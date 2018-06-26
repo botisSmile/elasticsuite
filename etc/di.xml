@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Smile_ElasticsuiteVirtualAttribute dependency injection configuration.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Smile Elastic Suite to newer
+ * versions in the future.
+ *
+ *
+ * @category  Smile
+ * @package   Smile\ElasticsuiteVirtualAttribute
+ * @author    Romain Ruaud <romain.ruaud@smile.fr>
+ * @copyright 2018 Smile
+ * @license   Open Software License ("OSL") v. 3.0
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <type name="Magento\Framework\Model\Entity\RepositoryFactory">
+        <arguments>
+            <argument name="entities" xsi:type="array">
+                <item name="Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterface" xsi:type="string">Smile\ElasticsuiteVirtualAttribute\Api\RuleRepositoryInterface</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Framework\EntityManager\MetadataPool">
+        <arguments>
+            <argument name="metadata" xsi:type="array">
+                <item name="Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterface" xsi:type="array">
+                    <item name="entityTableName" xsi:type="string">smile_elasticsuite_virtual_attribute_rule</item>
+                    <item name="identifierField" xsi:type="string">rule_id</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Framework\EntityManager\HydratorPool">
+        <arguments>
+            <argument name="hydrators" xsi:type="array">
+                <item name="Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterface" xsi:type="string">Magento\Framework\EntityManager\AbstractModelHydrator</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Dependency Injection for Virtual Attribute Rule models -->
+    <preference for="Smile\ElasticsuiteVirtualAttribute\Api\RuleRepositoryInterface" type="Smile\ElasticsuiteVirtualAttribute\Model\RuleRepository" />
+    <preference for="Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterface" type="Smile\ElasticsuiteVirtualAttribute\Model\Rule" />
+    <preference for="Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleSearchResultsInterface" type="Magento\Framework\Api\SearchResults" />
+
+</config>
