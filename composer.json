@@ -1,0 +1,35 @@
+{
+    "name": "smile/module-elasticsuite-recommender",
+    "type": "magento2-module",
+    "license": "OSL-3.0",
+    "authors": [{
+            "name": "Aurélien FOUCRET",
+            "email": "aurelien.foucret@smile.fr"
+        }
+    ],
+    "description": "Smile ElasticSuite - Catalog recommender module.",
+    "homepage": "https://github.com/Smile-SA/elasticsuite",
+    "keywords": [
+        "magento",
+        "magento2",
+        "elasticsearch",
+        "search",
+        "merchandising",
+        "core",
+        "setup",
+        "recommender"
+    ],
+    "require": {
+        "magento/framework": ">=101.0.0",
+        "smile/elasticsuite" : "^2.6.0"
+    },
+    "version": "2.4.0",
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Smile\\ElasticsuiteRecommender\\": ""
+        }
+    }
+}
