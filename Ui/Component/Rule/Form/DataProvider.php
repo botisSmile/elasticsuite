@@ -22,12 +22,18 @@ namespace Smile\ElasticsuiteVirtualAttribute\Ui\Component\Rule\Form;
 class DataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
 {
     /**
+     * @var \Magento\Ui\DataProvider\Modifier\PoolInterface
+     */
+    private $modifierPool;
+
+    /**
      * DataProvider constructor
      *
      * @param string                                                                         $name                  Component Name
      * @param string                                                                         $primaryFieldName      Primary Field Name
      * @param string                                                                         $requestFieldName      Request Field Name
      * @param \Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\CollectionFactory $ruleCollectionFactory Rule Collection Factory
+     * @param \Magento\Ui\DataProvider\Modifier\PoolInterface                                $modifierPool          Modifiers Pool
      * @param array                                                                          $meta                  Component Metadata
      * @param array                                                                          $data                  Component Data
      */
@@ -36,10 +42,12 @@ class DataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
         $primaryFieldName,
         $requestFieldName,
         \Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\CollectionFactory $ruleCollectionFactory,
+        \Magento\Ui\DataProvider\Modifier\PoolInterface $modifierPool,
         array $meta = [],
         array $data = []
     ) {
-        $this->collection = $ruleCollectionFactory->create();
+        $this->collection   = $ruleCollectionFactory->create();
+        $this->modifierPool = $modifierPool;
 
         parent::__construct($name, $primaryFieldName, $requestFieldName, $meta, $data);
     }
@@ -53,7 +61,26 @@ class DataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
             $this->data[$itemId] = $item->toArray();
         }
 
+        /** @var \Magento\Ui\DataProvider\Modifier\ModifierInterface $modifier */
+        foreach ($this->modifierPool->getModifiersInstances() as $modifier) {
+            $this->data = $modifier->modifyData($this->data);
+        }
+
         return $this->data;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getMeta()
+    {
+        $this->meta = parent::getMeta();
+
+        /** @var \Magento\Ui\DataProvider\Modifier\ModifierInterface $modifier */
+        foreach ($this->modifierPool->getModifiersInstances() as $modifier) {
+            $this->meta = $modifier->modifyMeta($this->meta);
+        }
+
+        return $this->meta;
+    }
 }
