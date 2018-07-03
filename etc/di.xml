@@ -18,6 +18,11 @@
  -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
 
+    <!-- Dependency Injection for Virtual Attribute Rule models -->
+    <preference for="Smile\ElasticsuiteVirtualAttribute\Api\RuleRepositoryInterface" type="Smile\ElasticsuiteVirtualAttribute\Model\RuleRepository" />
+    <preference for="Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterface" type="Smile\ElasticsuiteVirtualAttribute\Model\Rule" />
+    <preference for="Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleSearchResultsInterface" type="Magento\Framework\Api\SearchResults" />
+
     <type name="Magento\Framework\Model\Entity\RepositoryFactory">
         <arguments>
             <argument name="entities" xsi:type="array">
@@ -63,9 +68,37 @@
         </arguments>
     </type>
 
-    <!-- Dependency Injection for Virtual Attribute Rule models -->
-    <preference for="Smile\ElasticsuiteVirtualAttribute\Api\RuleRepositoryInterface" type="Smile\ElasticsuiteVirtualAttribute\Model\RuleRepository" />
-    <preference for="Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterface" type="Smile\ElasticsuiteVirtualAttribute\Model\Rule" />
-    <preference for="Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleSearchResultsInterface" type="Magento\Framework\Api\SearchResults" />
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="smile_elasticsuite_virtual_attribute_rule_listing_data_source"
+                      xsi:type="string">Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <virtualType name="Smile\ElasticsuiteVirtualAttribute\Model\Api\SearchCriteria\CollectionProcessor\RuleFilterProcessor" type="Magento\Framework\Api\SearchCriteria\CollectionProcessor\FilterProcessor">
+        <arguments>
+            <argument name="customFilters" xsi:type="array">
+                <item name="store_id" xsi:type="object">Smile\ElasticsuiteVirtualAttribute\Model\Api\SearchCriteria\CollectionProcessor\FilterProcessor\RuleStoreFilter</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Smile\ElasticsuiteVirtualAttribute\Model\Api\SearchCriteria\RuleCollectionProcessor" type="Magento\Framework\Api\SearchCriteria\CollectionProcessor">
+        <arguments>
+            <argument name="processors" xsi:type="array">
+                <item name="filters" xsi:type="object">Smile\ElasticsuiteVirtualAttribute\Model\Api\SearchCriteria\CollectionProcessor\RuleFilterProcessor</item>
+                <item name="sorting" xsi:type="object">Magento\Framework\Api\SearchCriteria\CollectionProcessor\SortingProcessor</item>
+                <item name="pagination" xsi:type="object">Magento\Framework\Api\SearchCriteria\CollectionProcessor\PaginationProcessor</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Smile\ElasticsuiteVirtualAttribute\Model\RuleRepository">
+        <arguments>
+            <argument name="collectionProcessor" xsi:type="object">Smile\ElasticsuiteVirtualAttribute\Model\Api\SearchCriteria\RuleCollectionProcessor</argument>
+        </arguments>
+    </type>
 
 </config>

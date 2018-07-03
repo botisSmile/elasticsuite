@@ -35,9 +35,11 @@ interface RuleRepositoryInterface
     /**
      * Retrieve list of rule
      *
+     * @param \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria Search criteria
+     *
      * @return \Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterface
      */
-    public function getList();
+    public function getList(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria);
 
     /**
      * save a rule

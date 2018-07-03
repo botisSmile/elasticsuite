@@ -51,20 +51,36 @@ class RuleRepository implements \Smile\ElasticsuiteVirtualAttribute\Api\RuleRepo
     private $entityManager;
 
     /**
+     * @var \Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface
+     */
+    private $collectionProcessor;
+
+    /**
+     * @var \Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleSearchResultsInterfaceFactory
+     */
+    private $searchResultsFactory;
+
+    /**
      * PHP Constructor
      *
      * @param \Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterfaceFactory              $ruleFactory           Rule Factory.
      * @param \Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\CollectionFactory $ruleCollectionFactory Rule Collection Factory.
      * @param \Magento\Framework\EntityManager\EntityManager                                 $entityManager         Entity Manager.
+     * @param \Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface             $collectionProcessor   Collection Processor.
+     * @param \Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleSearchResultsInterfaceFactory $searchResultsFactory  Search Results Factory.
      */
     public function __construct(
         \Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterfaceFactory $ruleFactory,
         \Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\CollectionFactory $ruleCollectionFactory,
-        \Magento\Framework\EntityManager\EntityManager $entityManager
+        \Magento\Framework\EntityManager\EntityManager $entityManager,
+        \Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface $collectionProcessor,
+        \Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleSearchResultsInterfaceFactory $searchResultsFactory
     ) {
         $this->ruleFactory           = $ruleFactory;
         $this->ruleCollectionFactory = $ruleCollectionFactory;
         $this->entityManager         = $entityManager;
+        $this->collectionProcessor   = $collectionProcessor;
+        $this->searchResultsFactory  = $searchResultsFactory;
     }
     
     /**
@@ -88,9 +104,20 @@ class RuleRepository implements \Smile\ElasticsuiteVirtualAttribute\Api\RuleRepo
     /**
      * {@inheritdoc}
      */
-    public function getList()
+    public function getList(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria)
     {
-        // TODO: Implement getList() method.
+        /** @var \Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\Collection $collection */
+        $collection = $this->ruleCollectionFactory->create();
+
+        $this->collectionProcessor->process($searchCriteria, $collection);
+
+        /** @var \Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleSearchResultsInterface $searchResults */
+        $searchResults = $this->searchResultsFactory->create();
+        $searchResults->setSearchCriteria($searchCriteria);
+        $searchResults->setItems($collection->getItems());
+        $searchResults->setTotalCount($collection->getSize());
+
+        return $searchResults;
     }
 
     /**
