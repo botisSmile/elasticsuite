@@ -23,6 +23,51 @@ use Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterface;
  */
 class Rule extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
 {
+    private $ruleFactory;
+
+    public function __construct(
+        \Magento\Framework\Model\ResourceModel\Db\Context $context,
+        \Magento\CatalogRule\Model\RuleFactory $ruleFactory,
+        $connectionName = null
+    ) {
+        $this->ruleFactory = $ruleFactory;
+        parent::__construct($context, $connectionName);
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.CamelCaseMethodName)
+     *
+     * {@inheritDoc}
+     */
+    protected function _beforeSave(\Magento\Framework\Model\AbstractModel $object)
+    {
+        $rule          = $this->ruleFactory->create();
+        $ruleCondition = $object->getCondition();
+
+        if (is_object($ruleCondition)) {
+            $rule = $ruleCondition;
+        } elseif (is_array($ruleCondition)) {
+            $rule->getConditions()->loadArray($ruleCondition);
+        }
+
+        $object->setCondition(serialize($rule->getConditions()->asArray()));
+
+        return parent::_beforeSave($object);
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.CamelCaseMethodName)
+     *
+     * {@inheritDoc}
+     */
+    protected function _afterLoad(\Magento\Framework\Model\AbstractModel $object)
+    {
+        /* Using getter to force unserialize*/
+        $object->getCondition();
+
+        return parent::_afterLoad($object);
+    }
+
     /**
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      *

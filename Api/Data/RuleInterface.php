@@ -83,7 +83,7 @@ interface RuleInterface
     /**
      * Get rule_condition
      *
-     * @return \Smile\ElasticsuiteVirtualCategory\Api\Data\VirtualRuleInterface
+     * @return \Magento\CatalogRule\Model\Rule
      */
     public function getCondition();
 

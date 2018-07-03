@@ -12,6 +12,9 @@
  */
 namespace Smile\ElasticsuiteVirtualAttribute\Model;
 
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\NoSuchEntityException;
+
 /**
  * Smile Elastic Suite Virtual Attribute Rule repository.
  *
@@ -69,7 +72,17 @@ class RuleRepository implements \Smile\ElasticsuiteVirtualAttribute\Api\RuleRepo
      */
     public function getById($ruleId)
     {
-        // TODO: Implement getById() method.
+        if (!isset($this->ruleRepositoryById[$ruleId])) {
+            $ruleModel = $this->ruleFactory->create();
+            $rule      = $this->entityManager->load($ruleModel, $ruleId);
+            if (!$rule->getId()) {
+                throw new NoSuchEntityException(__('Rule with id "%1" does not exist.', $ruleId));
+            }
+
+            $this->ruleRepositoryById[$ruleId] = $rule;
+        }
+
+        return $this->ruleRepositoryById[$ruleId];
     }
 
     /**
@@ -85,7 +98,15 @@ class RuleRepository implements \Smile\ElasticsuiteVirtualAttribute\Api\RuleRepo
      */
     public function save(\Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterface $rule)
     {
-        // TODO: Implement save() method.
+        try {
+            $this->entityManager->save($rule);
+        } catch (\Exception $exception) {
+            throw new CouldNotSaveException(__('Could not save the rule: %1', $exception->getMessage()));
+        }
+
+        $this->ruleRepositoryById[$rule->getId()] = $rule;
+
+        return $rule;
     }
 
     /**
@@ -93,7 +114,15 @@ class RuleRepository implements \Smile\ElasticsuiteVirtualAttribute\Api\RuleRepo
      */
     public function delete(\Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterface $rule)
     {
-        // TODO: Implement delete() method.
+        $ruleId = $rule->getId();
+
+        $this->entityManager->delete($rule);
+
+        if (isset($this->ruleRepositoryById[$ruleId])) {
+            unset($this->ruleRepositoryById[$ruleId]);
+        }
+
+        return $rule;
     }
 
     /**
@@ -101,6 +130,6 @@ class RuleRepository implements \Smile\ElasticsuiteVirtualAttribute\Api\RuleRepo
      */
     public function deleteById($ruleId)
     {
-        // TODO: Implement deleteById() method.
+        return $this->delete($this->getById($ruleId));
     }
 }

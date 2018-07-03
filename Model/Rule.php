@@ -34,6 +34,23 @@ class Rule extends \Magento\Framework\Model\AbstractModel implements \Smile\Elas
     protected $_cacheTag = self::CACHE_TAG;
 
     /**
+     * @var \Magento\CatalogRule\Model\RuleFactory
+     */
+    private $ruleFactory;
+
+    public function __construct(
+        \Magento\Framework\Model\Context $context,
+        \Magento\Framework\Registry $registry,
+        \Magento\CatalogRule\Model\RuleFactory $ruleFactory,
+        \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
+        \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
+        array $data = []
+    ) {
+        $this->ruleFactory = $ruleFactory;
+        parent::__construct($context, $registry, $resource, $resourceCollection, $data);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getId() : int
@@ -70,6 +87,21 @@ class Rule extends \Magento\Framework\Model\AbstractModel implements \Smile\Elas
      */
     public function getCondition()
     {
+        if (!is_object($this->getData(self::CONDITION))) {
+            $ruleData = $this->getData(self::CONDITION);
+            $rule     = $this->ruleFactory->create();
+
+            if (is_string($ruleData)) {
+                $ruleData = unserialize($ruleData);
+            }
+
+            if (is_array($ruleData)) {
+                $rule->getConditions()->loadArray($ruleData);
+            }
+
+            $this->setData(self::CONDITION, $rule);
+        }
+
         return $this->getData(self::CONDITION);
     }
 
@@ -111,5 +143,15 @@ class Rule extends \Magento\Framework\Model\AbstractModel implements \Smile\Elas
     public function setCondition($ruleCondition)
     {
         return $this->setData(self::CONDITION, $ruleCondition);
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.CamelCaseMethodName)
+     *
+     * {@inheritDoc}
+     */
+    protected function _construct()
+    {
+        $this->_init('Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule');
     }
 }

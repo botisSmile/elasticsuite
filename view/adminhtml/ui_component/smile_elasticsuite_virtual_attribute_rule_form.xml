@@ -218,13 +218,13 @@
                     <item name="sortOrder" xsi:type="number">20</item>
                 </item>
             </argument>
-            <htmlContent name="rule_condition">
-                <argument name="block" xsi:type="object">Smile\ElasticsuiteCatalogOptimizer\Block\Adminhtml\Optimizer\RuleCondition</argument>
+            <htmlContent name="condition">
+                <argument name="block" xsi:type="object">Smile\ElasticsuiteVirtualAttribute\Block\Adminhtml\Rule\Condition</argument>
                 <argument name="data" xsi:type="array">
                     <item name="config" xsi:type="array">
                         <item name="sortOrder" xsi:type="number">10</item>
                         <item name="component" xsi:type="string">Smile_ElasticsuiteCatalogRule/js/component/catalog/product/form/rule</item>
-                        <item name="dataScope" xsi:type="string">rule_condition</item>
+                        <item name="dataScope" xsi:type="string">condition</item>
                     </item>
                 </argument>
             </htmlContent>

@@ -50,23 +50,13 @@ class Save extends \Smile\ElasticsuiteVirtualAttribute\Controller\Adminhtml\Abst
                 $data['rule_id'] = null;
             }
 
-            $validateResult = $model->validateData(new \Magento\Framework\DataObject($data));
-            if ($validateResult !== true) {
-                foreach ($validateResult as $errorMessage) {
-                    $this->messageManager->addErrorMessage($errorMessage);
-                }
-                $this->_objectManager->get('Magento\Backend\Model\Session')->setFormData($data);
-
-                return $resultRedirect->setPath('*/*/edit', ['id' => $identifier]);
-            }
-
             $model->setData($data);
-            $ruleConditionPost = $this->getRequest()->getParam('rule_condition', []);
-            $model->getRuleCondition()->loadPost($ruleConditionPost);
+            $ruleConditionPost = $this->getRequest()->getParam('condition', []);
+            $model->getCondition()->loadPost($ruleConditionPost);
 
             try {
                 $this->ruleRepository->save($model);
-                $this->messageManager->addSuccessMessage(__('You saved the rule %1.', $model->getName()));
+                $this->messageManager->addSuccessMessage(__('You saved the rule %1.', $model->getId()));
                 $this->_objectManager->get('Magento\Backend\Model\Session')->setFormData(false);
 
                 if ($redirectBack) {
@@ -82,7 +72,7 @@ class Save extends \Smile\ElasticsuiteVirtualAttribute\Controller\Adminhtml\Abst
 
                 $returnParams = ['id' => $model->getId()];
 
-                return $resultRedirect->setPath('*/*/edit', $returnParams);
+                return $resultRedirect->setPath('*/*/*', $returnParams);
             }
         }
 

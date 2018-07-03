@@ -71,11 +71,6 @@ class AttributeOptions implements \Magento\Ui\DataProvider\Modifier\ModifierInte
             $meta['general']['children']['option_id']['arguments']['data']['options']           = $options;
         }
 
-        $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/rorua.log');
-        $logger = new \Zend\Log\Logger();
-        $logger->addWriter($writer);
-        $logger->info(print_r($meta, true));
-
         return $meta;
     }
 
