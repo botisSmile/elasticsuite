@@ -35,6 +35,70 @@ class Rule extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
     }
 
     /**
+     * Persist relation between a given object and his rules.
+     *
+     * @param \Magento\Framework\Model\AbstractModel $object The rule
+     *
+     * @return array
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function saveStoreRelation(\Magento\Framework\Model\AbstractModel $object)
+    {
+        $oldStores = $this->getStoreIds($object);
+        $newStores = (array) $object->getStores();
+
+        $table = $this->getTable(RuleInterface::STORE_TABLE_NAME);
+
+        $delete = array_diff($oldStores, $newStores);
+        if ($delete) {
+            $where = [
+                $this->getIdFieldName() . ' = ?' => (int) $object->getData($this->getIdFieldName()),
+                'store_id IN (?)' => $delete,
+            ];
+            $this->getConnection()->delete($table, $where);
+        }
+
+        $insert = array_diff($newStores, $oldStores);
+        if ($insert) {
+            $data = [];
+            foreach ($insert as $storeId) {
+                $data[] = [
+                    $this->getIdFieldName() => (int) $object->getData($this->getIdFieldName()),
+                    'store_id'              => (int) $storeId,
+                ];
+            }
+
+            $this->getConnection()->insertMultiple($table, $data);
+        }
+
+        return $object;
+    }
+
+    /**
+     * Retrieve store ids associated to a given rule.
+     *
+     * @param \Magento\Framework\Model\AbstractModel $object The rule
+     *
+     * @return array
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function getStoreIds(\Magento\Framework\Model\AbstractModel $object)
+    {
+        $connection = $this->getConnection();
+
+        $select = $connection->select()
+        ->from(['rs' => $this->getTable(RuleInterface::STORE_TABLE_NAME)], 'store_id')
+            ->join(
+             ['r' => $this->getMainTable()],
+             'rs.' . $this->getIdFieldName() . ' = r.' . $this->getIdFieldName(),
+             []
+            )
+        ->where('r.' . $this->getIdFieldName() . ' = :rule_id');
+
+        return $connection->fetchCol($select, ['rule_id' => (int) $object->getId()]);
+    }
+
+    /**
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      *
      * {@inheritDoc}

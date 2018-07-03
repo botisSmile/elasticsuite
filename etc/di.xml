@@ -45,6 +45,24 @@
         </arguments>
     </type>
 
+    <type name="Magento\Framework\EntityManager\Operation\ExtensionPool">
+        <arguments>
+            <argument name="extensionActions" xsi:type="array">
+                <item name="Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterface" xsi:type="array">
+                    <item name="read" xsi:type="array">
+                        <item name="storeReader" xsi:type="string">Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\Store\ReadHandler</item>
+                    </item>
+                    <item name="create" xsi:type="array">
+                        <item name="storeCreator" xsi:type="string">Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\Store\SaveHandler</item>
+                    </item>
+                    <item name="update" xsi:type="array">
+                        <item name="storeUpdater" xsi:type="string">Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\Store\SaveHandler</item>
+                    </item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
     <!-- Dependency Injection for Virtual Attribute Rule models -->
     <preference for="Smile\ElasticsuiteVirtualAttribute\Api\RuleRepositoryInterface" type="Smile\ElasticsuiteVirtualAttribute\Model\RuleRepository" />
     <preference for="Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterface" type="Smile\ElasticsuiteVirtualAttribute\Model\Rule" />

@@ -85,6 +85,14 @@ class Rule extends \Magento\Framework\Model\AbstractModel implements \Smile\Elas
     /**
      * {@inheritdoc}
      */
+    public function getPriority() : int
+    {
+        return (int) $this->getData(self::PRIORITY);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getCondition()
     {
         if (!is_object($this->getData(self::CONDITION))) {
@@ -103,6 +111,20 @@ class Rule extends \Magento\Framework\Model\AbstractModel implements \Smile\Elas
         }
 
         return $this->getData(self::CONDITION);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getStores() : array
+    {
+        $stores = $this->hasData('stores') ? $this->getData('stores') : $this->getData('store_id');
+
+        if (is_numeric($stores)) {
+            $stores = [$stores];
+        }
+
+        return $stores ?? [];
     }
 
     /**
@@ -135,6 +157,14 @@ class Rule extends \Magento\Framework\Model\AbstractModel implements \Smile\Elas
     public function setIsActive(bool $status)
     {
         return $this->setData(self::IS_ACTIVE, $status);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setPriority(int $priority)
+    {
+        return $this->setData(self::PRIORITY, $priority);
     }
 
     /**

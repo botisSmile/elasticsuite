@@ -14,11 +14,11 @@
 namespace Smile\ElasticsuiteVirtualAttribute\Block\Adminhtml\Rule;
 
 /**
- * Create the virtual rule edit field in the category edit form.
+ * Form condition field renderer for virtual rule edition.
  *
  * @category Smile
- * @package  Smile\ElasticsuiteCatalogOptimizer
- * @author   Fanny DECLERCK <fadec@smile.fr>
+ * @package  Smile\ElasticsuiteVirtualAttribute
+ * @author   Romain Ruaud <romain.ruaud@smile.Fr>
  */
 class Condition extends \Magento\Backend\Block\AbstractBlock
 {

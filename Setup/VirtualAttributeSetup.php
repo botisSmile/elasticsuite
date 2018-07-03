@@ -43,7 +43,7 @@ class VirtualAttributeSetup
      *
      * @param \Magento\Framework\Setup\SchemaSetupInterface $setup Setup instance
      */
-    public function createVirtualAttributeRuleTable(\Magento\Framework\Setup\SchemaSetupInterface $setup)
+    public function createVirtualAttributeRuleTables(\Magento\Framework\Setup\SchemaSetupInterface $setup)
     {
         if (!$setup->getConnection()->isTableExists($setup->getTable(RuleInterface::TABLE_NAME))) {
             $table = $setup->getConnection()
@@ -77,6 +77,13 @@ class VirtualAttributeSetup
                     'Rule Option Id'
                 )
                 ->addColumn(
+                    RuleInterface::PRIORITY,
+                    \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+                    null,
+                    ['nullable' => false],
+                    'Rule Priority'
+                )
+                ->addColumn(
                     RuleInterface::CONDITION,
                     \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
                     '',
@@ -91,6 +98,51 @@ class VirtualAttributeSetup
                     \Magento\Framework\DB\Ddl\Table::ACTION_CASCADE
                 )
                 ->setComment('Virtual Attribute rules table');
+
+            $setup->getConnection()->createTable($table);
+        }
+
+        if (!$setup->getConnection()->isTableExists($setup->getTable(RuleInterface::STORE_TABLE_NAME))) {
+            $table = $setup->getConnection()
+                ->newTable($setup->getTable(RuleInterface::STORE_TABLE_NAME))
+                ->addColumn(
+                    RuleInterface::RULE_ID,
+                    \Magento\Framework\DB\Ddl\Table::TYPE_SMALLINT,
+                    null,
+                    ['nullable' => false, 'primary' => true],
+                    'Rule ID'
+                )
+                ->addColumn(
+                    'store_id',
+                    \Magento\Framework\DB\Ddl\Table::TYPE_SMALLINT,
+                    null,
+                    ['unsigned' => true, 'nullable' => false, 'primary' => true],
+                    'Store ID'
+                )
+                ->addIndex(
+                    $setup->getIdxName(RuleInterface::STORE_TABLE_NAME, ['store_id']),
+                    ['store_id']
+                )
+                ->addForeignKey(
+                    $setup->getFkName(
+                        RuleInterface::STORE_TABLE_NAME,
+                        RuleInterface::RULE_ID,
+                        RuleInterface::TABLE_NAME,
+                        RuleInterface::RULE_ID
+                    ),
+                    RuleInterface::RULE_ID,
+                    $setup->getTable(RuleInterface::TABLE_NAME),
+                    RuleInterface::RULE_ID,
+                    \Magento\Framework\DB\Ddl\Table::ACTION_CASCADE
+                )
+                ->addForeignKey(
+                    $setup->getFkName(RuleInterface::STORE_TABLE_NAME, 'store_id', 'store', 'store_id'),
+                    'store_id',
+                    $setup->getTable('store'),
+                    'store_id',
+                    \Magento\Framework\DB\Ddl\Table::ACTION_CASCADE
+                )
+                ->setComment('Virtual Attribute Rule to Store link table');
 
             $setup->getConnection()->createTable($table);
         }

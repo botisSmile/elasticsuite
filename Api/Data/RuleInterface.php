@@ -28,6 +28,11 @@ interface RuleInterface
     const TABLE_NAME = 'smile_elasticsuite_virtual_attribute_rule';
 
     /**
+     * Name of the rule-store association table
+     */
+    const STORE_TABLE_NAME = 'smile_elasticsuite_virtual_attribute_rule_store';
+
+    /**
      * Constant for field rule_id
      */
     const RULE_ID = 'rule_id';
@@ -46,6 +51,11 @@ interface RuleInterface
      * Constant for field is_active
      */
     const IS_ACTIVE = 'is_active';
+
+    /**
+     * Constant for priority field
+     */
+    const PRIORITY = 'priority';
 
     /**
      * Constant for field condition
@@ -81,11 +91,25 @@ interface RuleInterface
     public function isActive() : bool;
 
     /**
+     * Get priority
+     *
+     * @return int
+     */
+    public function getPriority() : int;
+
+    /**
      * Get rule_condition
      *
      * @return \Magento\CatalogRule\Model\Rule
      */
     public function getCondition();
+
+    /**
+     * Retrieve rule store ids
+     *
+     * @return int[]
+     */
+    public function getStores() : array;
 
     /**
      * Set rule id
@@ -122,6 +146,15 @@ interface RuleInterface
      * @return RuleInterface
      */
     public function setIsActive(bool $status);
+
+    /**
+     * Set rule priority.
+     *
+     * @param int $priority The priority
+     *
+     * @return RuleInterface
+     */
+    public function setPriority(int $priority);
 
     /**
      * Set condition

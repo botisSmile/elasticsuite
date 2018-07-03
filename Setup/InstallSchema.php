@@ -6,20 +6,18 @@
  *
  * @category  Smile
  * @package   Smile\ElasticsuiteVirtualAttribute
- * @author    Fanny DECLERCK <fadec@smile.fr>
- * @copyright 2016 Smile
+ * @author    Romain Ruaud <romain.ruaud@smile.fr>
+ * @copyright 2018 Smile
  * @license   Open Software License ("OSL") v. 3.0
  */
 namespace Smile\ElasticsuiteVirtualAttribute\Setup;
 
-use Smile\ElasticsuiteVirtualAttribute\Setup\VirtualAttributeSetupFactory;
-
 /**
- * Install Schema for Catalog Optimizer Module
+ * Install Schema for Virtual Attributes rule module.
  *
  * @category Smile
  * @package  Smile\ElasticsuiteVirtualAttribute
- * @author   Fanny DECLERCK <fadec@smile.fr>
+ * @author   Romain Ruaud <romain.ruaud@smile.fr>
  */
 class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
 {
@@ -33,7 +31,7 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
      *
      * @param \Smile\ElasticsuiteVirtualAttribute\Setup\VirtualAttributeSetupFactory $virtualAttributeSetupFactory Setup Factory
      */
-    public function __construct(VirtualAttributeSetupFactory $virtualAttributeSetupFactory)
+    public function __construct(\Smile\ElasticsuiteVirtualAttribute\Setup\VirtualAttributeSetupFactory $virtualAttributeSetupFactory)
     {
         $this->virtualAttributeSetup = $virtualAttributeSetupFactory->create();
     }
@@ -44,7 +42,7 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
     public function install(\Magento\Framework\Setup\SchemaSetupInterface $setup, \Magento\Framework\Setup\ModuleContextInterface $context)
     {
         $setup->startSetup();
-        $this->virtualAttributeSetup->createVirtualAttributeRuleTable($setup);
+        $this->virtualAttributeSetup->createVirtualAttributeRuleTables($setup);
 
         $setup->endSetup();
     }
