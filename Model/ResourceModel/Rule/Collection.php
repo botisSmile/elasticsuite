@@ -24,6 +24,21 @@ use Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterface;
 class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection
 {
     /**
+     * @var int[]
+     */
+    private $storeIds = [];
+
+    /**
+     * Get store ids applied to current collection.
+     *
+     * @return int[]
+     */
+    public function getStoreIds()
+    {
+        return $this->storeIds;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function addFieldToFilter($field, $condition = null)
@@ -52,6 +67,7 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
             $store = [$store];
         }
 
+        $this->storeIds = $store;
         $this->addFilter('store', ['in' => $store], 'public');
 
         return $this;

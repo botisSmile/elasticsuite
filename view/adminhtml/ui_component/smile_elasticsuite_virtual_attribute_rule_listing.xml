@@ -132,31 +132,19 @@
             </settings>
         </column>
 
-        <column name="attribute_id" sortOrder="20">
+        <column name="frontend_label" sortOrder="20">
             <settings>
                 <filter>select</filter>
-                <editor>
-                    <validation>
-                        <rule name="required-entry" xsi:type="boolean">true</rule>
-                        <rule name="validate-xml-identifier" xsi:type="boolean">true</rule>
-                    </validation>
-                    <editorType>text</editorType>
-                </editor>
                 <label translate="true">Attribute</label>
+                <bodyTmpl>ui/grid/cells/html</bodyTmpl>
                 <sortable>true</sortable>
             </settings>
         </column>
 
-        <column name="option_id" sortOrder="30">
+        <column name="option_label" sortOrder="30">
             <settings>
-                <editor>
-                    <validation>
-                        <rule name="required-entry" xsi:type="boolean">true</rule>
-                        <rule name="validate-xml-identifier" xsi:type="boolean">true</rule>
-                    </validation>
-                    <editorType>text</editorType>
-                </editor>
                 <label translate="true">Option</label>
+                <bodyTmpl>ui/grid/cells/html</bodyTmpl>
                 <sortable>true</sortable>
             </settings>
         </column>
