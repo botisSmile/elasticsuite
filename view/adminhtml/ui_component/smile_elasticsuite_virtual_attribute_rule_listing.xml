@@ -159,7 +159,15 @@
             </settings>
         </column>
 
-        <column name="is_active" component="Magento_Ui/js/grid/columns/select" sortOrder="40">
+        <column name="store_id" class="Magento\Store\Ui\Component\Listing\Column\Store" sortOrder="40">
+            <settings>
+                <label translate="true">Store View</label>
+                <bodyTmpl>ui/grid/cells/html</bodyTmpl>
+                <sortable>false</sortable>
+            </settings>
+        </column>
+
+        <column name="is_active" component="Magento_Ui/js/grid/columns/select" sortOrder="50">
             <settings>
                 <options>
                     <option name="active" xsi:type="array">
@@ -180,23 +188,12 @@
             </settings>
         </column>
 
-        <column name="store_id" class="Magento\Store\Ui\Component\Listing\Column\Store" sortOrder="50">
+        <actionsColumn name="actions" class="Smile\ElasticsuiteVirtualAttribute\Ui\Component\Rule\Listing\Column\RuleActions" sortOrder="60">
             <settings>
-                <label translate="true">Store View</label>
-                <bodyTmpl>ui/grid/cells/html</bodyTmpl>
-                <sortable>false</sortable>
+                <resizeEnabled>false</resizeEnabled>
+                <resizeDefaultWidth>100</resizeDefaultWidth>
+                <indexField>block_id</indexField>
             </settings>
-        </column>
-
-        <actionsColumn name="actions" class="Smile\ElasticsuiteVirtualAttribute\Ui\Component\Rule\Listing\Column\RuleActions">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="resizeEnabled" xsi:type="boolean">false</item>
-                    <item name="resizeDefaultWidth" xsi:type="string">107</item>
-                    <item name="indexField" xsi:type="string">rule_id</item>
-                    <item name="sortOrder" xsi:type="number">60</item>
-                </item>
-            </argument>
         </actionsColumn>
     </columns>
 </listing>

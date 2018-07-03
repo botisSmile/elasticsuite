@@ -76,7 +76,7 @@ class RuleActions extends \Magento\Ui\Component\Listing\Columns\Column
             foreach ($dataSource['data']['items'] as & $item) {
                 $name = $this->getData('name');
 
-                if (isset($item['optimizer_id'])) {
+                if (isset($item['rule_id'])) {
                     $item[$name]['edit'] = [
                         'href'  => $this->urlBuilder->getUrl($this->editUrl, ['id' => $item['rule_id']]),
                         'label' => __('Edit'),
