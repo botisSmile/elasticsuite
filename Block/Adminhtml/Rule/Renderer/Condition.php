@@ -21,7 +21,9 @@ namespace Smile\ElasticsuiteVirtualAttribute\Block\Adminhtml\Rule\Renderer;
  * @package  Smile\ElasticsuiteVirtualAttribute
  * @author   Romain Ruaud <romain.ruaud@smile.fr>
  */
-class Condition extends \Magento\Backend\Block\Template implements \Magento\Framework\Data\Form\Element\Renderer\RendererInterface
+class Condition
+    extends \Magento\Backend\Block\Template
+    implements \Magento\Framework\Data\Form\Element\Renderer\RendererInterface
 {
     /**
      * @var \Magento\Rule\Block\Conditions
@@ -29,7 +31,7 @@ class Condition extends \Magento\Backend\Block\Template implements \Magento\Fram
     protected $conditions;
 
     /**
-     * @var \Smile\ElasticsuiteCatalogRule\Model\Rule
+     * @var \Magento\CatalogRule\Model\Rule
      */
     protected $rule;
 
@@ -98,7 +100,7 @@ class Condition extends \Magento\Backend\Block\Template implements \Magento\Fram
             'element_name' => $this->getElement()->getName(),
         ];
 
-        return $this->getUrl('catalog_search_rule/product_rule/conditions', $urlParams);
+        return $this->getUrl('smile_elasticsuite_virtual_attribute/rule/conditions', $urlParams);
     }
 
     /**
