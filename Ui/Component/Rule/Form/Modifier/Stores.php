@@ -46,7 +46,7 @@ class Stores implements \Magento\Ui\DataProvider\Modifier\ModifierInterface
     {
         $rule = $this->locator->getRule();
 
-        if ($rule && $rule->getId() && !empty($rule->getStores())) {
+        if ($rule && $rule->getId() && !empty($rule->getStores()) && empty($data[$rule->getId()]['store_id'])) {
             $data[$rule->getId()]['store_id'] = $rule->getStores();
         }
 

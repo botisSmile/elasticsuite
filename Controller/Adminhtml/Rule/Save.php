@@ -29,9 +29,9 @@ class Save extends \Smile\ElasticsuiteVirtualAttribute\Controller\Adminhtml\Abst
     {
         /** @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect */
         $resultRedirect = $this->resultRedirectFactory->create();
-        $data = $this->getRequest()->getPostValue();
-
-        $redirectBack = $this->getRequest()->getParam('back', false);
+        $data           = $this->getRequest()->getPostValue();
+        $redirectBack   = $this->getRequest()->getParam('back', false);
+        $resultRedirect->setPath('*/*/');
 
         if ($data) {
             $identifier = $this->getRequest()->getParam('id');
@@ -57,25 +57,18 @@ class Save extends \Smile\ElasticsuiteVirtualAttribute\Controller\Adminhtml\Abst
             try {
                 $this->ruleRepository->save($model);
                 $this->messageManager->addSuccessMessage(__('You saved the rule %1.', $model->getId()));
-                $this->_objectManager->get('Magento\Backend\Model\Session')->setFormData(false);
-
-                if ($redirectBack) {
-                    $redirectParams = ['id' => $model->getId()];
-
-                    return $resultRedirect->setPath('*/*/edit', $redirectParams);
-                }
-
-                return $resultRedirect->setPath('*/*/');
+                $this->dataPersistor->clear('smile_elasticsuite_virtual_attribute_rule');
             } catch (\Exception $e) {
                 $this->messageManager->addErrorMessage($e->getMessage());
-                $this->_objectManager->get('Magento\Backend\Model\Session')->setFormData($data);
+                $this->dataPersistor->set('smile_elasticsuite_virtual_attribute_rule', $data);
+            }
 
-                $returnParams = ['id' => $model->getId()];
-
-                return $resultRedirect->setPath('*/*/*', $returnParams);
+            if ($redirectBack && $model->getId()) {
+                $redirectParams = ['id' => $model->getId()];
+                $resultRedirect->setPath('*/*/edit', $redirectParams);
             }
         }
 
-        return $resultRedirect->setPath('*/*/');
+        return $resultRedirect;
     }
 }

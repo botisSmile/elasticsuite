@@ -27,6 +27,11 @@ class DataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
     private $modifierPool;
 
     /**
+     * @var \Magento\Framework\App\Request\DataPersistorInterface
+     */
+    private $dataPersistor;
+
+    /**
      * DataProvider constructor
      *
      * @param string                                                                         $name                  Component Name
@@ -34,6 +39,7 @@ class DataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
      * @param string                                                                         $requestFieldName      Request Field Name
      * @param \Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\CollectionFactory $ruleCollectionFactory Rule Collection Factory
      * @param \Magento\Ui\DataProvider\Modifier\PoolInterface                                $modifierPool          Modifiers Pool
+     * @param \Magento\Framework\App\Request\DataPersistorInterface                          $dataPersistor         Data Persistor
      * @param array                                                                          $meta                  Component Metadata
      * @param array                                                                          $data                  Component Data
      */
@@ -43,11 +49,13 @@ class DataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
         $requestFieldName,
         \Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\CollectionFactory $ruleCollectionFactory,
         \Magento\Ui\DataProvider\Modifier\PoolInterface $modifierPool,
+        \Magento\Framework\App\Request\DataPersistorInterface $dataPersistor,
         array $meta = [],
         array $data = []
     ) {
-        $this->collection   = $ruleCollectionFactory->create();
-        $this->modifierPool = $modifierPool;
+        $this->collection    = $ruleCollectionFactory->create();
+        $this->modifierPool  = $modifierPool;
+        $this->dataPersistor = $dataPersistor;
 
         parent::__construct($name, $primaryFieldName, $requestFieldName, $meta, $data);
     }
@@ -59,6 +67,14 @@ class DataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
     {
         foreach ($this->getCollection()->getItems() as $itemId => $item) {
             $this->data[$itemId] = $item->toArray();
+        }
+
+        $data = $this->dataPersistor->get('smile_elasticsuite_virtual_attribute_rule');
+        if (!empty($data)) {
+            $rule = $this->collection->getNewEmptyItem();
+            $rule->setData($data);
+            $this->data[$rule->getId()] = $rule->getData();
+            $this->dataPersistor->clear('smile_elasticsuite_virtual_attribute_rule');
         }
 
         /** @var \Magento\Ui\DataProvider\Modifier\ModifierInterface $modifier */

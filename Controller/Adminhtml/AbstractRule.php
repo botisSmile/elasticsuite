@@ -43,6 +43,11 @@ abstract class AbstractRule extends Action
     protected $coreRegistry;
 
     /**
+     * @var \Magento\Framework\App\Request\DataPersistorInterface
+     */
+    protected $dataPersistor;
+
+    /**
      * @var \Smile\ElasticsuiteVirtualAttribute\Api\RuleRepositoryInterface
      */
     protected $ruleRepository;
@@ -57,16 +62,18 @@ abstract class AbstractRule extends Action
     /**
      * Abstract constructor.
      *
-     * @param \Magento\Backend\App\Action\Context                                    $context             Application context.
-     * @param \Magento\Framework\View\Result\PageFactory                             $resultPageFactory   Result Page factory.
-     * @param \Magento\Framework\Registry                                            $coreRegistry        Application registry.
-     * @param \Smile\ElasticsuiteVirtualAttribute\Api\RuleRepositoryInterface   $ruleRepository Rule Repository.
-     * @param \Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterfaceFactory $ruleFactory    Rule Factory.
+     * @param \Magento\Backend\App\Action\Context                               $context           Application context.
+     * @param \Magento\Framework\View\Result\PageFactory                        $resultPageFactory Result Page factory.
+     * @param \Magento\Framework\Registry                                       $coreRegistry      Application registry.
+     * @param \Magento\Framework\App\Request\DataPersistorInterface             $dataPersistor     Data persistor.
+     * @param \Smile\ElasticsuiteVirtualAttribute\Api\RuleRepositoryInterface   $ruleRepository    Rule Repository.
+     * @param \Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterfaceFactory $ruleFactory       Rule Factory.
      */
     public function __construct(
         \Magento\Backend\App\Action\Context $context,
         \Magento\Framework\View\Result\PageFactory $resultPageFactory,
         \Magento\Framework\Registry $coreRegistry,
+        \Magento\Framework\App\Request\DataPersistorInterface $dataPersistor,
         \Smile\ElasticsuiteVirtualAttribute\Api\RuleRepositoryInterface $ruleRepository,
         \Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterfaceFactory $ruleFactory
     ) {
@@ -74,6 +81,7 @@ abstract class AbstractRule extends Action
 
         $this->resultPageFactory = $resultPageFactory;
         $this->coreRegistry      = $coreRegistry;
+        $this->dataPersistor     = $dataPersistor;
         $this->ruleRepository    = $ruleRepository;
         $this->ruleFactory       = $ruleFactory;
     }
