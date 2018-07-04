@@ -10,7 +10,7 @@
  * @copyright 2018 Smile
  * @license   Open Software License ("OSL") v. 3.0
  */
-namespace Smile\ElasticsuiteVirtualAttribute\Ui\Component\Rule\Listing\Column\Store;
+namespace Smile\ElasticsuiteVirtualAttribute\Ui\Component\Rule\Source\Store;
 
 /**
  * Store Options for Smile Elastic Suite Virtual Attributes Rules.

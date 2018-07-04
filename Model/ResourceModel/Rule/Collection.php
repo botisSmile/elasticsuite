@@ -85,7 +85,8 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
         );
 
         /* @see self::_renderFiltersBefore() */
-        $this->_map['fields']['store'] = RuleInterface::STORE_TABLE_NAME . '.store_id';
+        $this->_map['fields']['store']        = RuleInterface::STORE_TABLE_NAME . '.store_id';
+        $this->_map['fields']['attribute_id'] = 'main_table.attribute_id';
     }
 
     /**

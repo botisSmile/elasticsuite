@@ -135,7 +135,7 @@
             <formElements>
                 <select>
                     <settings>
-                        <options class="Smile\ElasticsuiteVirtualAttribute\Ui\Component\Rule\Form\Attribute\Options"/>
+                        <options class="Smile\ElasticsuiteVirtualAttribute\Ui\Component\Rule\Source\Attribute\Options"/>
                     </settings>
                 </select>
             </formElements>
@@ -181,7 +181,7 @@
             <formElements>
                 <multiselect>
                     <settings>
-                        <options class="Smile\ElasticsuiteVirtualAttribute\Ui\Component\Rule\Listing\Column\Store\Options"/>
+                        <options class="Smile\ElasticsuiteVirtualAttribute\Ui\Component\Rule\Source\Store\Options"/>
                     </settings>
                 </multiselect>
             </formElements>

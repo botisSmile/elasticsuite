@@ -10,7 +10,9 @@
  * @copyright 2018 Smile
  * @license   Open Software License ("OSL") v. 3.0
  */
-namespace Smile\ElasticsuiteVirtualAttribute\Ui\Component\Rule\Form\Attribute;
+namespace Smile\ElasticsuiteVirtualAttribute\Ui\Component\Rule\Source\Attribute;
+
+use \Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\Attributes\CollectionFactory;
 
 /**
  * Attributes options values for virtual attribute rule edit form.
@@ -22,7 +24,7 @@ namespace Smile\ElasticsuiteVirtualAttribute\Ui\Component\Rule\Form\Attribute;
 class Options implements \Magento\Framework\Data\OptionSourceInterface
 {
     /**
-     * @var \Magento\Catalog\Model\ResourceModel\Product\Attribute\CollectionFactory
+     * @var \Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\Attributes\CollectionFactory
      */
     private $attributesCollectionFactory;
 
@@ -32,27 +34,13 @@ class Options implements \Magento\Framework\Data\OptionSourceInterface
     private $attributesList;
 
     /**
-     * @var array
-     */
-    private $defaultAvailableFrontendInputs = ['select', 'multiselect'];
-
-    /**
-     * @var array
-     */
-    private $availableFrontendInputs = [];
-
-    /**
      * Options constructor.
      *
-     * @param \Magento\Catalog\Model\ResourceModel\Product\Attribute\CollectionFactory $attributesCollectionFactory Attributes Collection
-     * @param array                                                                    $availableFrontendInputs     Available Frontend inputs
+     * @param CollectionFactory $attributesCollectionFactory Attributes Collection
      */
-    public function __construct(
-        \Magento\Catalog\Model\ResourceModel\Product\Attribute\CollectionFactory $attributesCollectionFactory,
-        $availableFrontendInputs = []
-    ) {
+    public function __construct(CollectionFactory $attributesCollectionFactory)
+    {
         $this->attributesCollectionFactory = $attributesCollectionFactory;
-        $this->availableFrontendInputs     = array_merge($this->defaultAvailableFrontendInputs, $availableFrontendInputs);
     }
 
     /**
@@ -74,7 +62,6 @@ class Options implements \Magento\Framework\Data\OptionSourceInterface
             $this->attributesList = [];
 
             $collection = $this->attributesCollectionFactory->create();
-            $collection->addFieldToFilter('frontend_input', ['in' => $this->availableFrontendInputs]);
 
             foreach ($collection as $attribute) {
                 $this->attributesList[$attribute->getId()] = [

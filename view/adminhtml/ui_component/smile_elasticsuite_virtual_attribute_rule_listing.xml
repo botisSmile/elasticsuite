@@ -74,10 +74,11 @@
                     </filters>
                 </templates>
             </settings>
-            <filterSelect name="store_id" provider="${ $.parentName }">
+
+            <filterSelect sortOrder="10" name="store_id" provider="${ $.parentName }">
                 <settings>
                     <captionValue>0</captionValue>
-                    <options class="Smile\ElasticsuiteVirtualAttribute\Ui\Component\Rule\Listing\Column\Store\Options"/>
+                    <options class="Smile\ElasticsuiteVirtualAttribute\Ui\Component\Rule\Source\Store\Options"/>
                     <label translate="true">Store View</label>
                     <dataScope>store_id</dataScope>
                     <imports>
@@ -85,6 +86,28 @@
                     </imports>
                 </settings>
             </filterSelect>
+
+            <filterSelect sortOrder="20" name="attribute_id" provider="${ $.parentName }" component="Magento_Ui/js/form/element/ui-select" template="ui/grid/filters/elements/ui-select">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="filterOptions" xsi:type="boolean">true</item>
+                        <item name="showCheckbox" xsi:type="boolean">false</item>
+                        <item name="multiple" xsi:type="boolean">false</item>
+                        <item name="levelsVisibility" xsi:type="number">1</item>
+                    </item>
+                </argument>
+                <settings>
+                    <captionValue>0</captionValue>
+                    <options class="Smile\ElasticsuiteVirtualAttribute\Ui\Component\Rule\Source\Attribute\Options"/>
+                    <label translate="true">Attribute</label>
+                    <dataScope>attribute_id</dataScope>
+                    <imports>
+                        <link name="visible">componentType = column, index = ${ $.index }:visible</link>
+                    </imports>
+                    <caption>Select...</caption>
+                </settings>
+            </filterSelect>
+
         </filters>
 
         <paging name="listing_paging"/>
@@ -134,7 +157,6 @@
 
         <column name="frontend_label" sortOrder="20">
             <settings>
-                <filter>select</filter>
                 <label translate="true">Attribute</label>
                 <bodyTmpl>ui/grid/cells/html</bodyTmpl>
                 <sortable>true</sortable>
