@@ -47,6 +47,6 @@ class Refresh extends \Smile\ElasticsuiteVirtualAttribute\Controller\Adminhtml\A
             $resultRedirect->setPath('*/*/index');
         }
 
-        return $resultRedirect->setPath('*/*/edit', $redirectParams);
+        return $resultRedirect->setPath($this->_redirect->getRefererUrl(), $redirectParams);
     }
 }
