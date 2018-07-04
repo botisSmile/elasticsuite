@@ -110,6 +110,31 @@
 
         </filters>
 
+        <massaction name="listing_massaction">
+            <action name="delete">
+                <settings>
+                    <confirm>
+                        <message translate="true">Are you sure you want to delete selected items?</message>
+                        <title translate="true">Delete items</title>
+                    </confirm>
+                    <url path="*/*/massDelete"/>
+                    <type>delete</type>
+                    <label translate="true">Delete</label>
+                </settings>
+            </action>
+            <action name="refresh">
+                <settings>
+                    <confirm>
+                        <message translate="true">Are you sure you want to refresh selected items?</message>
+                        <title translate="true">Refresh items</title>
+                    </confirm>
+                    <url path="*/*/massRefresh"/>
+                    <type>refresh</type>
+                    <label translate="true">Refresh</label>
+                </settings>
+            </action>
+        </massaction>
+
         <paging name="listing_paging"/>
 
     </listingToolbar>
@@ -131,13 +156,11 @@
         </argument>
 
         <selectionsColumn name="ids">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="resizeEnabled" xsi:type="boolean">false</item>
-                    <item name="resizeDefaultWidth" xsi:type="string">55</item>
-                    <item name="indexField" xsi:type="string">rule_id</item>
-                </item>
-            </argument>
+            <settings>
+                <indexField>rule_id</indexField>
+                <resizeEnabled>false</resizeEnabled>
+                <resizeDefaultWidth>50</resizeDefaultWidth>
+            </settings>
         </selectionsColumn>
 
         <column name="rule_id" sortOrder="10">
@@ -152,6 +175,8 @@
                 </editor>
                 <label translate="true">Identifier</label>
                 <sortable>true</sortable>
+                <resizeEnabled>false</resizeEnabled>
+                <resizeDefaultWidth>80</resizeDefaultWidth>
             </settings>
         </column>
 

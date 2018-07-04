@@ -48,6 +48,16 @@ abstract class AbstractRule extends Action
     protected $dataPersistor;
 
     /**
+     * @var \Magento\Ui\Component\MassAction\Filter
+     */
+    protected $filter;
+
+    /**
+     * @var \Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\CollectionFactory
+     */
+    protected $collectionFactory;
+
+    /**
      * @var \Smile\ElasticsuiteVirtualAttribute\Api\RuleRepositoryInterface
      */
     protected $ruleRepository;
@@ -66,6 +76,7 @@ abstract class AbstractRule extends Action
      * @param \Magento\Framework\View\Result\PageFactory                        $resultPageFactory Result Page factory.
      * @param \Magento\Framework\Registry                                       $coreRegistry      Application registry.
      * @param \Magento\Framework\App\Request\DataPersistorInterface             $dataPersistor     Data persistor.
+     * @param \Magento\Ui\Component\MassAction\Filter                           $filter            Mass Action Filter.
      * @param \Smile\ElasticsuiteVirtualAttribute\Api\RuleRepositoryInterface   $ruleRepository    Rule Repository.
      * @param \Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterfaceFactory $ruleFactory       Rule Factory.
      */
@@ -74,6 +85,8 @@ abstract class AbstractRule extends Action
         \Magento\Framework\View\Result\PageFactory $resultPageFactory,
         \Magento\Framework\Registry $coreRegistry,
         \Magento\Framework\App\Request\DataPersistorInterface $dataPersistor,
+        \Magento\Ui\Component\MassAction\Filter $filter,
+        \Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\CollectionFactory $collectionFactory,
         \Smile\ElasticsuiteVirtualAttribute\Api\RuleRepositoryInterface $ruleRepository,
         \Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterfaceFactory $ruleFactory
     ) {
@@ -82,6 +95,8 @@ abstract class AbstractRule extends Action
         $this->resultPageFactory = $resultPageFactory;
         $this->coreRegistry      = $coreRegistry;
         $this->dataPersistor     = $dataPersistor;
+        $this->filter            = $filter;
+        $this->collectionFactory = $collectionFactory;
         $this->ruleRepository    = $ruleRepository;
         $this->ruleFactory       = $ruleFactory;
     }

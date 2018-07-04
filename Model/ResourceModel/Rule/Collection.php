@@ -17,12 +17,19 @@ use Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterface;
 /**
  * Smile Elastic Suite Virtual Attribute Rule collection.
  *
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
+ *
  * @category Smile
  * @package  Smile\ElasticsuiteVirtualAttribute
  * @author   Romain Ruaud <romain.ruaud@smile.fr>
  */
 class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection
 {
+    /**
+     * @var string
+     */
+    protected $_idFieldName = RuleInterface::RULE_ID;
+
     /**
      * @var int[]
      */
