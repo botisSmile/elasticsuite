@@ -35,10 +35,11 @@
     <settings>
         <reloadItem>general.attribute_id:value</reloadItem>
         <buttons>
-            <button name="back" class="Smile\ElasticsuiteCatalogOptimizer\Block\Adminhtml\Optimizer\Edit\Button\Back"/>
-            <button name="save" class="Smile\ElasticsuiteCatalogOptimizer\Block\Adminhtml\Optimizer\Edit\Button\Save"/>
-            <button name="delete" class="Smile\ElasticsuiteCatalogOptimizer\Block\Adminhtml\Optimizer\Edit\Button\Delete"/>
-            <button name="save_and_continue" class="Smile\ElasticsuiteCatalogOptimizer\Block\Adminhtml\Optimizer\Edit\Button\SaveAndContinue"/>
+            <button name="back" class="Smile\ElasticsuiteVirtualAttribute\Block\Adminhtml\Rule\Edit\Button\Back"/>
+            <button name="save" class="Smile\ElasticsuiteVirtualAttribute\Block\Adminhtml\Rule\Edit\Button\Save"/>
+            <button name="delete" class="Smile\ElasticsuiteVirtualAttribute\Block\Adminhtml\Rule\Edit\Button\Delete"/>
+            <button name="save_and_continue" class="Smile\ElasticsuiteVirtualAttribute\Block\Adminhtml\Rule\Edit\Button\SaveAndContinue"/>
+            <button name="refresh" class="Smile\ElasticsuiteVirtualAttribute\Block\Adminhtml\Rule\Edit\Button\Refresh"/>
         </buttons>
         <deps>
             <dep>smile_elasticsuite_virtual_attribute_rule_form.smile_elasticsuite_virtual_attribute_rule_form_data_source</dep>
