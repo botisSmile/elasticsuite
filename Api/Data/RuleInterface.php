@@ -58,6 +58,11 @@ interface RuleInterface
     const PRIORITY = 'priority';
 
     /**
+     * Constant for to_refresh field
+     */
+    const TO_REFRESH = 'to_refresh';
+
+    /**
      * Constant for field condition
      */
     const CONDITION = 'condition';
@@ -96,6 +101,13 @@ interface RuleInterface
      * @return int
      */
     public function getPriority() : int;
+
+    /**
+     * Get Rule to_refresh status flag
+     *
+     * @return bool
+     */
+    public function isToRefresh() : bool;
 
     /**
      * Get rule_condition
@@ -155,6 +167,15 @@ interface RuleInterface
      * @return RuleInterface
      */
     public function setPriority(int $priority);
+
+    /**
+     * Set Rule to_refresh flag field.
+     *
+     * @param bool $toRefresh The Rule status
+     *
+     * @return RuleInterface
+     */
+    public function setToRefresh(bool $toRefresh);
 
     /**
      * Set condition

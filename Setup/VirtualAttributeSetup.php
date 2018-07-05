@@ -84,6 +84,13 @@ class VirtualAttributeSetup
                     'Rule Priority'
                 )
                 ->addColumn(
+                    RuleInterface::TO_REFRESH,
+                    \Magento\Framework\DB\Ddl\Table::TYPE_BOOLEAN,
+                    null,
+                    ['nullable' => false, 'default' => '1'],
+                    'If rule has to be refreshed'
+                )
+                ->addColumn(
                     RuleInterface::CONDITION,
                     \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
                     '',

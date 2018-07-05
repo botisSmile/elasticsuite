@@ -93,6 +93,14 @@ class Rule extends \Magento\Framework\Model\AbstractModel implements \Smile\Elas
     /**
      * {@inheritdoc}
      */
+    public function isToRefresh() : bool
+    {
+        return (bool) $this->getData(self::TO_REFRESH);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getCondition()
     {
         if (!is_object($this->getData(self::CONDITION))) {
@@ -165,6 +173,14 @@ class Rule extends \Magento\Framework\Model\AbstractModel implements \Smile\Elas
     public function setPriority(int $priority)
     {
         return $this->setData(self::PRIORITY, $priority);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setToRefresh(bool $toRefresh)
+    {
+        return $this->setData(self::TO_REFRESH, $toRefresh);
     }
 
     /**
