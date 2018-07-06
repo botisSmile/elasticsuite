@@ -190,17 +190,19 @@
 
         <column name="option_label" sortOrder="30">
             <settings>
-                <label translate="true">Option</label>
+                <label translate="true">Value</label>
                 <bodyTmpl>ui/grid/cells/html</bodyTmpl>
                 <sortable>true</sortable>
             </settings>
         </column>
 
-        <column name="store_id" class="Magento\Store\Ui\Component\Listing\Column\Store" sortOrder="40">
+        <column name="priority" sortOrder="40">
             <settings>
-                <label translate="true">Store View</label>
+                <label translate="true">Priority</label>
                 <bodyTmpl>ui/grid/cells/html</bodyTmpl>
-                <sortable>false</sortable>
+                <sortable>true</sortable>
+                <resizeEnabled>false</resizeEnabled>
+                <resizeDefaultWidth>20</resizeDefaultWidth>
             </settings>
         </column>
 
@@ -225,7 +227,15 @@
             </settings>
         </column>
 
-        <actionsColumn name="actions" class="Smile\ElasticsuiteVirtualAttribute\Ui\Component\Rule\Listing\Column\RuleActions" sortOrder="60">
+        <column name="store_id" class="Magento\Store\Ui\Component\Listing\Column\Store" sortOrder="60">
+            <settings>
+                <label translate="true">Store View</label>
+                <bodyTmpl>ui/grid/cells/html</bodyTmpl>
+                <sortable>false</sortable>
+            </settings>
+        </column>
+
+        <actionsColumn name="actions" class="Smile\ElasticsuiteVirtualAttribute\Ui\Component\Rule\Listing\Column\RuleActions" sortOrder="70">
             <settings>
                 <resizeEnabled>false</resizeEnabled>
                 <resizeDefaultWidth>100</resizeDefaultWidth>
