@@ -99,4 +99,26 @@ class Product extends \Magento\CatalogRule\Model\Rule\Condition\Product
 
         return $valueElementType;
     }
+
+    /**
+     * Retrieve value element chooser URL
+     *
+     * @return string
+     */
+    public function getValueElementChooserUrl()
+    {
+        $url = parent::getValueElementChooserUrl();
+
+        if ($this->getAttribute() === 'category_ids') {
+            $url = 'smile_elasticsuite_virtual_attribute/rule_category/chooser/attribute/';
+            $chooserUrlParams = [];
+            if ($this->getJsFormObject()) {
+                $chooserUrlParams['form'] = $this->getJsFormObject();
+            }
+
+            $url = $this->_backendData->getUrl($url, $chooserUrlParams);
+        }
+
+        return $url;
+    }
 }
