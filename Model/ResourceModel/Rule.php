@@ -23,8 +23,18 @@ use Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterface;
  */
 class Rule extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
 {
+    /**
+     * @var \Magento\CatalogRule\Model\RuleFactory
+     */
     private $ruleFactory;
 
+    /**
+     * Rule constructor.
+     *
+     * @param \Magento\Framework\Model\ResourceModel\Db\Context $context        DB Context
+     * @param \Magento\CatalogRule\Model\RuleFactory            $ruleFactory    Rule Factory
+     * @param null                                              $connectionName Connection name
+     */
     public function __construct(
         \Magento\Framework\Model\ResourceModel\Db\Context $context,
         \Magento\CatalogRule\Model\RuleFactory $ruleFactory,

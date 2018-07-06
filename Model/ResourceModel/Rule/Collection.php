@@ -81,6 +81,24 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
     }
 
     /**
+     * Retrieve all distinct options ids of current collection.
+     *
+     * @return array
+     */
+    public function getAllOptionIds()
+    {
+        $optionIdsSelect = clone $this->getSelect();
+        $optionIdsSelect->reset(\Magento\Framework\DB\Select::ORDER);
+        $optionIdsSelect->reset(\Magento\Framework\DB\Select::LIMIT_COUNT);
+        $optionIdsSelect->reset(\Magento\Framework\DB\Select::LIMIT_OFFSET);
+        $optionIdsSelect->reset(\Magento\Framework\DB\Select::COLUMNS);
+
+        $optionIdsSelect->distinct(true)->columns(RuleInterface::OPTION_ID, 'main_table');
+
+        return $this->getConnection()->fetchCol($optionIdsSelect, $this->_bindParams);
+    }
+
+    /**
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      * {@inheritDoc}
      */

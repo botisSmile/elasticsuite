@@ -12,6 +12,8 @@
  */
 namespace Smile\ElasticsuiteVirtualAttribute\Model\Rule\Condition;
 
+use \Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\CollectionFactory as RuleCollectionFactory;
+
 /**
  * Smile Elastic Suite Virtual Attribute Product Condition model.
  *
@@ -21,6 +23,56 @@ namespace Smile\ElasticsuiteVirtualAttribute\Model\Rule\Condition;
  */
 class Product extends \Magento\CatalogRule\Model\Rule\Condition\Product
 {
+    /**
+     * @var array
+     */
+    private $calculatedAttributesOptionIds = [];
+
+    /**
+     * Product constructor.
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     *
+     * @param \Magento\Rule\Model\Condition\Context                            $context               Context
+     * @param \Magento\Backend\Helper\Data                                     $backendData           Backend Data
+     * @param \Magento\Eav\Model\Config                                        $config                EAV Config
+     * @param \Magento\Catalog\Model\ProductFactory                            $productFactory        Product Factory
+     * @param \Magento\Catalog\Api\ProductRepositoryInterface                  $productRepository     Product Repository
+     * @param \Magento\Catalog\Model\ResourceModel\Product                     $productResource       Product Resource
+     * @param \Magento\Eav\Model\ResourceModel\Entity\Attribute\Set\Collection $attrSetCollection     Attribute Set Collection
+     * @param \Magento\Framework\Locale\FormatInterface                        $localeFormat          Locale Format
+     * @param RuleCollectionFactory                                            $ruleCollectionFactory Rule Collection
+     * @param array                                                            $data                  Data
+     * @param \Magento\Catalog\Model\ProductCategoryList|null                  $categoryList          Category List
+     */
+    public function __construct(
+        \Magento\Rule\Model\Condition\Context $context,
+        \Magento\Backend\Helper\Data $backendData,
+        \Magento\Eav\Model\Config $config,
+        \Magento\Catalog\Model\ProductFactory $productFactory,
+        \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
+        \Magento\Catalog\Model\ResourceModel\Product $productResource,
+        \Magento\Eav\Model\ResourceModel\Entity\Attribute\Set\Collection $attrSetCollection,
+        \Magento\Framework\Locale\FormatInterface $localeFormat,
+        RuleCollectionFactory $ruleCollectionFactory,
+        array $data = [],
+        $categoryList = null
+    ) {
+        parent::__construct(
+            $context,
+            $backendData,
+            $config,
+            $productFactory,
+            $productRepository,
+            $productResource,
+            $attrSetCollection,
+            $localeFormat,
+            $data,
+            $categoryList
+        );
+
+        $this->initExistingRules($ruleCollectionFactory);
+    }
+
     /**
      * Default operator input by type map getter
      *
@@ -39,7 +91,7 @@ class Product extends \Magento\CatalogRule\Model\Rule\Condition\Product
                 'grid'        => ['()', '!()'],
                 'category'    => ['()', '!()'],
             ];
-            $this->_arrayInputTypes = ['multiselect', 'grid', 'category'];
+            $this->_arrayInputTypes            = ['multiselect', 'grid', 'category'];
         }
 
         return $this->_defaultOperatorInputByType;
@@ -110,7 +162,7 @@ class Product extends \Magento\CatalogRule\Model\Rule\Condition\Product
         $url = parent::getValueElementChooserUrl();
 
         if ($this->getAttribute() === 'category_ids') {
-            $url = 'smile_elasticsuite_virtual_attribute/rule_category/chooser/attribute/';
+            $url              = 'smile_elasticsuite_virtual_attribute/rule_category/chooser/attribute/';
             $chooserUrlParams = [];
             if ($this->getJsFormObject()) {
                 $chooserUrlParams['form'] = $this->getJsFormObject();
@@ -120,5 +172,47 @@ class Product extends \Magento\CatalogRule\Model\Rule\Condition\Product
         }
 
         return $url;
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.CamelCaseMethodName)
+     * {@inheritdoc}
+     */
+    protected function _setSelectOptions($selectOptions, $selectReady, $hashedReady)
+    {
+        if ($selectOptions !== null) {
+            $selectOptions = array_filter($selectOptions, [$this, 'isNotCalculatedOption']);
+        }
+
+        parent::_setSelectOptions($selectOptions, $selectReady, $hashedReady);
+
+        return $this;
+    }
+
+    /**
+     * Init an array containing all already existing calculated option Ids.
+     *
+     * @param RuleCollectionFactory $ruleCollectionFactory Rule Collection Factory
+     */
+    private function initExistingRules($ruleCollectionFactory)
+    {
+        $collection = $ruleCollectionFactory->create();
+        $this->calculatedAttributesOptionIds = array_map('intval', $collection->getAllOptionIds());
+    }
+
+    /**
+     * Function used to filter out calculated attributes options from the available options used to build conditions.
+     *
+     * @param array $option an attribute option
+     *
+     * @return bool
+     */
+    private function isNotCalculatedOption($option)
+    {
+        if (!isset($option['value']) || is_array($option['value'])) {
+            return false;
+        }
+
+        return !in_array((int) $option['value'], $this->calculatedAttributesOptionIds);
     }
 }
