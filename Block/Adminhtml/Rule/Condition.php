@@ -28,9 +28,9 @@ class Condition extends \Magento\Backend\Block\AbstractBlock
     private $formFactory;
 
     /**
-     * @var \Magento\Framework\Registry
+     * @var \Smile\ElasticsuiteVirtualAttribute\Model\Rule\Locator\LocatorInterface
      */
-    private $registry;
+    private $locator;
 
     /**
      * @var \Magento\CatalogRule\Model\RuleFactory
@@ -40,22 +40,22 @@ class Condition extends \Magento\Backend\Block\AbstractBlock
     /**
      * Constructor.
      *
-     * @param \Magento\Backend\Block\Context         $context     Block context.
-     * @param \Magento\Framework\Data\FormFactory    $formFactory Form factory.
-     * @param \Magento\CatalogRule\Model\RuleFactory $ruleFactory Rule Factory.
-     * @param \Magento\Framework\Registry            $registry    Registry.
-     * @param array                                  $data        Additional data.
+     * @param \Magento\Backend\Block\Context                                          $context     Block context.
+     * @param \Magento\Framework\Data\FormFactory                                     $formFactory Form factory.
+     * @param \Magento\CatalogRule\Model\RuleFactory                                  $ruleFactory Rule Factory.
+     * @param \Smile\ElasticsuiteVirtualAttribute\Model\Rule\Locator\LocatorInterface $locator     Rule Locator.
+     * @param array                                                                   $data        Additional data.
      */
     public function __construct(
         \Magento\Backend\Block\Context $context,
         \Magento\Framework\Data\FormFactory $formFactory,
         \Magento\CatalogRule\Model\RuleFactory $ruleFactory,
-        \Magento\Framework\Registry $registry,
+        \Smile\ElasticsuiteVirtualAttribute\Model\Rule\Locator\LocatorInterface $locator,
         array $data = []
     ) {
         $this->formFactory = $formFactory;
         $this->ruleFactory = $ruleFactory;
-        $this->registry    = $registry;
+        $this->locator     = $locator;
 
         parent::__construct($context, $data);
     }
@@ -76,7 +76,7 @@ class Condition extends \Magento\Backend\Block\AbstractBlock
      */
     private function getRule()
     {
-        return $this->registry->registry('current_rule');
+        return $this->locator->getRule();
     }
 
     /**

@@ -39,7 +39,7 @@ class Edit extends \Smile\ElasticsuiteVirtualAttribute\Controller\Adminhtml\Abst
         try {
             $rule = $this->ruleRepository->getById($ruleId);
             $this->coreRegistry->register('current_rule', $rule);
-            $resultPage->getConfig()->getTitle()->prepend(__('Edit %1', $rule->getId()));
+            $resultPage->getConfig()->getTitle()->prepend(__('Edit rule %1', $rule->getId()));
         } catch (NoSuchEntityException $e) {
             $this->messageManager->addExceptionMessage($e, __('Something went wrong while editing the rule.'));
             $resultRedirect = $this->resultRedirectFactory->create();
