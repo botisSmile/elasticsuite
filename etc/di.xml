@@ -101,4 +101,52 @@
         </arguments>
     </type>
 
+    <!-- Virtual Types for Rules -->
+    <virtualType name="virtualAttributeRuleFactory" type="\Magento\CatalogRule\Model\RuleFactory">
+        <arguments>
+            <argument name="instanceName" xsi:type="string">virtualAttributeRule</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="virtualAttributeRule" type="\Magento\CatalogRule\Model\Rule">
+        <arguments>
+            <argument name="combineFactory" xsi:type="object">virtualAttributeCombineFactory</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="virtualAttributeCombineFactory" type="\Magento\CatalogRule\Model\Rule\Condition\CombineFactory">
+        <arguments>
+            <argument name="instanceName" xsi:type="string">Smile\ElasticsuiteVirtualAttribute\Model\Rule\Condition\Combine</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Smile\ElasticsuiteVirtualAttribute\Model\Rule">
+        <arguments>
+            <argument name="ruleFactory" xsi:type="object">virtualAttributeRuleFactory</argument>
+        </arguments>
+    </type>
+
+    <type name="Smile\ElasticsuiteVirtualAttribute\Block\Adminhtml\Rule\Condition">
+        <arguments>
+            <argument name="ruleFactory" xsi:type="object">virtualAttributeRuleFactory</argument>
+        </arguments>
+    </type>
+
+    <type name="Smile\ElasticsuiteVirtualAttribute\Block\Adminhtml\Rule\Renderer\Condition">
+        <arguments>
+            <argument name="ruleFactory" xsi:type="object">virtualAttributeRuleFactory</argument>
+        </arguments>
+    </type>
+
+    <type name="Smile\ElasticsuiteVirtualAttribute\Controller\Adminhtml\Rule\Conditions">
+        <arguments>
+            <argument name="ruleFactory" xsi:type="object">virtualAttributeRuleFactory</argument>
+        </arguments>
+    </type>
+
+    <type name="Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule">
+        <arguments>
+            <argument name="ruleFactory" xsi:type="object">virtualAttributeRuleFactory</argument>
+        </arguments>
+    </type>
 </config>

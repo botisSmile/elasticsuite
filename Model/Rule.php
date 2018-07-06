@@ -14,7 +14,6 @@ namespace Smile\ElasticsuiteVirtualAttribute\Model;
 
 /**
  * Elastic Suite Virtual Attribute Rule model.
- *
  * @SuppressWarnings(CamelCasePropertyName)
  *
  * @category Smile
@@ -38,6 +37,16 @@ class Rule extends \Magento\Framework\Model\AbstractModel implements \Smile\Elas
      */
     private $ruleFactory;
 
+    /**
+     * Rule constructor.
+     *
+     * @param \Magento\Framework\Model\Context                             $context            Model Context
+     * @param \Magento\Framework\Registry                                  $registry           Registry
+     * @param \Magento\CatalogRule\Model\RuleFactory                       $ruleFactory        Rule Factory
+     * @param \Magento\Framework\Model\ResourceModel\AbstractResource|null $resource           Resource
+     * @param \Magento\Framework\Data\Collection\AbstractDb|null           $resourceCollection Resource Collection
+     * @param array                                                        $data               Data
+     */
     public function __construct(
         \Magento\Framework\Model\Context $context,
         \Magento\Framework\Registry $registry,
@@ -193,7 +202,6 @@ class Rule extends \Magento\Framework\Model\AbstractModel implements \Smile\Elas
 
     /**
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
-     *
      * {@inheritDoc}
      */
     protected function _construct()
