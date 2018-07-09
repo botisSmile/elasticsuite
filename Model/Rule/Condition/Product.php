@@ -24,9 +24,9 @@ use \Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\CollectionFacto
 class Product extends \Magento\CatalogRule\Model\Rule\Condition\Product
 {
     /**
-     * @var array
+     * @var \Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\CollectionFactory
      */
-    private $calculatedAttributesOptionIds = [];
+    private $ruleCollectionFactory;
 
     /**
      * Product constructor.
@@ -70,7 +70,7 @@ class Product extends \Magento\CatalogRule\Model\Rule\Condition\Product
             $categoryList
         );
 
-        $this->initExistingRules($ruleCollectionFactory);
+        $this->ruleCollectionFactory = $ruleCollectionFactory;
     }
 
     /**
@@ -181,7 +181,7 @@ class Product extends \Magento\CatalogRule\Model\Rule\Condition\Product
     protected function _setSelectOptions($selectOptions, $selectReady, $hashedReady)
     {
         if ($selectOptions !== null) {
-            $selectOptions = array_filter($selectOptions, [$this, 'isNotCalculatedOption']);
+            $this->filterSelectOptions($selectOptions);
         }
 
         parent::_setSelectOptions($selectOptions, $selectReady, $hashedReady);
@@ -190,29 +190,24 @@ class Product extends \Magento\CatalogRule\Model\Rule\Condition\Product
     }
 
     /**
-     * Init an array containing all already existing calculated option Ids.
+     * Filter current select options to exclude values that are built by virtual attribute rules.
      *
-     * @param RuleCollectionFactory $ruleCollectionFactory Rule Collection Factory
+     * @param array &$selectOptions The option list to filter.
      */
-    private function initExistingRules($ruleCollectionFactory)
+    private function filterSelectOptions(&$selectOptions)
     {
-        $collection = $ruleCollectionFactory->create();
-        $this->calculatedAttributesOptionIds = array_map('intval', $collection->getAllOptionIds());
-    }
-
-    /**
-     * Function used to filter out calculated attributes options from the available options used to build conditions.
-     *
-     * @param array $option an attribute option
-     *
-     * @return bool
-     */
-    private function isNotCalculatedOption($option)
-    {
-        if (!isset($option['value']) || is_array($option['value'])) {
-            return false;
+        $ruleCollection = $this->ruleCollectionFactory->create();
+        if ($this->getAttributeObject()) {
+            $ruleCollection->addAttributeFilter($this->getAttributeObject());
         }
 
-        return !in_array((int) $option['value'], $this->calculatedAttributesOptionIds);
+        $optionsIds    = array_map('intval', $ruleCollection->getAllOptionIds());
+        $selectOptions = array_filter($selectOptions, function ($option) use ($optionsIds) {
+            if (!isset($option['value']) || is_array($option['value'])) {
+                return false;
+            }
+
+            return !in_array((int) $option['value'], $optionsIds);
+        });
     }
 }

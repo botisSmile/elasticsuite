@@ -99,6 +99,22 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
     }
 
     /**
+     * Filter rule collection for a given attribute.
+     *
+     * @param \Magento\Catalog\Api\Data\ProductAttributeInterface $attribute The attribute
+     *
+     * @return $this
+     */
+    public function addAttributeFilter(\Magento\Catalog\Api\Data\ProductAttributeInterface $attribute)
+    {
+        if ($attribute->getAttributeId()) {
+            $this->addFieldToFilter(RuleInterface::ATTRIBUTE_ID, (int) $attribute->getAttributeId());
+        }
+
+        return $this;
+    }
+
+    /**
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      * {@inheritDoc}
      */
