@@ -22,6 +22,7 @@
     <preference for="Smile\ElasticsuiteVirtualAttribute\Api\RuleRepositoryInterface" type="Smile\ElasticsuiteVirtualAttribute\Model\RuleRepository" />
     <preference for="Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterface" type="Smile\ElasticsuiteVirtualAttribute\Model\Rule" />
     <preference for="Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleSearchResultsInterface" type="Magento\Framework\Api\SearchResults" />
+    <preference for="Smile\ElasticsuiteVirtualAttribute\Api\RuleServiceInterface" type="Smile\ElasticsuiteVirtualAttribute\Model\RuleService" />
 
     <type name="Magento\Framework\Model\Entity\RepositoryFactory">
         <arguments>

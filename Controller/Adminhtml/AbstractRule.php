@@ -70,6 +70,11 @@ abstract class AbstractRule extends Action
     protected $ruleFactory;
 
     /**
+     * @var \Smile\ElasticsuiteVirtualAttribute\Api\RuleServiceInterface
+     */
+    protected $ruleService;
+
+    /**
      * Abstract constructor.
      *
      * @param \Magento\Backend\App\Action\Context                               $context           Application context.
@@ -79,6 +84,7 @@ abstract class AbstractRule extends Action
      * @param \Magento\Ui\Component\MassAction\Filter                           $filter            Mass Action Filter.
      * @param \Smile\ElasticsuiteVirtualAttribute\Api\RuleRepositoryInterface   $ruleRepository    Rule Repository.
      * @param \Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterfaceFactory $ruleFactory       Rule Factory.
+     * @param \Smile\ElasticsuiteVirtualAttribute\Api\RuleServiceInterface      $ruleService       Rule Service.
      */
     public function __construct(
         \Magento\Backend\App\Action\Context $context,
@@ -88,7 +94,8 @@ abstract class AbstractRule extends Action
         \Magento\Ui\Component\MassAction\Filter $filter,
         \Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\CollectionFactory $collectionFactory,
         \Smile\ElasticsuiteVirtualAttribute\Api\RuleRepositoryInterface $ruleRepository,
-        \Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterfaceFactory $ruleFactory
+        \Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterfaceFactory $ruleFactory,
+        \Smile\ElasticsuiteVirtualAttribute\Api\RuleServiceInterface $ruleService
     ) {
         parent::__construct($context);
 
@@ -99,6 +106,7 @@ abstract class AbstractRule extends Action
         $this->collectionFactory = $collectionFactory;
         $this->ruleRepository    = $ruleRepository;
         $this->ruleFactory       = $ruleFactory;
+        $this->ruleService       = $ruleService;
     }
 
     /**

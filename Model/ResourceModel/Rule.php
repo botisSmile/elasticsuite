@@ -109,6 +109,29 @@ class Rule extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
     }
 
     /**
+     * Set rule Ids to be refreshed by ids.
+     *
+     * @param array $ruleIds The rule ids
+     *
+     * @return $this
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function refreshRulesByIds(array $ruleIds)
+    {
+        $connection = $this->getConnection();
+
+        if (!empty($ruleIds)) {
+            $connection->update(
+                $this->getMainTable(),
+                [RuleInterface::TO_REFRESH => (int) true],
+                $connection->prepareSqlCondition(RuleInterface::RULE_ID, ['in' => array_map('intval', $ruleIds)])
+            );
+        }
+
+        return $this;
+    }
+
+    /**
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      *
      * {@inheritDoc}
