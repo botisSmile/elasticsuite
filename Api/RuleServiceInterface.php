@@ -30,4 +30,14 @@ interface RuleServiceInterface
      * @return void
      */
     public function refresh(array $ruleIds);
+
+    /**
+     * Retrieve product Ids matching the rule for a given store.
+     *
+     * @param int $ruleId  The rule Id
+     * @param int $storeId The store Id
+     *
+     * @return array
+     */
+    public function getMatchingProductIds(int $ruleId, int $storeId);
 }

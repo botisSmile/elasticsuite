@@ -175,6 +175,28 @@ class Product extends \Magento\CatalogRule\Model\Rule\Condition\Product
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getValueParsed()
+    {
+        if (!$this->hasValueParsed()) {
+            $value = $this->getData('value');
+
+            if ($this->isArrayOperatorType()) {
+                if (is_string($value)) {
+                    $value = preg_split('#\s*[,;]\s*#', $value, null, PREG_SPLIT_NO_EMPTY);
+                }
+            } elseif (is_array($value) && isset($value[0]) && is_string($value[0])) {
+                $value = $value[0];
+            }
+
+            $this->setValueParsed($value);
+        }
+
+        return $this->getData('value_parsed');
+    }
+
+    /**
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      * {@inheritdoc}
      */
