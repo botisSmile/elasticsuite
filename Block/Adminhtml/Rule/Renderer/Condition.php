@@ -147,7 +147,27 @@ class Condition
 
         $this->input = $this->elementFactory->create('text');
         $this->input->setRule($this->rule)->setRenderer($this->conditions);
+        $this->setConditionFormName($this->rule->getConditions(), $this->getElement()->getContainer()->getHtmlId());
 
         return $this->input->toHtml();
+    }
+
+    /**
+     * Set proper form name to rule conditions.
+     *
+     * @param \Magento\Rule\Model\Condition\AbstractCondition $conditions Rule conditions.
+     * @param string                                          $formName   Form Name.
+     *
+     * @return void
+     */
+    private function setConditionFormName(\Magento\Rule\Model\Condition\AbstractCondition $conditions, $formName)
+    {
+        $conditions->setJsFormObject($formName);
+
+        if ($conditions->getConditions() && is_array($conditions->getConditions())) {
+            foreach ($conditions->getConditions() as $condition) {
+                $this->setConditionFormName($condition, $formName);
+            }
+        }
     }
 }
