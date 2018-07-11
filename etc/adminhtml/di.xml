@@ -45,4 +45,8 @@
         </arguments>
     </type>
 
+    <type name="Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\Eav">
+        <plugin name="elasticsuiteVirtualAttributeTooltip" type="Smile\ElasticsuiteVirtualAttribute\Plugin\Catalog\Ui\DataProvider\Product\Form\Modifier\EavPlugin" />
+    </type>
+
 </config>
