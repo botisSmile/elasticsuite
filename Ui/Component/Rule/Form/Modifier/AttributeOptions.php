@@ -64,12 +64,13 @@ class AttributeOptions implements \Magento\Ui\DataProvider\Modifier\ModifierInte
 
         $meta['general']['children']['option_id']['arguments']['data']['config']['visible'] = false;
 
+        $options = [];
         if ($rule && $rule->getAttributeId()) {
             $options = $this->getAttributeOptions((int) $rule->getAttributeId());
-
             $meta['general']['children']['option_id']['arguments']['data']['config']['visible'] = true;
-            $meta['general']['children']['option_id']['arguments']['data']['options']           = $options;
         }
+
+        $meta['general']['children']['option_id']['arguments']['data']['options'] = $options;
 
         return $meta;
     }
