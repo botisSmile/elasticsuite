@@ -22,7 +22,7 @@
         <item name="js_config" xsi:type="array">
             <item name="provider" xsi:type="string">smile_elasticsuite_virtual_attribute_rule_form.smile_elasticsuite_virtual_attribute_rule_form_data_source</item>
         </item>
-        <item name="label" xsi:type="string" translate="true">Optimizer Information</item>
+        <item name="label" xsi:type="string" translate="true">Rule Information</item>
         <item name="template" xsi:type="string">templates/form/collapsible</item>
 
         <item name="config" xsi:type="array">

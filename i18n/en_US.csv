@@ -1,0 +1,47 @@
+"Rule conditions","Rule conditions"
+Back,Back
+Delete,Delete
+"Are you sure you want to do this?","Are you sure you want to do this?"
+Refresh,Refresh
+Save,Save
+"Save and Continue Edit","Save and Continue Edit"
+Rule,Rule
+"New Rule","New Rule"
+"This rule no longer exists.","This rule no longer exists."
+"You deleted the rule %1.","You deleted the rule %1."
+"Edit rule %1","Edit rule %1"
+"Something went wrong while editing the rule.","Something went wrong while editing the rule."
+"Rules List","Rules List"
+Rules,Rules
+"A total of %1 rules(s) have been deleted.","A total of %1 rules(s) have been deleted."
+"A total of %1 rules(s) have been set for refreshment.","A total of %1 rules(s) have been set for refreshment."
+"Rule has been scheduled for refreshment.","Rule has been scheduled for refreshment."
+"Something went wrong while refreshing the rule.","Something went wrong while refreshing the rule."
+"You saved the rule %1.","You saved the rule %1."
+"Please choose a condition to add.","Please choose a condition to add."
+"Conditions Combination","Conditions Combination"
+"Product Attribute","Product Attribute"
+"Unknown condition operator","Unknown condition operator"
+"Rule with id ""%1"" does not exist.","Rule with id ""%1"" does not exist."
+"Could not save the rule: %1","Could not save the rule: %1"
+"This attribute has values that can be automatically set by virtual attribute rules. Modifying it could lead to potential data loss on next occurence of rules calculation.","This attribute has values that can be automatically set by virtual attribute rules. Modifying it could lead to potential data loss on next occurence of rules calculation."
+Edit,Edit
+"Are you sure you want to delete this rule ?","Are you sure you want to delete this rule ?"
+"All Store Views","All Store Views"
+"Rule Information","Rule Information"
+"Enable rule","Enable rule"
+Attribute,Attribute
+Option,Option
+"Store View","Store View"
+Priority,Priority
+"Apply to products","Apply to products"
+"Add New Rule","Add New Rule"
+"Are you sure you want to delete selected items?","Are you sure you want to delete selected items?"
+"Delete items","Delete items"
+"Are you sure you want to refresh selected items?","Are you sure you want to refresh selected items?"
+"Refresh items","Refresh items"
+Identifier,Identifier
+Value,Value
+Active,Active
+Inactive,Inactive
+Status,Status
