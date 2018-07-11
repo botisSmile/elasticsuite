@@ -140,6 +140,7 @@ class RuleService implements \Smile\ElasticsuiteVirtualAttribute\Api\RuleService
     {
         $rulesCollection = $this->ruleCollectionFactory->create();
         $rulesCollection->addFieldToFilter(\Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterface::TO_REFRESH, (int) true)
+                        ->addFieldToFilter(\Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterface::IS_ACTIVE, (int) true)
                         ->setOrder(\Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterface::PRIORITY);
 
         foreach ($rulesCollection as $rule) {
@@ -169,7 +170,7 @@ class RuleService implements \Smile\ElasticsuiteVirtualAttribute\Api\RuleService
         $oldProductsCollection->addFieldToFilter('attribute_set_id', ['in' => $attributeSetIds])
                               ->addAttributeToFilter($attributeCode, $optionId);
 
-        $oldProductIds = $oldProductsCollection->getAllIds();
+        $oldProductIds = array_diff($oldProductsCollection->getAllIds(), $productIds);
 
         if (!empty($oldProductIds)) {
             // updateAttributes will trigger a reindex for catalogsearch_fulltext if indexer is not "on schedule".
