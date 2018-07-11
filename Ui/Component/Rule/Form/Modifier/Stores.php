@@ -29,14 +29,22 @@ class Stores implements \Magento\Ui\DataProvider\Modifier\ModifierInterface
     private $locator;
 
     /**
+     * @var \Magento\Catalog\Api\ProductAttributeRepositoryInterface
+     */
+    private $attributeRepository;
+
+    /**
      * AttributeOptions constructor.
      *
-     * @param \Smile\ElasticsuiteVirtualAttribute\Model\Rule\Locator\LocatorInterface $locator Rule Locator
+     * @param \Smile\ElasticsuiteVirtualAttribute\Model\Rule\Locator\LocatorInterface $locator             Rule Locator
+     * @param \Magento\Catalog\Api\ProductAttributeRepositoryInterface                $attributeRepository Attribute Repository
      */
     public function __construct(
-        \Smile\ElasticsuiteVirtualAttribute\Model\Rule\Locator\LocatorInterface $locator
+        \Smile\ElasticsuiteVirtualAttribute\Model\Rule\Locator\LocatorInterface $locator,
+        \Magento\Catalog\Api\ProductAttributeRepositoryInterface $attributeRepository
     ) {
-        $this->locator = $locator;
+        $this->locator             = $locator;
+        $this->attributeRepository = $attributeRepository;
     }
 
     /**
@@ -50,6 +58,10 @@ class Stores implements \Magento\Ui\DataProvider\Modifier\ModifierInterface
             $data[$rule->getId()]['store_id'] = $rule->getStores();
         }
 
+        if ($rule && $rule->getAttributeId() && !$this->isScopeStore($rule->getAttributeId())) {
+            $data[$rule->getId()]['store_id'] = \Magento\Store\Model\Store::DEFAULT_STORE_ID;
+        }
+
         return $data;
     }
 
@@ -58,6 +70,26 @@ class Stores implements \Magento\Ui\DataProvider\Modifier\ModifierInterface
      */
     public function modifyMeta(array $meta)
     {
+        $rule = $this->locator->getRule();
+
+        $meta['general']['children']['storeviews']['arguments']['data']['config']['visible'] = false;
+        if ($rule && $rule->getAttributeId() && $this->isScopeStore($rule->getAttributeId())) {
+            $meta['general']['children']['storeviews']['arguments']['data']['config']['visible'] = true;
+        }
+
         return $meta;
+    }
+
+    /**
+     * Check if an attribute is store scoped.
+     *
+     * @param int $attributeId The attribute Id
+     *
+     * @return array
+     */
+    private function isScopeStore($attributeId)
+    {
+        $attribute = $this->attributeRepository->get($attributeId);
+        return ($attribute->getAttributeId() && $attribute->isScopeStore());
     }
 }
