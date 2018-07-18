@@ -46,7 +46,7 @@
     <type name="Magento\Framework\EntityManager\HydratorPool">
         <arguments>
             <argument name="hydrators" xsi:type="array">
-                <item name="Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterface" xsi:type="string">Magento\Framework\EntityManager\AbstractModelHydrator</item>
+                <item name="Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterface" xsi:type="string">Smile\ElasticsuiteVirtualAttribute\Model\Rule\Hydrator</item>
             </argument>
         </arguments>
     </type>
@@ -122,6 +122,12 @@
     </virtualType>
 
     <type name="Smile\ElasticsuiteVirtualAttribute\Model\Rule">
+        <arguments>
+            <argument name="ruleFactory" xsi:type="object">virtualAttributeRuleFactory</argument>
+        </arguments>
+    </type>
+
+    <type name="Smile\ElasticsuiteVirtualAttribute\Model\Rule\Hydrator">
         <arguments>
             <argument name="ruleFactory" xsi:type="object">virtualAttributeRuleFactory</argument>
         </arguments>

@@ -38,11 +38,17 @@ class Rule extends \Magento\Framework\Model\AbstractModel implements \Smile\Elas
     private $ruleFactory;
 
     /**
+     * @var \Magento\Framework\Serialize\SerializerInterface
+     */
+    private $serializer;
+
+    /**
      * Rule constructor.
      *
      * @param \Magento\Framework\Model\Context                             $context            Model Context
      * @param \Magento\Framework\Registry                                  $registry           Registry
      * @param \Magento\CatalogRule\Model\RuleFactory                       $ruleFactory        Rule Factory
+     * @param \Magento\Framework\Serialize\SerializerInterface             $serializer         Serializer
      * @param \Magento\Framework\Model\ResourceModel\AbstractResource|null $resource           Resource
      * @param \Magento\Framework\Data\Collection\AbstractDb|null           $resourceCollection Resource Collection
      * @param array                                                        $data               Data
@@ -51,11 +57,13 @@ class Rule extends \Magento\Framework\Model\AbstractModel implements \Smile\Elas
         \Magento\Framework\Model\Context $context,
         \Magento\Framework\Registry $registry,
         \Magento\CatalogRule\Model\RuleFactory $ruleFactory,
+        \Magento\Framework\Serialize\SerializerInterface $serializer,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = []
     ) {
         $this->ruleFactory = $ruleFactory;
+        $this->serializer  = $serializer;
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
     }
 
@@ -117,7 +125,7 @@ class Rule extends \Magento\Framework\Model\AbstractModel implements \Smile\Elas
             $rule     = $this->ruleFactory->create();
 
             if (is_string($ruleData)) {
-                $ruleData = unserialize($ruleData);
+                $ruleData = $this->serializer->unserialize($ruleData);
             }
 
             if (is_array($ruleData)) {
