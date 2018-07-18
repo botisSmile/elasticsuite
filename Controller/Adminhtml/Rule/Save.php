@@ -34,8 +34,8 @@ class Save extends \Smile\ElasticsuiteVirtualAttribute\Controller\Adminhtml\Abst
         $resultRedirect->setPath('*/*/');
 
         if ($data) {
-            $identifier = $this->getRequest()->getParam('id');
-            $model = $this->ruleFactory->create();
+            $identifier = $this->getRequest()->getParam(\Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterface::RULE_ID);
+            $model      = $this->ruleFactory->create();
 
             if ($identifier) {
                 $model = $this->ruleRepository->getById($identifier);
@@ -46,13 +46,11 @@ class Save extends \Smile\ElasticsuiteVirtualAttribute\Controller\Adminhtml\Abst
                 }
             }
 
-            if (empty($data['rule_id'])) {
-                $data['rule_id'] = null;
+            if (empty($data[\Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterface::RULE_ID])) {
+                $data[\Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterface::RULE_ID] = null;
             }
 
-            $model->setData($data);
-            $ruleConditionPost = $this->getRequest()->getParam('condition', []);
-            $model->getCondition()->loadPost($ruleConditionPost);
+            $model->loadPost($data);
 
             try {
                 $this->ruleRepository->save($model);

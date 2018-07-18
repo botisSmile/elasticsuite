@@ -201,6 +201,20 @@ class Rule extends \Magento\Framework\Model\AbstractModel implements \Smile\Elas
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function loadPost($data = [])
+    {
+        $this->addData($data);
+
+        if (isset($data[self::CONDITION])) {
+            $this->getCondition()->loadPost($data[self::CONDITION]);
+        }
+
+        return $this;
+    }
+
+    /**
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      * {@inheritDoc}
      */

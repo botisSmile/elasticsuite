@@ -185,4 +185,13 @@ interface RuleInterface
      * @return string
      */
     public function setCondition($ruleCondition);
+
+    /**
+     * Load data from a POST request.
+     *
+     * @param array $data POST data
+     *
+     * @return RuleInterface
+     */
+    public function loadPost($data = []);
 }
