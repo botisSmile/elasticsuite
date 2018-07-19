@@ -151,9 +151,4 @@
         </arguments>
     </type>
 
-    <type name="Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule">
-        <arguments>
-            <argument name="ruleFactory" xsi:type="object">virtualAttributeRuleFactory</argument>
-        </arguments>
-    </type>
 </config>
