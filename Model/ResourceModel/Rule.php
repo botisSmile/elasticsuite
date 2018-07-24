@@ -95,7 +95,7 @@ class Rule extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
      * @return $this
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function refreshRulesByIds(array $ruleIds)
+    public function setToRefreshByIds(array $ruleIds)
     {
         $connection = $this->getConnection();
 

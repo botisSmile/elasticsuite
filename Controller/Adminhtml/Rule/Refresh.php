@@ -33,7 +33,7 @@ class Refresh extends \Smile\ElasticsuiteVirtualAttribute\Controller\Adminhtml\A
 
         try {
             $rule = $this->ruleRepository->getById($ruleId);
-            $this->ruleService->refresh([$rule->getId()]);
+            $this->ruleService->scheduleRefresh([$rule->getId()]);
 
             if ($redirectBack) {
                 $redirectParams = ['id' => $ruleId];

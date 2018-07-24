@@ -32,7 +32,7 @@ class MassRefresh extends \Smile\ElasticsuiteVirtualAttribute\Controller\Adminht
         $collection     = $this->filter->getCollection($this->collectionFactory->create());
         $collectionSize = $collection->getSize();
 
-        $this->ruleService->refresh($collection->getAllIds());
+        $this->ruleService->scheduleRefresh($collection->getAllIds());
 
         $this->messageManager->addSuccessMessage(__('A total of %1 rules(s) have been set for refreshment.', $collectionSize));
 

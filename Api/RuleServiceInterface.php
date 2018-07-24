@@ -23,16 +23,18 @@ namespace Smile\ElasticsuiteVirtualAttribute\Api;
 interface RuleServiceInterface
 {
     /**
-     * Refresh a list of rule Ids.
+     * Set a list of rule Ids to be refreshed.
      *
      * @param array $ruleIds The rule ids
      *
      * @return void
      */
-    public function refresh(array $ruleIds);
+    public function scheduleRefresh(array $ruleIds);
 
     /**
-     * Apply all rules.
+     * Process appliance of all rules set to be refreshed.
+     *
+     * @return void
      */
-    public function applyAll();
+    public function processRefresh();
 }

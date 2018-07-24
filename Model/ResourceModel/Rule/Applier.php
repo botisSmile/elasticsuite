@@ -5,18 +5,18 @@
  * versions in the future.
  *
  * @category  Smile
- * @package   Smile\ElasticSuite________
+ * @package   Smile\ElasticsuiteVirtualAttribute
  * @author    Romain Ruaud <romain.ruaud@smile.fr>
- * @copyright 2017 Smile
+ * @copyright 2018 Smile
  * @license   Open Software License ("OSL") v. 3.0
  */
 namespace Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule;
 
 /**
- * _________________________________________________
+ * Applier for Rules.
  *
  * @category Smile
- * @package  Smile\ElasticSuite______________
+ * @package  Smile\ElasticsuiteVirtualAttribute
  * @author   Romain Ruaud <romain.ruaud@smile.fr>
  */
 class Applier extends \Magento\Catalog\Model\ResourceModel\Product\Action
@@ -27,18 +27,12 @@ class Applier extends \Magento\Catalog\Model\ResourceModel\Product\Action
     private $sqlBuilder;
 
     /**
-     * @var \Magento\Catalog\Model\ResourceModel\Product\Attribute\CollectionFactory
-     */
-    private $attributeCollectionFactory;
-
-    /**
      * Applier constructor.
      *
      * @param \Magento\Eav\Model\Entity\Context                                        $context                    Entity Context
      * @param \Magento\Store\Model\StoreManagerInterface                               $storeManager               Store Manager
      * @param \Magento\Catalog\Model\Factory                                           $modelFactory               Model Factory
      * @param \Smile\ElasticsuiteVirtualAttribute\Model\Rule\Condition\Sql\Builder     $sqlBuilder                 Rules Conditions SQL Builder
-     * @param \Magento\Catalog\Model\ResourceModel\Product\Attribute\CollectionFactory $attributeCollectionFactory Attributes Collection
      * @param array                                                                    $data                       Data
      */
     public function __construct(
@@ -46,30 +40,34 @@ class Applier extends \Magento\Catalog\Model\ResourceModel\Product\Action
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Catalog\Model\Factory $modelFactory,
         \Smile\ElasticsuiteVirtualAttribute\Model\Rule\Condition\Sql\Builder $sqlBuilder,
-        \Magento\Catalog\Model\ResourceModel\Product\Attribute\CollectionFactory $attributeCollectionFactory,
         array $data = []
     ) {
         parent::__construct($context, $storeManager, $modelFactory, $data);
         $this->sqlBuilder                 = $sqlBuilder;
-        $this->attributeCollectionFactory = $attributeCollectionFactory;
     }
 
     /**
      * Apply a list of rules matching the same attribute_id.
      *
-     * @param \Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterface[] $rules List of rules.
+     * @param int                                                          $attributeId Attribute Id.
+     * @param \Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterface[] $rules       List of rules.
      *
      * @throws \Exception
      */
-    public function applyList($rules)
+    public function applyByAttributeId($attributeId, $rules)
     {
-        $attribute = $this->getAttribute($rules->getFirstItem()->getAttributeId());
+        $attribute = $this->getAttribute($attributeId);
 
         $this->createTemporaryTable($attribute);
 
         foreach ($rules as $rule) {
+            $this->removeValue($rule);
+        }
+
+        foreach ($rules as $rule) {
             $this->registerUpdate($rule);
         }
+
         $this->getConnection()->beginTransaction();
 
         try {
@@ -320,7 +318,7 @@ class Applier extends \Magento\Catalog\Model\ResourceModel\Product\Action
      */
     private function getAttributeSetIds($attributeId)
     {
-        $collection = $this->attributeCollectionFactory->create();
+        $collection = $this->_universalFactory->create('\Magento\Catalog\Model\ResourceModel\Product\Attribute\Collection');
         $collection->addSetInfo(true);
         $collection->getSelect()->where('main_table.attribute_id = ?', $attributeId);
 
@@ -343,7 +341,7 @@ class Applier extends \Magento\Catalog\Model\ResourceModel\Product\Action
      */
     private function getAttributeForUpdate($attributeId)
     {
-        $attributeCollection = $this->attributeCollectionFactory->create();
+        $attributeCollection = $this->_universalFactory->create('\Magento\Catalog\Model\ResourceModel\Product\Attribute\Collection');
         $attributeCollection->addFieldToFilter('main_table.attribute_id', $attributeId);
         $attribute = $attributeCollection->getFirstItem();
 
@@ -392,9 +390,6 @@ class Applier extends \Magento\Catalog\Model\ResourceModel\Product\Action
      */
     private function getTemporaryTableName(\Magento\Catalog\Api\Data\ProductAttributeInterface $attribute)
     {
-        $entityTable  = [$attribute->getEntityType()->getEntityTablePrefix(), $attribute->getBackendType()];
-        $backendTable = $attribute->getResource()->getTable($entityTable);
-
-        return 'elasticsuite_' . $backendTable . '_tmp';
+        return 'elasticsuite_' . $attribute->getBackendTable() . '_tmp';
     }
 }
