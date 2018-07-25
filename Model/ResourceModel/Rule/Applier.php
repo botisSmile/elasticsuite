@@ -29,11 +29,11 @@ class Applier extends \Magento\Catalog\Model\ResourceModel\Product\Action
     /**
      * Applier constructor.
      *
-     * @param \Magento\Eav\Model\Entity\Context                                        $context                    Entity Context
-     * @param \Magento\Store\Model\StoreManagerInterface                               $storeManager               Store Manager
-     * @param \Magento\Catalog\Model\Factory                                           $modelFactory               Model Factory
-     * @param \Smile\ElasticsuiteVirtualAttribute\Model\Rule\Condition\Sql\Builder     $sqlBuilder                 Rules Conditions SQL Builder
-     * @param array                                                                    $data                       Data
+     * @param \Magento\Eav\Model\Entity\Context                                    $context      Entity Context
+     * @param \Magento\Store\Model\StoreManagerInterface                           $storeManager Store Manager
+     * @param \Magento\Catalog\Model\Factory                                       $modelFactory Model Factory
+     * @param \Smile\ElasticsuiteVirtualAttribute\Model\Rule\Condition\Sql\Builder $sqlBuilder   Rules Conditions SQL Builder
+     * @param array                                                                $data         Data
      */
     public function __construct(
         \Magento\Eav\Model\Entity\Context $context,
@@ -43,7 +43,7 @@ class Applier extends \Magento\Catalog\Model\ResourceModel\Product\Action
         array $data = []
     ) {
         parent::__construct($context, $storeManager, $modelFactory, $data);
-        $this->sqlBuilder                 = $sqlBuilder;
+        $this->sqlBuilder = $sqlBuilder;
     }
 
     /**
@@ -194,11 +194,14 @@ class Applier extends \Magento\Catalog\Model\ResourceModel\Product\Action
     private function addAttributeValue($attribute, $row, $value, $storeId)
     {
         $frontendInput = $attribute->getFrontendInput();
-        $newValue      = $value; // New value default to the option_id of the rule.
+        $newValue      = $value; // New value default to the option_id of the rule. It will replace old value for select.
 
-        // If attribute is multiselect and already has value, append new value after.
-        if ($frontendInput === 'multiselect' && (strpos($row[$attribute->getAttributeCode()], ',') !== false)) {
-            $newValue = $row[$attribute->getAttributeCode()] . ',' . trim($value);
+        // If attribute is multiselect and already has value, append new value to existing.
+        if ($frontendInput === 'multiselect') {
+            $oldValue = $row[$attribute->getAttributeCode()];
+            if ((string) $oldValue !== '') {
+                $newValue = implode(',', array_merge(explode(',', $oldValue), [$value]));
+            }
         }
 
         // Register new value to save if not empty.
@@ -235,13 +238,14 @@ class Applier extends \Magento\Catalog\Model\ResourceModel\Product\Action
             return;
         }
 
+        $newValue = implode(',', $newValue);
         // Register new value to save if not empty.
         $object = new \Magento\Framework\DataObject();
         $object->setStoreId($storeId);
         $object->setId($row[$this->getIdFieldName()]);
         $object->setEntityId($row[$this->getIdFieldName()]);
 
-        $this->_saveAttributeValue($object, $attribute, implode(',', $newValue));
+        $this->_saveAttributeValue($object, $attribute, $newValue);
     }
 
     /**
