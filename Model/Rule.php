@@ -223,11 +223,49 @@ class Rule extends \Magento\Framework\Model\AbstractModel implements \Smile\Elas
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function beforeSave()
+    {
+        if ($this->isRefreshNeeded()) {
+            $this->setToRefresh(true);
+        }
+
+        return parent::beforeSave();
+    }
+
+    /**
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      * {@inheritDoc}
      */
     protected function _construct()
     {
         $this->_init('Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule');
+    }
+
+    /**
+     * Check if rule has to be flagged for refreshment.
+     *
+     * @return bool
+     */
+    private function isRefreshNeeded()
+    {
+        $result = false;
+        if ($this->getId()) {
+            foreach ([self::PRIORITY, self::IS_ACTIVE] as $field) {
+                if ($this->dataHasChangedFor($field)) {
+                    $result = true;
+                }
+            }
+
+            if ($result === false) {
+                if ($this->getOrigData(self::CONDITION)
+                    !== $this->serializer->serialize($this->getCondition()->getConditions()->asArray())) {
+                    $result = true;
+                }
+            }
+        }
+
+        return $result;
     }
 }
