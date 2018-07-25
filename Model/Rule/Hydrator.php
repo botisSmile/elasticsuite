@@ -58,6 +58,10 @@ class Hydrator implements \Magento\Framework\EntityManager\HydratorInterface
         $rule          = $this->ruleFactory->create();
         $ruleCondition = $data[RuleInterface::CONDITION];
 
+        if (is_string($ruleCondition)) {
+            $ruleCondition = $this->serializer->unserialize($ruleCondition);
+        }
+
         if (is_object($ruleCondition)) {
             $rule = $ruleCondition;
         } elseif (is_array($ruleCondition)) {
