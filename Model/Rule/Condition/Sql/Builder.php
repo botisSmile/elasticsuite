@@ -27,18 +27,19 @@ class Builder extends \Magento\Rule\Model\Condition\Sql\Builder
      * @var array
      */
     protected $_conditionOperatorMap = [
-        '=='    => ':field = ?',
-        '!='    => ':field <> ?',
-        '>='    => ':field >= ?',
-        '>'     => ':field > ?',
-        '<='    => ':field <= ?',
-        '<'     => ':field < ?',
-        '{}'    => ':field IN (?)',
-        '!{}'   => ':field NOT IN (?)',
-        '()'    => ':field IN (?)',
-        '!()'   => ':field NOT IN (?)',
-        'like'  => ':field LIKE ?',
-        'nlike' => ':field NOT LIKE ?',
+        '=='     => ':field = ?',
+        '!='     => ':field <> ?',
+        '>='     => ':field >= ?',
+        '>'      => ':field > ?',
+        '<='     => ':field <= ?',
+        '<'      => ':field < ?',
+        '{}'     => ':field IN (?)',
+        '!{}'    => ':field NOT IN (?)',
+        '()'     => ':field IN (?)',
+        '!()'    => ':field NOT IN (?)',
+        'like'   => ':field LIKE ?',
+        'nlike'  => ':field NOT LIKE ?',
+        'finset' => 'FIND_IN_SET(?, :field)',
     ];
 
     /**
@@ -95,9 +96,31 @@ class Builder extends \Magento\Rule\Model\Condition\Sql\Builder
             $this->_conditionOperatorMap[$conditionOperator]
         );
 
-        return $this->_expressionFactory->create(
+        $expression = $this->_expressionFactory->create(
             ['expression' => $value . $this->_connection->quoteInto($sql, $this->getBindValue($condition))]
         );
+
+        // Manage computation against multiple select attributes.
+        if ($this->isArray($condition->getAttribute()) && in_array($conditionOperator, ['()', '!()'])) {
+            $values = $condition->getBindArgumentValue();
+            $values = is_string($values) ? explode(',', $values) : $values;
+
+            $clauses = [];
+            foreach ($values as $distinctValue) {
+                $sql = str_replace(
+                    ':field',
+                    $this->_connection->getIfNullSql($this->_connection->quoteIdentifier($argument), $defaultValue),
+                    $this->_conditionOperatorMap['finset']
+                );
+
+                $clauses[] = $this->_expressionFactory->create(
+                    ['expression' => $value . $this->_connection->quoteInto($sql, $distinctValue)]
+                );
+            }
+            $expression = implode(' OR ', $clauses);
+        }
+
+        return $expression;
     }
 
     /**
@@ -158,6 +181,26 @@ class Builder extends \Magento\Rule\Model\Condition\Sql\Builder
             return (
                 in_array($attribute->getBackendType(), ['varchar', 'text'])
                 && in_array($attribute->getFrontendInput(), ['text', 'textarea'])
+            );
+        } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Test if an attribute is an array. (for multiselect attributes).
+     *
+     * @param string $attributeCode The attribute code
+     *
+     * @return bool
+     */
+    private function isArray($attributeCode)
+    {
+        try {
+            $attribute = $this->attributeRepository->get(\Magento\Catalog\Model\Product::ENTITY, $attributeCode);
+            return (
+                in_array($attribute->getBackendType(), ['varchar', 'text'])
+                && in_array($attribute->getFrontendInput(), ['multiselect'])
             );
         } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
             return false;
