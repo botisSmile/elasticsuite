@@ -346,8 +346,6 @@ class Applier extends \Magento\Catalog\Model\ResourceModel\Product\Action
 
         $select = $productCollection->getSelect();
 
-        echo $select->assemble() . "\n" ."\n";
-
         return $productCollection->getConnection()->query($select);
     }
 
