@@ -18,11 +18,18 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
     <menu>
         <add
-            id="ElasticsuiteVirtualAttribute::manage"
-            title="Virtual Attributes Rules"
+             id="ElasticsuiteVirtualAttribute::attributes"
+             title="Virtual Attributes"
+             module="Smile_ElasticsuiteVirtualAttribute"
+             sortOrder="200"
+             parent="Smile_ElasticsuiteCore::elasticsuite_menu"
+             resource="Smile_ElasticsuiteVirtualAttribute::manage"/>
+        <add
+            id="ElasticsuiteVirtualAttribute::products"
+            title="Product Attributes"
             module="Smile_ElasticsuiteVirtualAttribute"
-            sortOrder="40"
-            parent="Smile_ElasticsuiteCore::manage_search"
+            sortOrder="10"
+            parent="ElasticsuiteVirtualAttribute::attributes"
             action="smile_elasticsuite_virtual_attribute/rule/index"
             resource="Smile_ElasticsuiteVirtualAttribute::manage"/>
     </menu>
