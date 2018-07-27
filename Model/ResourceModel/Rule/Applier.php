@@ -27,23 +27,36 @@ class Applier extends \Magento\Catalog\Model\ResourceModel\Product\Action
     private $sqlBuilder;
 
     /**
+     * @var \Magento\Framework\Indexer\IndexerRegistry
+     */
+    private $indexerRegistry;
+
+    /**
+     * @var array
+     */
+    private $updatedProductIds = [];
+
+    /**
      * Applier constructor.
      *
-     * @param \Magento\Eav\Model\Entity\Context                                    $context      Entity Context
-     * @param \Magento\Store\Model\StoreManagerInterface                           $storeManager Store Manager
-     * @param \Magento\Catalog\Model\Factory                                       $modelFactory Model Factory
-     * @param \Smile\ElasticsuiteVirtualAttribute\Model\Rule\Condition\Sql\Builder $sqlBuilder   Rules Conditions SQL Builder
-     * @param array                                                                $data         Data
+     * @param \Magento\Eav\Model\Entity\Context                                    $context         Entity Context
+     * @param \Magento\Store\Model\StoreManagerInterface                           $storeManager    Store Manager
+     * @param \Magento\Catalog\Model\Factory                                       $modelFactory    Model Factory
+     * @param \Smile\ElasticsuiteVirtualAttribute\Model\Rule\Condition\Sql\Builder $sqlBuilder      Rules Conditions SQL Builder
+     * @param \Magento\Framework\Indexer\IndexerRegistry                           $indexerRegistry Indexer Registry
+     * @param array                                                                $data            Data
      */
     public function __construct(
         \Magento\Eav\Model\Entity\Context $context,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Catalog\Model\Factory $modelFactory,
         \Smile\ElasticsuiteVirtualAttribute\Model\Rule\Condition\Sql\Builder $sqlBuilder,
+        \Magento\Framework\Indexer\IndexerRegistry $indexerRegistry,
         array $data = []
     ) {
         parent::__construct($context, $storeManager, $modelFactory, $data);
-        $this->sqlBuilder = $sqlBuilder;
+        $this->sqlBuilder      = $sqlBuilder;
+        $this->indexerRegistry = $indexerRegistry;
     }
 
     /**
@@ -88,6 +101,7 @@ class Applier extends \Magento\Catalog\Model\ResourceModel\Product\Action
         }
 
         $this->dropTemporaryTable($attribute);
+        $this->processFullTextReindex($this->updatedProductIds);
     }
 
     /**
@@ -118,6 +132,7 @@ class Applier extends \Magento\Catalog\Model\ResourceModel\Product\Action
                     $cpt++;
                     if (!empty($row)) {
                         $this->addAttributeValue($attribute, $row, $optionId, $storeId);
+                        $this->updatedProductIds[] = $row[$this->getIdFieldName()];
                     }
 
                     if ($cpt % 1000 == 0) {
@@ -165,6 +180,7 @@ class Applier extends \Magento\Catalog\Model\ResourceModel\Product\Action
 
                     if (!empty($row)) {
                         $this->deleteAttributeValue($attribute, $row, $optionId, $storeId);
+                        $this->updatedProductIds[] = $row[$this->getIdFieldName()];
                     }
 
                     if ($cpt % 1000 == 0) {
@@ -180,6 +196,26 @@ class Applier extends \Magento\Catalog\Model\ResourceModel\Product\Action
             $this->getConnection()->rollBack();
 
             throw $e;
+        }
+    }
+
+    /**
+     * Process full-text reindex for product ids
+     *
+     * @param mixed $ids The product ids to reindex
+     */
+    private function processFullTextReindex($ids)
+    {
+        $fullTextIndexer = $this->indexerRegistry->get(\Magento\CatalogSearch\Model\Indexer\Fulltext::INDEXER_ID);
+
+        if (!is_array($ids)) {
+            $ids = [$ids];
+        }
+
+        if (!$fullTextIndexer->isScheduled()) {
+            if (!empty($ids)) {
+                $fullTextIndexer->reindexList($ids);
+            }
         }
     }
 
@@ -309,6 +345,8 @@ class Applier extends \Magento\Catalog\Model\ResourceModel\Product\Action
         $productCollection->getSelect()->columns(['value_id' => $attributeTable . '.value_id']);
 
         $select = $productCollection->getSelect();
+
+        echo $select->assemble() . "\n" ."\n";
 
         return $productCollection->getConnection()->query($select);
     }
