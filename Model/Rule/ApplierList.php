@@ -76,10 +76,12 @@ class ApplierList
                         foreach ($rule->getStores() as $storeId) {
                             $this->appliers[$attributeId][] = $this->applierFactory->create(
                                 [
-                                    'attribute' => $attribute,
-                                    'optionId'  => $rule->getOptionId(),
-                                    'condition' => $rule->getCondition(),
-                                    'storeId'   => (int) $storeId,
+                                    'attribute'  => $attribute,
+                                    'rule'       => $rule,
+                                    'optionId'   => $rule->getOptionId(),
+                                    'condition'  => $rule->getCondition(),
+                                    'ruleStatus' => $rule->isActive(),
+                                    'storeId'    => (int) $storeId,
                                 ]
                             );
                         }

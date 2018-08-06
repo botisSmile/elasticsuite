@@ -40,6 +40,11 @@ class Applier
     private $optionId;
 
     /**
+     * @var bool
+     */
+    private $ruleStatus;
+
+    /**
      * @var int
      */
     private $storeId;
@@ -51,6 +56,7 @@ class Applier
      * @param RuleValueUpdaterFactory                             $valueUpdaterFactory Product Value Updater Factory
      * @param \Magento\CatalogRule\Model\Rule                     $condition           The rule condition to match on
      * @param \Magento\Catalog\Api\Data\ProductAttributeInterface $attribute           The attribute to apply value for
+     * @param bool                                                $ruleStatus          The rule status
      * @param int                                                 $optionId            The value to apply
      * @param int                                                 $storeId             The storeId to apply value for
      */
@@ -60,12 +66,14 @@ class Applier
         \Magento\CatalogRule\Model\Rule $condition,
         \Magento\Catalog\Api\Data\ProductAttributeInterface $attribute,
         $optionId,
+        $ruleStatus,
         $storeId
     ) {
-        $this->condition = $condition;
-        $this->attribute = $attribute;
-        $this->optionId  = $optionId;
-        $this->storeId   = $storeId;
+        $this->condition  = $condition;
+        $this->attribute  = $attribute;
+        $this->optionId   = $optionId;
+        $this->storeId    = $storeId;
+        $this->ruleStatus = $ruleStatus;
 
         $this->matcher = $matcherFactory->create([
             'attribute' => $this->attribute,
@@ -91,17 +99,18 @@ class Applier
         // Remove value for products having it previously.
         $this->remove();
 
-        // Add value for products that are now matching the rules.
-        $updateCount = 0;
-        foreach ($this->matcher->matchByCondition() as $row)
-        {
-            $this->valueUpdater->update($row);
-            $updateCount++;
-            if ($updateCount % 1000 === 0) {
-                $this->valueUpdater->persist();
+        if ($this->ruleStatus === true) {
+            // Add value for products that are now matching the rules.
+            $updateCount = 0;
+            foreach ($this->matcher->matchByCondition() as $row) {
+                $this->valueUpdater->update($row);
+                $updateCount++;
+                if ($updateCount % 1000 === 0) {
+                    $this->valueUpdater->persist();
+                }
             }
+            $this->valueUpdater->persist();
         }
-        $this->valueUpdater->persist();
     }
 
     /**
