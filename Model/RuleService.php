@@ -39,9 +39,14 @@ class RuleService implements \Smile\ElasticsuiteVirtualAttribute\Api\RuleService
     private $ruleCollectionFactory;
 
     /**
-     * @var \Smile\ElasticsuiteVirtualAttribute\Model\Rule\Applier
+     * @var \Smile\ElasticsuiteVirtualAttribute\Model\Rule\ApplierList
      */
-    private $applier;
+    private $applierList;
+
+    /**
+     * @var \Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\PublisherFactory
+     */
+    private $publisherFactory;
 
     /**
      * RuleService constructor.
@@ -49,18 +54,21 @@ class RuleService implements \Smile\ElasticsuiteVirtualAttribute\Api\RuleService
      * @param \Smile\ElasticsuiteVirtualAttribute\Api\RuleRepositoryInterface                $ruleRepository        Rule Repository
      * @param \Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule                   $resource              Rule Resource
      * @param \Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\CollectionFactory $ruleCollectionFactory Rule Collection Factory
-     * @param \Smile\ElasticsuiteVirtualAttribute\Model\Rule\Applier                         $applier               Rules applier
+     * @param \Smile\ElasticsuiteVirtualAttribute\Model\Rule\ApplierList                     $applierList           Rules appliers
+     * @param \Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\PublisherFactory  $publisherFactory      Rule  publisher Factory
      */
     public function __construct(
         \Smile\ElasticsuiteVirtualAttribute\Api\RuleRepositoryInterface $ruleRepository,
         \Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule $resource,
         \Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\CollectionFactory $ruleCollectionFactory,
-        \Smile\ElasticsuiteVirtualAttribute\Model\Rule\Applier $applier
+        \Smile\ElasticsuiteVirtualAttribute\Model\Rule\ApplierList $applierList,
+        \Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\PublisherFactory $publisherFactory
     ) {
         $this->ruleRepository        = $ruleRepository;
         $this->resource              = $resource;
         $this->ruleCollectionFactory = $ruleCollectionFactory;
-        $this->applier               = $applier;
+        $this->applierList           = $applierList;
+        $this->publisherFactory      = $publisherFactory;
     }
 
     /**
@@ -82,13 +90,20 @@ class RuleService implements \Smile\ElasticsuiteVirtualAttribute\Api\RuleService
         $attributeIds    = $rulesCollection->getAllAttributeIds();
 
         foreach ($attributeIds as $attributeId) {
-            $this->applier->applyByAttributeId($attributeId);
+            $appliers  = $this->applierList->get($attributeId);
+            /** @var \Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\Publisher $publisher */
+            $publisher = $this->publisherFactory->create(['attributeId' => $attributeId]);
+            foreach ($appliers as $applier) {
+                $applier->apply();
+            }
+            $publisher->publish();
         }
 
+        /*
         foreach ($rulesCollection as $rule) {
             $rule->setToRefresh(false);
             $this->ruleRepository->save($rule);
-        }
+        }*/
     }
 
     /**
@@ -99,8 +114,7 @@ class RuleService implements \Smile\ElasticsuiteVirtualAttribute\Api\RuleService
     private function getRulesToRefresh()
     {
         $rulesCollection = $this->ruleCollectionFactory->create();
-        $rulesCollection->addFieldToFilter(RuleInterface::TO_REFRESH, (int) true)
-            ->addFieldToFilter(RuleInterface::IS_ACTIVE, (int) true);
+        $rulesCollection->addFieldToFilter(RuleInterface::TO_REFRESH, (int) true);
 
         return $rulesCollection;
     }

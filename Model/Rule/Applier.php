@@ -12,8 +12,8 @@
  */
 namespace Smile\ElasticsuiteVirtualAttribute\Model\Rule;
 
-use Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterface;
-use \Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\CollectionFactory as RuleCollectionFactory;
+use \Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\Applier\MatcherFactory as RuleMatcherFactory;
+use \Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\Applier\ValueUpdaterFactory as RuleValueUpdaterFactory;
 
 /**
  * Elastic Suite Virtual Attribute Rule applier.
@@ -25,34 +25,94 @@ use \Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\CollectionFacto
 class Applier
 {
     /**
+     * @var \Magento\CatalogRule\Model\Rule
+     */
+    private $condition;
+
+    /**
+     * @var \Magento\Catalog\Api\Data\ProductAttributeInterface
+     */
+    private $attribute;
+
+    /**
+     * @var int
+     */
+    private $optionId;
+
+    /**
+     * @var int
+     */
+    private $storeId;
+
+    /**
      * Applier constructor.
      *
-     * @param \Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\Applier $resource              Applier Resource
-     * @param RuleCollectionFactory                                                $ruleCollectionFactory Rule Collection Factory.
+     * @param RuleMatcherFactory                                  $matcherFactory      Rule Matcher Factory
+     * @param RuleValueUpdaterFactory                             $valueUpdaterFactory Product Value Updater Factory
+     * @param \Magento\CatalogRule\Model\Rule                     $condition           The rule condition to match on
+     * @param \Magento\Catalog\Api\Data\ProductAttributeInterface $attribute           The attribute to apply value for
+     * @param int                                                 $optionId            The value to apply
+     * @param int                                                 $storeId             The storeId to apply value for
      */
     public function __construct(
-        \Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\Applier $resource,
-        \Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\CollectionFactory $ruleCollectionFactory
-    ){
-        $this->resource              = $resource;
-        $this->ruleCollectionFactory = $ruleCollectionFactory;
+        RuleMatcherFactory $matcherFactory,
+        RuleValueUpdaterFactory $valueUpdaterFactory,
+        \Magento\CatalogRule\Model\Rule $condition,
+        \Magento\Catalog\Api\Data\ProductAttributeInterface $attribute,
+        $optionId,
+        $storeId
+    ) {
+        $this->condition = $condition;
+        $this->attribute = $attribute;
+        $this->optionId  = $optionId;
+        $this->storeId   = $storeId;
+
+        $this->matcher = $matcherFactory->create([
+            'attribute' => $this->attribute,
+            'optionId'  => $this->optionId,
+            'storeId'   => $this->storeId,
+            'condition' => $this->condition,
+        ]);
+
+        $this->valueUpdater = $valueUpdaterFactory->create([
+            'attribute' => $this->attribute,
+            'optionId'  => $this->optionId,
+            'storeId'   => $this->storeId,
+        ]);
     }
 
     /**
-     * Apply all rules building values for a given attribute Id.
-     * They are applied together to take priority into account.
-     *
-     * @param int $attributeId The attribute Id
+     * Apply current condition for attribute and option Id.
      *
      * @throws \Exception
      */
-    public function applyByAttributeId($attributeId)
+    public function apply()
     {
-        $rulesCollection = $this->ruleCollectionFactory->create();
-        $rulesCollection->addFieldToFilter(RuleInterface::ATTRIBUTE_ID, $attributeId)
-            ->addFieldToFilter(RuleInterface::IS_ACTIVE, (int) true)
-            ->setOrder(RuleInterface::PRIORITY); // DESC is default sort.
+        echo "APPLY \n";
+        // Remove value for products having it previously.
+        $deleteCount = 0;
+        foreach ($this->matcher->matchByOptionId() as $row)
+        {
+            print_r($row);
+            $this->valueUpdater->remove($row);
+            $deleteCount++;
+            if ($deleteCount % 1000 === 0) {
+                $this->valueUpdater->persist();
+            }
+        }
+        $this->valueUpdater->persist();
 
-        $this->resource->applyByAttributeId($attributeId, $rulesCollection);
+        // Add value for products that are now matching the rules.
+        $updateCount = 0;
+        foreach ($this->matcher->matchByCondition() as $row)
+        {
+            print_r($row);
+            $this->valueUpdater->update($row);
+            $updateCount++;
+            if ($deleteCount % 1000 === 0) {
+                $this->valueUpdater->persist();
+            }
+        }
+        $this->valueUpdater->persist();
     }
 }
