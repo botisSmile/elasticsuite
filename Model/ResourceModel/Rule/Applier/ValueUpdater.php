@@ -103,7 +103,7 @@ class ValueUpdater extends \Magento\Catalog\Model\ResourceModel\Product\Action
         if ($frontendInput === 'multiselect') {
             $oldValue = $row[$attribute->getAttributeCode()];
             if ((string) $oldValue !== '') {
-                $newValue = implode(',', array_merge(explode(',', $oldValue), [$this->optionId]));
+                $newValue = implode(',', array_unique(array_merge(explode(',', $oldValue), [$this->optionId])));
             }
         }
 

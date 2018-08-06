@@ -88,27 +88,32 @@ class Applier
      */
     public function apply()
     {
-        echo "APPLY \n";
         // Remove value for products having it previously.
-        $deleteCount = 0;
-        foreach ($this->matcher->matchByOptionId() as $row)
-        {
-            print_r($row);
-            $this->valueUpdater->remove($row);
-            $deleteCount++;
-            if ($deleteCount % 1000 === 0) {
-                $this->valueUpdater->persist();
-            }
-        }
-        $this->valueUpdater->persist();
+        $this->remove();
 
         // Add value for products that are now matching the rules.
         $updateCount = 0;
         foreach ($this->matcher->matchByCondition() as $row)
         {
-            print_r($row);
             $this->valueUpdater->update($row);
             $updateCount++;
+            if ($updateCount % 1000 === 0) {
+                $this->valueUpdater->persist();
+            }
+        }
+        $this->valueUpdater->persist();
+    }
+
+    /**
+     * Remove value for products having it previously.
+     */
+    public function remove()
+    {
+        $deleteCount = 0;
+        foreach ($this->matcher->matchByOptionId() as $row)
+        {
+            $this->valueUpdater->remove($row);
+            $deleteCount++;
             if ($deleteCount % 1000 === 0) {
                 $this->valueUpdater->persist();
             }

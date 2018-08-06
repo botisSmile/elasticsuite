@@ -100,7 +100,6 @@ class Matcher extends AbstractDb
      */
     public function matchByCondition()
     {
-        echo "MATCH\n";
         $fetchStmt = $this->getFetchStmt($this->getMatchingProductCollection());
 
         do {
@@ -122,7 +121,6 @@ class Matcher extends AbstractDb
      */
     public function matchByOptionId()
     {
-        echo "MATCH BY OPTION ID\n";
         $fetchStmt = $this->getFetchStmt($this->getAppliedProductCollection());
 
         do {
@@ -231,8 +229,6 @@ class Matcher extends AbstractDb
         $productCollection->getSelect()->columns(['value_id' => $attributeTable . '.value_id']);
 
         $select = $productCollection->getSelect();
-
-        echo $select->assemble() . "\n" . "\n";
 
         return $productCollection->getConnection()->query($select);
     }
