@@ -133,6 +133,29 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
     }
 
     /**
+     * Filter rule collection for a given list of attribute set ids.
+     *
+     * @param array $attributeSetIds List of attribute set ids
+     *
+     * @return $this
+     */
+    public function addAttributeSetIdFilter($attributeSetIds)
+    {
+        if (!is_array($attributeSetIds)) {
+            $attributeSetIds = [$attributeSetIds];
+        }
+
+        $this->getSelect()->joinInner(
+            ['eea' => $this->getTable('eav_entity_attribute')],
+            'eea.attribute_id = main_table.attribute_id'
+        )->where('eea.attribute_set_id IN (?)', $attributeSetIds);
+
+        $this->getSelect()->group(RuleInterface::RULE_ID);
+
+        return $this;
+    }
+
+    /**
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      * {@inheritDoc}
      */

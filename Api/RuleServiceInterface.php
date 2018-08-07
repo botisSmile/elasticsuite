@@ -32,6 +32,16 @@ interface RuleServiceInterface
     public function scheduleRefresh(array $ruleIds);
 
     /**
+     * Schedule appliance of rules by attribute set ids.
+     * Eg : This method is to be called after a massive product import, for the given list of attribute sets.
+     *
+     * @param array $attributeSetIds A list of attribute set ids.
+     *
+     * @return mixed
+     */
+    public function scheduleRefreshByAttributeSetIds($attributeSetIds);
+
+    /**
      * Process appliance of all rules set to be refreshed.
      *
      * @return void

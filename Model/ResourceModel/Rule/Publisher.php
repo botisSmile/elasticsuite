@@ -27,12 +27,17 @@ use Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\Applier\TableStr
 class Publisher extends AbstractDb
 {
     /**
+     * Default number of products that can be modified without invalidating the catalogsearch_fulltext index.
+     */
+    const DEFAULT_FULLTEXT_THRESHOLD = 10000;
+
+    /**
      * @var \Magento\Framework\Indexer\IndexerRegistry
      */
     private $indexerRegistry;
 
     /**
-     * @var \Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\Applier\TableStrategy
+     * @var TableStrategy
      */
     private $tableStrategy;
 
@@ -47,29 +52,40 @@ class Publisher extends AbstractDb
     private $attribute;
 
     /**
+     * @var int
+     */
+    private $fulltextIndexThreshold = self::DEFAULT_FULLTEXT_THRESHOLD;
+
+    /**
      * Applier constructor.
      *
-     * @param \Magento\Framework\Model\ResourceModel\Db\Context                                  $context             Context
-     * @param \Magento\Framework\Indexer\IndexerRegistry                                         $indexerRegistry     Indexer Registry
-     * @param \Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\Applier\TableStrategy $tableStrategy       Table Strategy
-     * @param \Magento\Catalog\Api\ProductAttributeRepositoryInterface                           $attributeRepository Attribute Repository
-     * @param \Magento\Framework\EntityManager\MetadataPool                                      $metadataPool        Metadata Pool
-     * @param int                                                                                $attributeId         Attribute Id
-     * @param null                                                                               $connectionName      Connection Name
+     * @param \Magento\Framework\Model\ResourceModel\Db\Context        $context                Context
+     * @param \Magento\Framework\Indexer\IndexerRegistry               $indexerRegistry        Indexer Registry
+     * @param \Magento\Catalog\Api\ProductAttributeRepositoryInterface $attributeRepository    Attribute Repository
+     * @param \Magento\Framework\EntityManager\MetadataPool            $metadataPool           Metadata Pool
+     * @param TableStrategy                                            $tableStrategy          Table Strategy
+     * @param int                                                      $attributeId            Attribute Id
+     * @param int                                                      $fulltextIndexThreshold Fulltext Index Threshold
+     * @param null                                                     $connectionName         Connection Name
+     *
+     * @throws \Exception
      */
     public function __construct(
         \Magento\Framework\Model\ResourceModel\Db\Context $context,
         \Magento\Framework\Indexer\IndexerRegistry $indexerRegistry,
-        \Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\Applier\TableStrategy $tableStrategy,
         \Magento\Catalog\Api\ProductAttributeRepositoryInterface $attributeRepository,
         \Magento\Framework\EntityManager\MetadataPool $metadataPool,
+        TableStrategy $tableStrategy,
         int $attributeId,
+        $fulltextIndexThreshold = self::DEFAULT_FULLTEXT_THRESHOLD,
         $connectionName = null
     ) {
-        $this->indexerRegistry = $indexerRegistry;
-        $this->tableStrategy   = $tableStrategy;
-        $this->attribute       = $attributeRepository->get($attributeId);
-        $this->metadata        = $metadataPool->getMetadata(\Magento\Catalog\Api\Data\ProductInterface::class);
+        $this->indexerRegistry        = $indexerRegistry;
+        $this->tableStrategy          = $tableStrategy;
+        $this->attribute              = $attributeRepository->get($attributeId);
+        $this->metadata               = $metadataPool->getMetadata(\Magento\Catalog\Api\Data\ProductInterface::class);
+        $this->fulltextIndexThreshold = $fulltextIndexThreshold;
+
         parent::__construct($context, $connectionName);
     }
 
@@ -92,19 +108,19 @@ class Publisher extends AbstractDb
         }
 
         $idSelect = $this->getConnection()
-                         ->select()
-                         ->distinct(true)
-                         ->from(['main_table' => $this->getMainTable()], [])
-                         ->joinInner(
-                             ['entity' => $this->metadata->getEntityTable()],
-                             sprintf('main_table.%s = entity.%s', $this->metadata->getLinkField(), $this->metadata->getLinkField()),
-                             $this->metadata->getIdentifierField()
-                         )->group($this->metadata->getLinkField());
+            ->select()
+            ->distinct(true)
+            ->from(['main_table' => $this->getMainTable()], [])
+            ->joinInner(
+                ['entity' => $this->metadata->getEntityTable()],
+                sprintf('main_table.%s = entity.%s', $this->metadata->getLinkField(), $this->metadata->getLinkField()),
+                $this->metadata->getIdentifierField()
+            )->group($this->metadata->getLinkField());
 
         $ids = $this->getConnection()->fetchCol($idSelect);
         $this->processFullTextReindex($ids);
 
-        //$this->dropTemporaryTable();
+        $this->dropTemporaryTable();
     }
 
     /**
@@ -130,17 +146,17 @@ class Publisher extends AbstractDb
         $sourceColumns = [$this->metadata->getLinkField(), 'attribute_id', 'store_id', 'GROUP_CONCAT(value) as value'];
 
         $select = $this->getConnection()
-                       ->select()
-                       ->from($this->getMainTable(), $sourceColumns)
-                       ->group([$this->metadata->getLinkField(), 'attribute_id', 'store_id']);
+            ->select()
+            ->from($this->getMainTable(), $sourceColumns)
+            ->group([$this->metadata->getLinkField(), 'attribute_id', 'store_id']);
 
+        // Insert-Select from temporary table in one-shot.
         $query = $this->getConnection()->insertFromSelect(
             $select,
             $this->attribute->getBackendTable(),
             $targetColumns,
             \Magento\Framework\DB\Adapter\AdapterInterface::INSERT_ON_DUPLICATE
         );
-
         $this->getConnection()->query($query);
 
         // Remove attribute values rows that are containing only NULL as value.
@@ -171,7 +187,8 @@ class Publisher extends AbstractDb
             $indexList = $this->getConnection()->getIndexList($table);
             foreach ($indexList as $indexName => $ddl) {
                 if (isset($ddl['type']) &&
-                    $ddl['type'] === \Magento\Framework\DB\Adapter\AdapterInterface::INDEX_TYPE_UNIQUE) {
+                    $ddl['type'] === \Magento\Framework\DB\Adapter\AdapterInterface::INDEX_TYPE_UNIQUE
+                ) {
                     $this->getConnection()->dropIndex($table, $indexName);
                 }
             }
@@ -207,6 +224,7 @@ class Publisher extends AbstractDb
 
     /**
      * Process full-text reindex for product ids
+     * @SuppressWarnings(PHPMD.ElseExpression)
      *
      * @param mixed $ids The product ids to reindex
      */
@@ -218,8 +236,10 @@ class Publisher extends AbstractDb
             $ids = [$ids];
         }
 
-        if (!$fullTextIndexer->isScheduled()) {
-            if (!empty($ids)) {
+        if (!$fullTextIndexer->isScheduled() && !empty($ids)) {
+            if (count($ids) > $this->fulltextIndexThreshold) {
+                $fullTextIndexer->invalidate();
+            } else {
                 $fullTextIndexer->reindexList($ids);
             }
         }

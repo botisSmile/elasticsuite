@@ -97,36 +97,66 @@ class Applier
     public function apply()
     {
         // Remove value for products having it previously.
-        $this->remove();
+        $this->deletePreviousMatching();
 
-        if ($this->ruleStatus === true) {
-            // Add value for products that are now matching the rules.
-            $updateCount = 0;
-            foreach ($this->matcher->matchByCondition() as $row) {
-                $this->valueUpdater->update($row);
-                $updateCount++;
-                if ($updateCount % 1000 === 0) {
-                    $this->valueUpdater->persist();
-                }
-            }
-            $this->valueUpdater->persist();
+        if ($this->isEnabledRule()) {
+            $this->updateMatchingProducts();
         }
     }
 
     /**
-     * Remove value for products having it previously.
+     * Process a cleanup of temporary data to remove completely the current option Id.
+     * Called when a rule is disabled.
      */
-    public function remove()
+    public function cleanup()
+    {
+        if (!$this->isEnabledRule()) {
+            $this->valueUpdater->removeOptionId();
+        }
+    }
+
+    /**
+     * Compute data for products actually matching the conditions.
+     */
+    public function updateMatchingProducts()
+    {
+        // Add value for products that are now matching the rules.
+        $updateCount = 0;
+        foreach ($this->matcher->matchByCondition() as $row) {
+            $this->valueUpdater->updateValue($row);
+            $updateCount++;
+            if ($updateCount % 1000 === 0) {
+                $this->valueUpdater->persist();
+            }
+        }
+        $this->valueUpdater->persist();
+    }
+
+    /**
+     * Remove value for products having it previously.
+     * They may not match anymore the condition.
+     */
+    private function deletePreviousMatching()
     {
         $deleteCount = 0;
         foreach ($this->matcher->matchByOptionId() as $row)
         {
-            $this->valueUpdater->remove($row);
+            $this->valueUpdater->removeValue($row);
             $deleteCount++;
             if ($deleteCount % 1000 === 0) {
                 $this->valueUpdater->persist();
             }
         }
         $this->valueUpdater->persist();
+    }
+
+    /**
+     * Check if rule associated to this applier is enabled.
+     *
+     * @return bool
+     */
+    private function isEnabledRule()
+    {
+        return (bool) $this->ruleStatus === true;
     }
 }

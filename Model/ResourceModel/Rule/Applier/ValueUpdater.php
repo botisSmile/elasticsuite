@@ -66,7 +66,7 @@ class ValueUpdater extends \Magento\Catalog\Model\ResourceModel\Product\Action
      *
      * @param array $row The row containing product data
      */
-    public function remove($row)
+    public function removeValue($row)
     {
         $attribute = $this->getAttributeForUpdate();
         $table     = $attribute->getBackendTable();
@@ -88,7 +88,7 @@ class ValueUpdater extends \Magento\Catalog\Model\ResourceModel\Product\Action
      *
      * @param array $row The row containing current product data
      */
-    public function update($row)
+    public function updateValue($row)
     {
         $attribute     = $this->getAttributeForUpdate();
         $frontendInput = $attribute->getFrontendInput();
@@ -127,6 +127,19 @@ class ValueUpdater extends \Magento\Catalog\Model\ResourceModel\Product\Action
         $this->_attributeValuesToDelete = [];
 
         return $this;
+    }
+
+    /**
+     * Unset all rows of temporary table belonging to current option Id.
+     * Called when cleaning up data linked to a disabled rule.
+     */
+    public function removeOptionId()
+    {
+        $this->getConnection()->update(
+            $this->getAttributeForUpdate()->getBackend()->getTable(),
+            ['value' => null],
+            ['value = ?' => $this->optionId]
+        );
     }
 
     /**

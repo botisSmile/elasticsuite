@@ -82,6 +82,19 @@ class RuleService implements \Smile\ElasticsuiteVirtualAttribute\Api\RuleService
     /**
      * {@inheritdoc}
      */
+    public function scheduleRefreshByAttributeSetIds($attributeSetIds)
+    {
+        $rulesCollection = $this->ruleCollectionFactory->create();
+        $rulesCollection->addAttributeSetIdFilter($attributeSetIds);
+
+        if ($rulesCollection->getSize() > 0) {
+            $this->scheduleRefresh($rulesCollection->getAllIds());
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function processRefresh()
     {
         // Get all attribute Ids concerned by rules to refresh.
@@ -90,20 +103,39 @@ class RuleService implements \Smile\ElasticsuiteVirtualAttribute\Api\RuleService
         $attributeIds    = $rulesCollection->getAllAttributeIds();
 
         foreach ($attributeIds as $attributeId) {
-            $appliers  = $this->applierList->get($attributeId);
-            /** @var \Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\Publisher $publisher */
-            $publisher = $this->publisherFactory->create(['attributeId' => $attributeId]);
-            foreach ($appliers as $applier) {
-                $applier->apply();
-            }
-            $publisher->publish();
+            $this->processByAttributeId($attributeId);
         }
 
-        /*
         foreach ($rulesCollection as $rule) {
             $rule->setToRefresh(false);
             $this->ruleRepository->save($rule);
-        }*/
+        }
+    }
+
+    /**
+     * Compute and publish all rules for a given attribute Id.
+     *
+     * @param int $attributeId The attribute Id
+     *
+     * @throws \Exception
+     */
+    private function processByAttributeId($attributeId)
+    {
+        $appliers  = $this->applierList->get($attributeId);
+
+        /** @var \Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\Publisher $publisher */
+        $publisher = $this->publisherFactory->create(['attributeId' => $attributeId]);
+
+        foreach ($appliers as $applier) {
+            $applier->apply();
+        }
+
+        // Cleanup data belonging to disabled rules if needed. Done in two-step because each applier is not aware of others.
+        foreach ($appliers as $applier) {
+            $applier->cleanup();
+        }
+
+        $publisher->publish();
     }
 
     /**
