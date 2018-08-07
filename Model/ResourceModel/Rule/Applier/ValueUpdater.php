@@ -74,10 +74,12 @@ class ValueUpdater extends \Magento\Catalog\Model\ResourceModel\Product\Action
         // New value is old value without the value to remove.
         $newValue = array_diff(explode(',', $row[$this->attribute->getAttributeCode()]), [$this->optionId]);
 
-        $this->_attributeValuesToDelete[$table] = $this->optionId;
+        if (!isset($this->_attributeValuesToDelete[$table])) {
+            $this->_attributeValuesToDelete[$table] = [];
+        }
+        $this->_attributeValuesToDelete[$table][] = $this->resolveEntityId($row[$this->getIdFieldName()]);
 
         // Register new value to save if not empty.
-        // $newValue = implode(',', $newValue);
         $this->saveAttributeValue($attribute, $row[$this->getIdFieldName()], $newValue);
     }
 
@@ -111,17 +113,13 @@ class ValueUpdater extends \Magento\Catalog\Model\ResourceModel\Product\Action
     public function persist()
     {
         $connection = $this->getConnection();
-        foreach ($this->_attributeValuesToSave as $table => $data) {
-            $connection->insertArray(
-                $table,
-                array_keys(current($data)),
-                $data,
-                \Magento\Framework\DB\Adapter\AdapterInterface::INSERT_IGNORE
-            );
+
+        foreach ($this->_attributeValuesToDelete as $table => $ids) {
+            $connection->delete($table, ['value = ?' => $this->optionId, $this->getLinkField() . ' IN (?)' => $ids]);
         }
 
-        foreach ($this->_attributeValuesToDelete as $table => $values) {
-            $connection->delete($table, ['value IN (?)' => $values]);
+        foreach ($this->_attributeValuesToSave as $table => $data) {
+            $connection->insertOnDuplicate($table, $data, ['value']);
         }
 
         // reset data arrays

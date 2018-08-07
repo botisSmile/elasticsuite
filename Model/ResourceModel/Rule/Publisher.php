@@ -104,7 +104,7 @@ class Publisher extends AbstractDb
         $ids = $this->getConnection()->fetchCol($idSelect);
         $this->processFullTextReindex($ids);
 
-        $this->dropTemporaryTable();
+        //$this->dropTemporaryTable();
     }
 
     /**
@@ -165,21 +165,25 @@ class Publisher extends AbstractDb
             true
         );
 
-        // Remove existing unique index if any.
-        $indexList = $this->getConnection()->getIndexList($table);
-        foreach ($indexList as $indexName => $ddl) {
-            if (isset($ddl['type']) && $ddl['type'] === \Magento\Framework\DB\Adapter\AdapterInterface::INDEX_TYPE_UNIQUE) {
-                $this->getConnection()->dropIndex($table, $indexName);
+        if ($this->attribute->getFrontendInput() === 'multiselect') {
+            // For multiselect, remove existing unique index if any.
+            // Because each value is inserted on an unique data row.
+            $indexList = $this->getConnection()->getIndexList($table);
+            foreach ($indexList as $indexName => $ddl) {
+                if (isset($ddl['type']) &&
+                    $ddl['type'] === \Magento\Framework\DB\Adapter\AdapterInterface::INDEX_TYPE_UNIQUE) {
+                    $this->getConnection()->dropIndex($table, $indexName);
+                }
             }
-        }
 
-        // Add index to table to manage proper insertion later.
-        $this->getConnection()->addIndex(
-            $table,
-            'idx_primary',
-            [$this->metadata->getLinkField(), 'attribute_id', 'store_id', 'value'],
-            \Magento\Framework\DB\Adapter\AdapterInterface::INDEX_TYPE_UNIQUE
-        );
+            // Add index to table to manage proper insertion later.
+            $this->getConnection()->addIndex(
+                $table,
+                'idx_primary',
+                [$this->metadata->getLinkField(), 'attribute_id', 'store_id', 'value'],
+                \Magento\Framework\DB\Adapter\AdapterInterface::INDEX_TYPE_UNIQUE
+            );
+        }
     }
 
     /**
