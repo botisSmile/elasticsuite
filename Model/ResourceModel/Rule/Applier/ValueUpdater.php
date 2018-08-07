@@ -68,24 +68,17 @@ class ValueUpdater extends \Magento\Catalog\Model\ResourceModel\Product\Action
      */
     public function remove($row)
     {
-        $table = $this->attribute->getBackendTable();
+        $attribute = $this->getAttributeForUpdate();
+        $table     = $attribute->getBackendTable();
 
         // New value is old value without the value to remove.
         $newValue = array_diff(explode(',', $row[$this->attribute->getAttributeCode()]), [$this->optionId]);
 
-        if (empty($newValue)) {
-            // Delete row since new value would be empty.
-            if (!isset($this->_attributeValuesToDelete[$table])) {
-                $this->_attributeValuesToDelete[$table] = [];
-            }
-            $this->_attributeValuesToDelete[$table] = array_merge($this->_attributeValuesToDelete[$table], [$row['value_id']]);
-
-            return;
-        }
+        $this->_attributeValuesToDelete[$table] = $this->optionId;
 
         // Register new value to save if not empty.
-        $newValue = implode(',', $newValue);
-        $this->saveAttributeValue($this->attribute, $row[$this->getIdFieldName()], $newValue);
+        // $newValue = implode(',', $newValue);
+        $this->saveAttributeValue($attribute, $row[$this->getIdFieldName()], $newValue);
     }
 
     /**
@@ -97,13 +90,13 @@ class ValueUpdater extends \Magento\Catalog\Model\ResourceModel\Product\Action
     {
         $attribute     = $this->getAttributeForUpdate();
         $frontendInput = $attribute->getFrontendInput();
-        $newValue      = $this->optionId; // New value default to the option_id of the rule. It will replace old value for select.
+        $newValue      = [$this->optionId]; // New value default to the option_id of the rule. It will replace old value for select.
 
         // If attribute is multiselect and already has value, append new value to existing.
         if ($frontendInput === 'multiselect') {
             $oldValue = $row[$attribute->getAttributeCode()];
             if ((string) $oldValue !== '') {
-                $newValue = implode(',', array_unique(array_merge(explode(',', $oldValue), [$this->optionId])));
+                $newValue = array_unique(array_merge(explode(',', $oldValue), [$this->optionId]));
             }
         }
 
@@ -113,11 +106,29 @@ class ValueUpdater extends \Magento\Catalog\Model\ResourceModel\Product\Action
     /**
      * Persist computed attribute values.
      *
-     * @return void
+     * @return $this
      */
     public function persist()
     {
-        $this->_processAttributeValues();
+        $connection = $this->getConnection();
+        foreach ($this->_attributeValuesToSave as $table => $data) {
+            $connection->insertArray(
+                $table,
+                array_keys(current($data)),
+                $data,
+                \Magento\Framework\DB\Adapter\AdapterInterface::INSERT_IGNORE
+            );
+        }
+
+        foreach ($this->_attributeValuesToDelete as $table => $values) {
+            $connection->delete($table, ['value IN (?)' => $values]);
+        }
+
+        // reset data arrays
+        $this->_attributeValuesToSave = [];
+        $this->_attributeValuesToDelete = [];
+
+        return $this;
     }
 
     /**
@@ -125,7 +136,7 @@ class ValueUpdater extends \Magento\Catalog\Model\ResourceModel\Product\Action
      *
      * @param ProductAttributeInterface $attribute Attribute
      * @param int                       $rowId     ID Field value
-     * @param string                    $newValue  New Value to save
+     * @param array                     $newValue  New Value to save
      */
     private function saveAttributeValue($attribute, $rowId, $newValue)
     {
@@ -134,7 +145,13 @@ class ValueUpdater extends \Magento\Catalog\Model\ResourceModel\Product\Action
         $object->setId($rowId);
         $object->setEntityId($rowId);
 
-        $this->_saveAttributeValue($object, $attribute, $newValue);
+        if (empty($newValue)) {
+            $this->_saveAttributeValue($object, $attribute, null);
+        }
+
+        foreach ($newValue as $value) {
+            $this->_saveAttributeValue($object, $attribute, $value);
+        }
     }
 
     /**

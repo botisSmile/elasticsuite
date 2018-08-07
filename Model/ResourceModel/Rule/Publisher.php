@@ -66,10 +66,10 @@ class Publisher extends AbstractDb
         int $attributeId,
         $connectionName = null
     ) {
-        $this->indexerRegistry     = $indexerRegistry;
-        $this->tableStrategy       = $tableStrategy;
-        $this->attribute           = $attributeRepository->get($attributeId);
-        $this->metadata            = $metadataPool->getMetadata(\Magento\Catalog\Api\Data\ProductInterface::class);
+        $this->indexerRegistry = $indexerRegistry;
+        $this->tableStrategy   = $tableStrategy;
+        $this->attribute       = $attributeRepository->get($attributeId);
+        $this->metadata        = $metadataPool->getMetadata(\Magento\Catalog\Api\Data\ProductInterface::class);
         parent::__construct($context, $connectionName);
     }
 
@@ -84,16 +84,7 @@ class Publisher extends AbstractDb
         $this->getConnection()->beginTransaction();
 
         try {
-            $sourceColumns = $targetColumns = [$this->metadata->getLinkField(), 'attribute_id', 'store_id'];
-
-            $select = $this->getConnection()->select()->from($this->getMainTable(), $sourceColumns);
-            $query  = $this->getConnection()->insertFromSelect(
-                $select,
-                $this->attribute->getBackendTable(),
-                $targetColumns,
-                \Magento\Framework\DB\Adapter\AdapterInterface::INSERT_ON_DUPLICATE
-            );
-            $this->getConnection()->query($query);
+            $this->applyCalculatedDataToAttributeTable();
             $this->getConnection()->commit();
         } catch (\Exception $e) {
             $this->getConnection()->rollBack();
@@ -101,14 +92,14 @@ class Publisher extends AbstractDb
         }
 
         $idSelect = $this->getConnection()
-            ->select()
-            ->distinct(true)
-            ->from(['main_table' => $this->getMainTable()], [])
-            ->joinInner(
-                ['entity' => $this->metadata->getEntityTable()],
-                sprintf('main_table.%s = entity.%s', $this->metadata->getLinkField(), $this->metadata->getLinkField()),
-                $this->metadata->getIdentifierField()
-            );
+                         ->select()
+                         ->distinct(true)
+                         ->from(['main_table' => $this->getMainTable()], [])
+                         ->joinInner(
+                             ['entity' => $this->metadata->getEntityTable()],
+                             sprintf('main_table.%s = entity.%s', $this->metadata->getLinkField(), $this->metadata->getLinkField()),
+                             $this->metadata->getIdentifierField()
+                         )->group($this->metadata->getLinkField());
 
         $ids = $this->getConnection()->fetchCol($idSelect);
         $this->processFullTextReindex($ids);
@@ -129,19 +120,65 @@ class Publisher extends AbstractDb
     }
 
     /**
+     * Move computed data for all rules related to this attributes from the tmp table to the real attribute backend table.
+     *
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    private function applyCalculatedDataToAttributeTable()
+    {
+        $targetColumns = [$this->metadata->getLinkField(), 'attribute_id', 'store_id', 'value'];
+        $sourceColumns = [$this->metadata->getLinkField(), 'attribute_id', 'store_id', 'GROUP_CONCAT(value) as value'];
+
+        $select = $this->getConnection()
+                       ->select()
+                       ->from($this->getMainTable(), $sourceColumns)
+                       ->group([$this->metadata->getLinkField(), 'attribute_id', 'store_id']);
+
+        $query = $this->getConnection()->insertFromSelect(
+            $select,
+            $this->attribute->getBackendTable(),
+            $targetColumns,
+            \Magento\Framework\DB\Adapter\AdapterInterface::INSERT_ON_DUPLICATE
+        );
+
+        $this->getConnection()->query($query);
+
+        // Remove attribute values rows that are containing only NULL as value.
+        $condition = ['attribute_id = ?' => (int) $this->attribute->getAttributeId(), 'value IS NULL'];
+        $this->getConnection()->delete($this->attribute->getBackendTable(), $condition);
+    }
+
+    /**
      * Create temporary table for current attribute.
      */
     private function createTemporaryTable()
     {
         $temporaryName = $this->getTemporaryTableName();
+        $table         = $this->getConnection()->getTableName($temporaryName);
 
         // Drop the temporary table in case it already exists on this (persistent?) connection.
-        $this->getConnection()->dropTemporaryTable($temporaryName);
+        $this->getConnection()->dropTemporaryTable($table);
 
         $this->getConnection()->createTemporaryTableLike(
-            $this->getConnection()->getTableName($temporaryName),
+            $table,
             $this->getConnection()->getTableName($this->attribute->getBackendTable()),
             true
+        );
+
+        // Remove existing unique index if any.
+        $indexList = $this->getConnection()->getIndexList($table);
+        foreach ($indexList as $indexName => $ddl) {
+            if (isset($ddl['type']) && $ddl['type'] === \Magento\Framework\DB\Adapter\AdapterInterface::INDEX_TYPE_UNIQUE) {
+                $this->getConnection()->dropIndex($table, $indexName);
+            }
+        }
+
+        // Add index to table to manage proper insertion later.
+        $this->getConnection()->addIndex(
+            $table,
+            'idx_primary',
+            [$this->metadata->getLinkField(), 'attribute_id', 'store_id', 'value'],
+            \Magento\Framework\DB\Adapter\AdapterInterface::INDEX_TYPE_UNIQUE
         );
     }
 

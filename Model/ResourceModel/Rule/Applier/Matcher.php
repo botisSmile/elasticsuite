@@ -230,7 +230,7 @@ class Matcher extends AbstractDb
 
         $select = $productCollection->getSelect();
 
-        return $productCollection->getConnection()->query($select);
+        return $this->getConnection()->query($select);
     }
 
     /**

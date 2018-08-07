@@ -68,7 +68,9 @@ class ApplierList
                 $rulesCollection = $this->ruleCollectionFactory->create();
 
                 $rulesCollection->addFieldToFilter(RuleInterface::ATTRIBUTE_ID, $attributeId);
-                $rulesCollection->setOrder(RuleInterface::PRIORITY); // DESC is default sort.
+                $rulesCollection
+                    ->setOrder(RuleInterface::IS_ACTIVE) // Filter disabled rules at the end since they will only process remove.
+                    ->setOrder(RuleInterface::PRIORITY); // DESC is default sort.
 
                 /** @var RuleInterface $rule */
                 foreach ($rulesCollection as $rule) {
