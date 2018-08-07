@@ -34,12 +34,12 @@ class Matcher extends AbstractDb
     private $attribute;
 
     /**
-     * @var int
+     * @var integer
      */
     private $optionId;
 
     /**
-     * @var int
+     * @var integer
      */
     private $storeId;
 
@@ -110,7 +110,6 @@ class Matcher extends AbstractDb
             if (!empty($row)) {
                 yield $row;
             }
-
         } while (!empty($row));
     }
 
@@ -131,7 +130,6 @@ class Matcher extends AbstractDb
             if (!empty($row)) {
                 yield $row;
             }
-
         } while (!empty($row));
     }
 

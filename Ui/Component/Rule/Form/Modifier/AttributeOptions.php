@@ -100,5 +100,4 @@ class AttributeOptions implements \Magento\Ui\DataProvider\Modifier\ModifierInte
 
         return $options;
     }
-
 }

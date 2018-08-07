@@ -48,8 +48,8 @@ class Builder extends \Magento\Rule\Model\Condition\Sql\Builder
     private $attributeRepository;
 
     /**
-     * @param \Magento\Rule\Model\Condition\Sql\ExpressionFactory $expressionFactory
-     * @param \Magento\Eav\Api\AttributeRepositoryInterface|null $attributeRepository
+     * @param \Magento\Rule\Model\Condition\Sql\ExpressionFactory $expressionFactory   Expression Factory
+     * @param \Magento\Eav\Api\AttributeRepositoryInterface|null  $attributeRepository Attribute Repository
      */
     public function __construct(
         \Magento\Rule\Model\Condition\Sql\ExpressionFactory $expressionFactory,
@@ -84,7 +84,7 @@ class Builder extends \Magento\Rule\Model\Condition\Sql\Builder
         }
 
         $defaultValue = 0;
-        // Check if attribute has a table with default value and add it to the query
+        // Check if attribute has a table with default value and add it to the query.
         if ($this->canAttributeHaveDefaultValue($condition->getAttribute(), $isDefaultStoreUsed)) {
             $defaultField = 'at_' . $condition->getAttribute() . '_default.value';
             $defaultValue = $this->_connection->quoteIdentifier($defaultField);
@@ -178,6 +178,7 @@ class Builder extends \Magento\Rule\Model\Condition\Sql\Builder
     {
         try {
             $attribute = $this->attributeRepository->get(\Magento\Catalog\Model\Product::ENTITY, $attributeCode);
+
             return (
                 in_array($attribute->getBackendType(), ['varchar', 'text'])
                 && in_array($attribute->getFrontendInput(), ['text', 'textarea'])
@@ -198,6 +199,7 @@ class Builder extends \Magento\Rule\Model\Condition\Sql\Builder
     {
         try {
             $attribute = $this->attributeRepository->get(\Magento\Catalog\Model\Product::ENTITY, $attributeCode);
+
             return (
                 in_array($attribute->getBackendType(), ['varchar', 'text'])
                 && in_array($attribute->getFrontendInput(), ['multiselect'])
@@ -226,7 +228,7 @@ class Builder extends \Magento\Rule\Model\Condition\Sql\Builder
         try {
             $attribute = $this->attributeRepository->get(\Magento\Catalog\Model\Product::ENTITY, $attributeCode);
         } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
-            // It's not exceptional case as we want to check if we have such attribute or not
+            // It's not exceptional case as we want to check if we have such attribute or not.
             return false;
         }
 

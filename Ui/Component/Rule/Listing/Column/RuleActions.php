@@ -76,7 +76,9 @@ class RuleActions extends \Magento\Ui\Component\Listing\Columns\Column
                 if (isset($item['rule_id'])) {
                     $item[$name]['edit'] = [
                         'href'  => $this->urlBuilder->getUrl(
-                            self::RULE_URL_PATH_EDIT, ['id' => $item['rule_id']]),
+                            self::RULE_URL_PATH_EDIT,
+                            ['id' => $item['rule_id']]
+                        ),
                         'label' => __('Edit'),
                     ];
 

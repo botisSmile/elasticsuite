@@ -39,7 +39,9 @@ class VirtualAttributeSetup
     }
 
     /**
-     * Create Optimizer main table.
+     * Create Virtual Attribute Rules main table.
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      *
      * @param \Magento\Framework\Setup\SchemaSetupInterface $setup Setup instance
      */

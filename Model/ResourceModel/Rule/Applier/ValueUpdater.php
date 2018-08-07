@@ -34,16 +34,27 @@ class ValueUpdater extends \Magento\Catalog\Model\ResourceModel\Product\Action
     private $attribute;
 
     /**
-     * @var int
+     * @var integer
      */
     private $optionId;
 
     /**
-     * @var int
+     * @var integer
      */
     private $storeId;
 
-
+    /**
+     * ValueUpdater constructor.
+     *
+     * @param \Magento\Eav\Model\Entity\Context                                                  $context       Context
+     * @param \Magento\Store\Model\StoreManagerInterface                                         $storeManager  Store Manager
+     * @param \Magento\Catalog\Model\Factory                                                     $modelFactory  Model Factory
+     * @param \Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\Applier\TableStrategy $tableStrategy Table Strategy
+     * @param \Magento\Catalog\Api\Data\ProductAttributeInterface                                $attribute     Attribute
+     * @param int                                                                                $optionId      Option Id
+     * @param int                                                                                $storeId       Store Id
+     * @param array                                                                              $data          Data
+     */
     public function __construct(
         \Magento\Eav\Model\Entity\Context $context,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
@@ -122,8 +133,8 @@ class ValueUpdater extends \Magento\Catalog\Model\ResourceModel\Product\Action
             $connection->insertOnDuplicate($table, $data, ['value']);
         }
 
-        // reset data arrays
-        $this->_attributeValuesToSave = [];
+        // Reset data arrays.
+        $this->_attributeValuesToSave   = [];
         $this->_attributeValuesToDelete = [];
 
         return $this;

@@ -35,17 +35,17 @@ class Applier
     private $attribute;
 
     /**
-     * @var int
+     * @var integer
      */
     private $optionId;
 
     /**
-     * @var bool
+     * @var boolean
      */
     private $ruleStatus;
 
     /**
-     * @var int
+     * @var integer
      */
     private $storeId;
 
@@ -56,8 +56,8 @@ class Applier
      * @param RuleValueUpdaterFactory                             $valueUpdaterFactory Product Value Updater Factory
      * @param \Magento\CatalogRule\Model\Rule                     $condition           The rule condition to match on
      * @param \Magento\Catalog\Api\Data\ProductAttributeInterface $attribute           The attribute to apply value for
-     * @param bool                                                $ruleStatus          The rule status
      * @param int                                                 $optionId            The value to apply
+     * @param bool                                                $ruleStatus          The rule status
      * @param int                                                 $storeId             The storeId to apply value for
      */
     public function __construct(
@@ -139,8 +139,7 @@ class Applier
     private function deletePreviousMatching()
     {
         $deleteCount = 0;
-        foreach ($this->matcher->matchByOptionId() as $row)
-        {
+        foreach ($this->matcher->matchByOptionId() as $row) {
             $this->valueUpdater->removeValue($row);
             $deleteCount++;
             if ($deleteCount % 1000 === 0) {

@@ -40,7 +40,6 @@ class Refresh extends \Smile\ElasticsuiteVirtualAttribute\Controller\Adminhtml\A
             }
 
             $this->messageManager->addNoticeMessage(__('Rule has been scheduled for refreshment.'));
-
         } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
             $this->messageManager->addExceptionMessage($e, __('Something went wrong while refreshing the rule.'));
             $resultRedirect->setPath('*/*/index');

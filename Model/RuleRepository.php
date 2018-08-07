@@ -82,7 +82,7 @@ class RuleRepository implements \Smile\ElasticsuiteVirtualAttribute\Api\RuleRepo
         $this->collectionProcessor   = $collectionProcessor;
         $this->searchResultsFactory  = $searchResultsFactory;
     }
-    
+
     /**
      * {@inheritdoc}
      */

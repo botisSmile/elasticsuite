@@ -77,14 +77,15 @@ abstract class AbstractRule extends Action
     /**
      * Abstract constructor.
      *
-     * @param \Magento\Backend\App\Action\Context                               $context           Application context.
-     * @param \Magento\Framework\View\Result\PageFactory                        $resultPageFactory Result Page factory.
-     * @param \Magento\Framework\Registry                                       $coreRegistry      Application registry.
-     * @param \Magento\Framework\App\Request\DataPersistorInterface             $dataPersistor     Data persistor.
-     * @param \Magento\Ui\Component\MassAction\Filter                           $filter            Mass Action Filter.
-     * @param \Smile\ElasticsuiteVirtualAttribute\Api\RuleRepositoryInterface   $ruleRepository    Rule Repository.
-     * @param \Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterfaceFactory $ruleFactory       Rule Factory.
-     * @param \Smile\ElasticsuiteVirtualAttribute\Api\RuleServiceInterface      $ruleService       Rule Service.
+     * @param \Magento\Backend\App\Action\Context                                            $context           Application context.
+     * @param \Magento\Framework\View\Result\PageFactory                                     $resultPageFactory Result Page factory.
+     * @param \Magento\Framework\Registry                                                    $coreRegistry      Application registry.
+     * @param \Magento\Framework\App\Request\DataPersistorInterface                          $dataPersistor     Data persistor.
+     * @param \Magento\Ui\Component\MassAction\Filter                                        $filter            Mass Action Filter.
+     * @param \Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\CollectionFactory $collectionFactory Collection Factory.
+     * @param \Smile\ElasticsuiteVirtualAttribute\Api\RuleRepositoryInterface                $ruleRepository    Rule Repository.
+     * @param \Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterfaceFactory              $ruleFactory       Rule Factory.
+     * @param \Smile\ElasticsuiteVirtualAttribute\Api\RuleServiceInterface                   $ruleService       Rule Service.
      */
     public function __construct(
         \Magento\Backend\App\Action\Context $context,

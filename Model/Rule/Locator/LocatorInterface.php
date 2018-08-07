@@ -22,7 +22,7 @@ namespace Smile\ElasticsuiteVirtualAttribute\Model\Rule\Locator;
 interface LocatorInterface
 {
     /**
-     * Retrieve current optimizer.
+     * Retrieve current rule.
      *
      * @return \Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterface
      */

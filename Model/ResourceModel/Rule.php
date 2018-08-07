@@ -76,13 +76,13 @@ class Rule extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
         $connection = $this->getConnection();
 
         $select = $connection->select()
-        ->from(['rs' => $this->getTable(RuleInterface::STORE_TABLE_NAME)], 'store_id')
+            ->from(['rs' => $this->getTable(RuleInterface::STORE_TABLE_NAME)], 'store_id')
             ->join(
-             ['r' => $this->getMainTable()],
-             'rs.' . $this->getIdFieldName() . ' = r.' . $this->getIdFieldName(),
-             []
+                ['r' => $this->getMainTable()],
+                'rs.' . $this->getIdFieldName() . ' = r.' . $this->getIdFieldName(),
+                []
             )
-        ->where('r.' . $this->getIdFieldName() . ' = :rule_id');
+            ->where('r.' . $this->getIdFieldName() . ' = :rule_id');
 
         return $connection->fetchCol($select, ['rule_id' => (int) $object->getId()]);
     }

@@ -91,7 +91,8 @@ class Product extends \Magento\CatalogRule\Model\Rule\Condition\Product
                 'grid'        => ['()', '!()'],
                 'category'    => ['()', '!()'],
             ];
-            $this->_arrayInputTypes            = ['multiselect', 'grid', 'category'];
+
+            $this->_arrayInputTypes = ['multiselect', 'grid', 'category'];
         }
 
         return $this->_defaultOperatorInputByType;
@@ -214,7 +215,7 @@ class Product extends \Magento\CatalogRule\Model\Rule\Condition\Product
     /**
      * Filter current select options to exclude values that are built by virtual attribute rules.
      *
-     * @param array &$selectOptions The option list to filter.
+     * @param array $selectOptions The option list to filter.
      */
     private function filterSelectOptions(&$selectOptions)
     {

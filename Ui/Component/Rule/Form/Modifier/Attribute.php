@@ -72,5 +72,4 @@ class Attribute implements \Magento\Ui\DataProvider\Modifier\ModifierInterface
 
         return $meta;
     }
-
 }

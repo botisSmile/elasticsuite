@@ -32,8 +32,8 @@ class Refresh extends AbstractButton
                 'label' => __('Refresh'),
                 'class' => 'action-secondary',
                 'on_click' => 'deleteConfirm(\'' . __(
-                        'Are you sure you want to do this?'
-                    ). '\', \'' . $this->getRefreshUrl() . '\')',
+                    'Are you sure you want to do this?'
+                ). '\', \'' . $this->getRefreshUrl() . '\')',
                 'sort_order' => 100,
             ];
         }

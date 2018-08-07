@@ -90,6 +90,7 @@ class Stores implements \Magento\Ui\DataProvider\Modifier\ModifierInterface
     private function isScopeStore($attributeId)
     {
         $attribute = $this->attributeRepository->get($attributeId);
+
         return ($attribute->getAttributeId() && $attribute->isScopeStore());
     }
 }

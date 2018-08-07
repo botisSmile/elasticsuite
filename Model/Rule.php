@@ -259,8 +259,8 @@ class Rule extends \Magento\Framework\Model\AbstractModel implements \Smile\Elas
             }
 
             if ($result === false) {
-                if ($this->getOrigData(self::CONDITION)
-                    !== $this->serializer->serialize($this->getCondition()->getConditions()->asArray())) {
+                $condition = $this->serializer->serialize($this->getCondition()->getConditions()->asArray());
+                if ($this->getOrigData(self::CONDITION) !== $condition) {
                     $result = true;
                 }
             }

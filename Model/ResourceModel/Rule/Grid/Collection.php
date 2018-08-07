@@ -12,6 +12,8 @@
  */
 namespace Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\Grid;
 
+use \Magento\Framework\Api\Search\SearchResultInterface;
+
 /**
  * Smile Elastic Suite Virtual Attribute rule collection for grids.
  *
@@ -19,9 +21,7 @@ namespace Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\Grid;
  * @package  Smile\ElasticsuiteVirtualAttribute
  * @author   Romain Ruaud <romain.ruaud@smile.fr>
  */
-class Collection
-    extends \Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\Collection
-    implements \Magento\Framework\Api\Search\SearchResultInterface
+class Collection extends \Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\Collection implements SearchResultInterface
 {
     /**
      * @var \Magento\Framework\Api\Search\AggregationInterface[]

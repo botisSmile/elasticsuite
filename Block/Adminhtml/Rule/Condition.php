@@ -102,7 +102,8 @@ class Condition extends \Magento\Backend\Block\AbstractBlock
         );
 
         $ruleConditionField->setValue($rule);
-        $ruleConditionRenderer = $this->getLayout()->createBlock('Smile\ElasticsuiteVirtualAttribute\Block\Adminhtml\Rule\Renderer\Condition');
+        $ruleConditionRenderer = $this->getLayout()
+            ->createBlock('Smile\ElasticsuiteVirtualAttribute\Block\Adminhtml\Rule\Renderer\Condition');
         $ruleConditionField->setRenderer($ruleConditionRenderer);
 
         return $form;

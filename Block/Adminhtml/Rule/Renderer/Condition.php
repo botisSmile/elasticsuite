@@ -21,9 +21,7 @@ namespace Smile\ElasticsuiteVirtualAttribute\Block\Adminhtml\Rule\Renderer;
  * @package  Smile\ElasticsuiteVirtualAttribute
  * @author   Romain Ruaud <romain.ruaud@smile.fr>
  */
-class Condition
-    extends \Magento\Backend\Block\Template
-    implements \Magento\Framework\Data\Form\Element\Renderer\RendererInterface
+class Condition extends \Magento\Backend\Block\Template implements \Magento\Framework\Data\Form\Element\Renderer\RendererInterface
 {
     /**
      * @var \Magento\Rule\Block\Conditions

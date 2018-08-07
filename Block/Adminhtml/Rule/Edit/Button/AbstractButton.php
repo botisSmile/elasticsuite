@@ -38,8 +38,8 @@ class AbstractButton implements \Magento\Framework\View\Element\UiComponent\Cont
     /**
      * Generic constructor
      *
-     * @param \Magento\Framework\View\Element\UiComponent\Context                     $context  UI Component context
-     * @param \Smile\ElasticsuiteVirtualAttribute\Model\Rule\Locator\LocatorInterface $locator  Rule Locator
+     * @param \Magento\Framework\View\Element\UiComponent\Context                     $context UI Component context
+     * @param \Smile\ElasticsuiteVirtualAttribute\Model\Rule\Locator\LocatorInterface $locator Rule Locator
      */
     public function __construct(
         \Magento\Framework\View\Element\UiComponent\Context $context,

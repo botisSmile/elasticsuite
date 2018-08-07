@@ -52,7 +52,7 @@ class Publisher extends AbstractDb
     private $attribute;
 
     /**
-     * @var int
+     * @var integer
      */
     private $fulltextIndexThreshold = self::DEFAULT_FULLTEXT_THRESHOLD;
 
