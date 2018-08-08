@@ -55,7 +55,7 @@ class Builder extends \Magento\Rule\Model\Condition\Sql\Builder
         \Magento\Rule\Model\Condition\Sql\ExpressionFactory $expressionFactory,
         \Magento\Eav\Api\AttributeRepositoryInterface $attributeRepository
     ) {
-        parent::__construct($expressionFactory, $attributeRepository);
+        parent::__construct($expressionFactory);
         $this->attributeRepository = $attributeRepository;
     }
 
