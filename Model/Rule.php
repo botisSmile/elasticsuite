@@ -251,6 +251,11 @@ class Rule extends \Magento\Framework\Model\AbstractModel implements \Smile\Elas
     private function isRefreshNeeded()
     {
         $result = false;
+
+        if ($this->isObjectNew()) {
+            $result = true;
+        }
+
         if ($this->getId()) {
             foreach ([self::PRIORITY, self::IS_ACTIVE] as $field) {
                 if ($this->dataHasChangedFor($field)) {
