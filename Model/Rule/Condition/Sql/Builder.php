@@ -118,6 +118,10 @@ class Builder extends \Magento\Rule\Model\Condition\Sql\Builder
                 );
             }
             $expression = implode(' OR ', $clauses);
+
+            if (strpos($conditionOperator, '!') !== false) {
+                $expression = 'NOT ' . implode(' AND NOT ', $clauses);
+            }
         }
 
         return $expression;
