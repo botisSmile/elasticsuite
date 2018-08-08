@@ -115,7 +115,7 @@ class Publisher extends AbstractDb
                 ['entity' => $this->metadata->getEntityTable()],
                 sprintf('main_table.%s = entity.%s', $this->metadata->getLinkField(), $this->metadata->getLinkField()),
                 $this->metadata->getIdentifierField()
-            )->group($this->metadata->getLinkField());
+            )->group('main_table.' . $this->metadata->getLinkField());
 
         $ids = $this->getConnection()->fetchCol($idSelect);
         $this->processFullTextReindex($ids);
