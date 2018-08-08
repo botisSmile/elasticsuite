@@ -19,14 +19,16 @@
     <menu>
         <add
              id="ElasticsuiteVirtualAttribute::attributes"
-             title="Virtual Attributes"
+             title="Virtual Attributes Rules"
+             translate="title"
              module="Smile_ElasticsuiteVirtualAttribute"
              sortOrder="200"
              parent="Smile_ElasticsuiteCore::elasticsuite_menu"
              resource="Smile_ElasticsuiteVirtualAttribute::manage"/>
         <add
             id="ElasticsuiteVirtualAttribute::products"
-            title="Product Attributes"
+            title="Products"
+            translate="title"
             module="Smile_ElasticsuiteVirtualAttribute"
             sortOrder="10"
             parent="ElasticsuiteVirtualAttribute::attributes"
