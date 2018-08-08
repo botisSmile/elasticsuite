@@ -80,15 +80,9 @@ class ValueUpdater extends \Magento\Catalog\Model\ResourceModel\Product\Action
     public function removeValue($row)
     {
         $attribute = $this->getAttributeForUpdate();
-        $table     = $attribute->getBackendTable();
 
         // New value is old value without the value to remove.
         $newValue = array_diff(explode(',', $row[$this->attribute->getAttributeCode()]), [$this->optionId]);
-
-        if (!isset($this->_attributeValuesToDelete[$table])) {
-            $this->_attributeValuesToDelete[$table] = [];
-        }
-        $this->_attributeValuesToDelete[$table][] = $this->resolveEntityId($row[$this->getIdFieldName()]);
 
         // Register new value to save if not empty.
         $this->saveAttributeValue($attribute, $row[$this->getIdFieldName()], $newValue);
@@ -125,17 +119,12 @@ class ValueUpdater extends \Magento\Catalog\Model\ResourceModel\Product\Action
     {
         $connection = $this->getConnection();
 
-        foreach ($this->_attributeValuesToDelete as $table => $ids) {
-            $connection->delete($table, ['value = ?' => $this->optionId, $this->getLinkField() . ' IN (?)' => $ids]);
-        }
-
         foreach ($this->_attributeValuesToSave as $table => $data) {
             $connection->insertOnDuplicate($table, $data, ['value']);
         }
 
         // Reset data arrays.
         $this->_attributeValuesToSave   = [];
-        $this->_attributeValuesToDelete = [];
 
         return $this;
     }
