@@ -43,6 +43,6 @@ class ApplyRules
      */
     public function execute()
     {
-        $this->service->applyAll();
+        $this->service->processRefresh();
     }
 }
