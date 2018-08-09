@@ -47,3 +47,6 @@ Inactive,Inactive
 Status,Status
 "Virtual Attributes Rules","Virtual Attributes Rules"
 "Products","Products"
+"Change status","Change status"
+"A total of %1 rules(s) have been disabled.","A total of %1 rules(s) have been disabled."
+"A total of %1 rules(s) have been enabled.","A total of %1 rules(s) have been enabled."
