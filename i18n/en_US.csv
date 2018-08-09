@@ -50,3 +50,6 @@ Status,Status
 "Change status","Change status"
 "A total of %1 rules(s) have been disabled.","A total of %1 rules(s) have been disabled."
 "A total of %1 rules(s) have been enabled.","A total of %1 rules(s) have been enabled."
+"Refresh scheduled","Refresh scheduled"
+"Yes","Yes"
+"No","No"

@@ -257,7 +257,28 @@
             </settings>
         </column>
 
-        <actionsColumn name="actions" class="Smile\ElasticsuiteVirtualAttribute\Ui\Component\Rule\Listing\Column\RuleActions" sortOrder="70">
+        <column name="to_refresh" component="Magento_Ui/js/grid/columns/select" sortOrder="70">
+            <settings>
+                <options>
+                    <option name="active" xsi:type="array">
+                        <item name="value" xsi:type="string">1</item>
+                        <item name="label" xsi:type="string" translate="true">Yes</item>
+                    </option>
+                    <option name="inactive" xsi:type="array">
+                        <item name="value" xsi:type="string">0</item>
+                        <item name="label" xsi:type="string" translate="true">No</item>
+                    </option>
+                </options>
+                <filter>select</filter>
+                <editor>
+                    <editorType>select</editorType>
+                </editor>
+                <dataType>select</dataType>
+                <label translate="true">Refresh scheduled</label>
+            </settings>
+        </column>
+
+        <actionsColumn name="actions" class="Smile\ElasticsuiteVirtualAttribute\Ui\Component\Rule\Listing\Column\RuleActions" sortOrder="80">
             <settings>
                 <resizeEnabled>false</resizeEnabled>
                 <resizeDefaultWidth>100</resizeDefaultWidth>
