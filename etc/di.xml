@@ -103,9 +103,9 @@
     </type>
 
     <!-- Virtual Types for Rules -->
-    <virtualType name="virtualAttributeRuleFactory" type="\Magento\CatalogRule\Model\RuleFactory">
+    <virtualType name="virtualAttributeCombineFactory" type="\Magento\CatalogRule\Model\Rule\Condition\CombineFactory">
         <arguments>
-            <argument name="instanceName" xsi:type="string">virtualAttributeRule</argument>
+            <argument name="instanceName" xsi:type="string">Smile\ElasticsuiteVirtualAttribute\Model\Rule\Condition\Combine</argument>
         </arguments>
     </virtualType>
 
@@ -115,9 +115,9 @@
         </arguments>
     </virtualType>
 
-    <virtualType name="virtualAttributeCombineFactory" type="\Magento\CatalogRule\Model\Rule\Condition\CombineFactory">
+    <virtualType name="virtualAttributeRuleFactory" type="\Magento\CatalogRule\Model\RuleFactory">
         <arguments>
-            <argument name="instanceName" xsi:type="string">Smile\ElasticsuiteVirtualAttribute\Model\Rule\Condition\Combine</argument>
+            <argument name="instanceName" xsi:type="string">virtualAttributeRule</argument>
         </arguments>
     </virtualType>
 
