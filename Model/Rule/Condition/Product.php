@@ -112,11 +112,14 @@ class Product extends \Magento\CatalogRule\Model\Rule\Condition\Product
             $inputType = 'numeric';
         } elseif (is_object($this->getAttributeObject())) {
             $frontendInput = $this->getAttributeObject()->getFrontendInput();
+            $frontendClass = $this->getAttributeObject()->getFrontendClass();
 
             if ($this->getAttributeObject()->getAttributeCode() === 'category_ids') {
                 $inputType = 'category';
             } elseif (in_array($frontendInput, ['select', 'multiselect'])) {
                 $inputType = 'multiselect';
+            } elseif (in_array($frontendClass, ['validate-digits', 'validate-number'])) {
+                $inputType = 'numeric';
             } elseif ($frontendInput === 'date') {
                 $inputType = 'date';
             } elseif ($frontendInput === 'boolean') {
