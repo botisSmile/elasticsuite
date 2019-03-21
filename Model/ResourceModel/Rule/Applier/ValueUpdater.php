@@ -44,6 +44,11 @@ class ValueUpdater extends \Magento\Catalog\Model\ResourceModel\Product\Action
     private $storeId;
 
     /**
+     * @var \Magento\Catalog\Api\Data\ProductAttributeInterface|null
+     */
+    private $attributeForUpdate = null;
+
+    /**
      * ValueUpdater constructor.
      *
      * @param \Magento\Eav\Model\Entity\Context                                                  $context       Context
@@ -172,13 +177,15 @@ class ValueUpdater extends \Magento\Catalog\Model\ResourceModel\Product\Action
      */
     private function getAttributeForUpdate()
     {
-        $attributeCollection = $this->_universalFactory->create('\Magento\Catalog\Model\ResourceModel\Product\Attribute\Collection');
-        $attributeCollection->addFieldToFilter('main_table.attribute_id', $this->attribute->getAttributeId());
-        $attribute = $attributeCollection->getFirstItem();
+        if (null === $this->attributeForUpdate) {
+            $attributeCollection = $this->_universalFactory->create('\Magento\Catalog\Model\ResourceModel\Product\Attribute\Collection');
+            $attributeCollection->addFieldToFilter('main_table.attribute_id', $this->attribute->getAttributeId());
+            $this->attributeForUpdate = $attributeCollection->getFirstItem();
 
-        // To process insert in temporary table instead of real one.
-        $attribute->setBackendTable($this->tableStrategy->getTemporaryTableName($this->attribute));
+            // To process insert in temporary table instead of real one.
+            $this->attributeForUpdate->setBackendTable($this->tableStrategy->getTemporaryTableName($this->attribute));
+        }
 
-        return $attribute;
+        return $this->attributeForUpdate;
     }
 }
