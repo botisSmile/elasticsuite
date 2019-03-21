@@ -67,9 +67,9 @@ class Builder extends \Magento\Rule\Model\Condition\Sql\Builder
      */
     protected function _getMappedSqlCondition(
         \Magento\Rule\Model\Condition\AbstractCondition $condition,
-        $value = '',
-        $isDefaultStoreUsed = true
-    ) {
+        string $value = '',
+        bool $isDefaultStoreUsed = true
+    ) : string {
         $argument = $condition->getMappedSqlField();
 
         // If rule hasn't valid argument - create negative expression to prevent incorrect rule behavior.
