@@ -216,15 +216,22 @@ class Matcher extends AbstractDb
             \Magento\Eav\Model\Entity\Collection\AbstractCollection::ATTRIBUTE_TABLE_ALIAS_PREFIX . $attributeCode
         );
 
+        $entityIdField = $productCollection->getEntity()->getEntityIdField();
+        $linkField     = $productCollection->getEntity()->getLinkField();
         $productCollection->addAttributeToSelect($attributeCode, 'left');
 
         $productCollection->getSelect()->reset(\Magento\Framework\DB\Select::ORDER);
         $productCollection->getSelect()->reset(\Magento\Framework\DB\Select::LIMIT_COUNT);
         $productCollection->getSelect()->reset(\Magento\Framework\DB\Select::LIMIT_OFFSET);
         $productCollection->getSelect()->reset(\Magento\Framework\DB\Select::COLUMNS);
-        $productCollection->getSelect()->columns('e.' . $productCollection->getEntity()->getIdFieldName());
-        $productCollection->getSelect()->columns([$attributeCode => $attributeTable . '.value']);
-        $productCollection->getSelect()->columns(['value_id' => $attributeTable . '.value_id']);
+        $productCollection->getSelect()->columns(
+            [
+                $entityIdField => 'e.' . $entityIdField,
+                $linkField     => 'e.' . $linkField,
+                $attributeCode => $attributeTable . '.value',
+                'value_id'     => $attributeTable . '.value_id',
+            ]
+        );
 
         $select = $productCollection->getSelect();
 

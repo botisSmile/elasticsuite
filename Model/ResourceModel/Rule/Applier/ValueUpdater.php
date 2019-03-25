@@ -44,9 +44,9 @@ class ValueUpdater extends \Magento\Catalog\Model\ResourceModel\Product\Action
     private $storeId;
 
     /**
-     * @var \Magento\Catalog\Api\Data\ProductAttributeInterface|null
+     * @var string
      */
-    private $attributeForUpdate = null;
+    private $updateTable;
 
     /**
      * ValueUpdater constructor.
@@ -75,6 +75,7 @@ class ValueUpdater extends \Magento\Catalog\Model\ResourceModel\Product\Action
         $this->attribute     = $attribute;
         $this->optionId      = $optionId;
         $this->storeId       = $storeId;
+        $this->updateTable   = $this->tableStrategy->getTemporaryTableName($this->attribute);
     }
 
     /**
@@ -84,13 +85,13 @@ class ValueUpdater extends \Magento\Catalog\Model\ResourceModel\Product\Action
      */
     public function removeValue($row)
     {
-        $attribute = $this->getAttributeForUpdate();
+        $attribute = $this->attribute;
 
         // New value is old value without the value to remove.
         $newValue = array_diff(explode(',', $row[$this->attribute->getAttributeCode()]), [$this->optionId]);
 
         // Register new value to save if not empty.
-        $this->saveAttributeValue($attribute, $row[$this->getIdFieldName()], $newValue);
+        $this->saveAttributeValue($attribute, $row[$this->getLinkField()], $newValue);
     }
 
     /**
@@ -100,7 +101,7 @@ class ValueUpdater extends \Magento\Catalog\Model\ResourceModel\Product\Action
      */
     public function updateValue($row)
     {
-        $attribute     = $this->getAttributeForUpdate();
+        $attribute     = $this->attribute;
         $frontendInput = $attribute->getFrontendInput();
         $newValue      = [$this->optionId]; // New value default to the option_id of the rule. It will replace old value for select.
 
@@ -112,7 +113,7 @@ class ValueUpdater extends \Magento\Catalog\Model\ResourceModel\Product\Action
             }
         }
 
-        $this->saveAttributeValue($attribute, $row[$this->getIdFieldName()], $newValue);
+        $this->saveAttributeValue($attribute, $row[$this->getLinkField()], $newValue);
     }
 
     /**
@@ -128,8 +129,19 @@ class ValueUpdater extends \Magento\Catalog\Model\ResourceModel\Product\Action
             $connection->insertOnDuplicate($table, $data, ['value']);
         }
 
+        if ($this->_storeManager->hasSingleStore()) {
+            $storeId = $this->getDefaultStoreId();
+            $connection->delete(
+                $this->getUpdateTable(),
+                [
+                    'attribute_id = ?' => $this->attribute->getAttributeId(),
+                    'store_id <> ?'    => (int) $storeId,
+                ]
+            );
+        }
+
         // Reset data arrays.
-        $this->_attributeValuesToSave   = [];
+        $this->_attributeValuesToSave = [];
 
         return $this;
     }
@@ -141,10 +153,50 @@ class ValueUpdater extends \Magento\Catalog\Model\ResourceModel\Product\Action
     public function removeOptionId()
     {
         $this->getConnection()->update(
-            $this->getAttributeForUpdate()->getBackend()->getTable(),
+            $this->getUpdateTable(),
             ['value' => null],
             ['value = ?' => $this->optionId]
         );
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.CamelCaseMethodName)
+     * @SuppressWarnings(PHPMD.ElseExpression)
+     * {@inheritdoc}
+     */
+    protected function _saveAttributeValue($object, $attribute, $value)
+    {
+        $storeId  = $this->storeId;
+        $table    = $this->getUpdateTable();
+        $entityId = $object->getId();
+
+        $data = new \Magento\Framework\DataObject(
+            [
+                'attribute_id'        => $attribute->getAttributeId(),
+                'store_id'            => $storeId,
+                $this->getLinkField() => $entityId,
+                'value'               => $this->_prepareValueForSave($value, $attribute),
+            ]
+        );
+        $bind = $this->_prepareDataForTable($data, $table);
+
+        if ($attribute->isScopeStore()) {
+            // Update attribute value for store.
+            $this->_attributeValuesToSave[$table][] = $bind;
+        } elseif ($attribute->isScopeWebsite() && $storeId != $this->getDefaultStoreId()) {
+            // Update attribute value for website.
+            $storeIds = $this->_storeManager->getStore($storeId)->getWebsite()->getStoreIds(true);
+            foreach ($storeIds as $storeId) {
+                $bind['store_id'] = (int) $storeId;
+                $this->_attributeValuesToSave[$table][] = $bind;
+            }
+        } else {
+            // Update global attribute value.
+            $bind['store_id'] = $this->getDefaultStoreId();
+            $this->_attributeValuesToSave[$table][] = $bind;
+        }
+
+        return $this;
     }
 
     /**
@@ -157,7 +209,6 @@ class ValueUpdater extends \Magento\Catalog\Model\ResourceModel\Product\Action
     private function saveAttributeValue($attribute, $rowId, $newValue)
     {
         $object = new \Magento\Framework\DataObject();
-        $object->setStoreId($this->storeId);
         $object->setId($rowId);
         $object->setEntityId($rowId);
 
@@ -171,21 +222,12 @@ class ValueUpdater extends \Magento\Catalog\Model\ResourceModel\Product\Action
     }
 
     /**
-     * Fetch a new instance of attribute with custom backend table to process update.
+     * Retrieve Update table name (a temporary table based on the current attribute).
      *
-     * @return \Magento\Framework\DataObject
+     * @return string
      */
-    private function getAttributeForUpdate()
+    private function getUpdateTable()
     {
-        if (null === $this->attributeForUpdate) {
-            $attributeCollection = $this->_universalFactory->create('\Magento\Catalog\Model\ResourceModel\Product\Attribute\Collection');
-            $attributeCollection->addFieldToFilter('main_table.attribute_id', $this->attribute->getAttributeId());
-            $this->attributeForUpdate = $attributeCollection->getFirstItem();
-
-            // To process insert in temporary table instead of real one.
-            $this->attributeForUpdate->setBackendTable($this->tableStrategy->getTemporaryTableName($this->attribute));
-        }
-
-        return $this->attributeForUpdate;
+        return $this->updateTable;
     }
 }
