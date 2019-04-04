@@ -156,7 +156,7 @@ class Coocurence
         $bucketType = BucketInterface::TYPE_SIGNIFICANT_TERM;
 
         return [
-            $targetEventType => ['field' => $field, 'type' => $bucketType, 'config' => $config],
+            $targetEventType => ['name' => $targetEventType, 'field' => $field, 'type' => $bucketType, 'config' => $config],
         ];
     }
 }
