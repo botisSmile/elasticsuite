@@ -151,12 +151,16 @@ class Coocurence
      */
     private function getAggregations($targetEventType, $size)
     {
-        $config     = ['size' => $size];
-        $field      = $targetEventType;
-        $bucketType = BucketInterface::TYPE_SIGNIFICANT_TERM;
+        $config = [
+            'type'        => BucketInterface::TYPE_SIGNIFICANT_TERM,
+            'name'        => $targetEventType,
+            'field'       => $targetEventType,
+            'size'        => $size,
+            //'minDocCount' => 1 To allow some matching with low volume tracking log.
+        ];
 
         return [
-            $targetEventType => ['name' => $targetEventType, 'field' => $field, 'type' => $bucketType, 'config' => $config],
+            $targetEventType => $config,
         ];
     }
 }
