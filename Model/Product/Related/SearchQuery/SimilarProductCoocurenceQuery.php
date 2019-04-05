@@ -1,17 +1,17 @@
 <?php
 /**
  * DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade Smile ElasticSuite to newer
-* versions in the future.
-*
-*
-* @category  Smile
-* @package   Smile\ElasticsuiteRecommender
-* @author    Aurelien FOUCRET <aurelien.foucret@smile.fr>
-* @copyright 2018 Smile
-* @license   Open Software License ("OSL") v. 3.0
-*/
+ *
+ * Do not edit or add to this file if you wish to upgrade Smile ElasticSuite to newer
+ * versions in the future.
+ *
+ *
+ * @category  Smile
+ * @package   Smile\ElasticsuiteRecommender
+ * @author    Aurelien FOUCRET <aurelien.foucret@smile.fr>
+ * @copyright 2018 Smile
+ * @license   Open Software License ("OSL") v. 3.0
+ */
 namespace Smile\ElasticsuiteRecommender\Model\Product\Related\SearchQuery;
 
 use Smile\ElasticsuiteCore\Search\Request\Query\QueryFactory;
@@ -21,6 +21,13 @@ use Smile\ElasticsuiteRecommender\Model\Product\Matcher\SearchQueryBuilderInterf
 use Magento\Catalog\Api\Data\ProductInterface;
 use Smile\ElasticsuiteRecommender\Model\Coocurence;
 
+/**
+ * Class SimilarProductCoocurenceQuery
+ *
+ * @category Smile
+ * @package  Smile\ElasticsuiteRecommender
+ * @author   Aurelien FOUCRET <aurelien.foucret@smile.fr>
+ */
 class SimilarProductCoocurenceQuery implements SearchQueryBuilderInterface
 {
     /**
@@ -53,6 +60,16 @@ class SimilarProductCoocurenceQuery implements SearchQueryBuilderInterface
      */
     private $minimumShouldMatch;
 
+    /**
+     * SimilarProductCoocurenceQuery constructor.
+     *
+     * @param QueryFactory $queryFactory       Query factory.
+     * @param Coocurence   $coocurence         Co-occurrence finder.
+     * @param UpsellConfig $config             Upsell config model.
+     * @param sgtring      $coocurenceField    Co-occurence field.
+     * @param int          $boost              Query boost.
+     * @param string       $minimumShouldMatch Minimum should match.
+     */
     public function __construct(
         QueryFactory $queryFactory,
         Coocurence $coocurence,
@@ -69,13 +86,16 @@ class SimilarProductCoocurenceQuery implements SearchQueryBuilderInterface
         $this->minimumShouldMatch = $minimumShouldMatch;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getSearchQuery(ProductInterface $product)
     {
         $query      = false;
         $productIds = $this->getProducts($product);
 
         if (!empty($productIds)) {
-            $queryParams =  [
+            $queryParams = [
                 'fields'              => $this->config->getSimilarityFields($product->getStoreId()),
                 'includeOriginalDocs' => true,
                 'minimumShouldMatch'  => $this->minimumShouldMatch,
@@ -92,11 +112,28 @@ class SimilarProductCoocurenceQuery implements SearchQueryBuilderInterface
         return $query;
     }
 
+    /**
+     * Get products similar to the given product according to product view co-occurences.
+     *
+     * @param int $productId Product Id
+     * @param int $storeId   Store Id
+     *
+     * @return string[]
+     */
     private function getSimilarProducts($productId, $storeId)
     {
         return $this->coocurence->getCoocurences("product_view", $productId, $storeId, "product_view", 10);
     }
 
+    /**
+     * Get co-occurences of a product according to the co-occurence field and products also viewed.
+     * For instance if the co-occurrence field is "product_cart", it will return all products also added to cart
+     * with any of the products added to cart which were also viewed when the given product was viewed.
+     *
+     * @param ProductInterface $product Product to get co-occurences for.
+     *
+     * @return array
+     */
     private function getProducts(ProductInterface $product)
     {
         $storeId     = $product->getStoreId();

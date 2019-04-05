@@ -1,21 +1,30 @@
 <?php
 /**
  * DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade Smile ElasticSuite to newer
-* versions in the future.
-*
-*
-* @category  Smile
-* @package   Smile\ElasticsuiteRecommender
-* @author    Aurelien FOUCRET <aurelien.foucret@smile.fr>
-* @copyright 2018 Smile
-* @license   Open Software License ("OSL") v. 3.0
-*/
+ *
+ * Do not edit or add to this file if you wish to upgrade Smile ElasticSuite to newer
+ * versions in the future.
+ *
+ *
+ * @category  Smile
+ * @package   Smile\ElasticsuiteRecommender
+ * @author    Aurelien FOUCRET <aurelien.foucret@smile.fr>
+ * @copyright 2018 Smile
+ * @license   Open Software License ("OSL") v. 3.0
+ */
 namespace Smile\ElasticsuiteRecommender\Model\Product;
 
 use Magento\Catalog\Api\Data\ProductInterface;
 
+/**
+ * Automatic recommendations loader.
+ * If instantiated with a provider of manual recommended items,
+ * it will only complement if need be that items list with automatic recommendations.
+ *
+ * @category Smile
+ * @package  Smile\ElasticsuiteRecommender
+ * @author   Aurelien FOUCRET <aurelien.foucret@smile.fr>
+ */
 class Matcher
 {
     /**
@@ -36,9 +45,9 @@ class Matcher
     /**
      * Constructor.
      *
-     * @param Matcher\CollectionProvider          $collectionProvider
-     * @param Matcher\SearchQueryBuilderInterface $searchQueryBuilder
-     * @param Matcher\ItemProviderInterface       $itemProvider
+     * @param Matcher\CollectionProvider          $collectionProvider Collection provider.
+     * @param Matcher\SearchQueryBuilderInterface $searchQueryBuilder Search query builder.
+     * @param Matcher\ItemProviderInterface       $itemProvider       Item provider.
      */
     public function __construct(
         Matcher\CollectionProvider $collectionProvider,
@@ -54,7 +63,7 @@ class Matcher
      * Load recommendations.
      *
      * @param ProductInterface $product Source product.
-     * @param number           $size    Number of recommendations to load.
+     * @param int              $size    Number of recommendations to load.
      *
      * @return \Magento\Catalog\Api\Data\ProductInterface[]
      */

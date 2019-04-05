@@ -1,17 +1,17 @@
 <?php
 /**
  * DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade Smile ElasticSuite to newer
-* versions in the future.
-*
-*
-* @category  Smile
-* @package   Smile\ElasticsuiteRecommender
-* @author    Aurelien FOUCRET <aurelien.foucret@smile.fr>
-* @copyright 2018 Smile
-* @license   Open Software License ("OSL") v. 3.0
-*/
+ *
+ * Do not edit or add to this file if you wish to upgrade Smile ElasticSuite to newer
+ * versions in the future.
+ *
+ *
+ * @category  Smile
+ * @package   Smile\ElasticsuiteRecommender
+ * @author    Aurelien FOUCRET <aurelien.foucret@smile.fr>
+ * @copyright 2018 Smile
+ * @license   Open Software License ("OSL") v. 3.0
+ */
 namespace Smile\ElasticsuiteRecommender\Model\Product\Upsell\SearchQuery;
 
 use Smile\ElasticsuiteCore\Search\Request\Query\QueryFactory;
@@ -21,6 +21,12 @@ use Smile\ElasticsuiteRecommender\Model\Product\Matcher\SearchQueryBuilderInterf
 use Magento\Catalog\Api\Data\ProductInterface;
 use Smile\ElasticsuiteRecommender\Model\Coocurence;
 
+/**
+ * Upsell search query fulltext search co-occurences based clause builder.
+ *
+ * @category Smile
+ * @package  Smile\ElasticsuiteRecommender
+ */
 class SearchTerms implements SearchQueryBuilderInterface
 {
     /**
@@ -41,7 +47,9 @@ class SearchTerms implements SearchQueryBuilderInterface
     /**
      * Constructor.
      *
-     * @param QueryFactory $queryFactory
+     * @param QueryFactory $queryFactory Query factory.
+     * @param Coocurence   $coocurence   Co-occurence finder.
+     * @param UpsellConfig $config       Upsell config model.
      */
     public function __construct(QueryFactory $queryFactory, Coocurence $coocurence, UpsellConfig $config)
     {
@@ -50,6 +58,9 @@ class SearchTerms implements SearchQueryBuilderInterface
         $this->config       = $config;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getSearchQuery(ProductInterface $product)
     {
         $query = false;
@@ -60,9 +71,17 @@ class SearchTerms implements SearchQueryBuilderInterface
             $query = $this->queryFactory->create(QueryInterface::TYPE_BOOL, ['should' => $subQueries]);
         }
 
+        // @TODO fix this
         return false;$query;
     }
 
+    /**
+     * Return an array of fulltext search queries the upsell products should match as the provided product supposedly did.
+     *
+     * @param ProductInterface $product Product
+     *
+     * @return array
+     */
     private function getSubQueries(ProductInterface $product)
     {
         $queries     = [];
@@ -72,7 +91,7 @@ class SearchTerms implements SearchQueryBuilderInterface
             foreach ($searchTerms as $searchTerm) {
                 $queries[] = $this->queryFactory->create(
                     QueryInterface::TYPE_MULTIMATCH,
-                    ['fields'=> $queryFields, 'queryText' => $searchTerm]
+                    ['fields' => $queryFields, 'queryText' => $searchTerm]
                 );
             }
         }
@@ -80,6 +99,13 @@ class SearchTerms implements SearchQueryBuilderInterface
         return $queries;
     }
 
+    /**
+     * Get search terms searched for when the given product has been viewed
+     *
+     * @param ProductInterface $product Product
+     *
+     * @return string[]
+     */
     private function getSearches(ProductInterface $product)
     {
         return $this->coocurence->getCoocurences('product_view', $product->getId(), $product->getStoreId(), 'search_query');

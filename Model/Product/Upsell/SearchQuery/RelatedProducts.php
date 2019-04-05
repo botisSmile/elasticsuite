@@ -1,17 +1,17 @@
 <?php
 /**
  * DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade Smile ElasticSuite to newer
-* versions in the future.
-*
-*
-* @category  Smile
-* @package   Smile\ElasticsuiteRecommender
-* @author    Aurelien FOUCRET <aurelien.foucret@smile.fr>
-* @copyright 2018 Smile
-* @license   Open Software License ("OSL") v. 3.0
-*/
+ *
+ * Do not edit or add to this file if you wish to upgrade Smile ElasticSuite to newer
+ * versions in the future.
+ *
+ *
+ * @category  Smile
+ * @package   Smile\ElasticsuiteRecommender
+ * @author    Aurelien FOUCRET <aurelien.foucret@smile.fr>
+ * @copyright 2018 Smile
+ * @license   Open Software License ("OSL") v. 3.0
+ */
 namespace Smile\ElasticsuiteRecommender\Model\Product\Upsell\SearchQuery;
 
 use Smile\ElasticsuiteCore\Search\Request\Query\QueryFactory;
@@ -21,6 +21,13 @@ use Smile\ElasticsuiteRecommender\Model\Product\Matcher\SearchQueryBuilderInterf
 use Magento\Catalog\Api\Data\ProductInterface;
 use Smile\ElasticsuiteRecommender\Model\Coocurence;
 
+/**
+ * Upsell search query product view based related/more like this products clause builder.
+ *
+ * @category Smile
+ * @package  Smile\ElasticsuiteRecommender
+ * @author   Aurelien FOUCRET <aurelien.foucret@smile.fr>
+ */
 class RelatedProducts implements SearchQueryBuilderInterface
 {
     /**
@@ -41,7 +48,9 @@ class RelatedProducts implements SearchQueryBuilderInterface
     /**
      * Constructor.
      *
-     * @param QueryFactory $queryFactory
+     * @param QueryFactory $queryFactory Query factory.
+     * @param Coocurence   $coocurence   Co-occurrence finder.
+     * @param UpsellConfig $config       Upsell config model.
      */
     public function __construct(QueryFactory $queryFactory, Coocurence $coocurence, UpsellConfig $config)
     {
@@ -50,6 +59,9 @@ class RelatedProducts implements SearchQueryBuilderInterface
         $this->config       = $config;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getSearchQuery(ProductInterface $product)
     {
         $similarityQueryFields = $this->config->getSimilarityFields($product->getStoreId());
@@ -60,17 +72,24 @@ class RelatedProducts implements SearchQueryBuilderInterface
 
             foreach ($productIds as $relatedProduct) {
                  $likes[] = ['_id' => $relatedProduct];
-             }
+            }
 
             $query = $this->queryFactory->create(
                 QueryInterface::TYPE_MORELIKETHIS,
-                ['fields'=> $similarityQueryFields, 'like' => $likes, 'includeOriginalDocs' => true]
+                ['fields' => $similarityQueryFields, 'like' => $likes, 'includeOriginalDocs' => true]
             );
         }
 
         return $query;
     }
 
+    /**
+     * Get viewed products when a given product has been viewed
+     *
+     * @param ProductInterface $product Product.
+     *
+     * @return array Product Ids
+     */
     private function getProducts(ProductInterface $product)
     {
         return $this->coocurence->getCoocurences('product_view', $product->getId(), $product->getStoreId(), 'product_view');

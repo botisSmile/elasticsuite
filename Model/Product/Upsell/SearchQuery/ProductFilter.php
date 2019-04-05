@@ -1,17 +1,17 @@
 <?php
 /**
  * DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade Smile ElasticSuite to newer
-* versions in the future.
-*
-*
-* @category  Smile
-* @package   Smile\ElasticsuiteRecommender
-* @author    Aurelien FOUCRET <aurelien.foucret@smile.fr>
-* @copyright 2018 Smile
-* @license   Open Software License ("OSL") v. 3.0
-*/
+ *
+ * Do not edit or add to this file if you wish to upgrade Smile ElasticSuite to newer
+ * versions in the future.
+ *
+ *
+ * @category  Smile
+ * @package   Smile\ElasticsuiteRecommender
+ * @author    Aurelien FOUCRET <aurelien.foucret@smile.fr>
+ * @copyright 2018 Smile
+ * @license   Open Software License ("OSL") v. 3.0
+ */
 namespace Smile\ElasticsuiteRecommender\Model\Product\Upsell\SearchQuery;
 
 use Smile\ElasticsuiteCore\Search\Request\Query\QueryFactory;
@@ -19,6 +19,13 @@ use Smile\ElasticsuiteCore\Search\Request\QueryInterface;
 use Smile\ElasticsuiteRecommender\Model\Product\Matcher\SearchQueryBuilderInterface;
 use Magento\Catalog\Api\Data\ProductInterface;
 
+/**
+ * Upsell search query manual upsell recommendations exclusion filter builder
+ *
+ * @category Smile
+ * @package  Smile\ElasticsuiteRecommender
+ * @author   Aurelien FOUCRET <aurelien.foucret@smile.fr>
+ */
 class ProductFilter implements SearchQueryBuilderInterface
 {
     /**
@@ -29,13 +36,16 @@ class ProductFilter implements SearchQueryBuilderInterface
     /**
      * Constructor.
      *
-     * @param QueryFactory $queryFactory
+     * @param QueryFactory $queryFactory Query factory.
      */
     public function __construct(QueryFactory $queryFactory)
     {
         $this->queryFactory = $queryFactory;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getSearchQuery(ProductInterface $product)
     {
         $excludedProducts   = $product->getUpsellProductIds();

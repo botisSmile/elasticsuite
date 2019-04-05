@@ -1,17 +1,17 @@
 <?php
 /**
  * DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade Smile ElasticSuite to newer
-* versions in the future.
-*
-*
-* @category  Smile
-* @package   Smile\ElasticsuiteRecommender
-* @author    Aurelien FOUCRET <aurelien.foucret@smile.fr>
-* @copyright 2018 Smile
-* @license   Open Software License ("OSL") v. 3.0
-*/
+ *
+ * Do not edit or add to this file if you wish to upgrade Smile ElasticSuite to newer
+ * versions in the future.
+ *
+ *
+ * @category  Smile
+ * @package   Smile\ElasticsuiteRecommender
+ * @author    Aurelien FOUCRET <aurelien.foucret@smile.fr>
+ * @copyright 2018 Smile
+ * @license   Open Software License ("OSL") v. 3.0
+ */
 namespace Smile\ElasticsuiteRecommender\Model\Product\Upsell\SearchQuery;
 
 use Smile\ElasticsuiteCore\Search\Request\Query\QueryFactory;
@@ -21,6 +21,12 @@ use Smile\ElasticsuiteRecommender\Model\Product\Matcher\SearchQueryBuilderInterf
 use Magento\Catalog\Api\Data\ProductInterface;
 use Smile\ElasticsuiteRecommender\Model\Coocurence;
 
+/**
+ * Upsell search query manual upsell recommendations clause builder
+ *
+ * @category Smile
+ * @package  Smile\ElasticsuiteRecommender
+ */
 class ManualProducts implements SearchQueryBuilderInterface
 {
     /**
@@ -41,7 +47,9 @@ class ManualProducts implements SearchQueryBuilderInterface
     /**
      * Constructor.
      *
-     * @param QueryFactory $queryFactory
+     * @param QueryFactory $queryFactory Query factory.
+     * @param Coocurence   $coocurence   Co-occurrence finder.
+     * @param UpsellConfig $config       Upsell config model.
      */
     public function __construct(QueryFactory $queryFactory, Coocurence $coocurence, UpsellConfig $config)
     {
@@ -50,6 +58,9 @@ class ManualProducts implements SearchQueryBuilderInterface
         $this->config       = $config;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getSearchQuery(ProductInterface $product)
     {
         $query = false;
@@ -64,13 +75,20 @@ class ManualProducts implements SearchQueryBuilderInterface
 
             $query = $this->queryFactory->create(
                 QueryInterface::TYPE_MORELIKETHIS,
-                ['fields'=> $similarityQueryFields, 'like' => $likes, 'includeOriginalDocs' => true, 'boost' => 100]
+                ['fields' => $similarityQueryFields, 'like' => $likes, 'includeOriginalDocs' => true, 'boost' => 100]
             );
         }
 
         return $query;
     }
 
+    /**
+     * Return the manually configured upsell products ids for a given product
+     *
+     * @param ProductInterface $product Product
+     *
+     * @return array
+     */
     private function getProducts(ProductInterface $product)
     {
         return $product->getUpsellProductIds();

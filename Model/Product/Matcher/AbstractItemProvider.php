@@ -15,7 +15,6 @@
 
 namespace Smile\ElasticsuiteRecommender\Model\Product\Matcher;
 
-use Smile\ElasticsuiteRecommender\Model\Product\Matcher\ItemProviderInterface;
 use Magento\Catalog\Api\Data\ProductInterface;
 
 /**
@@ -61,5 +60,12 @@ abstract class AbstractItemProvider implements ItemProviderInterface
         return $collection->getItems();
     }
 
+    /**
+     * Return the product collection made out of manual recommendations for a given product.
+     *
+     * @param ProductInterface $product Product to get manual recommendations for.
+     *
+     * @return \Magento\Catalog\Model\ResourceModel\Product\Link\Product\Collection
+     */
     abstract protected function createCollection(ProductInterface $product);
 }

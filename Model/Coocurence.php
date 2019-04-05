@@ -1,17 +1,17 @@
 <?php
 /**
  * DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade Smile ElasticSuite to newer
-* versions in the future.
-*
-*
-* @category  Smile
-* @package   Smile\ElasticsuiteRecommender
-* @author    Aurelien FOUCRET <aurelien.foucret@smile.fr>
-* @copyright 2018 Smile
-* @license   Open Software License ("OSL") v. 3.0
-*/
+ *
+ * Do not edit or add to this file if you wish to upgrade Smile ElasticSuite to newer
+ * versions in the future.
+ *
+ *
+ * @category  Smile
+ * @package   Smile\ElasticsuiteRecommender
+ * @author    Aurelien FOUCRET <aurelien.foucret@smile.fr>
+ * @copyright 2018 Smile
+ * @license   Open Software License ("OSL") v. 3.0
+ */
 namespace Smile\ElasticsuiteRecommender\Model;
 
 use Smile\ElasticsuiteCore\Search\Request\Builder as SearchRequestBuilder;
@@ -21,7 +21,7 @@ use Smile\ElasticsuiteCore\Search\Request\BucketInterface;
 use function GuzzleHttp\json_encode;
 
 /**
- * Find coocurences accross event into the session data.
+ * Find coocurences across event into the session data.
  *
  * @category Smile
  * @package  Smile\ElasticsuiteRecommender

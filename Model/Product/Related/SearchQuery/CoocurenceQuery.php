@@ -1,17 +1,17 @@
 <?php
 /**
  * DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade Smile ElasticSuite to newer
-* versions in the future.
-*
-*
-* @category  Smile
-* @package   Smile\ElasticsuiteRecommender
-* @author    Aurelien FOUCRET <aurelien.foucret@smile.fr>
-* @copyright 2018 Smile
-* @license   Open Software License ("OSL") v. 3.0
-*/
+ *
+ * Do not edit or add to this file if you wish to upgrade Smile ElasticSuite to newer
+ * versions in the future.
+ *
+ *
+ * @category  Smile
+ * @package   Smile\ElasticsuiteRecommender
+ * @author    Aurelien FOUCRET <aurelien.foucret@smile.fr>
+ * @copyright 2018 Smile
+ * @license   Open Software License ("OSL") v. 3.0
+ */
 namespace Smile\ElasticsuiteRecommender\Model\Product\Related\SearchQuery;
 
 use Smile\ElasticsuiteCore\Search\Request\Query\QueryFactory;
@@ -53,6 +53,16 @@ class CoocurenceQuery implements SearchQueryBuilderInterface
      */
     private $minimumShouldMatch;
 
+    /**
+     * CoocurenceQuery constructor.
+     *
+     * @param QueryFactory $queryFactory       Query factory.
+     * @param Coocurence   $coocurence         Co-occurence finder.
+     * @param UpsellConfig $config             Upsell config model.
+     * @param string       $coocurenceField    Co-occurence field.
+     * @param int          $boost              Query boost.
+     * @param string       $minimumShouldMatch Minimum should match.
+     */
     public function __construct(
         QueryFactory $queryFactory,
         Coocurence $coocurence,
@@ -69,13 +79,16 @@ class CoocurenceQuery implements SearchQueryBuilderInterface
         $this->minimumShouldMatch = $minimumShouldMatch;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getSearchQuery(ProductInterface $product)
     {
         $query      = false;
         $productIds = $this->getProducts($product);
 
         if (!empty($productIds)) {
-            $queryParams =  [
+            $queryParams = [
                 'fields'              => $this->config->getSimilarityFields($product->getStoreId()),
                 'includeOriginalDocs' => true,
                 'minimumShouldMatch'  => $this->minimumShouldMatch,
@@ -92,6 +105,15 @@ class CoocurenceQuery implements SearchQueryBuilderInterface
         return $query;
     }
 
+    /**
+     * Get co-occurences of a product according to the co-occurence field.
+     * For instance if the co-occurence field is "product_cart", it will return all products also added to cart
+     * when this product was.
+     *
+     * @param ProductInterface $product Product to get co-occurrences for.
+     *
+     * @return array
+     */
     private function getProducts(ProductInterface $product)
     {
         $productId   = $product->getId();
