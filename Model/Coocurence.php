@@ -19,6 +19,7 @@ use Magento\Framework\Search\SearchEngineInterface;
 use Smile\ElasticsuiteTracker\Api\SessionIndexInterface;
 use Smile\ElasticsuiteCore\Search\Request\BucketInterface;
 use function GuzzleHttp\json_encode;
+use Smile\ElasticsuiteRecommender\Helper\Data as RecommenderHelper;
 
 /**
  * Find coocurences across event into the session data.
@@ -40,6 +41,11 @@ class Coocurence
     private $searchEngine;
 
     /**
+     * @var RecommenderHelper
+     */
+    private $helper;
+
+    /**
      * @var array
      */
     private $cache = [];
@@ -49,11 +55,16 @@ class Coocurence
      *
      * @param SearchRequestBuilder  $searchRequestBuilder Search request builder.
      * @param SearchEngineInterface $searchEngine         Search engine.
+     * @param RecommenderHelper     $helper               Recommender helper.
      */
-    public function __construct(SearchRequestBuilder $searchRequestBuilder, SearchEngineInterface $searchEngine)
-    {
+    public function __construct(
+        SearchRequestBuilder $searchRequestBuilder,
+        SearchEngineInterface $searchEngine,
+        RecommenderHelper $helper
+    ) {
         $this->searchRequestBuilder = $searchRequestBuilder;
         $this->searchEngine = $searchEngine;
+        $this->helper = $helper;
     }
 
     /**
@@ -156,7 +167,7 @@ class Coocurence
             'name'        => $targetEventType,
             'field'       => $targetEventType,
             'size'        => $size,
-            //'minDocCount' => 1 To allow some matching with low volume tracking log.
+            'minDocCount' => $this->helper->getCoOccurrenceMinDocCount(),
         ];
 
         return [
