@@ -86,7 +86,7 @@
                     <item name="addToCartRelated" xsi:type="object">addToCartRelated</item>
                     <item name="orderRelated" xsi:type="object">orderRelated</item>
                     <item name="addToCartSimilarRelated" xsi:type="object">addToCartSimilarRelated</item>
-                    <item name="orderSimilarRelated" xsi:type="object">addToCartSimilarRelated</item>
+                    <item name="orderSimilarRelated" xsi:type="object">orderSimilarRelated</item>
                 </item>
             </argument>
         </arguments>

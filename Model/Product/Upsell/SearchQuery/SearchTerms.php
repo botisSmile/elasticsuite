@@ -71,8 +71,7 @@ class SearchTerms implements SearchQueryBuilderInterface
             $query = $this->queryFactory->create(QueryInterface::TYPE_BOOL, ['should' => $subQueries]);
         }
 
-        // @TODO fix this
-        return false;$query;
+        return $query;
     }
 
     /**
