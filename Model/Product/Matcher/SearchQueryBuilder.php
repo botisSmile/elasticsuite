@@ -61,10 +61,7 @@ class SearchQueryBuilder implements SearchQueryBuilderInterface
             $queryClauses[$clause] = [];
             foreach ($queries as $subQuery) {
                 if ($queryPart = $subQuery->getSearchQuery($product)) {
-                    if (!is_array($queryPart)) {
-                        $queryPart = [$queryPart];
-                    }
-                    $queryClauses[$clause] += $queryPart;
+                    $queryClauses[$clause][] = $queryPart;
                 }
             }
         }
