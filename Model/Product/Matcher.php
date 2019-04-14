@@ -83,7 +83,7 @@ class Matcher
             $searchQuery = $this->getSearchQuery($product);
 
             if ($searchQuery) {
-                $productCollection->addSearchFilter($this->getSearchQuery($product));
+                $productCollection->addSearchFilter($searchQuery);
                 $items = array_merge($items, $productCollection->getItems());
             }
         }
@@ -94,7 +94,7 @@ class Matcher
     /**
      * Build the search query to load recommendations.
      *
-     * @param ProductInterface $product Source product.
+     * @param ProductInterface $product Source product to get recommendations for.
      *
      * @return \Smile\ElasticsuiteCore\Search\Request\QueryInterface
      */
