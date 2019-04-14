@@ -69,7 +69,11 @@ class RecommenderList extends \Magento\Catalog\Block\Product\AbstractProduct
     public function getAllItems()
     {
         if ($this->items === null) {
-            $this->items = $this->model->getItems($this->getProduct(), $this->getPositionLimit());
+            $items = [];
+            if ($product = $this->getProduct()) {
+                $items = $this->model->getItems($product, $this->getPositionLimit());
+            }
+            $this->items = $items;
         }
 
         return $this->items;
