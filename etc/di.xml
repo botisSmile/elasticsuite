@@ -31,6 +31,7 @@
                 </item>
                 <item name="mustNot" xsi:type="array">
                     <item name="productFilter" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Upsell\SearchQuery\ProductFilter</item>
+                    <item name="cartProductFilter" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Matcher\SearchQuery\CartProductFilter</item>
                 </item>
             </argument>
         </arguments>
@@ -92,6 +93,7 @@
                 </item>
                 <item name="mustNot" xsi:type="array">
                     <item name="productFilter" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Related\SearchQuery\ProductFilter</item>
+                    <item name="cartProductFilter" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Matcher\SearchQuery\CartProductFilter</item>
                 </item>
             </argument>
         </arguments>
@@ -125,6 +127,7 @@
                 </item>
                 <item name="mustNot" xsi:type="array">
                     <item name="productFilter" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\CrossSell\SearchQuery\ProductFilter</item>
+                    <item name="cartProductFilter" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Matcher\SearchQuery\CartProductFilter</item>
                 </item>
             </argument>
         </arguments>

@@ -31,14 +31,24 @@ abstract class AbstractItemProvider implements ItemProviderInterface
      */
     private $catalogConfig;
 
+
+    /**
+     * @var CartProductProvider
+     */
+    private $cartProductProvider;
+
     /**
      * Constructor.
      *
-     * @param \Magento\Catalog\Model\Config $catalogConfig Catalog configuration.
+     * @param \Magento\Catalog\Model\Config $catalogConfig       Catalog configuration.
+     * @param CartProductProvider           $cartProductProvider Cart products provider.
      */
-    public function __construct(\Magento\Catalog\Model\Config $catalogConfig)
-    {
+    public function __construct(
+        \Magento\Catalog\Model\Config $catalogConfig,
+        CartProductProvider $cartProductProvider
+    ) {
         $this->catalogConfig = $catalogConfig;
+        $this->cartProductProvider = $cartProductProvider;
     }
 
     /**
@@ -47,6 +57,10 @@ abstract class AbstractItemProvider implements ItemProviderInterface
     public function getItems(ProductInterface $product)
     {
         $collection = $this->createCollection($product);
+        $cartProductIds = $this->cartProductProvider->getCartProductIds();
+        if (!empty($cartProductIds)) {
+            $collection->addExcludeProductFilter($cartProductIds);
+        }
         $attributes = $this->catalogConfig->getProductAttributes();
 
         $collection->setPositionOrder()
