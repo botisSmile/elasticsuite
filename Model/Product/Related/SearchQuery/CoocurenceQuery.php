@@ -21,6 +21,14 @@ use Smile\ElasticsuiteRecommender\Model\Product\Matcher\SearchQueryBuilderInterf
 use Magento\Catalog\Api\Data\ProductInterface;
 use Smile\ElasticsuiteRecommender\Model\Coocurence;
 
+/**
+ * Generic event co-occurrence search query builder.
+ * Helps recommend products that are similar to products which have also been - depending on the selected "co-occurrence field" -
+ * viewed or added to cart or bought when the product we want recommendations for was viewed or added to cart or bought.
+ *
+ * @category Smile
+ * @package  Smile\ElasticsuiteRecommender
+ */
 class CoocurenceQuery implements SearchQueryBuilderInterface
 {
     /**

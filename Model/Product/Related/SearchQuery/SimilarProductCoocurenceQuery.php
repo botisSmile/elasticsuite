@@ -22,7 +22,9 @@ use Magento\Catalog\Api\Data\ProductInterface;
 use Smile\ElasticsuiteRecommender\Model\Coocurence;
 
 /**
- * Class SimilarProductCoocurenceQuery
+ * Generic 2nd order event co-occurrence search query builder.
+ * Helps recommend products that are similar to products which have also been - depending on the selected "co-occurrence field" -
+ * added to cart or bought at the same time as products which were also viewed when the product we want recommendations for was viewed.
  *
  * @category Smile
  * @package  Smile\ElasticsuiteRecommender
@@ -66,7 +68,7 @@ class SimilarProductCoocurenceQuery implements SearchQueryBuilderInterface
      * @param QueryFactory $queryFactory       Query factory.
      * @param Coocurence   $coocurence         Co-occurrence finder.
      * @param UpsellConfig $config             Upsell config model.
-     * @param sgtring      $coocurenceField    Co-occurence field.
+     * @param string       $coocurenceField    Co-occurence field.
      * @param int          $boost              Query boost.
      * @param string       $minimumShouldMatch Minimum should match.
      */

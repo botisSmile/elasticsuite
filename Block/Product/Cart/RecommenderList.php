@@ -42,16 +42,18 @@ class RecommenderList extends GenericRecommenderList
      *
      * @param \Magento\Catalog\Block\Product\Context               $context Block context.
      * @param \Smile\ElasticsuiteRecommender\Model\Product\Matcher $model   Recommender model.
+     * @param \Smile\ElasticsuiteRecommender\Helper\Data           $helper  Data helper.
      * @param \Magento\Checkout\Model\Session                      $session Checkout session.
      * @param array                                                $data    Additional block data.
      */
     public function __construct(
         \Magento\Catalog\Block\Product\Context $context,
         \Smile\ElasticsuiteRecommender\Model\Product\Matcher $model,
+        \Smile\ElasticsuiteRecommender\Helper\Data $helper,
         \Magento\Checkout\Model\Session $session,
         array $data = []
     ) {
-        parent::__construct($context, $model, $data);
+        parent::__construct($context, $model, $helper, $data);
         $this->checkoutSession = $session;
         $this->lastAddedProduct = null;
     }

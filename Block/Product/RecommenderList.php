@@ -36,19 +36,27 @@ class RecommenderList extends \Magento\Catalog\Block\Product\AbstractProduct
     private $model;
 
     /**
+     * @var \Smile\ElasticsuiteRecommender\Helper\Data
+     */
+    private $helper;
+
+    /**
      * Constructor.
      *
      * @param \Magento\Catalog\Block\Product\Context               $context Block context.
      * @param \Smile\ElasticsuiteRecommender\Model\Product\Matcher $model   Recommender model.
+     * @param \Smile\ElasticsuiteRecommender\Helper\Data           $helper  Data helper.
      * @param array                                                $data    Additional block data.
      */
     public function __construct(
         \Magento\Catalog\Block\Product\Context $context,
         \Smile\ElasticsuiteRecommender\Model\Product\Matcher $model,
+        \Smile\ElasticsuiteRecommender\Helper\Data $helper,
         array $data = []
     ) {
         parent::__construct($context, $data);
         $this->model = $model;
+        $this->helper = $helper;
     }
 
     /**
@@ -92,13 +100,11 @@ class RecommenderList extends \Magento\Catalog\Block\Product\AbstractProduct
     /**
      * Number of recommendations to load.
      *
-     * @TODO : make configurable.
-     *
      * @return number
      */
     public function getPositionLimit()
     {
-        return 6;
+        return $this->helper->getPositionLimit($this->getType());
     }
 
     /**

@@ -23,6 +23,7 @@
             <argument name="searchQueries" xsi:type="array">
                 <item name="must" xsi:type="array">
                     <item name="categories" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Upsell\SearchQuery\Category</item>
+                    <item name="higherPrice" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Upsell\SearchQuery\HigherPrice</item>
                 </item>
                 <item name="should" xsi:type="array">
                     <item name="searchTerms" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Upsell\SearchQuery\SearchTerms</item>
@@ -94,6 +95,7 @@
                 <item name="mustNot" xsi:type="array">
                     <item name="productFilter" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Related\SearchQuery\ProductFilter</item>
                     <item name="cartProductFilter" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Matcher\SearchQuery\CartProductFilter</item>
+                    <item name="compositeProductTypeFilter" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Related\SearchQuery\CompositeProductTypeFilter</item>
                 </item>
             </argument>
         </arguments>
