@@ -79,7 +79,7 @@ class RecommenderList extends \Magento\Catalog\Block\Product\AbstractProduct
         if ($this->items === null) {
             $items = [];
             if ($product = $this->getProduct()) {
-                $items = $this->model->getItems($product, $this->getPositionLimit());
+                $items = $this->model->getItems($product, $this->getBehavior(), $this->getPositionLimit());
             }
             $this->items = $items;
         }
@@ -105,6 +105,16 @@ class RecommenderList extends \Magento\Catalog\Block\Product\AbstractProduct
     public function getPositionLimit()
     {
         return $this->helper->getPositionLimit($this->getType());
+    }
+
+    /**
+     * Recommendations loading behavior.
+     *
+     * @return int
+     */
+    public function getBehavior()
+    {
+        return $this->helper->getBehavior($this->getType());
     }
 
     /**

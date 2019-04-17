@@ -110,6 +110,24 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
+     * Return the configured behavior for showing products
+     *
+     * @param string $blockType Block type.
+     *
+     * @return int
+     */
+    public function getBehavior($blockType)
+    {
+        $prefix = $this->getTypePrefix($blockType);
+
+        $behavior = (int) $this->scopeConfig->getValue(
+            sprintf('smile_elasticsuite_recommender/general/%s_behavior', $prefix)
+        );
+
+        return $behavior;
+    }
+
+    /**
      * Returns true if products of a composite product type should be excluded from automated related products
      *
      * @return bool

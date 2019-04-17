@@ -19,9 +19,12 @@
         <smile_elasticsuite_recommender>
             <general>
                 <related_position_limit>6</related_position_limit>
+                <related_behavior>0</related_behavior>
                 <related_exclude_composite_products>0</related_exclude_composite_products>
                 <crosssell_position_limit>5</crosssell_position_limit>
+                <crosssell_behavior>0</crosssell_behavior>
                 <upsell_position_limit>8</upsell_position_limit>
+                <upsell_behavior>0</upsell_behavior>
                 <upsell_force_higher_price>0</upsell_force_higher_price>
             </general>
             <cooccurrence>
