@@ -19,7 +19,7 @@ use Smile\ElasticsuiteCore\Search\Request\QueryInterface;
 use Smile\ElasticsuiteRecommender\Model\Product\Upsell\Config as UpsellConfig;
 use Smile\ElasticsuiteRecommender\Model\Product\Matcher\SearchQueryBuilderInterface;
 use Magento\Catalog\Api\Data\ProductInterface;
-use Smile\ElasticsuiteRecommender\Model\Coocurence;
+use Smile\ElasticsuiteRecommender\Model\CoOccurrence;
 
 /**
  * Upsell search query manual upsell recommendations clause builder
@@ -40,21 +40,21 @@ class ManualProducts implements SearchQueryBuilderInterface
     private $config;
 
     /**
-     * @var Coocurence
+     * @var CoOccurrence
      */
-    private $coocurence;
+    private $coOccurrence;
 
     /**
      * Constructor.
      *
      * @param QueryFactory $queryFactory Query factory.
-     * @param Coocurence   $coocurence   Co-occurrence finder.
+     * @param CoOccurrence $coOccurrence Co-occurrence finder.
      * @param UpsellConfig $config       Upsell config model.
      */
-    public function __construct(QueryFactory $queryFactory, Coocurence $coocurence, UpsellConfig $config)
+    public function __construct(QueryFactory $queryFactory, CoOccurrence $coOccurrence, UpsellConfig $config)
     {
         $this->queryFactory = $queryFactory;
-        $this->coocurence   = $coocurence;
+        $this->coOccurrence = $coOccurrence;
         $this->config       = $config;
     }
 

@@ -19,10 +19,10 @@ use Smile\ElasticsuiteCore\Search\Request\QueryInterface;
 use Smile\ElasticsuiteRecommender\Model\Product\Upsell\Config as UpsellConfig;
 use Smile\ElasticsuiteRecommender\Model\Product\Matcher\SearchQueryBuilderInterface;
 use Magento\Catalog\Api\Data\ProductInterface;
-use Smile\ElasticsuiteRecommender\Model\Coocurence;
+use Smile\ElasticsuiteRecommender\Model\CoOccurrence;
 
 /**
- * Upsell search query fulltext search co-occurences based clause builder.
+ * Upsell search query fulltext search co-occurrences based clause builder.
  *
  * @category Smile
  * @package  Smile\ElasticsuiteRecommender
@@ -40,21 +40,21 @@ class SearchTerms implements SearchQueryBuilderInterface
     private $config;
 
     /**
-     * @var Coocurence
+     * @var CoOccurrence
      */
-    private $coocurence;
+    private $coOccurrence;
 
     /**
      * Constructor.
      *
      * @param QueryFactory $queryFactory Query factory.
-     * @param Coocurence   $coocurence   Co-occurence finder.
+     * @param CoOccurrence $coOccurrence Co-occurrence finder.
      * @param UpsellConfig $config       Upsell config model.
      */
-    public function __construct(QueryFactory $queryFactory, Coocurence $coocurence, UpsellConfig $config)
+    public function __construct(QueryFactory $queryFactory, CoOccurrence $coOccurrence, UpsellConfig $config)
     {
         $this->queryFactory = $queryFactory;
-        $this->coocurence   = $coocurence;
+        $this->coOccurrence   = $coOccurrence;
         $this->config       = $config;
     }
 
@@ -107,6 +107,6 @@ class SearchTerms implements SearchQueryBuilderInterface
      */
     private function getSearches(ProductInterface $product)
     {
-        return $this->coocurence->getCoocurences('product_view', $product->getId(), $product->getStoreId(), 'search_query');
+        return $this->coOccurrence->getCoOccurrences('product_view', $product->getId(), $product->getStoreId(), 'search_query');
     }
 }
