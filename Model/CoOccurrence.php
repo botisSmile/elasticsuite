@@ -22,13 +22,13 @@ use function GuzzleHttp\json_encode;
 use Smile\ElasticsuiteRecommender\Helper\Data as RecommenderHelper;
 
 /**
- * Find coocurences across event into the session data.
+ * Find co-occurrences across event into the session data.
  *
  * @category Smile
  * @package  Smile\ElasticsuiteRecommender
  * @author   Aurelien FOUCRET <aurelien.foucret@smile.fr>
  */
-class Coocurence
+class CoOccurrence
 {
     /**
      * @var SearchRequestBuilder
@@ -68,39 +68,39 @@ class Coocurence
     }
 
     /**
-     * Match observed coocurences into the session data.
+     * Match observed co-occurrences into the session data.
      *
      * @param string  $sourceEventType  Source event type (product_view, category_view, ...)
      * @param mixed   $sourceEventValue Event value.
      * @param integer $storeId          Store id.
-     * @param string  $targetEventType  Target event to match coocurences.
-     * @param integer $size             Number of coocurences to find.
+     * @param string  $targetEventType  Target event to match co-occurrences.
+     * @param integer $size             Number of co-occurrences to find.
      *
      * @return string[]
      */
-    public function getCoocurences($sourceEventType, $sourceEventValue, $storeId, $targetEventType, $size = 5)
+    public function getCoOccurrences($sourceEventType, $sourceEventValue, $storeId, $targetEventType, $size = 5)
     {
         $cacheKey = md5(json_encode(func_get_args()));
 
         if (!isset($this->cache[$cacheKey])) {
-            $this->cache[$cacheKey] = $this->loadCoocurences($sourceEventType, $sourceEventValue, $storeId, $targetEventType, $size);
+            $this->cache[$cacheKey] = $this->loadCoOccurrences($sourceEventType, $sourceEventValue, $storeId, $targetEventType, $size);
         }
 
         return $this->cache[$cacheKey];
     }
 
     /**
-     * Load the coocurences.
+     * Load the co-occurrences.
      *
      * @param string  $sourceEventType  Source event type (product_view, category_view, ...)
      * @param mixed   $sourceEventValue Event value.
      * @param integer $storeId          Store id.
-     * @param string  $targetEventType  Target event to match coocurences.
-     * @param integer $size             Number of coocurences to find.
+     * @param string  $targetEventType  Target event to match co-occurrences.
+     * @param integer $size             Number of co-occurrences to find.
      *
      * @return string[]
      */
-    private function loadCoocurences($sourceEventType, $sourceEventValue, $storeId, $targetEventType, $size = 5)
+    private function loadCoOccurrences($sourceEventType, $sourceEventValue, $storeId, $targetEventType, $size = 5)
     {
         $values = [];
 
@@ -124,7 +124,7 @@ class Coocurence
     }
 
     /**
-     * Build the search request used to match coocurences.
+     * Build the search request used to match co-occurrences.
      *
      * @param integer $storeId       Store id.
      * @param array   $sessionFilter Session filter.

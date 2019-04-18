@@ -54,30 +54,30 @@
     </virtualType>
 
     <!-- Related products -->
-    <virtualType name="addToCartRelated" type="Smile\ElasticsuiteRecommender\Model\Product\Related\SearchQuery\CoocurenceQuery">
+    <virtualType name="addToCartRelated" type="Smile\ElasticsuiteRecommender\Model\Product\Related\SearchQuery\CoOccurrenceQuery">
         <arguments>
-            <argument name="coocurenceField" xsi:type="string">product_cart</argument>
+            <argument name="coOccurrenceField" xsi:type="string">product_cart</argument>
             <argument name="boost" xsi:type="string">5</argument>
         </arguments>
     </virtualType>
     
-    <virtualType name="orderRelated" type="Smile\ElasticsuiteRecommender\Model\Product\Related\SearchQuery\CoocurenceQuery">
+    <virtualType name="orderRelated" type="Smile\ElasticsuiteRecommender\Model\Product\Related\SearchQuery\CoOccurrenceQuery">
         <arguments>
-            <argument name="coocurenceField" xsi:type="string">product_sale</argument>
+            <argument name="coOccurrenceField" xsi:type="string">product_sale</argument>
             <argument name="boost" xsi:type="string">10</argument>
         </arguments>
     </virtualType>
     
-    <virtualType name="addToCartSimilarRelated" type="Smile\ElasticsuiteRecommender\Model\Product\Related\SearchQuery\SimilarProductCoocurenceQuery">
+    <virtualType name="addToCartSimilarRelated" type="Smile\ElasticsuiteRecommender\Model\Product\Related\SearchQuery\SimilarProductCoOccurrenceQuery">
         <arguments>
-            <argument name="coocurenceField" xsi:type="string">product_cart</argument>
+            <argument name="coOccurrenceField" xsi:type="string">product_cart</argument>
             <argument name="boost" xsi:type="string">1</argument>
         </arguments>
     </virtualType>
     
-    <virtualType name="orderSimilarRelated" type="Smile\ElasticsuiteRecommender\Model\Product\Related\SearchQuery\SimilarProductCoocurenceQuery">
+    <virtualType name="orderSimilarRelated" type="Smile\ElasticsuiteRecommender\Model\Product\Related\SearchQuery\SimilarProductCoOccurrenceQuery">
         <arguments>
-            <argument name="coocurenceField" xsi:type="string">product_sale</argument>
+            <argument name="coOccurrenceField" xsi:type="string">product_sale</argument>
             <argument name="boost" xsi:type="string">2</argument>
         </arguments>
     </virtualType>

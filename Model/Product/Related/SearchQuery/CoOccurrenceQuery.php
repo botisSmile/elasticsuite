@@ -19,7 +19,7 @@ use Smile\ElasticsuiteCore\Search\Request\QueryInterface;
 use Smile\ElasticsuiteRecommender\Model\Product\Upsell\Config as UpsellConfig;
 use Smile\ElasticsuiteRecommender\Model\Product\Matcher\SearchQueryBuilderInterface;
 use Magento\Catalog\Api\Data\ProductInterface;
-use Smile\ElasticsuiteRecommender\Model\Coocurence;
+use Smile\ElasticsuiteRecommender\Model\CoOccurrence;
 
 /**
  * Generic event co-occurrence search query builder.
@@ -29,7 +29,7 @@ use Smile\ElasticsuiteRecommender\Model\Coocurence;
  * @category Smile
  * @package  Smile\ElasticsuiteRecommender
  */
-class CoocurenceQuery implements SearchQueryBuilderInterface
+class CoOccurrenceQuery implements SearchQueryBuilderInterface
 {
     /**
      * @var QueryFactory
@@ -42,14 +42,14 @@ class CoocurenceQuery implements SearchQueryBuilderInterface
     private $config;
 
     /**
-     * @var Coocurence
+     * @var CoOccurrence
      */
-    private $coocurence;
+    private $coOccurrence;
 
     /**
      * @var string
      */
-    private $coocurenceField;
+    private $coOccurrenceField;
 
     /**
      * @var integer
@@ -62,27 +62,27 @@ class CoocurenceQuery implements SearchQueryBuilderInterface
     private $minimumShouldMatch;
 
     /**
-     * CoocurenceQuery constructor.
+     * CoOccurrenceQuery constructor.
      *
      * @param QueryFactory $queryFactory       Query factory.
-     * @param Coocurence   $coocurence         Co-occurence finder.
+     * @param CoOccurrence $coOccurrence       Co-occurrence finder.
      * @param UpsellConfig $config             Upsell config model.
-     * @param string       $coocurenceField    Co-occurence field.
+     * @param string       $coOccurrenceField  Co-occurrence field.
      * @param int          $boost              Query boost.
      * @param string       $minimumShouldMatch Minimum should match.
      */
     public function __construct(
         QueryFactory $queryFactory,
-        Coocurence $coocurence,
+        CoOccurrence $coOccurrence,
         UpsellConfig $config,
-        $coocurenceField,
+        $coOccurrenceField,
         $boost = 1,
         $minimumShouldMatch = "30%"
     ) {
         $this->queryFactory       = $queryFactory;
-        $this->coocurence         = $coocurence;
+        $this->coOccurrence       = $coOccurrence;
         $this->config             = $config;
-        $this->coocurenceField    = $coocurenceField;
+        $this->coOccurrenceField  = $coOccurrenceField;
         $this->boost              = $boost;
         $this->minimumShouldMatch = $minimumShouldMatch;
     }
@@ -114,8 +114,8 @@ class CoocurenceQuery implements SearchQueryBuilderInterface
     }
 
     /**
-     * Get co-occurences of a product according to the co-occurence field.
-     * For instance if the co-occurence field is "product_cart", it will return all products also added to cart
+     * Get co-occurrences of a product according to the co-occurrence field.
+     * For instance if the co-occurrence field is "product_cart", it will return all products also added to cart
      * when this product was.
      *
      * @param ProductInterface $product Product to get co-occurrences for.
@@ -124,10 +124,15 @@ class CoocurenceQuery implements SearchQueryBuilderInterface
      */
     private function getProducts(ProductInterface $product)
     {
-        $productId   = $product->getId();
-        $storeId     = $product->getStoreId();
-        $coocurences = $this->coocurence->getCoocurences($this->coocurenceField, $productId, $storeId, $this->coocurenceField);
+        $productId      = $product->getId();
+        $storeId        = $product->getStoreId();
+        $coOccurrences  = $this->coOccurrence->getCoOccurrences(
+            $this->coOccurrenceField,
+            $productId,
+            $storeId,
+            $this->coOccurrenceField
+        );
 
-        return array_diff(array_map('intval', $coocurences), [$productId]);
+        return array_diff(array_map('intval', $coOccurrences), [$productId]);
     }
 }

@@ -16,7 +16,7 @@ namespace Smile\ElasticsuiteRecommender\Model\Product\Upsell\SearchQuery;
 
 use Smile\ElasticsuiteCore\Search\Request\Query\QueryFactory;
 use Smile\ElasticsuiteCore\Search\Request\QueryInterface;
-use Smile\ElasticsuiteRecommender\Model\Coocurence;
+use Smile\ElasticsuiteRecommender\Model\CoOccurrence;
 use Smile\ElasticsuiteRecommender\Model\Product\Matcher\SearchQueryBuilderInterface;
 use Smile\ElasticsuiteCore\Search\Request\Query\Nested;
 use Magento\Catalog\Api\Data\ProductInterface;
@@ -36,20 +36,20 @@ class Category implements SearchQueryBuilderInterface
     private $queryFactory;
 
     /**
-     * @var Coocurence
+     * @var CoOccurrence
      */
-    private $coocurence;
+    private $coOccurrence;
 
     /**
      * Constructor.
      *
      * @param QueryFactory $queryFactory Query factory.
-     * @param Coocurence   $coocurence   Co-occurence finder.
+     * @param CoOccurrence $coOccurrence Co-occurrence finder.
      */
-    public function __construct(QueryFactory $queryFactory, Coocurence $coocurence)
+    public function __construct(QueryFactory $queryFactory, CoOccurrence $coOccurrence)
     {
         $this->queryFactory = $queryFactory;
-        $this->coocurence   = $coocurence;
+        $this->coOccurrence = $coOccurrence;
     }
 
     /**
@@ -83,7 +83,12 @@ class Category implements SearchQueryBuilderInterface
      */
     private function getCategories(ProductInterface $product)
     {
-        $categoryIds = $this->coocurence->getCoocurences('product_view', $product->getId(), $product->getStoreId(), 'category_view');
+        $categoryIds = $this->coOccurrence->getCoOccurrences(
+            'product_view',
+            $product->getId(),
+            $product->getStoreId(),
+            'category_view'
+        );
 
         if (empty($categoryIds)) {
             $categoryIds = $product->getCategoryIds();
