@@ -23,6 +23,11 @@
 
             <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>General</label>
+                <field id="exclude_already_bought" type="select" translate="label comment" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Exclude from recommendations any product already bought by the visitor</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment><![CDATA[Applies only to automated recommendations and not to manually selected products.]]></comment>
+                </field>
                 <field id="related_position_limit" translate="label" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Maximum Number of Products in Related Products List</label>
                     <validate>integer validate-greater-than-zero validate-number-range number-range-1-20</validate>
@@ -54,7 +59,7 @@
                     <label>Show Upsell Products</label>
                     <source_model>Smile\ElasticsuiteRecommender\Model\Product\Matcher\Source\Behavior</source_model>
                 </field>
-                <field id="upsell_force_higher_price" type="select" translate="label" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="upsell_force_higher_price" type="select" translate="label comment" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Force Higher Price for Upsell Products</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment><![CDATA[If set to Yes, will ensure that products automatically recommended based on past tracked events have a higher price than the base product. This has no impact on the manually configured upsell products.]]></comment>

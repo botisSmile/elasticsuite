@@ -18,6 +18,7 @@
     <default>
         <smile_elasticsuite_recommender>
             <general>
+                <exclude_already_bought>1</exclude_already_bought>
                 <related_position_limit>6</related_position_limit>
                 <related_behavior>0</related_behavior>
                 <related_exclude_composite_products>0</related_exclude_composite_products>

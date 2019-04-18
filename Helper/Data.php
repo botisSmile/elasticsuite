@@ -60,6 +60,12 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     const CONFIG_UPSELL_FORCE_HIGHER_PRICE_XPATH = 'smile_elasticsuite_recommender/general/upsell_force_higher_price';
 
     /**
+     * Whether to exclude products already bought by the visitor configuration path
+     * @var string
+     */
+    const CONFIG_EXCLUDE_ALREADY_BOUGHT_XPATH = 'smile_elasticsuite_recommender/general/exclude_already_bought';
+
+    /**
      * Absolute maximum number of products to display for related/upsell/cross-sell products.
      * @var int
      */
@@ -145,6 +151,16 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     public function isForceHigherPriceForUpsells()
     {
         return $this->scopeConfig->isSetFlag(self::CONFIG_UPSELL_FORCE_HIGHER_PRICE_XPATH);
+    }
+
+    /**
+     * Returns true if products already bought in the past by the user should be excluded from recommendations.
+     *
+     * @return bool
+     */
+    public function isExcludingPastBoughtProducts()
+    {
+        return $this->scopeConfig->isSetFlag(self::CONFIG_EXCLUDE_ALREADY_BOUGHT_XPATH);
     }
 
     /**
