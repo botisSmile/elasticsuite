@@ -126,13 +126,15 @@ class AlreadyBoughtFilter implements SearchQueryBuilderInterface
         $boughtProducts = [];
 
         if ($visitorId = $this->getCurrentVisitor()) {
-            $storeId = $this->storeManager->getStore()->getId();
+            $storeId        = $this->storeManager->getStore()->getId();
+            $maxAge         = $this->helper->getPastBoughtProductsExclusionMaxAge();
             $boughtProducts = $this->coOccurrence->getCoOccurrences(
                 'visitor_id',
                 $visitorId,
                 $storeId,
                 'product_sale',
-                self::MAX_ITEMS
+                self::MAX_ITEMS,
+                $maxAge
             );
         }
 

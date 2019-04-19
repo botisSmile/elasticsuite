@@ -66,6 +66,12 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     const CONFIG_EXCLUDE_ALREADY_BOUGHT_XPATH = 'smile_elasticsuite_recommender/general/exclude_already_bought';
 
     /**
+     * Already bought products exclusion max age configuration path
+     * @var string
+     */
+    const CONFIG_EXCLUDE_ALREADY_BOUGHT_MAX_AGE_XPATH = 'smile_elasticsuite_recommender/general/exclude_already_bought_max_age';
+
+    /**
      * Absolute maximum number of products to display for related/upsell/cross-sell products.
      * @var int
      */
@@ -161,6 +167,17 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     public function isExcludingPastBoughtProducts()
     {
         return $this->scopeConfig->isSetFlag(self::CONFIG_EXCLUDE_ALREADY_BOUGHT_XPATH);
+    }
+
+    /**
+     * Returns the number of past days to take into account for excluding already bought products.
+     * Any product bought beyond this number of days could still be recommended.
+     *
+     * @return int
+     */
+    public function getPastBoughtProductsExclusionMaxAge()
+    {
+        return (int) $this->scopeConfig->getValue(self::CONFIG_EXCLUDE_ALREADY_BOUGHT_MAX_AGE_XPATH);
     }
 
     /**

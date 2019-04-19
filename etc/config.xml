@@ -19,6 +19,7 @@
         <smile_elasticsuite_recommender>
             <general>
                 <exclude_already_bought>1</exclude_already_bought>
+                <exclude_already_bought_max_age>90</exclude_already_bought_max_age>
                 <related_position_limit>6</related_position_limit>
                 <related_behavior>0</related_behavior>
                 <related_exclude_composite_products>0</related_exclude_composite_products>
