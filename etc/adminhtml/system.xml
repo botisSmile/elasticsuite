@@ -23,38 +23,51 @@
 
             <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>General</label>
-                <field id="related_position_limit" translate="label" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="exclude_already_bought" type="select" translate="label comment" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Exclude from recommendations any product already bought by the visitor</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment><![CDATA[Applies only to automated recommendations and not to manually selected products.]]></comment>
+                </field>
+                <field id="exclude_already_bought_max_age" translate="label comment" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Product bought exclusion window size as a number of days</label>
+                    <validate>integer</validate>
+                    <comment><![CDATA[For instance "90" will mean no product bought by the visitor in the past 90 days will be recommended. 0 means no time restriction at all : no product ever bought by the visitor will be recommended to him. Be careful that this setting impact is heavily dependent on the tracker "Retention delay" and "Visitor Cookie Lifetime" parameters.]]></comment>
+                    <depends>
+                        <field id="exclude_already_bought" separator=",">1</field>
+                    </depends>
+                </field>
+                <field id="related_position_limit" translate="label" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Maximum Number of Products in Related Products List</label>
                     <validate>integer validate-greater-than-zero validate-number-range number-range-1-20</validate>
                 </field>
-                <field id="related_behavior" type="select" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="related_behavior" type="select" translate="label" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Show Related Products</label>
                     <source_model>Smile\ElasticsuiteRecommender\Model\Product\Matcher\Source\Behavior</source_model>
                 </field>
-                <field id="related_exclude_composite_products" type="select" translate="label" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="related_exclude_composite_products" type="select" translate="label" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Exclude composite (bundle, grouped, configurable) from Related Products List</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <depends>
                         <field id="related_behavior" separator=",">0,2</field>
                     </depends>
                 </field>
-                <field id="crosssell_position_limit" translate="label" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="crosssell_position_limit" translate="label" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Maximum Number of Products in Cross-Sell Products List</label>
                     <validate>integer validate-greater-than-zero validate-number-range number-range-1-20</validate>
                 </field>
-                <field id="crosssell_behavior" type="select" translate="label" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="crosssell_behavior" type="select" translate="label" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Show Cross-Sell Products</label>
                     <source_model>Smile\ElasticsuiteRecommender\Model\Product\Matcher\Source\Behavior</source_model>
                 </field>
-                <field id="upsell_position_limit" translate="label" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="upsell_position_limit" translate="label" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Maximum Number of Products in Upsell Products List</label>
                     <validate>integer validate-greater-than-zero validate-number-range number-range-1-20</validate>
                 </field>
-                <field id="upsell_behavior" type="select" translate="label" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="upsell_behavior" type="select" translate="label" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Show Upsell Products</label>
                     <source_model>Smile\ElasticsuiteRecommender\Model\Product\Matcher\Source\Behavior</source_model>
                 </field>
-                <field id="upsell_force_higher_price" type="select" translate="label" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="upsell_force_higher_price" type="select" translate="label comment" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Force Higher Price for Upsell Products</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment><![CDATA[If set to Yes, will ensure that products automatically recommended based on past tracked events have a higher price than the base product. This has no impact on the manually configured upsell products.]]></comment>

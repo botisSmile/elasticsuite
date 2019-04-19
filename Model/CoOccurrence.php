@@ -75,15 +75,23 @@ class CoOccurrence
      * @param integer $storeId          Store id.
      * @param string  $targetEventType  Target event to match co-occurrences.
      * @param integer $size             Number of co-occurrences to find.
+     * @param integer $maxAge           Session max age in days.
      *
      * @return string[]
      */
-    public function getCoOccurrences($sourceEventType, $sourceEventValue, $storeId, $targetEventType, $size = 5)
+    public function getCoOccurrences($sourceEventType, $sourceEventValue, $storeId, $targetEventType, $size = 5, $maxAge = 0)
     {
         $cacheKey = md5(json_encode(func_get_args()));
 
         if (!isset($this->cache[$cacheKey])) {
-            $this->cache[$cacheKey] = $this->loadCoOccurrences($sourceEventType, $sourceEventValue, $storeId, $targetEventType, $size);
+            $this->cache[$cacheKey] = $this->loadCoOccurrences(
+                $sourceEventType,
+                $sourceEventValue,
+                $storeId,
+                $targetEventType,
+                $size,
+                $maxAge
+            );
         }
 
         return $this->cache[$cacheKey];
@@ -97,15 +105,16 @@ class CoOccurrence
      * @param integer $storeId          Store id.
      * @param string  $targetEventType  Target event to match co-occurrences.
      * @param integer $size             Number of co-occurrences to find.
+     * @param integer $maxAge           Session max age in days.
      *
      * @return string[]
      */
-    private function loadCoOccurrences($sourceEventType, $sourceEventValue, $storeId, $targetEventType, $size = 5)
+    private function loadCoOccurrences($sourceEventType, $sourceEventValue, $storeId, $targetEventType, $size = 5, $maxAge = 0)
     {
         $values = [];
 
         try {
-            $sessionFilter = $this->getSessionFilter($sourceEventType, $sourceEventValue);
+            $sessionFilter = $this->getSessionFilter($sourceEventType, $sourceEventValue, $maxAge);
             $aggregations  = $this->getAggregations($targetEventType, $size);
 
             $searchRequest  = $this->getSearchRequest($storeId, $sessionFilter, $aggregations);
@@ -142,14 +151,22 @@ class CoOccurrence
     /**
      * Filter used to match sessions.
      *
-     * @param string $sourceEventType  Source event type (product_view, category_view, ...)
-     * @param mixed  $sourceEventValue Event value.
+     * @param string  $sourceEventType  Source event type (product_view, category_view, ...)
+     * @param mixed   $sourceEventValue Event value.
+     * @param integer $maxAge           Session max age.
      *
      * @return array
      */
-    private function getSessionFilter($sourceEventType, $sourceEventValue)
+    private function getSessionFilter($sourceEventType, $sourceEventValue, $maxAge = 0)
     {
-        return [$sourceEventType => $sourceEventValue];
+        $filter = [$sourceEventType => $sourceEventValue];
+        if ($maxAge > 0) {
+            $earlierDate = new \DateTime();
+            $earlierDate->modify(sprintf('- %d days', $maxAge));
+            $filter['end_date'] = ['gt' => $earlierDate->format('Y-m-d')];
+        }
+
+        return $filter;
     }
 
     /**
