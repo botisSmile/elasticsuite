@@ -38,12 +38,34 @@
             </argument>
         </arguments>
     </virtualType>
-    
+
+    <virtualType name="Smile\ElasticsuiteRecommender\Model\ResourceModel\Product\Upsell\Collection"
+                 type="Smile\ElasticsuiteCatalog\Model\ResourceModel\Product\Fulltext\Collection">
+        <arguments>
+            <argument name="searchRequestName" xsi:type="string">upsell_products_container</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Smile\ElasticsuiteRecommender\Model\ResourceModel\Product\Upsell\CollectionFactory"
+                 type="Smile\ElasticsuiteCatalog\Model\ResourceModel\Product\Fulltext\CollectionFactory">
+        <arguments>
+            <argument name="instanceName" xsi:type="string">Smile\ElasticsuiteRecommender\Model\ResourceModel\Product\Upsell\Collection</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Smile\ElasticsuiteRecommender\Model\Product\Upsell\CollectionProvider"
+                 type="Smile\ElasticsuiteRecommender\Model\Product\Matcher\CollectionProvider">
+        <arguments>
+            <argument name="productCollectionFactory" xsi:type="object">Smile\ElasticsuiteRecommender\Model\ResourceModel\Product\Upsell\CollectionFactory</argument>
+        </arguments>
+    </virtualType>
+
     <virtualType name="Smile\ElasticsuiteRecommender\Model\Product\Upsell" 
                  type="Smile\ElasticsuiteRecommender\Model\Product\Matcher">
         <arguments>
             <argument name="searchQueryBuilder" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Upsell\SearchQueryBuilder</argument>
             <argument name="itemProvider" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Upsell\ItemProvider</argument>
+            <argument name="collectionProvider" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Upsell\CollectionProvider</argument>
         </arguments>
     </virtualType>
     
@@ -102,12 +124,34 @@
             </argument>
         </arguments>
     </virtualType>
-    
-    <virtualType name="Smile\ElasticsuiteRecommender\Model\Product\Related" 
+
+    <virtualType name="Smile\ElasticsuiteRecommender\Model\ResourceModel\Product\Related\Collection"
+                 type="Smile\ElasticsuiteCatalog\Model\ResourceModel\Product\Fulltext\Collection">
+        <arguments>
+            <argument name="searchRequestName" xsi:type="string">related_products_container</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Smile\ElasticsuiteRecommender\Model\ResourceModel\Product\Related\CollectionFactory"
+                 type="Smile\ElasticsuiteCatalog\Model\ResourceModel\Product\Fulltext\CollectionFactory">
+        <arguments>
+            <argument name="instanceName" xsi:type="string">Smile\ElasticsuiteRecommender\Model\ResourceModel\Product\Related\Collection</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Smile\ElasticsuiteRecommender\Model\Product\Related\CollectionProvider"
+                 type="Smile\ElasticsuiteRecommender\Model\Product\Matcher\CollectionProvider">
+        <arguments>
+            <argument name="productCollectionFactory" xsi:type="object">Smile\ElasticsuiteRecommender\Model\ResourceModel\Product\Related\CollectionFactory</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Smile\ElasticsuiteRecommender\Model\Product\Related"
                  type="Smile\ElasticsuiteRecommender\Model\Product\Matcher">
         <arguments>
             <argument name="searchQueryBuilder" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Related\SearchQueryBuilder</argument>
             <argument name="itemProvider" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Related\ItemProvider</argument>
+            <argument name="collectionProvider" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Related\CollectionProvider</argument>
         </arguments>
     </virtualType>
     
@@ -138,11 +182,33 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="Smile\ElasticsuiteRecommender\Model\ResourceModel\Product\CrossSell\Collection"
+                 type="Smile\ElasticsuiteCatalog\Model\ResourceModel\Product\Fulltext\Collection">
+        <arguments>
+            <argument name="searchRequestName" xsi:type="string">crosssell_products_container</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Smile\ElasticsuiteRecommender\Model\ResourceModel\Product\CrossSell\CollectionFactory"
+                 type="Smile\ElasticsuiteCatalog\Model\ResourceModel\Product\Fulltext\CollectionFactory">
+        <arguments>
+            <argument name="instanceName" xsi:type="string">Smile\ElasticsuiteRecommender\Model\ResourceModel\Product\CrossSell\Collection</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Smile\ElasticsuiteRecommender\Model\Product\CrossSell\CollectionProvider"
+                 type="Smile\ElasticsuiteRecommender\Model\Product\Matcher\CollectionProvider">
+        <arguments>
+            <argument name="productCollectionFactory" xsi:type="object">Smile\ElasticsuiteRecommender\Model\ResourceModel\Product\CrossSell\CollectionFactory</argument>
+        </arguments>
+    </virtualType>
+
     <virtualType name="Smile\ElasticsuiteRecommender\Model\Product\CrossSell"
                  type="Smile\ElasticsuiteRecommender\Model\Product\Matcher">
         <arguments>
             <argument name="searchQueryBuilder" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\CrossSell\SearchQueryBuilder</argument>
             <argument name="itemProvider" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\CrossSell\ItemProvider</argument>
+            <argument name="collectionProvider" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\CrossSell\CollectionProvider</argument>
         </arguments>
     </virtualType>
 
