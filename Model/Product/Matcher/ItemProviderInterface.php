@@ -29,8 +29,9 @@ interface ItemProviderInterface
      * Return manual recommendations of a given product
      *
      * @param ProductInterface $product Product
+     * @param int              $size    Maximum number of recommendations to return
      *
      * @return ProductInterface[]
      */
-    public function getItems(ProductInterface $product);
+    public function getItems(ProductInterface $product, $size);
 }

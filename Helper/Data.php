@@ -54,6 +54,12 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     const CONFIG_UPSELL_POSITION_LIMIT_XPATH = 'smile_elasticsuite_recommender/general/upsell_position_limit';
 
     /**
+     * Allow the native complement of manually selected upsell products configuration path
+     * @var string
+     */
+    const CONFIG_UPSELL_NATIVE_SELECTION_COMPL_XPATH = 'smile_elasticsuite_recommender/general/upsell_native_selection_complement';
+
+    /**
      * Force higher price for upsells flag configuration path
      * @var string
      */
@@ -147,6 +153,17 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     public function isExcludingCompositeForRelated()
     {
         return $this->scopeConfig->isSetFlag(self::CONFIG_RELATED_EXCLUDE_COMPOSITE_XPATH);
+    }
+
+    /**
+     * Returns true if manually selected upsell products should be complemented the native behavior way.
+     * Will dispatch the native 'catalog_product_upsell' event which 'magento/module-bundle' observes.
+     *
+     * @return bool
+     */
+    public function isNativeComplementAllowedForUpsells()
+    {
+        return $this->scopeConfig->isSetFlag(self::CONFIG_UPSELL_NATIVE_SELECTION_COMPL_XPATH);
     }
 
     /**
