@@ -101,7 +101,7 @@ class Matcher
 
         if (in_array($behavior, [self::SELECTED_ONLY, self::BOTH_SELECTED_AND_EVENT_BASED])) {
             if ($this->itemProvider !== null) {
-                $items = $this->itemProvider->getItems($product);
+                $items = $this->itemProvider->getItems($product, $size);
             }
         }
 

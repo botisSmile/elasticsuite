@@ -67,7 +67,15 @@
                     <label>Show Upsell Products</label>
                     <source_model>Smile\ElasticsuiteRecommender\Model\Product\Matcher\Source\Behavior</source_model>
                 </field>
-                <field id="upsell_force_higher_price" type="select" translate="label comment" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="upsell_native_selection_complement" type="select" translate="label comment" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Allow native complement of manually selected upsell products</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment><![CDATA[If set to Yes, will dispatch the native event which ensures that any bundle product the current product appears in is added to the manual upsell products selection. This will of course potentially restrict the size of the automated recommendations.]]></comment>
+                    <depends>
+                        <field id="upsell_behavior" separator=",">0,1</field>
+                    </depends>
+                </field>
+                <field id="upsell_force_higher_price" type="select" translate="label comment" sortOrder="55" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Force Higher Price for Upsell Products</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment><![CDATA[If set to Yes, will ensure that products automatically recommended based on past tracked events have a higher price than the base product. This has no impact on the manually configured upsell products.]]></comment>

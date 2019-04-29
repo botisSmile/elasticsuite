@@ -29,13 +29,13 @@ abstract class AbstractItemProvider implements ItemProviderInterface
     /**
      * @var \Magento\Catalog\Model\Config
      */
-    private $catalogConfig;
+    protected $catalogConfig;
 
 
     /**
      * @var CartProductProvider
      */
-    private $cartProductProvider;
+    protected $cartProductProvider;
 
     /**
      * Constructor.
@@ -54,9 +54,9 @@ abstract class AbstractItemProvider implements ItemProviderInterface
     /**
      * {@inheritDoc}
      */
-    public function getItems(ProductInterface $product)
+    public function getItems(ProductInterface $product, $size)
     {
-        $collection = $this->createCollection($product);
+        $collection = $this->createCollection($product)->setPageSize($size);
         $cartProductIds = $this->cartProductProvider->getCartProductIds();
         if (!empty($cartProductIds)) {
             $collection->addExcludeProductFilter($cartProductIds);
