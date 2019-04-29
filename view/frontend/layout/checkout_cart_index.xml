@@ -19,7 +19,6 @@
         <referenceContainer name="checkout.cart.items">
             <block class="Smile\ElasticsuiteRecommender\Block\Product\CrossSell" name="checkout.cart.crosssell" template="Magento_Catalog::product/list/items.phtml" after="-" ifconfig="checkout/cart/crosssell_enabled">
                 <arguments>
-                    <!-- <argument name="type" xsi:type="string">crosssell-rule</argument> -->
                     <argument name="type" xsi:type="string">crosssell</argument>
                 </arguments>
                 <block class="Magento\Catalog\Block\Product\ProductList\Item\Container" name="crosssell.product.addto" as="addto">

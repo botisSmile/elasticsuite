@@ -1,0 +1,30 @@
+<?php
+/**
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Smile ElasticSuite to newer
+ * versions in the future.
+ *
+ *
+ * @category  Smile
+ * @package   Smile\ElasticSuiteRecommender
+ * @author    Richard BAYET <richard.bayet@smile.fr>
+ * @copyright 2019 Smile
+ * @license   Open Software License ("OSL") v. 3.0
+ */
+
+/** @var \Smile\ElasticsuiteRecommender\Block\Product\AjaxLoader $block */
+?>
+<div id="elasticsuite-recommender-container"></div>
+
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "Smile_ElasticsuiteRecommender/js/loader": {
+                "recommenderUrl": "<?= $block->escapeJs($block->escapeUrl($block->getProductRecommenderUrl())) ?>",
+                "redirectUrl": "<?= $block->getRedirectEncodedUrl() ?>",
+                "container" : "#elasticsuite-recommender-container"
+            }
+        }
+    }
+</script>
