@@ -82,6 +82,7 @@ class ItemProvider extends AbstractItemProvider
              * so the resulting items list might be longer than expected.
              */
             $items = array_slice($items, 0, $size, true);
+            $product->setUpSellProductIds(array_keys($items));
         }
 
         return $items;
