@@ -218,4 +218,92 @@
             <argument name="model" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\CrossSell</argument>
         </arguments>
     </virtualType>
+
+    <!-- Visitor personal recommendations -->
+    <virtualType name="Smile\ElasticsuiteRecommender\Model\Product\Visitor\SearchQueryBuilder"
+                 type="Smile\ElasticsuiteRecommender\Model\Product\Matcher\SearchQueryBuilder">
+        <arguments>
+            <argument name="searchQueries" xsi:type="array">
+                <item name="should" xsi:type="array">
+                    <item name="addToCartRelated" xsi:type="object">addToCartRelated</item>
+                    <item name="orderRelated" xsi:type="object">orderRelated</item>
+                    <item name="addToCartSimilarRelated" xsi:type="object">addToCartSimilarRelated</item>
+                    <item name="orderSimilarRelated" xsi:type="object">orderSimilarRelated</item>
+                </item>
+                <item name="mustNot" xsi:type="array">
+                    <!-- TODO remove mustNot on cross-sells ? and transform as a should rule ? -->
+                    <item name="productFilter" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\CrossSell\SearchQuery\ProductFilter</item>
+                    <item name="cartProductFilter" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Matcher\SearchQuery\CartProductFilter</item>
+                    <item name="alreadyBoughtFilter" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Matcher\SearchQuery\AlreadyBoughtFilter</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Smile\ElasticsuiteRecommender\Model\ResourceModel\Product\Visitor\Collection"
+                 type="Smile\ElasticsuiteCatalog\Model\ResourceModel\Product\Fulltext\Collection">
+        <arguments>
+            <argument name="searchRequestName" xsi:type="string">visitor_products_container</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Smile\ElasticsuiteRecommender\Model\ResourceModel\Product\Visitor\CollectionFactory"
+                 type="Smile\ElasticsuiteCatalog\Model\ResourceModel\Product\Fulltext\CollectionFactory">
+        <arguments>
+            <argument name="instanceName" xsi:type="string">Smile\ElasticsuiteRecommender\Model\ResourceModel\Product\Visitor\Collection</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Smile\ElasticsuiteRecommender\Model\Product\Visitor\CollectionProvider"
+                 type="Smile\ElasticsuiteRecommender\Model\Product\Matcher\CollectionProvider">
+        <arguments>
+            <argument name="productCollectionFactory" xsi:type="object">Smile\ElasticsuiteRecommender\Model\ResourceModel\Product\Visitor\CollectionFactory</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Smile\ElasticsuiteRecommender\Model\Product\Visitor"
+                 type="Smile\ElasticsuiteRecommender\Model\Product\Matcher\Multiple">
+        <arguments>
+            <argument name="searchQueryBuilder" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Visitor\SearchQueryBuilder</argument>
+            <argument name="collectionProvider" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Visitor\CollectionProvider</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Smile\ElasticsuiteRecommender\Model\Product\Visitor\ProductProvider">
+        <arguments>
+            <argument name="aggregationProviders" xsi:type="array">
+                <item name="sales" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Visitor\Sales\AggregationProvider</item>
+                <item name="views" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Visitor\Views\AggregationProvider</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <virtualType name="Smile\ElasticsuiteRecommender\Model\Product\Visitor\ProductProviderFactory"
+                 type="Smile\ElasticsuiteRecommender\Model\Product\Matcher\ProductProviderInterfaceFactory">
+        <arguments>
+            <argument name="instanceName" xsi:type="string">Smile\ElasticsuiteRecommender\Model\Product\Visitor\ProductProvider</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- sample visitor context -->
+    <virtualType name="visitorProductProviderContext"
+                 type="Smile\ElasticsuiteRecommender\Model\Product\Visitor\Context">
+        <arguments>
+            <argument name="categories" xsi:type="array">
+                <!-- <item name="category_3" xsi:type="number">3</item> -->
+                <item name="category_15" xsi:type="number">15</item>
+            </argument>
+            <argument name="maxAge" xsi:type="number">10</argument>
+            <argument name="maxSize" xsi:type="number">2</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Smile\ElasticsuiteRecommender\Block\Product\Visitor"
+                 type="Smile\ElasticsuiteRecommender\Block\Product\Multiple\RecommenderList">
+        <arguments>
+            <argument name="productProviderFactory" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Visitor\ProductProviderFactory</argument>
+            <argument name="providerContext" xsi:type="object">visitorProductProviderContext</argument>
+            <argument name="model" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Visitor</argument>
+        </arguments>
+    </virtualType>
 </config>

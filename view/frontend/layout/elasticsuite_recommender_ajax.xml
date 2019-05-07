@@ -17,6 +17,22 @@
 <layout xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/layout_generic.xsd">
     <update handle="empty"/>
     <container name="root">
+        <!-- for demo purpose only / to be replaced by the widget
+        <block class="Smile\ElasticsuiteRecommender\Block\Product\Visitor" name="product.info.visitor" template="Magento_Catalog::product/list/items.phtml">
+            <arguments>
+                <argument name="type" xsi:type="string">upsell-rule</argument>
+            </arguments>
+            <block class="Magento\Catalog\Block\Product\ProductList\Item\Container" name="visitor.product.addto" as="addto">
+                <block class="Smile\ElasticsuiteRecommender\Block\Product\ProductList\Item\AddTo\Wishlist"
+                       name="visitor.product.addto.wishlist" as="wishlist" before="compare"
+                       template="Magento_Wishlist::catalog/product/list/addto/wishlist.phtml"/>
+                <block class="Smile\ElasticsuiteRecommender\Block\Product\ProductList\Item\AddTo\Compare"
+                       name="visitor.product.addto.compare" as="compare"
+                       template="Magento_Catalog::product/list/addto/compare.phtml"/>
+            </block>
+        </block>
+        -->
+
         <block class="Smile\ElasticsuiteRecommender\Block\Product\Related" name="catalog.product.related" template="Magento_Catalog::product/list/items.phtml">
             <arguments>
                 <argument name="type" xsi:type="string">related-rule</argument>

@@ -170,7 +170,7 @@ class CoOccurrence
     }
 
     /**
-     * Build the aggregation used to match significant coocurences.
+     * Build the aggregation used to match significant co-occurrences.
      *
      * @param string  $targetEventType Target event type.
      * @param integer $size            Aggregation type.
