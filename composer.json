@@ -1,0 +1,33 @@
+{
+    "name": "smile/module-elasticsuite-facet-recommender",
+    "type": "magento2-module",
+    "license": "OSL-3.0",
+    "authors": [{
+            "name": "Romain Ruaud",
+            "email": "romain.ruaud@smile.fr"
+        }
+    ],
+    "description": "ElasticSuite - Smart navigation module.",
+    "homepage": "https://elasticsuite.io",
+    "keywords": [
+        "magento",
+        "magento2",
+        "elasticsearch",
+        "search",
+        "merchandising",
+        "core",
+        "setup"
+    ],
+    "require": {
+        "smile/elasticsuite" : "~2.8.0"
+    },
+    "version": "2.8.0",
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Smile\\ElasticsuiteFacetRecommender\\": ""
+        }
+    }
+}
