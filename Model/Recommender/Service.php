@@ -13,9 +13,10 @@
 
 namespace Smile\ElasticsuiteFacetRecommender\Model\Recommender;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Search\ResponseInterface;
+use Magento\Store\Model\StoreManagerInterface;
 use Smile\ElasticsuiteCore\Search\Request\BucketInterface;
-use Smile\ElasticsuiteCore\Search\Request\Query\QueryFactory;
 use Smile\ElasticsuiteCore\Search\Request\QueryInterface;
 use Smile\ElasticsuiteFacetRecommender\Api\FacetRecommenderServiceInterface;
 
@@ -53,18 +54,43 @@ class Service implements FacetRecommenderServiceInterface
      */
     private $aggregationFactory;
 
+    /**
+     * @var \Magento\Framework\App\Config\ScopeConfigInterface
+     */
+    private $scopeConfig;
+
+    /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
+    private $storeManager;
+
+    /**
+     * Service constructor.
+     *
+     * @param \Smile\ElasticsuiteFacetRecommender\Api\Data\FacetRecommendationInterfaceFactory $recommendationFactory Recommendation Factory
+     * @param \Smile\ElasticsuiteCore\Search\Request\Builder                                   $searchRequestBuilder  Request Builder
+     * @param \Magento\Search\Model\SearchEngine                                               $searchEngine          Search Engine
+     * @param \Smile\ElasticsuiteCore\Search\Request\Query\QueryFactory                        $queryFactory          Query Factory
+     * @param \Smile\ElasticsuiteCore\Search\Request\Aggregation\AggregationFactory            $aggregationFactory    Aggregation Factory
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface                               $scopeConfig           Scope Configuration
+     * @param \Magento\Store\Model\StoreManagerInterface                                       $storeManager          Store Manager
+     */
     public function __construct(
         \Smile\ElasticsuiteFacetRecommender\Api\Data\FacetRecommendationInterfaceFactory $recommendationFactory,
         \Smile\ElasticsuiteCore\Search\Request\Builder $searchRequestBuilder,
         \Magento\Search\Model\SearchEngine $searchEngine,
         \Smile\ElasticsuiteCore\Search\Request\Query\QueryFactory $queryFactory,
-        \Smile\ElasticsuiteCore\Search\Request\Aggregation\AggregationFactory $aggregationFactory
+        \Smile\ElasticsuiteCore\Search\Request\Aggregation\AggregationFactory $aggregationFactory,
+        ScopeConfigInterface $scopeConfig,
+        StoreManagerInterface $storeManager
     ) {
         $this->recommendationFactory = $recommendationFactory;
         $this->searchRequestBuilder  = $searchRequestBuilder;
         $this->searchEngine          = $searchEngine;
         $this->queryFactory          = $queryFactory;
         $this->aggregationFactory    = $aggregationFactory;
+        $this->scopeConfig           = $scopeConfig;
+        $this->storeManager          = $storeManager;
     }
 
     /**
@@ -72,7 +98,7 @@ class Service implements FacetRecommenderServiceInterface
      */
     public function getFacetsRecommendations($vid, $uid, $categoryId)
     {
-        $request = $this->getRequest($uid, $categoryId);
+        $request = $this->getRequest($vid, $categoryId);
         $result  = $this->searchEngine->search($request);
 
         $recommendations = $this->buildRecommendations($result);
@@ -97,17 +123,26 @@ class Service implements FacetRecommenderServiceInterface
                 if ($childBucket->getAggregations()) {
                     foreach ($childBucket->getAggregations() as $subAggregation) {
                         foreach ($subAggregation->getValues() as $aggValue) {
+                            $metrics = $aggValue->getMetrics();
                             if ($aggValue->getValue() !== '__other_docs') {
-                                $recommendations[] = $this->recommendationFactory->create(
-                                    [
-                                        'data' => ['name' => $filterName, 'value' => $aggValue->getValue()],
-                                    ]
-                                );
+                                $aggsData[] = [
+                                    'name'  => $filterName,
+                                    'value' => $aggValue->getValue(),
+                                    'count' => $metrics['count'] ?? 0,
+                                ];
                             }
                         }
                     }
                 }
             }
+        }
+
+        usort($aggsData, function ($item1, $item2) {
+            return $item2['count'] <=> $item1['count'];
+        });
+
+        foreach (array_slice($aggsData, 0, $this->getMaxSize()) as $recommendationData) {
+            $recommendations[] = $this->recommendationFactory->create(['data' => $recommendationData]);
         }
 
         return $recommendations;
@@ -116,16 +151,17 @@ class Service implements FacetRecommenderServiceInterface
     /**
      * Get request.
      *
-     * @param string $uid        The user Uid (long duration identifier)
+     * @param string $vid        The user Vid (long duration identifier)
      * @param int    $categoryId The current category Id
      *
      * @return \Smile\ElasticsuiteCore\Search\RequestInterface
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    private function getRequest($uid, $categoryId)
+    private function getRequest($vid, $categoryId)
     {
         $storeId      = $this->getStoreId();
         $aggregations = $this->getAggregations();
-        $searchQuery  = $this->getSearchQuery($uid, $categoryId);
+        $searchQuery  = $this->getSearchQuery($vid, $categoryId);
 
         return $this->searchRequestBuilder->create(
             $storeId,
@@ -140,24 +176,41 @@ class Service implements FacetRecommenderServiceInterface
         );
     }
 
+    /**
+     * Get current Store Id.
+     *
+     * @return int
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     private function getStoreId()
     {
-        return 1;
+        return $this->storeManager->getStore()->getId();
+    }
+
+    /**
+     * Get max number of filters to be recommended.
+     *
+     * @return int
+     */
+    private function getMaxSize()
+    {
+        // @TODO get it from config.
+        return 5;
     }
 
     /**
      * Get search query
      *
-     * @param string $uid        The user Uid (long duration identifier)
+     * @param string $vid        The user Vid (long duration identifier)
      * @param int    $categoryId The current category Id
      *
      * @return \Smile\ElasticsuiteCore\Search\Request\QueryInterface
      */
-    private function getSearchQuery($uid, $categoryId)
+    private function getSearchQuery($vid, $categoryId)
     {
         $uidFilter      = $this->queryFactory->create(
             QueryInterface::TYPE_TERM,
-            ['field' => 'session.uid', 'value' => $uid]
+            ['field' => 'session.vid', 'value' => $vid]
         );
         $pageFilter     = $this->queryFactory->create(
             QueryInterface::TYPE_TERM,
@@ -183,7 +236,7 @@ class Service implements FacetRecommenderServiceInterface
             [
                 'field' => 'page.product_list.filters.value',
                 'name'  => 'filter_value',
-                'size'  => 10,
+                'size'  => 5,
             ]
         );
 
