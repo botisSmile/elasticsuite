@@ -15,6 +15,7 @@ namespace Smile\ElasticsuiteFacetRecommender\Model\Recommender;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Search\ResponseInterface;
+use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Smile\ElasticsuiteCore\Search\Request\BucketInterface;
 use Smile\ElasticsuiteCore\Search\Request\QueryInterface;
@@ -29,6 +30,16 @@ use Smile\ElasticsuiteFacetRecommender\Api\FacetRecommenderServiceInterface;
  */
 class Service implements FacetRecommenderServiceInterface
 {
+    /**
+     * If enabled
+     */
+    const XML_CONFIG_ENABLED  = 'smile_elasticsuite_facet_recommender/general/enabled';
+
+    /**
+     * Max recommendations size
+     */
+    const XML_CONFIG_MAX_SIZE = 'smile_elasticsuite_facet_recommender/general/max_number';
+
     /**
      * @var \Smile\ElasticsuiteFacetRecommender\Api\Data\FacetRecommendationInterfaceFactory
      */
@@ -98,6 +109,10 @@ class Service implements FacetRecommenderServiceInterface
      */
     public function getFacetsRecommendations($vid, $uid, $categoryId)
     {
+        if (!$this->isEnabled()) {
+            return [];
+        }
+
         $request = $this->getRequest($vid, $categoryId);
         $result  = $this->searchEngine->search($request);
 
@@ -188,14 +203,23 @@ class Service implements FacetRecommenderServiceInterface
     }
 
     /**
+     * Check if service is enabled.
+     *
+     * @return bool
+     */
+    private function isEnabled()
+    {
+        return (bool) $this->scopeConfig->isSetFlag(self::XML_CONFIG_ENABLED, ScopeInterface::SCOPE_STORES, $this->getStoreId());
+    }
+
+    /**
      * Get max number of filters to be recommended.
      *
      * @return int
      */
     private function getMaxSize()
     {
-        // @TODO get it from config.
-        return 5;
+        return (int) $this->scopeConfig->getValue(self::XML_CONFIG_MAX_SIZE, ScopeInterface::SCOPE_STORES, $this->getStoreId());
     }
 
     /**
