@@ -48,6 +48,15 @@ class FilterRecommender implements \Magento\Framework\View\Element\Block\Argumen
      */
     private $url;
 
+    /**
+     * FilterRecommender constructor.
+     *
+     * @param \Magento\Store\Model\StoreManagerInterface                       $storeManager        Store Manager
+     * @param \Magento\Catalog\Model\Layer\Resolver                            $layerResolver       Layer Resolver
+     * @param \Smile\ElasticsuiteTracker\Helper\Data                           $trackerHelper       Tracker Helper
+     * @param \Magento\Catalog\Model\Layer\Filter\DataProvider\CategoryFactory $dataProviderFactory Data Provider
+     * @param \Magento\Framework\UrlInterface                                  $url                 URL
+     */
     public function __construct(
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Catalog\Model\Layer\Resolver $layerResolver,
