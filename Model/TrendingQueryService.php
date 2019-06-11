@@ -17,8 +17,10 @@ use Magento\Framework\Search\ResponseInterface;
 use Magento\Framework\Stdlib\StringUtils as StdlibString;
 use Magento\Search\Model\QueryFactory;
 use Magento\Store\Model\StoreManagerInterface;
+use mysql_xdevapi\Exception;
 use Smile\ElasticsuiteBehavioralAutocomplete\Api\TrendingQueryServiceInterface;
 use Smile\ElasticsuiteCore\Search\Request\BucketInterface;
+use Smile\ElasticsuiteCore\Search\Request\Query\FunctionScore;
 use Smile\ElasticsuiteCore\Search\Request\QueryInterface;
 
 /**
@@ -166,13 +168,14 @@ class TrendingQueryService implements TrendingQueryServiceInterface
         $storeId      = $this->getStoreId();
         $aggregations = $this->getAggregations($maxSize);
         $searchQuery  = $this->getSearchQuery($queryText);
+        $boostedQuery = $this->getBoostedQuery($searchQuery);
 
         return $this->searchRequestBuilder->create(
             $storeId,
             'tracking_log_event',
             0,
             0,
-            $searchQuery,
+            $boostedQuery,
             [],
             [],
             [],
@@ -189,6 +192,44 @@ class TrendingQueryService implements TrendingQueryServiceInterface
     private function getStoreId()
     {
         return $this->storeManager->getStore()->getId();
+    }
+
+    /**
+     * Apply a boost on the search query.
+     * Prioritize most recently used search terms.
+     *
+     * @param \Smile\ElasticsuiteCore\Search\Request\QueryInterface $searchQuery Search Query
+     *
+     * @return \Smile\ElasticsuiteCore\Search\Request\QueryInterface
+     */
+    private function getBoostedQuery(QueryInterface $searchQuery)
+    {
+        try {
+            $date      = new \DateTime();
+            $functions = [
+                [
+                    'gauss' => [
+                        'date' => [
+                            'origin' => $date->format(\Magento\Framework\DB\Adapter\Pdo\Mysql::DATETIME_FORMAT),
+                            'scale'  => '7d',
+                            'offset' => 0,
+                            'decay'  => 0.1,
+                        ],
+                    ],
+                ],
+            ];
+
+            $queryParams = [
+                'query'     => $searchQuery,
+                'functions' => $functions,
+                'scoreMode' => FunctionScore::SCORE_MODE_MULTIPLY,
+                'boostMode' => FunctionScore::BOOST_MODE_MULTIPLY,
+            ];
+
+            return $this->queryFactory->create(QueryInterface::TYPE_FUNCTIONSCORE, $queryParams);
+        } catch (\Exception $exception) {
+            return $searchQuery;
+        }
     }
 
     /**
@@ -248,11 +289,12 @@ class TrendingQueryService implements TrendingQueryServiceInterface
     {
         return [
             [
-                'type'    => BucketInterface::TYPE_TERM,
-                'field'   => 'page.search.query.sortable',
-                'name'    => 'search_query',
-                'size'    => (int) $maxSize,
-                'metrics' => [
+                'type'      => BucketInterface::TYPE_TERM,
+                'field'     => 'page.search.query.sortable',
+                'name'      => 'search_query',
+                'size'      => (int) $maxSize,
+                'sortOrder' => BucketInterface::SORT_ORDER_RELEVANCE,
+                'metrics'   => [
                     [
                         'name'  => 'product_count',
                         'type'  => 'avg',
