@@ -82,19 +82,27 @@ class DataProvider extends \Smile\ElasticsuiteCore\Model\Autocomplete\Terms\Data
     public function getItems()
     {
         if ($this->items === null) {
-            $collection  = $this->service->get(null, $this->getResultsPageSize());
             $this->items = [];
 
-            if ($this->configurationHelper->isEnabled($this->getType())) {
-                foreach ($collection as $item) {
-                    $resultItem    = $this->itemFactory->create([
-                        'title'       => $item->getQueryText(),
-                        'num_results' => $item->getNumResults(),
-                        'type'        => $this->getType(),
-                    ]);
-                    $this->items[] = $resultItem;
+            try {
+                $collection = $this->service->get(null, $this->getResultsPageSize());
+                if ($this->configurationHelper->isEnabled($this->getType())) {
+                    foreach ($collection as $item) {
+                        $resultItem    = $this->itemFactory->create([
+                            'title'       => $item->getQueryText(),
+                            'num_results' => $item->getNumResults(),
+                            'type'        => $this->getType(),
+                        ]);
+                        $this->items[] = $resultItem;
+                    }
                 }
+            } catch (\Exception $exception) {
+                $this->items = [];
             }
+        }
+
+        if (empty($this->items)) {
+            $this->items = parent::getItems();
         }
 
         return $this->items;
