@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Smile_ElasticsuiteFacetRecommender admin configuration UI fields.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Smile Elastic Suite to newer
+ * versions in the future.
+ *
+ *
+ * @category  Smile
+ * @package   Smile\ElasticsuiteFacetRecommender
+ * @author    Romain Ruaud <romain.ruaud@smile.fr>
+ * @copyright 2019 Smile
+ * @license   Open Software License ("OSL") v. 3.0
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="smile_elasticsuite_behavioral_autocomplete" translate="label" type="text" sortOrder="10000" showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>Behavioral autocomplete</label>
+            <tab>smile_elasticsuite</tab>
+            <resource>Magento_Catalog::config_smile_elasticsuite_core_base_settings</resource>
+
+            <group id="general" translate="label" type="text" sortOrder="10000" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Trend based autocomplete</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enabled</label>
+                    <comment>When enabled, autocomplete box will suggest trending search terms. Elasticsuite tracking must also be enabled.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
