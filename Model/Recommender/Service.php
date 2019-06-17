@@ -129,6 +129,7 @@ class Service implements FacetRecommenderServiceInterface
     private function buildRecommendations(ResponseInterface $response)
     {
         $recommendations = [];
+        $aggsData        = [];
 
         $filterBucket = $response->getAggregations()->getBucket('filter_name');
         if ($filterBucket) {
