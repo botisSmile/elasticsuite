@@ -22,7 +22,6 @@ use Smile\ElasticsuiteRecommender\Model\Product\Matcher\SearchQueryBuilderInterf
 use Magento\Catalog\Api\Data\ProductInterface;
 use Smile\ElasticsuiteRecommender\Model\CoOccurrence;
 use Magento\Store\Model\StoreManagerInterface;
-use Magento\Framework\Stdlib\CookieManagerInterface;
 use Smile\ElasticsuiteRecommender\Helper\Data;
 use Smile\ElasticsuiteTracker\Helper\Data as TrackerHelper;
 
@@ -56,11 +55,6 @@ class AlreadyBoughtFilter implements SearchQueryBuilderInterface
     private $storeManager;
 
     /**
-     * @var CookieManagerInterface
-     */
-    private $cookieManager;
-
-    /**
      * @var TrackerHelper
      */
     private $trackerHelper;
@@ -73,26 +67,23 @@ class AlreadyBoughtFilter implements SearchQueryBuilderInterface
     /**
      * Constructor.
      *
-     * @param QueryFactory           $queryFactory  Query factory.
-     * @param CoOccurrence           $coOccurrence  Co-occurrence finder.
-     * @param Data                   $helper        Data helper.
-     * @param StoreManagerInterface  $storeManager  Store manager.
-     * @param CookieManagerInterface $cookieManager Cookie Manager
-     * @param TrackerHelper          $trackerHelper Tracker Helper.
+     * @param QueryFactory          $queryFactory  Query factory.
+     * @param CoOccurrence          $coOccurrence  Co-occurrence finder.
+     * @param Data                  $helper        Data helper.
+     * @param StoreManagerInterface $storeManager  Store manager.
+     * @param TrackerHelper         $trackerHelper Tracker Helper.
      */
     public function __construct(
         QueryFactory $queryFactory,
         CoOccurrence $coOccurrence,
         Data $helper,
         StoreManagerInterface $storeManager,
-        CookieManagerInterface $cookieManager,
         TrackerHelper $trackerHelper
     ) {
         $this->queryFactory     = $queryFactory;
         $this->coOccurrence     = $coOccurrence;
         $this->storeManager     = $storeManager;
         $this->helper           = $helper;
-        $this->cookieManager    = $cookieManager;
         $this->trackerHelper    = $trackerHelper;
     }
 
@@ -125,7 +116,7 @@ class AlreadyBoughtFilter implements SearchQueryBuilderInterface
     {
         $boughtProducts = [];
 
-        if ($visitorId = $this->getCurrentVisitor()) {
+        if ($visitorId = $this->trackerHelper->getCurrentVisitorId()) {
             $storeId        = $this->storeManager->getStore()->getId();
             $maxAge         = $this->helper->getPastBoughtProductsExclusionMaxAge();
             $boughtProducts = $this->coOccurrence->getCoOccurrences(
@@ -139,35 +130,5 @@ class AlreadyBoughtFilter implements SearchQueryBuilderInterface
         }
 
         return $boughtProducts;
-    }
-
-    /**
-     * Return the current visitor id.
-     *
-     * @return string
-     */
-    private function getCurrentVisitor()
-    {
-        $visitorId = null;
-
-        $cookieConfig = $this->trackerHelper->getCookieConfig();
-        if (array_key_exists('visitor_cookie_name', $cookieConfig)) {
-            $visitorCookieName = $cookieConfig['visitor_cookie_name'];
-            $visitorId = $this->readCookieValue($visitorCookieName);
-        }
-
-        return $visitorId;
-    }
-
-    /**
-     * Read cookie value.
-     *
-     * @param string $cookieName Cookie name.
-     *
-     * @return string|NULL
-     */
-    private function readCookieValue($cookieName)
-    {
-        return $this->cookieManager->getCookie($cookieName);
     }
 }
