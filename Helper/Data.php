@@ -30,6 +30,13 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     const CONFIG_COOCCURRENCE_MIN_DOC_COUNT_XPATH = 'smile_elasticsuite_recommender/cooccurrence/min_doc_count';
 
     /**
+     * List of product attributes to use when performing a "more like this" after a co-occurrence query
+     *
+     * @var string
+     */
+    const CONFIG_COOCCURRENCE_SIMILARITY_ATTR_XPATH = 'smile_elasticsuite_recommender/cooccurrence/similarity_attributes';
+
+    /**
      * Maximum number of products to display for related products configuration path
      * @var string
      */
@@ -104,6 +111,18 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     public function getCoOccurrenceMinDocCount()
     {
         return (int) $this->scopeConfig->getValue(self::CONFIG_COOCCURRENCE_MIN_DOC_COUNT_XPATH);
+    }
+
+    /**
+     * Returns the list of product attributes to use for "more like this" requests
+     *
+     * @return array Array of attribute codes
+     */
+    public function getSimilarityAttributes()
+    {
+        $attributes = $this->scopeConfig->getValue(self::CONFIG_COOCCURRENCE_SIMILARITY_ATTR_XPATH);
+
+        return !empty($attributes) ? explode(',', $attributes) : [];
     }
 
     /**

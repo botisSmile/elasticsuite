@@ -92,6 +92,12 @@
                     <validate>integer</validate>
                     <comment><![CDATA[When gathering co-occurrence of products related events (products also viewed, added to cart, bought), in how many distinct sessions an event must occur at the minimum to be taken into account. Lowering it can be helpful on sites without much events tracking history to avoid a cold start.]]></comment>
                 </field>
+                <field id="similarity_attributes" translate="label comment" type="multiselect" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Similarity attributes</label>
+                    <comment><![CDATA[Attributes that will be used to find products similar to the co-occurrent products. The list is made of attributes that are searchable, can provide text values to the search engine and are configured to either be sortable or filterable in layer navigation.]]></comment>
+                    <source_model>Smile\ElasticsuiteRecommender\Model\Config\Source\SimilarityAttributes</source_model>
+                    <validate>required-entry</validate>
+                </field>
             </group>
         </section>
     </system>

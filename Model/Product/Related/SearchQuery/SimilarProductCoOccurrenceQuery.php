@@ -98,10 +98,11 @@ class SimilarProductCoOccurrenceQuery implements SearchQueryBuilderInterface
 
         if (!empty($productIds)) {
             $queryParams = [
-                'fields'              => $this->config->getSimilarityFields($product->getStoreId()),
                 'includeOriginalDocs' => true,
                 'minimumShouldMatch'  => $this->minimumShouldMatch,
                 'boost'               => $this->boost,
+                'fields'              => $this->config->getSimilarityFields($product->getStoreId()),
+                'like'                => [],
             ];
 
             foreach ($productIds as $relatedProduct) {

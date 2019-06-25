@@ -19,6 +19,8 @@ use Smile\ElasticsuiteCore\Search\Request\Query\Fulltext\SearchableFieldFilter;
 use Smile\ElasticsuiteCore\Api\Search\Request\ContainerConfigurationInterfaceFactory as ContainerConfigurationFactory;
 use Smile\ElasticsuiteCore\Api\Index\MappingInterface;
 use Smile\ElasticsuiteCore\Api\Index\Mapping\FieldInterface;
+use Smile\ElasticsuiteRecommender\Helper\Data as DataHelper;
+use Smile\ElasticsuiteCore\Helper\Mapping as MappingHelper;
 
 /**
  * Upsell Config model
@@ -40,22 +42,43 @@ class Config
     private $searchFieldFilter;
 
     /**
+     * @var DataHelper
+     */
+    private $helper;
+
+    /**
+     * @var MappingHelper
+     */
+    private $mappingHelper;
+
+    /**
      * @var array
      */
     private $mappings = [];
+
+    /**
+     * @var array
+     */
+    private $similarityFields = [];
 
     /**
      * Config constructor.
      *
      * @param ContainerConfigurationFactory $containerConfigFactory Container configuration factory.
      * @param SearchableFieldFilter         $searchFieldFilter      Searchable field filter.
+     * @param DataHelper                    $helper                 Data helper.
+     * @param MappingHelper                 $mappingHelper          Mapping helper.
      */
     public function __construct(
         ContainerConfigurationFactory $containerConfigFactory,
-        SearchableFieldFilter $searchFieldFilter
+        SearchableFieldFilter $searchFieldFilter,
+        DataHelper $helper,
+        MappingHelper $mappingHelper
     ) {
         $this->containerConfigFactory = $containerConfigFactory;
         $this->searchFieldFilter      = $searchFieldFilter;
+        $this->helper                 = $helper;
+        $this->mappingHelper          = $mappingHelper;
     }
 
     /**
@@ -67,19 +90,35 @@ class Config
      */
     public function getSimilarityFields($storeId)
     {
-        $fields = [
-            MappingInterface::DEFAULT_AUTOCOMPLETE_FIELD,
-            MappingInterface::DEFAULT_AUTOCOMPLETE_FIELD . '.' . FieldInterface::ANALYZER_SHINGLE,
-        ];
+        if (!isset($this->similarityFields[$storeId])) {
+            $defaultFields = [
+                MappingInterface::DEFAULT_AUTOCOMPLETE_FIELD,
+                MappingInterface::DEFAULT_AUTOCOMPLETE_FIELD . '.' . FieldInterface::ANALYZER_SHINGLE,
+            ];
 
-        foreach ($this->getMapping($storeId)->getFields() as $field) {
-            $isTextField = $field->getType() == FieldInterface::FIELD_TYPE_TEXT;
-            if ($isTextField && $field->isSearchable() && ($field->isUsedForSortBy() || $field->isFilterable())) {
-                $fields[] = $field->getMappingProperty(FieldInterface::ANALYZER_STANDARD);
+            $fields = [];
+            // Extract possible attribute related eligible fields from mapping.
+            foreach ($this->getMapping($storeId)->getFields() as $field) {
+                $isTextField = $field->getType() == FieldInterface::FIELD_TYPE_TEXT;
+                if ($isTextField && $field->isSearchable() && ($field->isUsedForSortBy() || $field->isFilterable())) {
+                    $fields[] = $field->getMappingProperty(FieldInterface::ANALYZER_STANDARD);
+                }
             }
+            $fields = array_filter($fields);
+
+            // Build whitelisted list of fields from list of configured attributes.
+            $attributeFields = $this->getAttributesFields($storeId);
+
+            $allowedFields = array_intersect($fields, $attributeFields);
+
+            if (empty($allowedFields)) {
+                $allowedFields = $defaultFields;
+            }
+
+            $this->similarityFields[$storeId] = array_values($allowedFields);
         }
 
-        return array_values(array_filter($fields));
+        return $this->similarityFields[$storeId];
     }
 
     /**
@@ -115,5 +154,52 @@ class Config
         }
 
         return $this->mappings[$storeId];
+    }
+
+    /**
+     * Get the list of engine fields for the configured attributes
+     *
+     * @param int $storeId Store id.
+     *
+     * @return array
+     */
+    private function getAttributesFields($storeId)
+    {
+        $fields = [];
+
+        $attributes = $this->helper->getSimilarityAttributes();
+        foreach ($attributes as $attributeCode) {
+            $fieldName = $this->getMappingFieldName($attributeCode, $storeId);
+            try {
+                $field = $this->getMapping($storeId)->getField($fieldName);
+                $mappingProperty = $field->getMappingProperty(FieldInterface::ANALYZER_STANDARD);
+                $fields[] = $mappingProperty;
+            } catch (\Exception $e) {
+                ;
+            }
+        }
+
+        return array_filter($fields);
+    }
+
+    /**
+     * Name of the field in the search engine mapping.
+     *
+     * @param string $fieldName Request field name.
+     * @param int    $storeId   Store id.
+     *
+     * @return string
+     */
+    private function getMappingFieldName($fieldName, $storeId)
+    {
+        try {
+            $optionTextFieldName = $this->mappingHelper->getOptionTextFieldName($fieldName);
+            $this->getMapping($storeId)->getField($optionTextFieldName);
+            $fieldName = $optionTextFieldName;
+        } catch (\Exception $e) {
+            ;
+        }
+
+        return $fieldName;
     }
 }
