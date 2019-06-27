@@ -13,21 +13,17 @@
 
 namespace Smile\ElasticsuiteBehavioralData\Model\ResourceModel\Product\Indexer\Fulltext\Datasource;
 
-use Magento\Framework\App\ResourceConnection;
-use Magento\Framework\Search\Response\Aggregation;
 use Magento\Framework\Search\SearchEngineInterface;
-use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
-use Smile\ElasticsuiteCore\Model\ResourceModel\Indexer\AbstractIndexer;
-use Smile\ElasticsuiteCore\Search\Request\BucketInterface;
-use Smile\ElasticsuiteCore\Search\Request\MetricInterface;
-use Smile\ElasticsuiteCore\Search\Request\PipelineInterface;
-use Smile\ElasticsuiteCore\Search\Request\Query\QueryFactory;
-use Smile\ElasticsuiteCore\Search\Request\Builder as RequestBuilder;
-use Smile\ElasticsuiteCore\Search\Request\QueryInterface;
 use Smile\ElasticsuiteCore\Search\Request\Aggregation\AggregationFactory;
 use Smile\ElasticsuiteCore\Search\Request\Aggregation\MetricFactory;
 use Smile\ElasticsuiteCore\Search\Request\Aggregation\PipelineFactory;
+use Smile\ElasticsuiteCore\Search\Request\BucketInterface;
+use Smile\ElasticsuiteCore\Search\Request\Builder as RequestBuilder;
+use Smile\ElasticsuiteCore\Search\Request\MetricInterface;
+use Smile\ElasticsuiteCore\Search\Request\PipelineInterface;
+use Smile\ElasticsuiteCore\Search\Request\Query\QueryFactory;
+use Smile\ElasticsuiteCore\Search\Request\QueryInterface;
 
 /**
  * Behavioral Data Index resource model
@@ -36,7 +32,7 @@ use Smile\ElasticsuiteCore\Search\Request\Aggregation\PipelineFactory;
  * @package  Smile\ElasticsuiteBehavioralData
  * @author   Romain Ruaud <romain.ruaud@smile.fr>
  */
-class BehavioralData extends AbstractIndexer
+class BehavioralData
 {
     /**
      * @var \Smile\ElasticsuiteCore\Search\Request\Query\QueryFactory
@@ -69,28 +65,47 @@ class BehavioralData extends AbstractIndexer
     private $requestBuilder;
 
     /**
+     * @var \Smile\ElasticsuiteBehavioralData\Model\Config
+     */
+    private $config;
+
+    /**
      * @var \Psr\Log\LoggerInterface
      */
     private $logger;
 
+    /**
+     * @var boolean|null
+     */
+    private $useWeeklyStats = null;
+
+    /**
+     * @var string|null
+     */
+    private $dailyFrom = null;
+
+    /**
+     * @var string|null
+     */
+    private $weeklyFrom = null;
+
     public function __construct(
-        ResourceConnection $resource,
-        StoreManagerInterface $storeManager,
         QueryFactory $queryFactory,
         SearchEngineInterface $searchEngine,
         RequestBuilder $requestBuilder,
         AggregationFactory $aggregationFactory,
         MetricFactory $metricFactory,
         PipelineFactory $pipelineFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        \Smile\ElasticsuiteBehavioralData\Model\Config $config
     ) {
-        parent::__construct($resource, $storeManager);
         $this->queryFactory       = $queryFactory;
         $this->searchEngine       = $searchEngine;
         $this->requestBuilder     = $requestBuilder;
         $this->aggregationFactory = $aggregationFactory;
         $this->metricFactory      = $metricFactory;
         $this->pipelineFactory    = $pipelineFactory;
+        $this->config             = $config;
         $this->logger             = $logger;
     }
 
@@ -109,6 +124,10 @@ class BehavioralData extends AbstractIndexer
         try {
             $views = $this->getViewsData($storeId, $productIds);
             $sales = $this->getSalesData($storeId, $productIds);
+
+            // Not using array_merge_recursive here because it discards numeric keys (which are product ids).
+            $data = array_replace_recursive($views, $sales);
+
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage());
         }
@@ -129,8 +148,72 @@ class BehavioralData extends AbstractIndexer
         );
     }
 
+    /**
+     * Build a "from" filter for a given date.
+     *
+     * @param \DateTime $date A date
+     *
+     * @return \Smile\ElasticsuiteCore\Search\Request\QueryInterface
+     */
+    private function getFromDateFilter(\DateTime $date)
+    {
+        return $this->queryFactory->create(
+            QueryInterface::TYPE_RANGE,
+            [
+                'field'  => 'date',
+                'bounds' => ['gte' => $date->format(\Magento\Framework\DB\Adapter\Pdo\Mysql::DATETIME_FORMAT)],
+            ]
+        );
+    }
+
+    /**
+     * Compute views data for a given store Id and Product ids.
+     *
+     * @param int   $storeId    The store Id
+     * @param int[] $productIds The product Ids
+     *
+     * @return array
+     *
+     * @throws \Exception
+     */
     private function getViewsData($storeId, $productIds)
     {
+        $dailyFrom  = $this->getDailyFrom();
+        $maxFrom    = $dailyFrom;
+        $dailyMaAgg = $this->getMovingAverageByDate(
+            'daily_views_count',
+            'ma',
+            '1d',
+            7,
+            $dailyFrom
+        );
+
+        $productIdAggParams = [
+            'field'        => 'page.product.id',
+            'name'         => 'product_id',
+            'childBuckets' => [$dailyMaAgg],
+        ];
+
+        if ($this->isUseWeeklyStats()) {
+            $weeklyFrom  = $this->getWeeklyFrom();
+            $maxFrom     = $weeklyFrom;
+            $weeklyMaAgg = $this->getMovingAverageByDate(
+                'weekly_views_count',
+                'ma',
+                '7d',
+                4,
+                $weeklyFrom
+            );
+
+            $productIdAggParams['childBuckets'][] = $weeklyMaAgg;
+        }
+
+        $productIdAgg = $this->aggregationFactory->create(BucketInterface::TYPE_TERM, $productIdAggParams);
+
+        $now        = new \DateTime();
+        $from       = $now->modify(sprintf('-%s', $maxFrom));
+        $dateFilter = $this->getFromDateFilter($from);
+
         $productIdsFilter = $this->queryFactory->create(
             QueryInterface::TYPE_TERMS,
             ['field' => 'page.product.id', 'values' => $productIds]
@@ -138,32 +221,7 @@ class BehavioralData extends AbstractIndexer
 
         $queryFilter = $this->queryFactory->create(
             QueryInterface::TYPE_BOOL,
-            ['must' => [$productIdsFilter, $this->getPageFilter('catalog_product_view')]]
-        );
-
-        $dailyMaAgg = $this->getMovingAverageByDate(
-            'daily_views_count',
-            'ma_daily',
-            '1d',
-            7,
-            '30day'
-        );
-
-        $weeklyMaAgg = $this->getMovingAverageByDate(
-            'weekly_views_count',
-            'ma_weekly',
-            '7d',
-            4,
-            '60day'
-        );
-
-        $productIdAgg = $this->aggregationFactory->create(
-            BucketInterface::TYPE_TERM,
-            [
-                'field'        => 'page.product.id',
-                'name'         => 'product_id',
-                'childBuckets' => [$dailyMaAgg, $weeklyMaAgg],
-            ]
+            ['must' => [$productIdsFilter, $dateFilter, $this->getPageFilter('catalog_product_view')]]
         );
 
         $request = $this->requestBuilder->create(
@@ -179,10 +237,78 @@ class BehavioralData extends AbstractIndexer
         );
 
         $result = $this->searchEngine->search($request);
+
+        return $this->parseResponse($result, 'views');
     }
 
+    /**
+     * Compute sales data for a given store Id and Product ids.
+     *
+     * @param int   $storeId    The store Id
+     * @param int[] $productIds The product Ids
+     *
+     * @return array
+     *
+     * @throws \Exception
+     */
     private function getSalesData($storeId, $productIds)
     {
+        $dailyFrom  = $this->getDailyFrom();
+        $maxFrom    = $dailyFrom;
+        $dailyMaAgg = $this->getMovingAverageByDate(
+            'daily_sales_count',
+            'ma',
+            '1d',
+            7,
+            $dailyFrom
+        );
+
+        $rnDailyAgg = $this->aggregationFactory->create(
+            'reverseNestedBucket',
+            [
+                'name'         => 'daily_sales_count',
+                'field'        => null,
+                'childBuckets' => [$dailyMaAgg],
+            ]
+        );
+
+        $productIdAggParams = [
+            'field'        => 'page.order.items.product_id',
+            'nestedPath'   => 'page.order.items',
+            'name'         => 'product_id',
+            'childBuckets' => [$rnDailyAgg],
+        ];
+
+        if ($this->isUseWeeklyStats()) {
+            $weeklyFrom  = $this->getWeeklyFrom();
+            $maxFrom     = $weeklyFrom;
+
+            $weeklyMaAgg = $this->getMovingAverageByDate(
+                'weekly_sales_count',
+                'ma',
+                '7d',
+                4,
+                $weeklyFrom
+            );
+
+            $rnWeeklyAgg = $this->aggregationFactory->create(
+                'reverseNestedBucket',
+                [
+                    'name'         => 'weekly_sales_count',
+                    'field'        => null,
+                    'childBuckets' => [$weeklyMaAgg],
+                ]
+            );
+
+            $productIdAggParams['childBuckets'][] = $rnWeeklyAgg;
+        }
+
+        $productIdAgg = $this->aggregationFactory->create(BucketInterface::TYPE_TERM, $productIdAggParams);
+
+        $now        = new \DateTime();
+        $from       = $now->modify(sprintf('-%s', $maxFrom));
+        $dateFilter = $this->getFromDateFilter($from);
+
         $productIdFilter = $this->queryFactory->create(
             QueryInterface::TYPE_NESTED,
             [
@@ -196,51 +322,7 @@ class BehavioralData extends AbstractIndexer
 
         $queryFilter = $this->queryFactory->create(
             QueryInterface::TYPE_BOOL,
-            ['must' => [$productIdFilter, $this->getPageFilter('checkout_onepage_success')]]
-        );
-
-        $dailyMaAgg = $this->getMovingAverageByDate(
-            'daily_sales_count',
-            'ma_daily',
-            '1d',
-            7,
-            '30day'
-        );
-
-        $rnDailyAgg = $this->aggregationFactory->create(
-            'reverseNestedBucket',
-            [
-                'name'         => 'rn_daily_sales_count',
-                'field'        => null,
-                'childBuckets' => [$dailyMaAgg],
-            ]
-        );
-
-        $weeklyMaAgg = $this->getMovingAverageByDate(
-            'weekly_sales_count',
-            'ma_weekly',
-            '7d',
-            4,
-            '60day'
-        );
-
-        $rnWeeklyAgg = $this->aggregationFactory->create(
-            'reverseNestedBucket',
-            [
-                'name'         => 'rn_weekly_sales_count',
-                'field'        => null,
-                'childBuckets' => [$weeklyMaAgg],
-            ]
-        );
-
-        $productIdAgg = $this->aggregationFactory->create(
-            BucketInterface::TYPE_TERM,
-            [
-                'field'        => 'page.order.items.product_id',
-                'nestedPath'   => 'page.order.items',
-                'name'         => 'product_id',
-                'childBuckets' => [$rnDailyAgg, $rnWeeklyAgg],
-            ]
+            ['must' => [$productIdFilter, $dateFilter, $this->getPageFilter('checkout_onepage_success')]]
         );
 
         $request = $this->requestBuilder->create(
@@ -256,6 +338,60 @@ class BehavioralData extends AbstractIndexer
         );
 
         $result = $this->searchEngine->search($request);
+
+        return $this->parseResponse($result, 'sales');
+    }
+
+    /**
+     * Compute sales data across query results.
+     *
+     * @param \Smile\ElasticsuiteCore\Search\Adapter\Elasticsuite\Response\QueryResponse $queryResponse Query Response
+     * @param string                                                                     $eventType     Event Type
+     *
+     * @return array
+     */
+    private function parseResponse($queryResponse, $eventType)
+    {
+        $data         = [];
+        $productIds   = $queryResponse->getAggregations()->getBucket('product_id');
+        $dailyBucket  = sprintf('daily_%s_count', $eventType);
+        $weeklyBucket = sprintf('weekly_%s_count', $eventType);
+
+        if ($productIds) {
+            /** @var \Smile\ElasticsuiteCore\Search\Adapter\Elasticsuite\Response\Aggregation\Value $childBucket */
+            foreach ($productIds->getValues() as $childBucket) {
+                $productId  = $childBucket->getValue();
+                $eventCount = $childBucket->getMetrics() ? $childBucket->getMetrics()['count'] : false;
+                $data[$productId]['_stats'][$eventType]['total'] = $eventCount;
+
+                if ($childBucket->getAggregations()->getBucket($dailyBucket)) {
+                    $subAggregation = $childBucket->getAggregations()->getBucket($dailyBucket);
+
+                    if (!empty($subAggregation->getValues())) {
+                        $values    = $subAggregation->getValues();
+                        $lastValue = end($values);
+                        $metrics   = $lastValue->getMetrics();
+                        $data[$productId]['_stats'][$eventType]['daily']['ma']    = $metrics['ma'] ?? false;
+                        $data[$productId]['_stats'][$eventType]['daily']['count'] = $metrics['event_count'] ?? false;
+                    }
+                }
+
+                if ($this->isUseWeeklyStats()) {
+                    if ($childBucket->getAggregations()->getBucket($weeklyBucket)) {
+                        $subAggregation = $childBucket->getAggregations()->getBucket($weeklyBucket);
+                        if (!empty($subAggregation->getValues())) {
+                            $values    = $subAggregation->getValues();
+                            $lastValue = end($values);
+                            $metrics   = $lastValue->getMetrics();
+                            $data[$productId]['_stats'][$eventType]['weekly']['ma']    = $metrics['ma'] ?? false;
+                            $data[$productId]['_stats'][$eventType]['weekly']['count'] = $metrics['event_count'] ?? false;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $data;
     }
 
     /**
@@ -267,6 +403,7 @@ class BehavioralData extends AbstractIndexer
      * @param string $maName          The moving average name
      * @param string $dateInterval    The interval to compute histogram on. ('1d', '1w', etc...)
      * @param int    $maWindow        The moving average window to calculate.
+     * @param string $from            The maximum anterior delay to compute data from.
      *
      * @return \Smile\ElasticsuiteCore\Search\Request\BucketInterface
      */
@@ -303,17 +440,51 @@ class BehavioralData extends AbstractIndexer
         $now  = new \DateTime();
         $from = $now->modify(sprintf('-%s', $from));
 
-        $aggregationParams['filter'] = $this->queryFactory->create(
-            QueryInterface::TYPE_RANGE,
-            [
-                'field'  => 'date',
-                'bounds' => ['gte' => $from->format(\Magento\Framework\DB\Adapter\Pdo\Mysql::DATETIME_FORMAT)],
-            ]
-        );
+        $aggregationParams['filter'] = $this->getFromDateFilter($from);
 
         return $this->aggregationFactory->create(
             BucketInterface::TYPE_DATE_HISTOGRAM,
             $aggregationParams
         );
+    }
+
+    /**
+     * @return bool
+     */
+    private function isUseWeeklyStats()
+    {
+        if ($this->useWeeklyStats === null) {
+            $this->useWeeklyStats = $this->config->isUseWeeklyStats();
+        }
+
+        return $this->useWeeklyStats;
+    }
+
+    /**
+     * Get max anterior date to compute daily statistics.
+     *
+     * @return string
+     */
+    private function getDailyFrom()
+    {
+        if ($this->dailyFrom === null) {
+            $this->dailyFrom = $this->config->getDailyFrom();
+        }
+
+        return $this->dailyFrom;
+    }
+
+    /**
+     * Get max anterior date to compute weekly statistics.
+     *
+     * @return string
+     */
+    private function getWeeklyFrom()
+    {
+        if ($this->weeklyFrom === null) {
+            $this->weeklyFrom = $this->config->getWeeklyFrom();
+        }
+
+        return $this->weeklyFrom;
     }
 }

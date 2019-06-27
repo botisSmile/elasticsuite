@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Smile_ElasticsuiteBehavioralData default configuration.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Smile ElasticSuite to newer
+ * versions in the future.
+ *
+ * @category  Smile
+ * @package   Smile\ElasticsuiteBehavioralData
+ * @author    Romain Ruaud <romain.ruaud@smile.fr>
+ * @copyright 2019 Smile
+ * @license   Open Software License ("OSL") v. 3.0
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <smile_elasticsuite_behavioral_data>
+            <general>
+                <use_weekly_stats>1</use_weekly_stats>
+                <daily_from>30</daily_from>
+                <weekly_from>60</weekly_from>
+            </general>
+        </smile_elasticsuite_behavioral_data>
+    </default>
+</config>

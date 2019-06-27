@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Smile_ElasticsuiteBehavioralData admin configuration UI fields.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Smile Elastic Suite to newer
+ * versions in the future.
+ *
+ *
+ * @category  Smile
+ * @package   Smile\ElasticsuiteBehavioralData
+ * @author    Romain Ruaud <romain.ruaud@smile.fr>
+ * @copyright 2019 Smile
+ * @license   Open Software License ("OSL") v. 3.0
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="smile_elasticsuite_behavioral_data" translate="label" type="text" sortOrder="10000" showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>Behavioral data</label>
+            <tab>smile_elasticsuite</tab>
+            <resource>Magento_Catalog::config_smile_elasticsuite_core_base_settings</resource>
+
+            <group id="general" translate="label" type="text" sortOrder="10000" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Behavioral Data</label>
+                <field id="use_weekly_stats" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enabled</label>
+                    <comment>When enabled, behavioral data will be computed on weekly basis additionnaly to daily basis.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="daily_from" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Daily From</label>
+                    <comment>Maximum window to be considered for daily data. A number of days as integer.</comment>
+                    <frontend_class>validate-number</frontend_class>
+                </field>
+                <field id="weekly_from" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Weekly From</label>
+                    <comment>Maximum window to be considered for weekly data. A number of days as integer.</comment>
+                    <frontend_class>validate-number</frontend_class>
+                    <depends>
+                        <field id="use_weekly_stats">1</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

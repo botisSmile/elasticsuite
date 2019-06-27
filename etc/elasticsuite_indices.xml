@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Smile_ElasticsuiteBehavioralData indices configuration.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this module to newer
+ * versions in the future.
+ *
+ *
+ * @category  Smile
+ * @package   Smile\ElasticsuiteBehavioralData
+ * @author    Romain Ruaud <romain.ruaud@smile.fr>
+ * @copyright 2019 Smile
+ * @license   Open Software License ("OSL") v. 3.0
+ */
+ -->
+<indices xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Smile_ElasticsuiteCore:etc/elasticsuite_indices.xsd">
+    <index identifier="catalog_product" defaultSearchType="product">
+        <type name="product" idFieldName="entity_id">
+            <mapping>
+                <field name="_stats.views.total" type="integer" />
+                <field name="_stats.views.daily.ma" type="double" />
+                <field name="_stats.views.daily.count" type="integer" />
+                <field name="_stats.views.weekly.ma" type="double" />
+                <field name="_stats.views.weekly.count" type="integer" />
+                <field name="_stats.sales.total" type="integer" />
+                <field name="_stats.sales.daily.ma" type="double" />
+                <field name="_stats.sales.daily.count" type="integer" />
+                <field name="_stats.sales.weekly.ma" type="double" />
+                <field name="_stats.sales.weekly.count" type="integer" />
+            </mapping>
+        </type>
+    </index>
+</indices>

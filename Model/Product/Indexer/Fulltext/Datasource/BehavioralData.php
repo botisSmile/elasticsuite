@@ -47,6 +47,8 @@ class BehavioralData implements DatasourceInterface
     {
         $behavioralData = $this->resourceModel->loadBehavioralData($storeId, array_keys($indexData));
 
+        $indexData = array_replace_recursive($indexData, $behavioralData);
+
         return $indexData;
     }
 }
