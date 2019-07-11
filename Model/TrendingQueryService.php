@@ -144,7 +144,7 @@ class TrendingQueryService implements TrendingQueryServiceInterface
                     [
                         'data' => [
                             'query_text'  => $this->string->cleanString($childBucket->getValue()),
-                            'num_results' => $metrics['product_count'] ?? 0,
+                            'num_results' => round($metrics['product_count'] ?? 0),
                         ],
                     ]
                 );
