@@ -64,19 +64,21 @@ class ManualProducts implements SearchQueryBuilderInterface
     public function getSearchQuery(ProductInterface $product)
     {
         $query = false;
-        $similarityQueryFields = $this->config->getSimilarityFields($product->getStoreId());
 
         if ($productIds = $this->getProducts($product)) {
-            $likes = [['_id' => $product->getId()]];
+            $queryParams = [
+                'includeOriginalDocs' => true,
+                'boost'               => 100,
+                'fields'              => $this->config->getSimilarityFields($product->getStoreId()),
+                'like'                => [],
+            ];
 
+            $queryParams['like'][] = ['_id' => $product->getId()];
             foreach ($productIds as $relatedProduct) {
-                 $likes[] = ['_id' => $relatedProduct];
+                $queryParams['like'][] = ['_id' => $relatedProduct];
             }
 
-            $query = $this->queryFactory->create(
-                QueryInterface::TYPE_MORELIKETHIS,
-                ['fields' => $similarityQueryFields, 'like' => $likes, 'includeOriginalDocs' => true, 'boost' => 100]
-            );
+            $query = $this->queryFactory->create(QueryInterface::TYPE_MORELIKETHIS, $queryParams);
         }
 
         return $query;
