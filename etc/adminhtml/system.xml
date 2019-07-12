@@ -36,6 +36,11 @@
                         <field id="exclude_already_bought" separator=",">1</field>
                     </depends>
                 </field>
+                <field id="prevent_zero_constraints_queries" translate="label comment" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Prevent defaulting to whole catalog</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment><![CDATA[In some conditions, there might not be any event yet (searches, views, sales, ...) for a product (e.g. for a new product) and so not constraint on the recommendation request for that product. If set to Yes, this will prevent such a recommendation request to be executed and no products will be shown. If set to No, the request would end up displaying generic products picked from the whole catalog.]]></comment>
+                </field>
                 <field id="related_position_limit" translate="label" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Maximum Number of Products in Related Products List</label>
                     <validate>integer validate-greater-than-zero validate-number-range number-range-1-20</validate>

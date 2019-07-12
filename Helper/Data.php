@@ -85,6 +85,12 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     const CONFIG_EXCLUDE_ALREADY_BOUGHT_MAX_AGE_XPATH = 'smile_elasticsuite_recommender/general/exclude_already_bought_max_age';
 
     /**
+     * Whether to prevent zero constraints recommendations requests that would pull ou the whole catalog
+     * @var string
+     */
+    const CONFIG_PREVENT_ZERO_CONSTRAINT_QUERIES_XPATH = 'smile_elasticsuite_recommender/general/prevent_zero_constraints_queries';
+
+    /**
      * Absolute maximum number of products to display for related/upsell/cross-sell products.
      * @var int
      */
@@ -214,6 +220,17 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     public function getPastBoughtProductsExclusionMaxAge()
     {
         return (int) $this->scopeConfig->getValue(self::CONFIG_EXCLUDE_ALREADY_BOUGHT_MAX_AGE_XPATH);
+    }
+
+    /**
+     * Returns true if requests without any constraint ("should" or "must" boolean parts) must not be executed.
+     * This prevents generating a recommendation list based upon the whole catalog.
+     *
+     * @return bool
+     */
+    public function isPreventingZeroConstraintsRequests()
+    {
+        return $this->scopeConfig->isSetFlag(self::CONFIG_PREVENT_ZERO_CONSTRAINT_QUERIES_XPATH);
     }
 
     /**

@@ -17,6 +17,7 @@ namespace Smile\ElasticsuiteRecommender\Model\Product\Matcher;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Smile\ElasticsuiteCore\Search\Request\Query\QueryFactory;
 use Smile\ElasticsuiteCore\Search\Request\QueryInterface;
+use Smile\ElasticsuiteRecommender\Helper\Data as DataHelper;
 
 /**
  * Recommender search query builder.
@@ -33,6 +34,11 @@ class SearchQueryBuilder implements SearchQueryBuilderInterface
     private $queryFactory;
 
     /**
+     * @var DataHelper
+     */
+    private $helper;
+
+    /**
      * @var SearchQueryBuilderInterface[]
      */
     private $searchQueries;
@@ -41,11 +47,13 @@ class SearchQueryBuilder implements SearchQueryBuilderInterface
      * Constructor.
      *
      * @param QueryFactory $queryFactory  Search query factory.
+     * @param DataHelper   $helper        Data helper.
      * @param array        $searchQueries Query clause builder.
      */
-    public function __construct(QueryFactory $queryFactory, array $searchQueries = [])
+    public function __construct(QueryFactory $queryFactory, DataHelper $helper, array $searchQueries = [])
     {
         $this->queryFactory  = $queryFactory;
+        $this->helper        = $helper;
         $this->searchQueries = $searchQueries;
     }
 
@@ -67,6 +75,13 @@ class SearchQueryBuilder implements SearchQueryBuilderInterface
         }
 
         $queryClauses = array_filter($queryClauses);
+
+        if ($this->helper->isPreventingZeroConstraintsRequests()) {
+            if (!isset($queryClauses['must']) && !isset($queryClauses['should'])) {
+                // Without any constraint clause, the whole catalog is a candidate, so the recommendation lacks any intelligence.
+                $queryClauses = [];
+            }
+        }
 
         if (!empty($queryClauses)) {
             $queryClauses['minimum_should_match'] = 1;
