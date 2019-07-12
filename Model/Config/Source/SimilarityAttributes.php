@@ -22,6 +22,7 @@ use Magento\Store\Model\StoreManagerInterface;
 use Smile\ElasticsuiteCore\Helper\Mapping as MappingHelper;
 use Smile\ElasticsuiteCore\Api\Index\MappingInterface;
 use Smile\ElasticsuiteCore\Api\Index\Mapping\FieldInterface;
+use Smile\ElasticsuiteRecommender\Model\Product\Matcher\SimilarityAbleFieldFilter;
 
 /**
  * Class SimilarityAttributes
@@ -67,6 +68,11 @@ class SimilarityAttributes implements \Magento\Framework\Option\ArrayInterface
     private $mappingHelper;
 
     /**
+     * @var SimilarityAbleFieldFilter
+     */
+    private $similarityFieldField;
+
+    /**
      * Options array
      *
      * @var array
@@ -82,6 +88,7 @@ class SimilarityAttributes implements \Magento\Framework\Option\ArrayInterface
      * @param AttributeList                 $attributeList          Indexed product attributes list.
      * @param StoreManagerInterface         $storeManager           Store manager.
      * @param MappingHelper                 $mappingHelper          Mapping helper.
+     * @param SimilarityAbleFieldFilter     $similarityFieldFilter  Similarity mapping field filter.
      */
     public function __construct(
         ContainerConfigurationFactory $containerConfigFactory,
@@ -89,7 +96,8 @@ class SimilarityAttributes implements \Magento\Framework\Option\ArrayInterface
         ProductAttributeData $productAttributeData,
         AttributeList $attributeList,
         StoreManagerInterface $storeManager,
-        MappingHelper $mappingHelper
+        MappingHelper $mappingHelper,
+        SimilarityAbleFieldFilter $similarityFieldFilter
     ) {
         $this->containerConfigFactory = $containerConfigFactory;
         $this->attributeHelper = $attributeHelper;
@@ -97,6 +105,7 @@ class SimilarityAttributes implements \Magento\Framework\Option\ArrayInterface
         $this->attributeList = $attributeList;
         $this->storeManager = $storeManager;
         $this->mappingHelper = $mappingHelper;
+        $this->similarityFieldField = $similarityFieldFilter;
         $this->options = [];
     }
 
@@ -136,8 +145,7 @@ class SimilarityAttributes implements \Magento\Framework\Option\ArrayInterface
         $fieldName = $this->getMappingFieldName($attribute->getAttributeCode());
         try {
             $field = $this->getMapping()->getField($fieldName);
-            $isTextField = $field->getType() == FieldInterface::FIELD_TYPE_TEXT;
-            if ($isTextField && $field->isSearchable() && ($field->isUsedForSortBy() || $field->isFilterable())) {
+            if ($this->similarityFieldField->filterField($field)) {
                 $mappingProperty = $field->getMappingProperty(FieldInterface::ANALYZER_STANDARD);
                 $isValid = ($mappingProperty !== null);
             }

@@ -19,6 +19,7 @@ use Smile\ElasticsuiteCore\Search\Request\Query\Fulltext\SearchableFieldFilter;
 use Smile\ElasticsuiteCore\Api\Search\Request\ContainerConfigurationInterfaceFactory as ContainerConfigurationFactory;
 use Smile\ElasticsuiteCore\Api\Index\MappingInterface;
 use Smile\ElasticsuiteCore\Api\Index\Mapping\FieldInterface;
+use Smile\ElasticsuiteRecommender\Model\Product\Matcher\SimilarityAbleFieldFilter;
 use Smile\ElasticsuiteRecommender\Helper\Data as DataHelper;
 use Smile\ElasticsuiteCore\Helper\Mapping as MappingHelper;
 
@@ -40,6 +41,11 @@ class Config
      * @var SearchableFieldFilter
      */
     private $searchFieldFilter;
+
+    /**
+     * @var SimilarityAbleFieldFilter
+     */
+    private $similarityFieldField;
 
     /**
      * @var DataHelper
@@ -66,17 +72,20 @@ class Config
      *
      * @param ContainerConfigurationFactory $containerConfigFactory Container configuration factory.
      * @param SearchableFieldFilter         $searchFieldFilter      Searchable field filter.
+     * @param SimilarityAbleFieldFilter     $similarityFieldFilter  Similarity-able field filter.
      * @param DataHelper                    $helper                 Data helper.
      * @param MappingHelper                 $mappingHelper          Mapping helper.
      */
     public function __construct(
         ContainerConfigurationFactory $containerConfigFactory,
         SearchableFieldFilter $searchFieldFilter,
+        SimilarityAbleFieldFilter $similarityFieldFilter,
         DataHelper $helper,
         MappingHelper $mappingHelper
     ) {
         $this->containerConfigFactory = $containerConfigFactory;
         $this->searchFieldFilter      = $searchFieldFilter;
+        $this->similarityFieldField   = $similarityFieldFilter;
         $this->helper                 = $helper;
         $this->mappingHelper          = $mappingHelper;
     }
@@ -99,8 +108,7 @@ class Config
             $fields = [];
             // Extract possible attribute related eligible fields from mapping.
             foreach ($this->getMapping($storeId)->getFields() as $field) {
-                $isTextField = $field->getType() == FieldInterface::FIELD_TYPE_TEXT;
-                if ($isTextField && $field->isSearchable() && ($field->isUsedForSortBy() || $field->isFilterable())) {
+                if ($this->similarityFieldField->filterField(($field))) {
                     $fields[] = $field->getMappingProperty(FieldInterface::ANALYZER_STANDARD);
                 }
             }
