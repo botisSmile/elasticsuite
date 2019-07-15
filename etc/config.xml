@@ -20,6 +20,7 @@
             <general>
                 <exclude_already_bought>1</exclude_already_bought>
                 <exclude_already_bought_max_age>90</exclude_already_bought_max_age>
+                <prevent_zero_constraints_queries>1</prevent_zero_constraints_queries>
                 <related_position_limit>6</related_position_limit>
                 <related_behavior>0</related_behavior>
                 <related_exclude_composite_products>0</related_exclude_composite_products>
