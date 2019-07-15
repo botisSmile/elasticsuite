@@ -54,7 +54,7 @@ class Options implements \Magento\Framework\Data\OptionSourceInterface
         $options = [];
 
         foreach ($this->fields as $field => $label) {
-            if (!$this->config->isUseWeeklyStats() && strpos($field, '.weekly.')) {
+            if (!$this->config->isUseWeeklyStats() && (strpos($field, '.weekly.') !== false)) {
                 continue;
             }
 
