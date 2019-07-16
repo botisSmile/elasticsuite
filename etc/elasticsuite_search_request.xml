@@ -40,4 +40,11 @@
         </filters>
     </request>
 
+    <request name="visitor_products_container" label="Visitor Products" index="catalog_product" type="product" fulltext="false">
+        <filters>
+            <filter name="stockFilter">Smile\ElasticsuiteCatalog\Model\Product\Search\Request\Container\Filter\Stock</filter>
+            <filter name="visibleInCatalog">Smile\ElasticsuiteCatalog\Model\Product\Search\Request\Container\Filter\VisibleInCatalog</filter>
+        </filters>
+    </request>
+
 </requests>
