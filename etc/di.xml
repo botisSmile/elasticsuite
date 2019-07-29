@@ -285,25 +285,13 @@
         </arguments>
     </virtualType>
 
-    <!-- sample visitor context -->
-    <virtualType name="visitorProductProviderContext"
-                 type="Smile\ElasticsuiteRecommender\Model\Product\Visitor\Context">
-        <arguments>
-            <argument name="categories" xsi:type="array">
-                <!-- <item name="category_3" xsi:type="number">3</item> -->
-                <item name="category_15" xsi:type="number">15</item>
-            </argument>
-            <argument name="maxAge" xsi:type="number">10</argument>
-            <argument name="maxSize" xsi:type="number">2</argument>
-        </arguments>
-    </virtualType>
-
-    <virtualType name="Smile\ElasticsuiteRecommender\Block\Product\Visitor"
-                 type="Smile\ElasticsuiteRecommender\Block\Product\Multiple\RecommenderList">
+    <!-- Visitor Recommendations Service -->
+    <type name="Smile\ElasticsuiteRecommender\Model\Product\Visitor\Service">
         <arguments>
             <argument name="productProviderFactory" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Visitor\ProductProviderFactory</argument>
-            <argument name="providerContext" xsi:type="object">visitorProductProviderContext</argument>
             <argument name="model" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Visitor</argument>
         </arguments>
-    </virtualType>
+    </type>
+
+    <preference for="Smile\ElasticsuiteRecommender\Model\Product\Matcher\ProductProvider\ContextInterface" type="Smile\ElasticsuiteRecommender\Model\Product\Visitor\Context"/>
 </config>
