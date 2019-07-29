@@ -173,11 +173,21 @@ class DataProvider extends \Magento\Catalog\Ui\DataProvider\Product\Listing\Data
     private function getRecommendedProductIds()
     {
         $categoryId = $this->request->getParam('category_id', null);
+        $categories = [];
 
-        if (!$this->searchContext->getCurrentCategory() && $categoryId) {
+        if ($categoryId) {
             try {
-                $category = $this->categoryRepository->get($categoryId);
-                $this->searchContext->setCurrentCategory($category);
+                $category   = $this->categoryRepository->get($categoryId);
+                $categories = [$categoryId];
+
+                if (!$this->searchContext->getCurrentCategory()) {
+                    $this->searchContext->setCurrentCategory($category);
+                }
+
+                $childrenIds = $category->getAllChildren(true);
+                if (null !== $childrenIds) {
+                    $categories = array_merge($categories, $childrenIds);
+                }
             } catch (\Magento\Framework\Exception\NoSuchEntityException $exception) {
                 ;
             }
@@ -186,7 +196,7 @@ class DataProvider extends \Magento\Catalog\Ui\DataProvider\Product\Listing\Data
         $productIds = $this->service->getRecommendedProductIds(
             null,
             $this->request->getParam('page_size', null),
-            $categoryId ? [$categoryId] : []
+            $categories
         );
 
         return $productIds;
