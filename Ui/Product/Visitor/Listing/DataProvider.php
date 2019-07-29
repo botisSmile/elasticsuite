@@ -13,6 +13,8 @@
 
 namespace Smile\ElasticsuiteRecommender\Ui\Product\Visitor\Listing;
 
+use Magento\Catalog\Api\CategoryRepositoryInterface;
+use Magento\Catalog\Model\CategoryRepository;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\SearchCriteriaBuilder;
 use Magento\Framework\App\RequestInterface;
@@ -53,20 +55,25 @@ class DataProvider extends \Magento\Catalog\Ui\DataProvider\Product\Listing\Data
     private $service;
 
     /**
+     * @var \Magento\Catalog\Api\CategoryRepositoryInterface
+     */
+    private $categoryRepository;
+
+    /**
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
-     *
-     * @param string                     $name                  Data Provider Name
-     * @param Reporting                  $reporting             Reporting
-     * @param SearchCriteriaBuilder      $searchCriteriaBuilder Search Criteria Builder
-     * @param RequestInterface           $request               Request
-     * @param FilterBuilder              $filterBuilder         Filter Builder
-     * @param StoreManager               $storeManager          Store Manager
-     * @param ProductRenderListInterface $productRenderList     Product Render List
-     * @param HydratorInterface          $hydrator              Product Hydrator
-     * @param ContextInterface           $context               Search Context
-     * @param Service                    $service               Visitor Recommendations Service
-     * @param array                      $meta                  UI Component Meta
-     * @param array                      $data                  UI Component Data
+     * @param string                      $name                  Data Provider Name
+     * @param Reporting                   $reporting             Reporting
+     * @param SearchCriteriaBuilder       $searchCriteriaBuilder Search Criteria Builder
+     * @param RequestInterface            $request               Request
+     * @param FilterBuilder               $filterBuilder         Filter Builder
+     * @param StoreManager                $storeManager          Store Manager
+     * @param ProductRenderListInterface  $productRenderList     Product Render List
+     * @param HydratorInterface           $hydrator              Product Hydrator
+     * @param ContextInterface            $context               Search Context
+     * @param Service                     $service               Visitor Recommendations Service
+     * @param CategoryRepositoryInterface $categoryRepository    Category Repository
+     * @param array                       $meta                  UI Component Meta
+     * @param array                       $data                  UI Component Data
      */
     public function __construct(
         $name,
@@ -79,6 +86,7 @@ class DataProvider extends \Magento\Catalog\Ui\DataProvider\Product\Listing\Data
         HydratorInterface $hydrator,
         ContextInterface $context,
         Service $service,
+        CategoryRepositoryInterface $categoryRepository,
         array $meta = [],
         array $data = []
     ) {
@@ -93,11 +101,12 @@ class DataProvider extends \Magento\Catalog\Ui\DataProvider\Product\Listing\Data
             $data
         );
 
-        $this->name              = $name;
-        $this->productRenderList = $productRenderList;
-        $this->hydrator          = $hydrator;
-        $this->searchContext     = $context;
-        $this->service           = $service;
+        $this->name               = $name;
+        $this->productRenderList  = $productRenderList;
+        $this->hydrator           = $hydrator;
+        $this->searchContext      = $context;
+        $this->service            = $service;
+        $this->categoryRepository = $categoryRepository;
     }
 
     /**
@@ -164,6 +173,15 @@ class DataProvider extends \Magento\Catalog\Ui\DataProvider\Product\Listing\Data
     private function getRecommendedProductIds()
     {
         $categoryId = $this->request->getParam('category_id', null);
+
+        if (!$this->searchContext->getCurrentCategory() && $categoryId) {
+            try {
+                $category = $this->categoryRepository->get($categoryId);
+                $this->searchContext->setCurrentCategory($category);
+            } catch (\Magento\Framework\Exception\NoSuchEntityException $exception) {
+                ;
+            }
+        }
 
         $productIds = $this->service->getRecommendedProductIds(
             null,

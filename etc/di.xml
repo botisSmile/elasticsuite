@@ -254,12 +254,11 @@
         </arguments>
     </virtualType>
 
-    <virtualType name="Smile\ElasticsuiteRecommender\Model\Product\Visitor\CollectionProvider"
-                 type="Smile\ElasticsuiteRecommender\Model\Product\Matcher\CollectionProvider">
+    <type name="Smile\ElasticsuiteRecommender\Model\Product\Visitor\CollectionProvider">
         <arguments>
             <argument name="productCollectionFactory" xsi:type="object">Smile\ElasticsuiteRecommender\Model\ResourceModel\Product\Visitor\CollectionFactory</argument>
         </arguments>
-    </virtualType>
+    </type>
 
     <virtualType name="Smile\ElasticsuiteRecommender\Model\Product\Visitor"
                  type="Smile\ElasticsuiteRecommender\Model\Product\Matcher\Multiple">
