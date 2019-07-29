@@ -224,15 +224,21 @@
                  type="Smile\ElasticsuiteRecommender\Model\Product\Matcher\SearchQueryBuilder">
         <arguments>
             <argument name="searchQueries" xsi:type="array">
+                <item name="must" xsi:type="array">
+                    <item name="categories" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Upsell\SearchQuery\Category</item>
+                </item>
                 <item name="should" xsi:type="array">
+                    <!-- First part is : recommend to the user products similar to the products he already viewed or bought -->
+                    <item name="searchTerms" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Upsell\SearchQuery\SearchTerms</item>
+                    <item name="relatedProducts" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Upsell\SearchQuery\RelatedProducts</item>
+                    <item name="manualProducts" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Upsell\SearchQuery\ManualProducts</item>
+                    <!-- Second part is : recommend to the user products complementary (cross-sell) to the products he already viewed or bought -->
                     <item name="addToCartRelated" xsi:type="object">addToCartRelated</item>
                     <item name="orderRelated" xsi:type="object">orderRelated</item>
                     <item name="addToCartSimilarRelated" xsi:type="object">addToCartSimilarRelated</item>
                     <item name="orderSimilarRelated" xsi:type="object">orderSimilarRelated</item>
                 </item>
                 <item name="mustNot" xsi:type="array">
-                    <!-- TODO remove mustNot on cross-sells ? and transform as a should rule ? -->
-                    <item name="productFilter" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\CrossSell\SearchQuery\ProductFilter</item>
                     <item name="cartProductFilter" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Matcher\SearchQuery\CartProductFilter</item>
                     <item name="alreadyBoughtFilter" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Matcher\SearchQuery\AlreadyBoughtFilter</item>
                 </item>
