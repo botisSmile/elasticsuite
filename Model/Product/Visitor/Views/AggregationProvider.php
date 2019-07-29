@@ -86,11 +86,11 @@ class AggregationProvider implements AggregationProviderInterface
         }
 
         $aggParams = [
-            'name'          => $this->getAggregationName(),
-            'field'         => 'page.product.id',
-            'nestedFilter'  => $categoryFilter,
-            'size'          => $size,
-            'minDocCount'   => 1,
+            'name'        => $this->getAggregationName(),
+            'field'       => 'page.product.id',
+            'filter'      => $categoryFilter,
+            'size'        => $size,
+            'minDocCount' => 1,
         ];
 
         return $this->aggregationFactory->create(BucketInterface::TYPE_SIGNIFICANT_TERM, $aggParams);
