@@ -5,6 +5,7 @@
  * Do not edit or add to this file if you wish to upgrade this module to newer
  * versions in the future.
  *
+ *
  * @category  Smile
  * @package   Smile\ElasticsuiteCatalogOptimizerCustomerSegment
  * @author    Richard BAYET <richard.bayet@smile.fr>
@@ -12,29 +13,28 @@
  * @license   Open Software License ("OSL") v. 3.0
  */
 
-namespace Smile\ElasticsuiteCatalogOptimizerCustomerSegment\Ui\Component\Optimizer\Form\Modifier;
+namespace Smile\ElasticsuiteCatalogOptimizerCustomerSegment\Api\Data;
 
 /**
- * Class CustomerSegment
+ * Elasticsuite Catalog Optimizer Customer Segment Interface
  *
  * @category Smile
  * @package  Smile\ElasticsuiteCatalogOptimizerCustomerSegment
  */
-class CustomerSegment implements \Magento\Ui\DataProvider\Modifier\ModifierInterface
+interface OptimizerCustomerSegmentInterface
 {
     /**
-     * {@inheritdoc}
+     * Name of the main Mysql Table
      */
-    public function modifyData(array $data)
-    {
-        return $data;
-    }
+    const TABLE_NAME = 'smile_elasticsuite_optimizer_customer_segment';
 
     /**
-     * {@inheritdoc}
+     * Constant for field optimizer_id
      */
-    public function modifyMeta(array $data)
-    {
-        return $data;
-    }
+    const OPTIMIZER_ID = 'optimizer_id';
+
+    /**
+     * Constant for field segment_id
+     */
+    const SEGMENT_ID = 'segment_id';
 }
