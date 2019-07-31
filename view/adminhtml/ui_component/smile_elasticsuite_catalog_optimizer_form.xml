@@ -117,9 +117,7 @@
                             <item name="id" xsi:type="string">segment_id</item>
                             <item name="name" xsi:type="string">name</item>
                             <item name="is_active" xsi:type="string">is_active</item>
-                            <!--
                             <item name="website_ids" xsi:type="string">website_ids</item>
-                            -->
                         </item>
                     </item>
                 </argument>
@@ -172,21 +170,18 @@
                             </item>
                         </argument>
                     </field>
-                    <!--
                     <field name="website_ids" formElement="input" template="ui/dynamic-rows/cells/text">
                         <settings>
                             <dataType>text</dataType>
-                            <label translate="true">Website IDs</label>
+                            <label translate="true">Websites</label>
                             <visible>true</visible>
                         </settings>
                     </field>
-                    -->
                     <actionDelete name="delete">
                         <settings>
                             <dataType>text</dataType>
                             <label translate="true">Actions</label>
                             <visible>true</visible>
-                            <!-- <dataScope>query_text</dataScope> -->
                             <dataScope>name</dataScope>
                             <additionalClasses>
                                 <class name="data-grid-actions-cell">true</class>
