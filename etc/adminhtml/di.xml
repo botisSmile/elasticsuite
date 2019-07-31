@@ -21,7 +21,7 @@
         <arguments>
             <argument name="modifiers" xsi:type="array">
                 <item name="customer_segment" xsi:type="array">
-                    <item name="class" xsi:type="string">Smile\ElasticsuiteCatalogOptimizerCustomerSegment\Ui\Component\Optimizer\Form\Modifier\CustomerSegment</item>
+                    <item name="class" xsi:type="string">Smile\ElasticsuiteCatalogOptimizerCustomerSegment\Ui\Component\Optimizer\Form\Modifier\CustomerSegments</item>
                     <item name="sortOrder" xsi:type="number">40</item>
                 </item>
             </argument>
