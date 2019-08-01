@@ -15,7 +15,8 @@
 namespace Smile\ElasticsuiteCatalogOptimizerCustomerSegment\Ui\Component\Optimizer\Form\Modifier;
 
 /**
- * Class CustomerSegment
+ * Optimizer Ui Component Modifier.
+ * Used to populate customer segments.
  *
  * @category Smile
  * @package  Smile\ElasticsuiteCatalogOptimizerCustomerSegment
@@ -62,13 +63,16 @@ class CustomerSegments implements \Magento\Ui\DataProvider\Modifier\ModifierInte
         $optimizer = $this->locator->getOptimizer();
 
         if ($optimizer && $optimizer->getId() && isset($data[$optimizer->getId()])) {
-            if (isset($data[$optimizer->getId()]['customer_segment'])
-                && isset($data[$optimizer->getId()]['customer_segment']['segment_ids'])) {
-                $segmentsData = $this->fillSegmentData($data[$optimizer->getId()]['customer_segment']['segment_ids']);
-                if (!empty($segmentsData)) {
-                    $data[$optimizer->getId()]['customer_segment']['segment_ids'] = $segmentsData;
-                }
-            }
+            $containerData = $optimizer->getCustomerSegment() ?? [];
+            $containerData['apply_to'] = (int) false;
+
+            $segmentsData = $this->fillSegmentData($containerData['segment_ids'] ?? []);
+            $containerData = [
+                'apply_to' => (int) !empty($segmentsData),
+                'segment_ids' => $segmentsData,
+            ];
+
+            $data[$optimizer->getId()]['customer_segment'] = $containerData;
         }
 
         return $data;
@@ -93,17 +97,19 @@ class CustomerSegments implements \Magento\Ui\DataProvider\Modifier\ModifierInte
     {
         $data = [];
 
-        $collection  = $this->segmentsCollection->addFieldToFilter('segment_id', $segmentIds)->addCustomerCountToSelect();
-        $yesNoValues = $this->yesNo->toArray();
+        if (!empty($segmentIds)) {
+            $collection  = $this->segmentsCollection->addFieldToFilter('segment_id', $segmentIds)->addCustomerCountToSelect();
+            $yesNoValues = $this->yesNo->toArray();
 
-        foreach ($collection as $segment) {
-            $data[] = [
-                'id'    => $segment->getId(),
-                'name'  => $segment->getName(),
-                'is_active' => $yesNoValues[(int) $segment->getIsActive()],
-                'website_ids' => $segment->getWebsiteIds(),
-                'customer_count' => $segment->getCustomerCount(),
-            ];
+            foreach ($collection as $segment) {
+                $data[] = [
+                    'id'    => $segment->getId(),
+                    'name'  => $segment->getName(),
+                    'is_active' => $yesNoValues[(int) $segment->getIsActive()],
+                    'website_ids' => $segment->getWebsiteIds(),
+                    'customer_count' => $segment->getCustomerCount(),
+                ];
+            }
         }
 
         return $data;
