@@ -21,7 +21,8 @@
     <fieldset name="customer_segment">
         <argument name="data" xsi:type="array">
             <item name="config" xsi:type="array">
-                <item name="label" xsi:type="string" translate="true">Customer Segment</item>
+                <item name="label" xsi:type="string" translate="true">Customer Segments</item>
+                <item name="sortOrder" xsi:type="number">70</item>
             </item>
         </argument>
         <field name="customer_segment_apply_to">
