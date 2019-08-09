@@ -23,12 +23,56 @@ use Smile\ElasticsuiteCatalogOptimizerCustomerSegment\Api\Data\OptimizerCustomer
  * @category Smile
  * @package  Smile\ElasticsuiteCatalogOptimizerCustomerSegment
  * @author   Richard BAYET <richard.bayet@smile.fr>
- *
- * TODO ribay@smile.fr extend \Smile\ElasticsuiteCatalogOptimizer\Model\ResourceModel\Optimizer\Limitation
- *      w/ saveLimitation and _construct being overriden ?
  */
 class CustomerSegment extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
 {
+    /**
+     * Return the list of applicable optimizer ids according to given list of customer segment ids.
+     * Union of the list of optimizers without any segment limitation and the list of optimizers
+     * with a specific limitation on the provided segments.
+     *
+     * @param array $segmentIds Customer segment ids.
+     *
+     * @return array
+     */
+    public function getApplicableOptimizerIdsByCustomerSegmentIds($segmentIds = [])
+    {
+        $selects = [];
+
+        $selects[] = $this->getConnection()
+            ->select()
+            ->from(['o' => $this->getTable(OptimizerInterface::TABLE_NAME)], [OptimizerInterface::OPTIMIZER_ID])
+            ->joinLeft(
+                ['main_table' => $this->getMainTable()],
+                sprintf("o.%s = main_table.%s", OptimizerInterface::OPTIMIZER_ID, OptimizerCustomerSegmentInterface::OPTIMIZER_ID),
+                []
+            )
+            ->where(
+                sprintf("main_table.%s IS NULL", OptimizerCustomerSegmentInterface::OPTIMIZER_ID)
+            )
+            ->group(OptimizerInterface::OPTIMIZER_ID);
+
+        if (!empty($segmentIds)) {
+            $selects[] = $this->getConnection()
+                ->select()
+                ->from(
+                    ['main_table' => $this->getTable(OptimizerCustomerSegmentInterface::TABLE_NAME)],
+                    [OptimizerInterface::OPTIMIZER_ID]
+                )
+                ->where(
+                    $this->getConnection()->quoteInto(
+                        sprintf('main_table.%s IN (?)', OptimizerCustomerSegmentInterface::SEGMENT_ID),
+                        implode($segmentIds)
+                    )
+                )
+                ->group(OptimizerCustomerSegmentInterface::OPTIMIZER_ID);
+        }
+
+        $select = $this->getConnection()->select()->union($selects);
+
+        return $this->getConnection()->fetchCol($select);
+    }
+
     /**
      * Retrieve all customer segments associated to a given optimizer.
      *
