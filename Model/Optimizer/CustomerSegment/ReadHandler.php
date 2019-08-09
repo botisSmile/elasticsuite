@@ -60,7 +60,7 @@ class ReadHandler implements \Magento\Framework\EntityManager\Operation\Extensio
      *
      * @return array
      */
-    public function getCustomerSegmentLimitation($entity)
+    private function getCustomerSegmentLimitation($entity)
     {
         $segmentIds = $this->resource->getSegmentIdsByOptimizer($entity);
         $containerData = [
