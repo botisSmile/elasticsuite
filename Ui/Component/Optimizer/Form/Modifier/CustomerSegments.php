@@ -14,6 +14,11 @@
 
 namespace Smile\ElasticsuiteCatalogOptimizerCustomerSegment\Ui\Component\Optimizer\Form\Modifier;
 
+use Smile\ElasticsuiteCatalogOptimizer\Model\Optimizer\Locator\LocatorInterface as OptimizerLocatorInterface;
+use Magento\CustomerSegment\Model\ResourceModel\Grid\CollectionFactory as CustomerSegmentCollectionFactory;
+use Magento\Store\Model\ResourceModel\Website\CollectionFactory as WebsiteCollectionFactory;
+use Magento\Config\Model\Config\Source\Yesno;
+
 /**
  * Optimizer Ui Component Modifier.
  * Used to populate customer segments.
@@ -24,7 +29,7 @@ namespace Smile\ElasticsuiteCatalogOptimizerCustomerSegment\Ui\Component\Optimiz
 class CustomerSegments implements \Magento\Ui\DataProvider\Modifier\ModifierInterface
 {
     /**
-     * @var \Smile\ElasticsuiteCatalogOptimizer\Model\Optimizer\Locator\LocatorInterface
+     * @var OptimizerLocatorInterface
      */
     private $locator;
 
@@ -34,6 +39,16 @@ class CustomerSegments implements \Magento\Ui\DataProvider\Modifier\ModifierInte
     private $segmentsCollection;
 
     /**
+     * @var \Magento\Store\Model\ResourceModel\Website\Collection
+     */
+    private $websiteCollection;
+
+    /**
+     * @var array
+     */
+    private $websiteNames;
+
+    /**
      * @var \Magento\Config\Model\Config\Source\Yesno
      */
     private $yesNo;
@@ -41,18 +56,22 @@ class CustomerSegments implements \Magento\Ui\DataProvider\Modifier\ModifierInte
     /**
      * CustomerSegment constructor.
      *
-     * @param \Smile\ElasticsuiteCatalogOptimizer\Model\Optimizer\Locator\LocatorInterface $locator    Optimizer locator.
-     * @param \Magento\CustomerSegment\Model\ResourceModel\Grid\CollectionFactory          $segmentCollectionFactory Customer segments collection factory.
-     * @param \Magento\Config\Model\Config\Source\Yesno                                    $yesNo      Yes/No source model.
+     * @param OptimizerLocatorInterface        $locator                  Optimizer locator.
+     * @param CustomerSegmentCollectionFactory $segmentCollectionFactory Customer segments collection factory.
+     * @param WebsiteCollectionFactory         $websiteCollectionFactory Website collection factory.
+     * @param Yesno                            $yesNo                    Yes/No source model.
      */
     public function __construct (
-        \Smile\ElasticsuiteCatalogOptimizer\Model\Optimizer\Locator\LocatorInterface $locator,
-        \Magento\CustomerSegment\Model\ResourceModel\Grid\CollectionFactory $segmentCollectionFactory,
-        \Magento\Config\Model\Config\Source\Yesno $yesNo
+        OptimizerLocatorInterface $locator,
+        CustomerSegmentCollectionFactory $segmentCollectionFactory,
+        WebsiteCollectionFactory $websiteCollectionFactory,
+        Yesno $yesNo
     ) {
         $this->locator  = $locator;
         $this->yesNo    = $yesNo;
         $this->segmentsCollection = $segmentCollectionFactory->create();
+        $this->websiteCollection  = $websiteCollectionFactory->create();
+        $this->initWebsiteNames();
     }
 
     /**
@@ -106,12 +125,46 @@ class CustomerSegments implements \Magento\Ui\DataProvider\Modifier\ModifierInte
                     'id'    => $segment->getId(),
                     'name'  => $segment->getName(),
                     'is_active' => $yesNoValues[(int) $segment->getIsActive()],
-                    'website_ids' => $segment->getWebsiteIds(),
+                    'website_ids' => $this->getWebsiteNames($segment->getWebsiteIds()),
                     'customer_count' => $segment->getCustomerCount(),
                 ];
             }
         }
 
         return $data;
+    }
+
+    /**
+     * Init list of website names.
+     *
+     * @return void
+     */
+    private function initWebsiteNames()
+    {
+        $this->websiteNames = [];
+        foreach ($this->websiteCollection as $website) {
+            $this->websiteNames[$website->getWebsiteId()] = $website->getName();
+        }
+    }
+
+    /**
+     * Return as a string the list of website names corresponding to a list of website ids.
+     *
+     * @param array|string $websiteIds List of website ids.
+     *
+     * @return string
+     */
+    private function getWebsiteNames($websiteIds)
+    {
+        $websiteNames = [];
+
+        if (!is_array($websiteIds)) {
+            $websiteIds = explode(',', $websiteIds);
+        }
+        foreach ($websiteIds as $websiteId) {
+            $websiteNames[] = $this->websiteNames[$websiteId] ?? $websiteId;
+        }
+
+        return implode(', ', $websiteNames);
     }
 }
