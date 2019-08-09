@@ -62,7 +62,7 @@ class CustomerSegment extends \Magento\Framework\Model\ResourceModel\Db\Abstract
                 ->where(
                     $this->getConnection()->quoteInto(
                         sprintf('main_table.%s IN (?)', OptimizerCustomerSegmentInterface::SEGMENT_ID),
-                        implode($segmentIds)
+                        $segmentIds
                     )
                 )
                 ->group(OptimizerCustomerSegmentInterface::OPTIMIZER_ID);
