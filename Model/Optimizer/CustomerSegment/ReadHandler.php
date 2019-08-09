@@ -47,8 +47,7 @@ class ReadHandler implements \Magento\Framework\EntityManager\Operation\Extensio
     public function execute($entity, $arguments = [])
     {
         if ($entity->getId()) {
-            $searchContainers = $entity->getResource()->getSearchContainersFromOptimizerId($entity->getId());
-            $this->getCustomerSegmentLimitation($entity, $searchContainers);
+            $this->getCustomerSegmentLimitation($entity);
         }
 
         return $entity;
