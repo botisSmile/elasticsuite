@@ -371,7 +371,8 @@ class BehavioralData
                         $values    = $subAggregation->getValues();
                         $lastValue = end($values);
                         $metrics   = $lastValue->getMetrics();
-                        $data[$productId]['_stats'][$eventType]['daily']['ma']    = $metrics['ma'] ?? false;
+                        $metrics['ma'] = !is_array($metrics['ma']) ? $metrics['ma'] : 0;
+                        $data[$productId]['_stats'][$eventType]['daily']['ma']    = $metrics['ma'];
                         $data[$productId]['_stats'][$eventType]['daily']['count'] = $metrics['event_count'] ?? false;
                     }
                 }
@@ -383,7 +384,8 @@ class BehavioralData
                             $values    = $subAggregation->getValues();
                             $lastValue = end($values);
                             $metrics   = $lastValue->getMetrics();
-                            $data[$productId]['_stats'][$eventType]['weekly']['ma']    = $metrics['ma'] ?? false;
+                            $metrics['ma'] = !is_array($metrics['ma']) ? $metrics['ma'] : 0;
+                            $data[$productId]['_stats'][$eventType]['weekly']['ma']    = $metrics['ma'];
                             $data[$productId]['_stats'][$eventType]['weekly']['count'] = $metrics['event_count'] ?? false;
                         }
                     }
