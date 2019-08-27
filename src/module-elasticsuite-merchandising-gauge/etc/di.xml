@@ -16,5 +16,21 @@
  */
  -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-
+    <!-- Plugins -->
+    <type name="Smile\ElasticsuiteCatalogOptimizer\Model\Optimizer\Preview\RequestBuilder">
+        <plugin name="merchGaugeAddAggregations" type="Smile\ElasticsuiteMerchandisingGauge\Plugin\Optimizer\Preview\RequestBuilderPlugin" />
+    </type>
+    <!-- Works for category and search term previews, not optimizer preview -->
+    <type name="Smile\ElasticsuiteCatalog\Model\ProductSorter\ItemDataFactory">
+        <plugin name="merchGaugeAddBehavioralStats" type="Smile\ElasticsuiteMerchandisingGauge\Plugin\Catalog\ProductSorter\ItemDataFactoryPlugin" />
+    </type>
+    <!-- Specific for optimizer preview -->
+    <type name="Smile\ElasticsuiteCatalogOptimizer\Model\Optimizer\Preview\Item">
+        <plugin name="merchGaugeAddBehavioralStats" type="Smile\ElasticsuiteMerchandisingGauge\Plugin\Optimizer\Preview\ItemPlugin" />
+    </type>
+    <!-- Category edit form provider plugin -->
+    <type name="Magento\Catalog\Model\Category\DataProvider">
+        <plugin name="smile_elasticsuite_merchandising_gauge_categories_category_form_dataprovider"
+                type="Smile\ElasticsuiteMerchandisingGauge\Plugin\Catalog\Category\DataProviderPlugin" />
+    </type>
 </config>
