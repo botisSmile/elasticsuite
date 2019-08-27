@@ -1,0 +1,34 @@
+{
+    "name": "smile/module-elasticsuite-merchandising-gauge",
+    "type": "magento2-module",
+    "license": "OSL-3.0",
+    "authors": [{
+            "name": "Richard BAYET",
+            "email": "richard.bayet@smile.fr"
+        }
+    ],
+    "description": "ElasticSuite - Merchandising Gauge module.",
+    "homepage": "https://elasticsuite.io",
+    "keywords": [
+        "magento",
+        "magento2",
+        "elasticsearch",
+        "search",
+        "merchandising",
+        "core",
+        "setup"
+    ],
+    "require": {
+        "smile/elasticsuite" : "~2.8.0",
+        "smile/module-elasticsuite-behavioral-data" : "~2.8.0"
+    },
+    "version": "2.8.0",
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Smile\\ElasticsuiteMerchandisingGauge\\": ""
+        }
+    }
+}

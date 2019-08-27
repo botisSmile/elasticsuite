@@ -1,0 +1,224 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Smile\ElasticsuiteMerchandisingGauge search requests configuration.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Smile ElasticSuite to newer
+ * versions in the future.
+ *
+ *
+ * @category  Smile
+ * @package   Smile\ElasticsuiteMerchandisingGauge
+ * @author    Richard BAYET <richard.bayet@smile.fr>
+ * @copyright 2019 Smile
+ * @license   Open Software License ("OSL") v. 3.0
+ */
+ -->
+<requests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:module:Smile_ElasticsuiteCore:etc/elasticsuite_search_request.xsd">
+
+    <request name="quick_search_container" label="Catalog Product Search" index="catalog_product" type="product" fulltext="true">
+        <aggregations>
+            <metrics>
+                <metric name="sales_stats_total" type="stats" field="_stats.sales.total" />
+                <metric name="views_stats_total" type="stats" field="_stats.views.total" />
+                <metric name="sales_stats_ext_total" type="extended_stats" field="_stats.sales.total" />
+                <metric name="views_stats_ext_total" type="extended_stats" field="_stats.views.total" />
+                <metric name="sales_outlier_total" type="percentiles" field="_stats.sales.total" />
+                <metric name="views_outlier_total" type="percentiles" field="_stats.views.total" />
+                <metric name="sales_stats_daily_ma" type="stats" field="_stats.sales.daily.ma" />
+                <metric name="views_stats_daily_ma" type="stats" field="_stats.views.daily.ma" />
+                <metric name="sales_stats_ext_daily_ma" type="extended_stats" field="_stats.sales.daily.ma" />
+                <metric name="views_stats_ext_daily_ma" type="extended_stats" field="_stats.views.daily.ma" />
+                <metric name="sales_outlier_daily_ma" type="percentiles" field="_stats.sales.daily.ma" />
+                <metric name="views_outlier_daily_ma" type="percentiles" field="_stats.views.daily.ma" />
+                <metric name="sales_stats_weekly_ma" type="stats" field="_stats.sales.weekly.ma" />
+                <metric name="views_stats_weekly_ma" type="stats" field="_stats.views.weekly.ma" />
+                <metric name="sales_stats_ext_weekly_ma" type="extended_stats" field="_stats.sales.weekly.ma" />
+                <metric name="views_stats_ext_weekly_ma" type="extended_stats" field="_stats.views.weekly.ma" />
+                <metric name="sales_outlier_weekly_ma" type="percentiles" field="_stats.sales.weekly.ma" />
+                <metric name="views_outlier_weekly_ma" type="percentiles" field="_stats.views.weekly.ma" />
+            </metrics>
+        </aggregations>
+    </request>
+
+    <request name="catalog_product_autocomplete" label="Catalog Product Autocomplete" index="catalog_product" type="product" fulltext="true">
+        <aggregations>
+            <metrics>
+                <metric name="sales_stats_total" type="stats" field="_stats.sales.total" />
+                <metric name="views_stats_total" type="stats" field="_stats.views.total" />
+                <metric name="sales_stats_ext_total" type="extended_stats" field="_stats.sales.total" />
+                <metric name="views_stats_ext_total" type="extended_stats" field="_stats.views.total" />
+                <metric name="sales_outlier_total" type="percentiles" field="_stats.sales.total" />
+                <metric name="views_outlier_total" type="percentiles" field="_stats.views.total" />
+                <metric name="sales_stats_daily_ma" type="stats" field="_stats.sales.daily.ma" />
+                <metric name="views_stats_daily_ma" type="stats" field="_stats.views.daily.ma" />
+                <metric name="sales_stats_ext_daily_ma" type="extended_stats" field="_stats.sales.daily.ma" />
+                <metric name="views_stats_ext_daily_ma" type="extended_stats" field="_stats.views.daily.ma" />
+                <metric name="sales_outlier_daily_ma" type="percentiles" field="_stats.sales.daily.ma" />
+                <metric name="views_outlier_daily_ma" type="percentiles" field="_stats.views.daily.ma" />
+                <metric name="sales_stats_weekly_ma" type="stats" field="_stats.sales.weekly.ma" />
+                <metric name="views_stats_weekly_ma" type="stats" field="_stats.views.weekly.ma" />
+                <metric name="sales_stats_ext_weekly_ma" type="extended_stats" field="_stats.sales.weekly.ma" />
+                <metric name="views_stats_ext_weekly_ma" type="extended_stats" field="_stats.views.weekly.ma" />
+                <metric name="sales_outlier_weekly_ma" type="percentiles" field="_stats.sales.weekly.ma" />
+                <metric name="views_outlier_weekly_ma" type="percentiles" field="_stats.views.weekly.ma" />
+            </metrics>
+        </aggregations>
+    </request>
+
+    <request name="catalog_view_container" label="Category Product View" index="catalog_product" type="product" fulltext="false">
+        <aggregations>
+            <metrics>
+                <metric name="sales_stats_total" type="stats" field="_stats.sales.total" />
+                <metric name="views_stats_total" type="stats" field="_stats.views.total" />
+                <metric name="sales_stats_ext_total" type="extended_stats" field="_stats.sales.total" />
+                <metric name="views_stats_ext_total" type="extended_stats" field="_stats.views.total" />
+                <metric name="sales_outlier_total" type="percentiles" field="_stats.sales.total" />
+                <metric name="views_outlier_total" type="percentiles" field="_stats.views.total" />
+                <metric name="sales_stats_daily_ma" type="stats" field="_stats.sales.daily.ma" />
+                <metric name="views_stats_daily_ma" type="stats" field="_stats.views.daily.ma" />
+                <metric name="sales_stats_ext_daily_ma" type="extended_stats" field="_stats.sales.daily.ma" />
+                <metric name="views_stats_ext_daily_ma" type="extended_stats" field="_stats.views.daily.ma" />
+                <metric name="sales_outlier_daily_ma" type="percentiles" field="_stats.sales.daily.ma" />
+                <metric name="views_outlier_daily_ma" type="percentiles" field="_stats.views.daily.ma" />
+                <metric name="sales_stats_weekly_ma" type="stats" field="_stats.sales.weekly.ma" />
+                <metric name="views_stats_weekly_ma" type="stats" field="_stats.views.weekly.ma" />
+                <metric name="sales_stats_ext_weekly_ma" type="extended_stats" field="_stats.sales.weekly.ma" />
+                <metric name="views_stats_ext_weekly_ma" type="extended_stats" field="_stats.views.weekly.ma" />
+                <metric name="sales_outlier_weekly_ma" type="percentiles" field="_stats.sales.weekly.ma" />
+                <metric name="views_outlier_weekly_ma" type="percentiles" field="_stats.views.weekly.ma" />
+            </metrics>
+        </aggregations>
+    </request>
+
+    <request name="category_search_container" label="Catalog Category Search" index="catalog_category" type="category" fulltext="true">
+        <aggregations>
+            <metrics>
+                <metric name="sales_stats_total" type="stats" field="_stats.sales.total" />
+                <metric name="views_stats_total" type="stats" field="_stats.views.total" />
+                <metric name="sales_stats_ext_total" type="extended_stats" field="_stats.sales.total" />
+                <metric name="views_stats_ext_total" type="extended_stats" field="_stats.views.total" />
+                <metric name="sales_outlier_total" type="percentiles" field="_stats.sales.total" />
+                <metric name="views_outlier_total" type="percentiles" field="_stats.views.total" />
+                <metric name="sales_stats_daily_ma" type="stats" field="_stats.sales.daily.ma" />
+                <metric name="views_stats_daily_ma" type="stats" field="_stats.views.daily.ma" />
+                <metric name="sales_stats_ext_daily_ma" type="extended_stats" field="_stats.sales.daily.ma" />
+                <metric name="views_stats_ext_daily_ma" type="extended_stats" field="_stats.views.daily.ma" />
+                <metric name="sales_outlier_daily_ma" type="percentiles" field="_stats.sales.daily.ma" />
+                <metric name="views_outlier_daily_ma" type="percentiles" field="_stats.views.daily.ma" />
+                <metric name="sales_stats_weekly_ma" type="stats" field="_stats.sales.weekly.ma" />
+                <metric name="views_stats_weekly_ma" type="stats" field="_stats.views.weekly.ma" />
+                <metric name="sales_stats_ext_weekly_ma" type="extended_stats" field="_stats.sales.weekly.ma" />
+                <metric name="views_stats_ext_weekly_ma" type="extended_stats" field="_stats.views.weekly.ma" />
+                <metric name="sales_outlier_weekly_ma" type="percentiles" field="_stats.sales.weekly.ma" />
+                <metric name="views_outlier_weekly_ma" type="percentiles" field="_stats.views.weekly.ma" />
+            </metrics>
+        </aggregations>
+    </request>
+
+    <!-- recommender requests -->
+    <!--
+    <request name="related_products_container" label="Related Products" index="catalog_product" type="product" fulltext="false">
+        <aggregations>
+            <metrics>
+                <metric name="sales_stats_total" type="stats" field="_stats.sales.total" />
+                <metric name="views_stats_total" type="stats" field="_stats.views.total" />
+                <metric name="sales_stats_ext_total" type="extended_stats" field="_stats.sales.total" />
+                <metric name="views_stats_ext_total" type="extended_stats" field="_stats.views.total" />
+                <metric name="sales_outlier_total" type="percentiles" field="_stats.sales.total" />
+                <metric name="views_outlier_total" type="percentiles" field="_stats.views.total" />
+                <metric name="sales_stats_daily_ma" type="stats" field="_stats.sales.daily.ma" />
+                <metric name="views_stats_daily_ma" type="stats" field="_stats.views.daily.ma" />
+                <metric name="sales_stats_ext_daily_ma" type="extended_stats" field="_stats.sales.daily.ma" />
+                <metric name="views_stats_ext_daily_ma" type="extended_stats" field="_stats.views.daily.ma" />
+                <metric name="sales_outlier_daily_ma" type="percentiles" field="_stats.sales.daily.ma" />
+                <metric name="views_outlier_daily_ma" type="percentiles" field="_stats.views.daily.ma" />
+                <metric name="sales_stats_weekly_ma" type="stats" field="_stats.sales.weekly.ma" />
+                <metric name="views_stats_weekly_ma" type="stats" field="_stats.views.weekly.ma" />
+                <metric name="sales_stats_ext_weekly_ma" type="extended_stats" field="_stats.sales.weekly.ma" />
+                <metric name="views_stats_ext_weekly_ma" type="extended_stats" field="_stats.views.weekly.ma" />
+                <metric name="sales_outlier_weekly_ma" type="percentiles" field="_stats.sales.weekly.ma" />
+                <metric name="views_outlier_weekly_ma" type="percentiles" field="_stats.views.weekly.ma" />
+            </metrics>
+        </aggregations>
+    </request>
+
+    <request name="upsell_products_container" label="Upsell Products" index="catalog_product" type="product" fulltext="false">
+        <aggregations>
+            <metrics>
+                <metric name="sales_stats_total" type="stats" field="_stats.sales.total" />
+                <metric name="views_stats_total" type="stats" field="_stats.views.total" />
+                <metric name="sales_stats_ext_total" type="extended_stats" field="_stats.sales.total" />
+                <metric name="views_stats_ext_total" type="extended_stats" field="_stats.views.total" />
+                <metric name="sales_outlier_total" type="percentiles" field="_stats.sales.total" />
+                <metric name="views_outlier_total" type="percentiles" field="_stats.views.total" />
+                <metric name="sales_stats_daily_ma" type="stats" field="_stats.sales.daily.ma" />
+                <metric name="views_stats_daily_ma" type="stats" field="_stats.views.daily.ma" />
+                <metric name="sales_stats_ext_daily_ma" type="extended_stats" field="_stats.sales.daily.ma" />
+                <metric name="views_stats_ext_daily_ma" type="extended_stats" field="_stats.views.daily.ma" />
+                <metric name="sales_outlier_daily_ma" type="percentiles" field="_stats.sales.daily.ma" />
+                <metric name="views_outlier_daily_ma" type="percentiles" field="_stats.views.daily.ma" />
+                <metric name="sales_stats_weekly_ma" type="stats" field="_stats.sales.weekly.ma" />
+                <metric name="views_stats_weekly_ma" type="stats" field="_stats.views.weekly.ma" />
+                <metric name="sales_stats_ext_weekly_ma" type="extended_stats" field="_stats.sales.weekly.ma" />
+                <metric name="views_stats_ext_weekly_ma" type="extended_stats" field="_stats.views.weekly.ma" />
+                <metric name="sales_outlier_weekly_ma" type="percentiles" field="_stats.sales.weekly.ma" />
+                <metric name="views_outlier_weekly_ma" type="percentiles" field="_stats.views.weekly.ma" />
+            </metrics>
+        </aggregations>
+    </request>
+
+    <request name="crosssell_products_container" label="Cross-sell Products" index="catalog_product" type="product" fulltext="false">
+        <aggregations>
+            <metrics>
+                <metric name="sales_stats_total" type="stats" field="_stats.sales.total" />
+                <metric name="views_stats_total" type="stats" field="_stats.views.total" />
+                <metric name="sales_stats_ext_total" type="extended_stats" field="_stats.sales.total" />
+                <metric name="views_stats_ext_total" type="extended_stats" field="_stats.views.total" />
+                <metric name="sales_outlier_total" type="percentiles" field="_stats.sales.total" />
+                <metric name="views_outlier_total" type="percentiles" field="_stats.views.total" />
+                <metric name="sales_stats_daily_ma" type="stats" field="_stats.sales.daily.ma" />
+                <metric name="views_stats_daily_ma" type="stats" field="_stats.views.daily.ma" />
+                <metric name="sales_stats_ext_daily_ma" type="extended_stats" field="_stats.sales.daily.ma" />
+                <metric name="views_stats_ext_daily_ma" type="extended_stats" field="_stats.views.daily.ma" />
+                <metric name="sales_outlier_daily_ma" type="percentiles" field="_stats.sales.daily.ma" />
+                <metric name="views_outlier_daily_ma" type="percentiles" field="_stats.views.daily.ma" />
+                <metric name="sales_stats_weekly_ma" type="stats" field="_stats.sales.weekly.ma" />
+                <metric name="views_stats_weekly_ma" type="stats" field="_stats.views.weekly.ma" />
+                <metric name="sales_stats_ext_weekly_ma" type="extended_stats" field="_stats.sales.weekly.ma" />
+                <metric name="views_stats_ext_weekly_ma" type="extended_stats" field="_stats.views.weekly.ma" />
+                <metric name="sales_outlier_weekly_ma" type="percentiles" field="_stats.sales.weekly.ma" />
+                <metric name="views_outlier_weekly_ma" type="percentiles" field="_stats.views.weekly.ma" />
+            </metrics>
+        </aggregations>
+    </request>
+
+    <request name="visitor_products_container" label="Visitor Products" index="catalog_product" type="product" fulltext="false">
+        <aggregations>
+            <metrics>
+                <metric name="sales_stats_total" type="stats" field="_stats.sales.total" />
+                <metric name="views_stats_total" type="stats" field="_stats.views.total" />
+                <metric name="sales_stats_ext_total" type="extended_stats" field="_stats.sales.total" />
+                <metric name="views_stats_ext_total" type="extended_stats" field="_stats.views.total" />
+                <metric name="sales_outlier_total" type="percentiles" field="_stats.sales.total" />
+                <metric name="views_outlier_total" type="percentiles" field="_stats.views.total" />
+                <metric name="sales_stats_daily_ma" type="stats" field="_stats.sales.daily.ma" />
+                <metric name="views_stats_daily_ma" type="stats" field="_stats.views.daily.ma" />
+                <metric name="sales_stats_ext_daily_ma" type="extended_stats" field="_stats.sales.daily.ma" />
+                <metric name="views_stats_ext_daily_ma" type="extended_stats" field="_stats.views.daily.ma" />
+                <metric name="sales_outlier_daily_ma" type="percentiles" field="_stats.sales.daily.ma" />
+                <metric name="views_outlier_daily_ma" type="percentiles" field="_stats.views.daily.ma" />
+                <metric name="sales_stats_weekly_ma" type="stats" field="_stats.sales.weekly.ma" />
+                <metric name="views_stats_weekly_ma" type="stats" field="_stats.views.weekly.ma" />
+                <metric name="sales_stats_ext_weekly_ma" type="extended_stats" field="_stats.sales.weekly.ma" />
+                <metric name="views_stats_ext_weekly_ma" type="extended_stats" field="_stats.views.weekly.ma" />
+                <metric name="sales_outlier_weekly_ma" type="percentiles" field="_stats.sales.weekly.ma" />
+                <metric name="views_outlier_weekly_ma" type="percentiles" field="_stats.views.weekly.ma" />
+            </metrics>
+        </aggregations>
+    </request>
+    -->
+</requests>
