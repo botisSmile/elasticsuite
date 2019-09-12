@@ -113,10 +113,14 @@ class Service implements FacetRecommenderServiceInterface
             return [];
         }
 
-        $request = $this->getRequest($vid, $categoryId);
-        $result  = $this->searchEngine->search($request);
+        try {
+            $request = $this->getRequest($vid, $categoryId);
+            $result  = $this->searchEngine->search($request);
 
-        $recommendations = $this->buildRecommendations($result);
+            $recommendations = $this->buildRecommendations($result);
+        } catch (\Exception $exception) {
+            $recommendations = [];
+        }
 
         return $recommendations;
     }
