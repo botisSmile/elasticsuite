@@ -24,9 +24,12 @@ use Magento\Catalog\Api\ProductRenderListInterface;
 use Magento\Framework\EntityManager\HydratorInterface;
 use Smile\ElasticsuiteCore\Api\Search\ContextInterface;
 use Smile\ElasticsuiteRecommender\Model\Product\Visitor\Service;
+use \Magento\Framework\Registry;
 
 /**
  * Data Provider for product listing blocks of the recommender.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  *
  * @category Smile
  * @package  Smile\ElasticsuiteRecommender
@@ -60,6 +63,11 @@ class DataProvider extends \Magento\Catalog\Ui\DataProvider\Product\Listing\Data
     private $categoryRepository;
 
     /**
+     * @var \Magento\Framework\Registry
+     */
+    private $registry;
+
+    /**
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      * @param string                      $name                  Data Provider Name
      * @param Reporting                   $reporting             Reporting
@@ -72,6 +80,7 @@ class DataProvider extends \Magento\Catalog\Ui\DataProvider\Product\Listing\Data
      * @param ContextInterface            $context               Search Context
      * @param Service                     $service               Visitor Recommendations Service
      * @param CategoryRepositoryInterface $categoryRepository    Category Repository
+     * @param Registry                    $registry              Registry
      * @param array                       $meta                  UI Component Meta
      * @param array                       $data                  UI Component Data
      */
@@ -87,6 +96,7 @@ class DataProvider extends \Magento\Catalog\Ui\DataProvider\Product\Listing\Data
         ContextInterface $context,
         Service $service,
         CategoryRepositoryInterface $categoryRepository,
+        Registry $registry,
         array $meta = [],
         array $data = []
     ) {
@@ -107,6 +117,7 @@ class DataProvider extends \Magento\Catalog\Ui\DataProvider\Product\Listing\Data
         $this->searchContext      = $context;
         $this->service            = $service;
         $this->categoryRepository = $categoryRepository;
+        $this->registry           = $registry;
     }
 
     /**
@@ -164,7 +175,14 @@ class DataProvider extends \Magento\Catalog\Ui\DataProvider\Product\Listing\Data
      */
     private function getCategory()
     {
-        return $this->searchContext->getCurrentCategory();
+        $category = $this->searchContext->getCurrentCategory();
+
+        // Category can be null if no search request (or layer) exists on current page.
+        if (($category === null) && ($this->registry->registry('current_category') !== null)) {
+            $category = $this->registry->registry('current_category');
+        }
+
+        return $category;
     }
 
     /**
