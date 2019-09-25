@@ -21,16 +21,46 @@
     <index identifier="catalog_product" defaultSearchType="product">
         <type name="product" idFieldName="entity_id">
             <mapping>
-                <field name="_stats.views.total" type="integer" />
-                <field name="_stats.views.daily.ma" type="double" />
-                <field name="_stats.views.daily.count" type="integer" />
-                <field name="_stats.views.weekly.ma" type="double" />
-                <field name="_stats.views.weekly.count" type="integer" />
-                <field name="_stats.sales.total" type="integer" />
-                <field name="_stats.sales.daily.ma" type="double" />
-                <field name="_stats.sales.daily.count" type="integer" />
-                <field name="_stats.sales.weekly.ma" type="double" />
-                <field name="_stats.sales.weekly.count" type="integer" />
+                <field name="_stats.views.total" type="integer">
+                    <sortOrderAscMissing>_first</sortOrderAscMissing>
+                    <sortOrderDescMissing>_last</sortOrderDescMissing>
+                </field>
+                <field name="_stats.views.daily.ma" type="double">
+                    <sortOrderAscMissing>_first</sortOrderAscMissing>
+                    <sortOrderDescMissing>_last</sortOrderDescMissing>
+                </field>
+                <field name="_stats.views.daily.count" type="integer">
+                    <sortOrderAscMissing>_first</sortOrderAscMissing>
+                    <sortOrderDescMissing>_last</sortOrderDescMissing>
+                </field>
+                <field name="_stats.views.weekly.ma" type="double">
+                    <sortOrderAscMissing>_first</sortOrderAscMissing>
+                    <sortOrderDescMissing>_last</sortOrderDescMissing>
+                </field>
+                <field name="_stats.views.weekly.count" type="integer">
+                    <sortOrderAscMissing>_first</sortOrderAscMissing>
+                    <sortOrderDescMissing>_last</sortOrderDescMissing>
+                </field>
+                <field name="_stats.sales.total" type="integer">
+                    <sortOrderAscMissing>_first</sortOrderAscMissing>
+                    <sortOrderDescMissing>_last</sortOrderDescMissing>
+                </field>
+                <field name="_stats.sales.daily.ma" type="double">
+                    <sortOrderAscMissing>_first</sortOrderAscMissing>
+                    <sortOrderDescMissing>_last</sortOrderDescMissing>
+                </field>
+                <field name="_stats.sales.daily.count" type="integer">
+                    <sortOrderAscMissing>_first</sortOrderAscMissing>
+                    <sortOrderDescMissing>_last</sortOrderDescMissing>
+                </field>
+                <field name="_stats.sales.weekly.ma" type="double">
+                    <sortOrderAscMissing>_first</sortOrderAscMissing>
+                    <sortOrderDescMissing>_last</sortOrderDescMissing>
+                </field>
+                <field name="_stats.sales.weekly.count" type="integer">
+                    <sortOrderAscMissing>_first</sortOrderAscMissing>
+                    <sortOrderDescMissing>_last</sortOrderDescMissing>
+                </field>
             </mapping>
         </type>
     </index>
