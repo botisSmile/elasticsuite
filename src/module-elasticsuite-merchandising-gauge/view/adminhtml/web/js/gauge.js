@@ -5,9 +5,10 @@ define([
     'ko',
     'underscore',
     'jquery',
+    'Magento_Ui/js/lib/view/utils/async',
     'uiCollection',
     'uiComponent'
-], function (ko, _, $, Collection, Component) {
+], function (ko, _, $, async, Collection, Component) {
 
     return Component.extend({
         defaults: {
@@ -24,6 +25,8 @@ define([
             minDistance: 2,
             columns: []
             */
+            newRootSelector: '.elasticsuite-admin-product-sorter',
+            productsSelector : '.elasticsuite-admin-product-sorter .product-list-item',
             productsMemento: [],
             maxRefreshInterval: 1000,
             imports: {
@@ -58,6 +61,54 @@ define([
             console.log("----------------------------");
             this.observe(['loading']);
             this.productsMemento = this.products;
+            this.waitContent();
+            /*
+                ##
+                * Applies DOM watcher for the
+                * content element rendering.
+                *
+                * @returns {TimelineView} Chainable.
+                ##
+                waitContent: function () {
+                    $.async({
+                        selector: this.selectors.content,
+                        component: this.model
+                    }, this.initContent);
+
+                    return this;
+                },
+
+                 ##
+                 * Initializes timelines' content element.
+                 *
+                 * @param {HTMLElement} content
+                 * @returns {TimelineView} Chainable.
+                 ##
+                initContent: function (content) {
+                    this.$content = content;
+
+                    $(content).on('scroll', this.onContentScroll);
+                    $(window).on('resize', this.onWindowResize);
+
+                    $.async(this.selectors.item, content, this.initItem);
+                    $.async(this.selectors.event, content, this.onEventElementRender);
+                    $.async(this.selectors.timeUnit, content, this.initTimeUnit);
+
+                    this.refresh();
+
+                    return this;
+                },
+            */
+        },
+        waitContent: function () {
+            async.async({
+                selector: this.productsSelector
+            }, this.initContent);
+
+            return this;
+        },
+        initContent: function (content) {
+            console.log(content)
         },
         refreshProducts: function (data) {
             console.log("-P-P-P-P-P-P-P-P-P-P-P-P-P-P");
@@ -121,6 +172,12 @@ define([
         },
         onMeasuresLoad: function (loadedData) {
             console.log(loadedData);
+
+            Object.keys(loadedData.score.raw_values).forEach(function (productId) {
+                var product = this.productsSelector + '[data-product-id=' + productId + ']';
+                var content = '<span class="dot" title="Score" style="background-position: ' + loadedData.score.raw_values[productId] + '%"></span></div>';
+                $(product).find('.performance-score').html(content);
+            }.bind(this));
 
             this.loading(false);
         },

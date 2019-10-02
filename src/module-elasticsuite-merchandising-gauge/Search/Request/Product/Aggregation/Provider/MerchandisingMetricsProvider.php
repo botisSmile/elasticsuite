@@ -175,6 +175,17 @@ class MerchandisingMetricsProvider implements AggregationProviderInterface
             ];
         }
 
+        /*
+            "total_views_histogram" :{
+                "histogram" : {
+                    "field" : "_stats.views.total",
+                    "min_doc_count": 1,
+                    "missing": 0,
+                    "interval": 1
+                }
+            },
+         */
+
         return $aggregations;
     }
 

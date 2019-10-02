@@ -153,6 +153,13 @@ class Measure implements MeasureInterface
              */
             $productsScore = $this->getProductsScore($dimension, $percentiles);
 
+            $max = max($productsScore['raw_values']);
+            if ($max > 0) {
+                foreach ($productsScore['raw_values'] as &$value) {
+                    $value *= (100.0 / $max);
+                }
+            }
+
             $data = [
                 'available_dimensions' => array_keys($availableDimensions),
                 'dimension'     => $dimension,
@@ -161,6 +168,7 @@ class Measure implements MeasureInterface
                     'range'     => $scoreRange,
                     'current'   => $productsScore['global'],
                     'products'  => $productsScore['products'],
+                    'raw_values' => $productsScore['raw_values'],
                 ],
             ];
         }
@@ -385,6 +393,7 @@ class Measure implements MeasureInterface
     {
         $globalScore = 0;
         $productsPercentiles = [];
+        $rawValues = [];
         $dimensionFieldPath = $this->metricsProvider->getDimensionRelatedFieldPath($dimension);
 
         $products = $this->getCurrentProducts();
@@ -396,10 +405,11 @@ class Measure implements MeasureInterface
             $productDimension = $product->getData($dimensionFieldPath) ?? 0;
             $globalScore += $this->scoreCoefficients[$position] * $productDimension;
             $productsPercentiles[$product->getId()] = $this->getPercentile($productDimension, $percentiles);
+            $rawValues[$product->getId()] = $productDimension;
             $position++;
         }
 
-        return ['global' => $globalScore, 'products' => $productsPercentiles];
+        return ['global' => $globalScore, 'products' => $productsPercentiles, 'raw_values' => $rawValues];
     }
 
     /**
