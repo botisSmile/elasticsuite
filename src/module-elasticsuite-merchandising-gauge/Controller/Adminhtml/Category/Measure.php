@@ -12,7 +12,7 @@
  * @license   Open Software License ("OSL") v. 3.0
  */
 
-namespace Smile\ElasticsuiteMerchandisingGauge\Controller\Adminhtml\Gauge;
+namespace Smile\ElasticsuiteMerchandisingGauge\Controller\Adminhtml\Category;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
@@ -32,6 +32,11 @@ use Magento\Catalog\Api\Data\CategoryInterface;
 class Measure extends Action
 {
     /**
+     * @var Data
+     */
+    private $jsonHelper;
+
+    /**
      * @var MeasureFactory
      */
     private $measureFactory;
@@ -42,29 +47,23 @@ class Measure extends Action
     private $categoryFactory;
 
     /**
-     * @var Data
-     */
-    private $jsonHelper;
-
-    /**
      * Measure constructor.
      *
-     * @param Context $context    Controller context
-     * @param Data    $jsonHelper Json Helper.
-     *
-      @param \Magento\Catalog\Model\CategoryFactory                  $categoryFactory     Category factory.
+     * @param Context         $context         Controller context
+     * @param Data            $jsonHelper      Json Helper.
+     * @param MeasureFactory  $measureFactory  Category measure factory.
+     * @param CategoryFactory $categoryFactory Category factory.
      */
     public function __construct(
         Context $context,
+        Data $jsonHelper,
         MeasureFactory $measureFactory,
-        CategoryFactory $categoryFactory,
-        Data $jsonHelper
+        CategoryFactory $categoryFactory
     ) {
         parent::__construct($context);
-
+        $this->jsonHelper = $jsonHelper;
         $this->measureFactory = $measureFactory;
         $this->categoryFactory = $categoryFactory;
-        $this->jsonHelper = $jsonHelper;
     }
 
     /**
@@ -72,10 +71,6 @@ class Measure extends Action
      */
     public function execute()
     {
-        $products      = $this->getRequest()->getParam('products', []);
-        $productPositions = $this->getRequest()->getParam('product_position', []);
-        $blacklistedProducts = $this->getRequest()->getParam('blacklisted_products', []);
-
         $responseData = $this->getMeasureObject()->getData();
         $json         = $this->jsonHelper->jsonEncode($responseData);
 
@@ -90,9 +85,16 @@ class Measure extends Action
     private function getMeasureObject()
     {
         $category = $this->getCategory();
+        $dimension = $this->getPreferredDimension();
         $pageSize = $this->getPageSize();
+        $previewSize = $this->getPreviewSize();
 
-        $measureObject = $this->measureFactory->create(['category' => $category, 'size' => $pageSize]);
+        $measureObject = $this->measureFactory->create([
+            'category' => $category,
+            'preferredDimension' => $dimension,
+            'sampleSize' => $previewSize,
+            'pageSize' => $pageSize,
+        ]);
 
         return $measureObject;
     }
@@ -181,7 +183,6 @@ class Measure extends Action
     private function setSortedProducts(CategoryInterface $category)
     {
         $productPositions = $this->getRequest()->getParam('product_position', []);
-        // $category->setSortedProductIds(array_keys($productPositions));
         asort($productPositions);
         $productPositions = array_flip($productPositions);
         $category->setSortedProductIds($productPositions);
@@ -205,12 +206,32 @@ class Measure extends Action
     }
 
     /**
-     * Return the measure page size (which is the same as the preview).
+     * Return the measure page size
      *
      * @return int
      */
     private function getPageSize()
     {
         return (int) $this->getRequest()->getParam('page_size');
+    }
+
+    /**
+     * Return the measure page size
+     *
+     * @return int
+     */
+    private function getPreviewSize()
+    {
+        return (int) $this->getRequest()->getParam('preview_size');
+    }
+
+    /**
+     * Return the preferred dimension
+     *
+     * @return mixed
+     */
+    private function getPreferredDimension()
+    {
+        return $this->getRequest()->getParam('dimension');
     }
 }

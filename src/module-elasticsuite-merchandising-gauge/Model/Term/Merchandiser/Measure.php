@@ -12,10 +12,9 @@
  * @license   Open Software License ("OSL") v. 3.0
  */
 
-namespace Smile\ElasticsuiteMerchandisingGauge\Model\Category;
+namespace Smile\ElasticsuiteMerchandisingGauge\Model\Term\Merchandiser;
 
-use Magento\Catalog\Api\Data\CategoryInterface;
-
+use Magento\Search\Model\QueryInterface as SearchQueryInterface;
 use Smile\ElasticsuiteMerchandisingGauge\Model\Merchandiser\AbstractMeasure as MerchandiserMeasure;
 use Smile\ElasticsuiteCatalog\Model\ResourceModel\Product\Fulltext\CollectionFactory as ProductCollectionFactory;
 use Smile\ElasticsuiteCatalog\Model\ResourceModel\Product\Fulltext\Collection;
@@ -26,7 +25,7 @@ use Smile\ElasticsuiteCore\Search\Request\Query\QueryFactory;
 use Smile\ElasticsuiteMerchandisingGauge\Model\DimensionProvider;
 
 /**
- * Category merchandiser measure
+ * Search term merchandiser measure
  *
  * @category Smile
  * @package  Smile\ElasticsuiteMerchandisingGauge
@@ -34,14 +33,14 @@ use Smile\ElasticsuiteMerchandisingGauge\Model\DimensionProvider;
 class Measure extends MerchandiserMeasure
 {
     /**
-     * @var CategoryInterface
+     * @var QueryInterface
      */
-    private $category;
+    private $searchQuery;
 
     /**
      * Measure constructor.
      *
-     * @param CategoryInterface        $category           Category to measure.
+     * @param SearchQueryInterface     $searchQuery        Search query.
      * @param ProductCollectionFactory $collectionFactory  Product collection factory.
      * @param QueryFactory             $queryFactory       Query factory.
      * @param ContextInterface         $searchContext      Search context.
@@ -52,7 +51,7 @@ class Measure extends MerchandiserMeasure
      * @param array                    $visibility         Products visibility.
      */
     public function __construct(
-        CategoryInterface $category,
+        SearchQueryInterface $searchQuery,
         ProductCollectionFactory $collectionFactory,
         QueryFactory $queryFactory,
         ContextInterface $searchContext,
@@ -60,7 +59,7 @@ class Measure extends MerchandiserMeasure
         $preferredDimension = null,
         $sampleSize = 10,
         $pageSize = 10,
-        $visibility = [Visibility::VISIBILITY_IN_CATALOG, Visibility::VISIBILITY_BOTH]
+        $visibility = [Visibility::VISIBILITY_IN_SEARCH, Visibility::VISIBILITY_BOTH]
     ) {
         parent::__construct(
             $collectionFactory,
@@ -72,9 +71,9 @@ class Measure extends MerchandiserMeasure
             $pageSize,
             $visibility
         );
-        $this->category = $category;
-        $this->searchContext->setCurrentCategory($this->category);
-        $this->searchContext->setStoreId($this->category->getStoreId());
+        $this->searchQuery = $searchQuery;
+        $this->searchContext->setStoreId($this->searchQuery->getStoreId());
+        $this->searchContext->setCurrentSearchQuery($this->searchQuery);
     }
 
     /**
@@ -84,7 +83,7 @@ class Measure extends MerchandiserMeasure
      */
     protected function getBlacklistedProductIds()
     {
-        return $this->category->getBlacklistedProductIds() ?? [];
+        return $this->searchQuery->getBlacklistedProductIds() ?? [];
     }
 
     /**
@@ -94,7 +93,7 @@ class Measure extends MerchandiserMeasure
      */
     protected function getSortedProductIds()
     {
-        return $this->category->getSortedProductIds() ?? [];
+        return $this->searchQuery->getSortedProductIds() ?? [];
     }
 
     /**
@@ -107,51 +106,8 @@ class Measure extends MerchandiserMeasure
     protected function prepareBaseProductCollection(Collection $collection)
     {
         $collection->setVisibility($this->visibility);
-
-        $queryFilter = $this->getBaseQueryFilter();
-        if ($queryFilter !== null) {
-            $collection->addQueryFilter($queryFilter);
-        }
+        $collection->setSearchQuery($this->searchQuery->getQueryText());
 
         return $collection;
-    }
-
-    /**
-     * Return the filter to apply to the query.
-     *
-     * @return QueryInterface
-     */
-    private function getBaseQueryFilter()
-    {
-        $query = null;
-
-        $this->category->setIsActive(true);
-
-        if ($this->category->getIsVirtualCategory() || $this->category->getId()) {
-            $query = $this->category->getVirtualRule()->getCategorySearchQuery($this->category);
-        }
-
-        if ((bool) $this->category->getIsVirtualCategory() === false) {
-            $queryParams = [];
-
-            if ($query !== null) {
-                $queryParams['should'][] = $query;
-            }
-
-            $idFilters = [
-                'should'  => $this->category->getAddedProductIds(),
-                'mustNot' => $this->category->getDeletedProductIds(),
-            ];
-
-            foreach ($idFilters as $clause => $productIds) {
-                if ($productIds && !empty($productIds)) {
-                    $queryParams[$clause][] = $this->getEntityIdFilterQuery($productIds);
-                }
-            }
-
-            $query = $this->queryFactory->create(QueryInterface::TYPE_BOOL, $queryParams);
-        }
-
-        return $query;
     }
 }

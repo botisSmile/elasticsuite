@@ -33,4 +33,81 @@
         <plugin name="smile_elasticsuite_merchandising_gauge_categories_category_form_dataprovider"
                 type="Smile\ElasticsuiteMerchandisingGauge\Plugin\Catalog\Category\DataProviderPlugin" />
     </type>
+    <type name="Smile\ElasticsuiteCatalog\Ui\Component\Search\Term\Preview\DataProvider">
+        <plugin name="smile_elasticsuite_merchandising_gauge_search_term_preview"
+                type="Smile\ElasticsuiteMerchandisingGauge\Plugin\Ui\Component\Search\Term\Preview\DataProviderPlugin" />
+    </type>
+
+    <virtualType name="Smile\ElasticsuiteMerchandisingGauge\Model\Dimension\Sales\Total"
+                 type="Smile\ElasticsuiteMerchandisingGauge\Model\Dimension">
+        <arguments>
+            <argument name="identifier" xsi:type="string">total_sales</argument>
+            <argument name="label" xsi:type="string" translate="true">Total sales</argument>
+            <argument name="valueLabelPattern" xsi:type="string" translate="true">{count} total sales</argument>
+            <argument name="documentField" xsi:type="string">_stats.sales.total</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Smile\ElasticsuiteMerchandisingGauge\Model\Dimension\Sales\Daily"
+                 type="Smile\ElasticsuiteMerchandisingGauge\Model\Dimension">
+        <arguments>
+            <argument name="identifier" xsi:type="string">daily_sales</argument>
+            <argument name="label" xsi:type="string" translate="true">Daily sales</argument>
+            <argument name="valueLabelPattern" xsi:type="string" translate="true">{count} daily sales</argument>
+            <argument name="documentField" xsi:type="string">_stats.sales.daily.ma</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Smile\ElasticsuiteMerchandisingGauge\Model\Dimension\Sales\Weekly"
+                 type="Smile\ElasticsuiteMerchandisingGauge\Model\Dimension\WeeklyBased">
+        <arguments>
+            <argument name="identifier" xsi:type="string">weekly_sales</argument>
+            <argument name="label" xsi:type="string" translate="true">Weekly sales</argument>
+            <argument name="valueLabelPattern" xsi:type="string" translate="true">{count} weekly sales</argument>
+            <argument name="documentField" xsi:type="string">_stats.sales.weekly.ma</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Smile\ElasticsuiteMerchandisingGauge\Model\Dimension\Views\Total"
+                 type="Smile\ElasticsuiteMerchandisingGauge\Model\Dimension">
+        <arguments>
+            <argument name="identifier" xsi:type="string">total_views</argument>
+            <argument name="label" xsi:type="string" translate="true">Total views</argument>
+            <argument name="valueLabelPattern" xsi:type="string" translate="true">{count} total views</argument>
+            <argument name="documentField" xsi:type="string">_stats.views.total</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Smile\ElasticsuiteMerchandisingGauge\Model\Dimension\Views\Daily"
+                 type="Smile\ElasticsuiteMerchandisingGauge\Model\Dimension">
+        <arguments>
+            <argument name="identifier" xsi:type="string">daily_views</argument>
+            <argument name="label" xsi:type="string" translate="true">Daily views</argument>
+            <argument name="valueLabelPattern" xsi:type="string" translate="true">{count} daily views</argument>
+            <argument name="documentField" xsi:type="string">_stats.views.daily.ma</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Smile\ElasticsuiteMerchandisingGauge\Model\Dimension\Views\Weekly"
+                 type="Smile\ElasticsuiteMerchandisingGauge\Model\Dimension\WeeklyBased">
+        <arguments>
+            <argument name="identifier" xsi:type="string">weekly_views</argument>
+            <argument name="label" xsi:type="string" translate="true">Weekly views</argument>
+            <argument name="valueLabelPattern" xsi:type="string" translate="true">{count} weekly views</argument>
+            <argument name="documentField" xsi:type="string">_stats.views.weekly.ma</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Smile\ElasticsuiteMerchandisingGauge\Model\DimensionProvider">
+        <arguments>
+            <argument name="dimensions" xsi:type="array">
+                <item name="weekly_sales" xsi:type="object">Smile\ElasticsuiteMerchandisingGauge\Model\Dimension\Sales\Weekly</item>
+                <item name="daily_sales" xsi:type="object">Smile\ElasticsuiteMerchandisingGauge\Model\Dimension\Sales\Daily</item>
+                <item name="total_sales" xsi:type="object">Smile\ElasticsuiteMerchandisingGauge\Model\Dimension\Sales\Total</item>
+                <item name="weekly_views" xsi:type="object">Smile\ElasticsuiteMerchandisingGauge\Model\Dimension\Views\Weekly</item>
+                <item name="daily_views" xsi:type="object">Smile\ElasticsuiteMerchandisingGauge\Model\Dimension\Views\Daily</item>
+                <item name="total_views" xsi:type="object">Smile\ElasticsuiteMerchandisingGauge\Model\Dimension\Views\Total</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

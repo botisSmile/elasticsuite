@@ -7,28 +7,19 @@ define([
     'jquery',
     'Magento_Ui/js/lib/view/utils/async',
     'uiCollection',
-    'uiComponent'
-], function (ko, _, $, async, Collection, Component) {
+    'uiComponent',
+    'mage/translate'
+], function (ko, _, $, async, Collection, Component, $t) {
 
     return Component.extend({
         defaults: {
-            rootSelector: '${ $.productsProvider }',
-            /*
-            rootSelector: '${ $.columnsProvider }:.admin__data-grid-wrap',
-            tableSelector: '${ $.rootSelector } -> table.data-grid',
-            mainTableSelector: '[data-role="grid"]',
-            columnSelector: '${ $.tableSelector } thead tr th',
-            noSelectClass: '_no-select',
-            hiddenClass: '_hidden',
-            fixedX: false,
-            fixedY: true,
-            minDistance: 2,
-            columns: []
-            */
-            newRootSelector: '.elasticsuite-admin-product-sorter',
+            rootSelector: '.elasticsuite-admin-product-sorter',
             productsSelector : '.elasticsuite-admin-product-sorter .product-list-item',
             productsMemento: [],
             maxRefreshInterval: 1000,
+            dimensions: [],
+            dimension: null,
+            showSpinner: true,
             imports: {
                 products: "${ $.productsProvider }:products",
                 editPositions: "${ $.productsProvider }:editPositions",
@@ -36,11 +27,11 @@ define([
                 loadUrl: "${ $.provider }:data.product_sorter_gauge_load_url" */,
                 formData: "${ $.productsProvider }:formData",
                 search: "${ $.productsProvider }:search",
-                pageSize: "${ $.productsProvider }:pageSize",
+                previewSize: "${ $.productsProvider }:pageSize",
+                currentSize: "${ $.productsProvider }:currentSize",
                 excludedPreviewFields: "${ $.productsProvider }:excludedPreviewFields"
             },
             listens: {
-                /* "${ $.productsProvider }:products" : "refreshMeasures", */
                 "${ $.productsProvider }:products" : "refreshProducts",
                 "${ $.productsProvider }:editPositions": "refreshMeasures",
                 "${ $.productsProvider }:blacklistedProducts" : "refreshMeasures"
@@ -59,7 +50,7 @@ define([
             console.log(this);
             */
             console.log("----------------------------");
-            this.observe(['loading']);
+            this.observe(['loading', 'dimensions', 'dimension']);
             this.productsMemento = this.products;
             this.waitContent();
             /*
@@ -145,12 +136,10 @@ define([
                 console.log("-T-T-T-T-T-T-T-T-T-T-T-T-T-T");
                 /*
                 console.log(this.products);
-                */
                 console.log(this.productsMemento);
-                console.log(this.editPositions);
-                /*
-                console.log(this.blacklistedProducts);
                 */
+                console.log(this.editPositions);
+                console.log(this.blacklistedProducts);
                 console.log(this.formData);
 
                 var formData = this.prepareFormData(this.formData);
@@ -160,10 +149,16 @@ define([
                     formData['product_position[' + productId + ']'] = this.editPositions[productId];
                 }.bind(this));
 
-                formData['pageSize'] = this.pageSize;
+                // 2) blacklistedProducts
+                formData['blacklisted_products'] = this.blacklistedProducts;
+                formData['dimension'] = $(this.rootSelector + ' .global-gauge .dimension').val();
+
+                formData['preview_size'] = this.previewSize;
+                formData['page_size'] = this.currentSize;
 
                 console.log(this.formData);
 
+                // TODO ribay@smile.fr : link this.enabled to this.loadUrl not being null
                 if (this.enabled) {
                     this.loadXhr = $.post(this.loadUrl, this.formData, this.onMeasuresLoad.bind(this));
                 }
@@ -173,13 +168,57 @@ define([
         onMeasuresLoad: function (loadedData) {
             console.log(loadedData);
 
-            Object.keys(loadedData.score.raw_values).forEach(function (productId) {
-                var product = this.productsSelector + '[data-product-id=' + productId + ']';
-                var content = '<span class="dot" title="Score" style="background-position: ' + loadedData.score.raw_values[productId] + '%"></span></div>';
-                $(product).find('.performance-score').html(content);
-            }.bind(this));
+            if (typeof loadedData.available_dimensions !== 'undefined') {
+                // Update gauge dimensions.
+                this.dimensions(loadedData.available_dimensions);
+            }
+
+            if (typeof loadedData.dimension !== 'undefined') {
+                this.dimension(loadedData.dimension);
+            }
+
+            if (typeof loadedData.score !== 'undefined') {
+                // Update products rendering.
+                Object.keys(loadedData.score.products).forEach(function (productId) {
+                    var product = this.productsSelector + '[data-product-id=' + productId + ']';
+                    var scoreValue = loadedData.score.products[productId].value;
+                    var scoreLabel = String(loadedData.available_dimensions[loadedData.dimension].valueLabelPattern)
+                        .replace('{count}', Math.round(scoreValue).toString());
+                    var scorePercent = loadedData.score.products[productId].percent;
+                    var content = '<span class="dot" title="' + scoreLabel + '" style="background-position: ' + scorePercent + '%"></span></div>';
+                    $(product).find('.performance-score').html(content);
+                }.bind(this));
+
+                // Update global gauge.
+                var minScore = loadedData.score.range.min,
+                    maxScore = loadedData.score.range.max;
+                var currentScore = loadedData.score.current;
+
+                var percentage = 100 * Math.min(maxScore, Math.max(minScore, currentScore)) / maxScore;
+                $(this.rootSelector + ' .global-gauge .progressbar .meter').width(
+                    percentage.toFixed(0) + ".01%"
+                );
+            }
 
             this.loading(false);
+        },
+        getDimensions: function () {
+            var dimensions = this.dimensions();
+
+            return _.values(dimensions);
+        },
+        hasDimensions: function () {
+            var dimensions = this.dimensions();
+
+            return !_.isEmpty(dimensions);
+        },
+        dimensionChanged: function (obj, event) {
+            if (event.originalEvent) {
+                // User change.
+                this.refreshMeasures();
+            } else {
+                // Program change : do nothing.
+            }
         },
         prepareFormData: function (formData) {
             if (this.excludedPreviewFields) {

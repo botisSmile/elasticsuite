@@ -1,3 +1,22 @@
 <div class="global-gauge">
-    <h1>I AM A HERE SIR !!!!</h1>
+    <select name="dimension" class="admin__control-select dimension" data-bind="
+            attr: {
+                title: $t('Select metric')
+            },
+            options: getDimensions(),
+            optionsValue: 'identifier',
+            optionsText: 'label',
+            enable: hasDimensions(),
+            value: dimension,
+            event: {change: dimensionChanged}"
+    />
+    <div class="container" visible="hasDimensions()">
+        <div class="progressbar">
+            <div class="meter"></div>
+            <div class="space"></div>
+        </div>
+    </div>
+</div>
+<div data-role="spinner" class="admin__data-grid-loading-mask" visible="loading" if="showSpinner">
+    <div class="spinner"><span repeat="8"></span></div>
 </div>

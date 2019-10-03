@@ -2,7 +2,7 @@
 /**
  * DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade Smile ElasticSuite to newer
+ * Do not edit or add to this file if you wish to upgrade this module to newer
  * versions in the future.
  *
  * @category  Smile
@@ -12,19 +12,18 @@
  * @license   Open Software License ("OSL") v. 3.0
  */
 
-namespace Smile\ElasticsuiteMerchandisingGauge\Plugin\Catalog\Category;
+namespace Smile\ElasticsuiteMerchandisingGauge\Plugin\Ui\Component\Search\Term\Preview;
 
-use Magento\Catalog\Model\Category\DataProvider as CategoryDataProvider;
+use Smile\ElasticsuiteCatalog\Ui\Component\Search\Term\Preview\DataProvider;
 use Magento\Backend\Model\UrlInterface;
 use Magento\Store\Model\StoreManagerInterface;
-use Magento\Catalog\Model\Category;
+use Magento\Search\Model\QueryFactory;
 
 /**
- * Category form UI data provider extension.
+ * Class DataProviderPlugin
  *
  * @category Smile
  * @package  Smile\ElasticsuiteMerchandisingGauge
- * @author   Richard BAYET <richard.bayet@smile.fr>
  */
 class DataProviderPlugin
 {
@@ -39,35 +38,44 @@ class DataProviderPlugin
     private $storeManager;
 
     /**
+     * @var QueryFactory
+     */
+    private $queryFactory;
+
+    /**
      * Constructor.
      *
      * @param UrlInterface          $urlBuilder   Admin URL Builder.
      * @param StoreManagerInterface $storeManager Store Manager.
+     * @param QueryFactory          $queryFactory Query factory.
      */
     public function __construct(
         UrlInterface $urlBuilder,
-        StoreManagerInterface $storeManager
+        StoreManagerInterface $storeManager,
+        QueryFactory $queryFactory
     ) {
         $this->urlBuilder   = $urlBuilder;
         $this->storeManager = $storeManager;
+        $this->queryFactory = $queryFactory;
     }
 
     /**
-     * Append virtual rule and sorting product data.
+     * Append gauge ajax url.
      *
-     * @param CategoryDataProvider $dataProvider Data provider.
-     * @param \Closure             $proceed      Original method.
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
+     * @param DataProvider $dataProvider Data provider.
+     * @param \Closure     $proceed      Original method.
      *
      * @return array
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function aroundGetData(CategoryDataProvider $dataProvider, \Closure $proceed)
+    public function aroundGetData(DataProvider $dataProvider, \Closure $proceed)
     {
         $data = $proceed();
 
-        $currentCategory = $dataProvider->getCurrentCategory();
-
-        $data[$currentCategory->getId()]['product_sorter_gauge_load_url'] = $this->getProductSorterGaugeLoadUrl($currentCategory);
+        foreach ($data as &$queryData) {
+            $queryData['product_sorter_gauge_load_url'] = $this->getProductSorterGaugeLoadUrl((int) $queryData['store_id']);
+        }
 
         return $data;
     }
@@ -75,19 +83,21 @@ class DataProviderPlugin
     /**
      * Retrieve the category product sorter load URL.
      *
-     * @param Category $category Category.
+     * @param int $storeId Store ID.
      *
      * @return string|null
      */
-    private function getProductSorterGaugeLoadUrl(Category $category)
+    private function getProductSorterGaugeLoadUrl($storeId)
     {
         $url = null;
 
-        $storeId = $this->getStoreId($category);
+        if ($storeId === 0) {
+            $storeId = $this->getDefaultStoreId();
+        }
 
         if ($storeId) {
             $urlParams = ['ajax' => true, 'store' => $storeId];
-            $url = $this->urlBuilder->getUrl('merchgauge/category/measure', $urlParams);
+            $url = $this->urlBuilder->getUrl('merchgauge/term_merchandiser/measure', $urlParams);
         }
 
         return $url;
@@ -108,29 +118,5 @@ class DataProviderPlugin
         }
 
         return $store ? $store->getId() : 0;
-    }
-
-    /**
-     * Get store id for the current category.
-     *
-     *
-     * @param Category $category Category.
-     *
-     * @return int
-     */
-    private function getStoreId(Category $category)
-    {
-        $storeId = $category->getStoreId();
-
-        if ($storeId === 0) {
-            $defaultStoreId   = $this->getDefaultStoreId();
-            $categoryStoreIds = array_filter($category->getStoreIds());
-            $storeId        = current($categoryStoreIds);
-            if (in_array($defaultStoreId, $categoryStoreIds)) {
-                $storeId = $defaultStoreId;
-            }
-        }
-
-        return $storeId;
     }
 }
