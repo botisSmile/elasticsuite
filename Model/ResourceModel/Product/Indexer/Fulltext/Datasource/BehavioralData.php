@@ -264,7 +264,7 @@ class BehavioralData
         );
 
         $rnDailyAgg = $this->aggregationFactory->create(
-            'reverseNestedBucket',
+            BucketInterface::TYPE_REVERSE_NESTED,
             [
                 'name'         => 'daily_sales_count',
                 'field'        => null,
@@ -292,7 +292,7 @@ class BehavioralData
             );
 
             $rnWeeklyAgg = $this->aggregationFactory->create(
-                'reverseNestedBucket',
+                BucketInterface::TYPE_REVERSE_NESTED,
                 [
                     'name'         => 'weekly_sales_count',
                     'field'        => null,
@@ -419,7 +419,7 @@ class BehavioralData
 
         $pipelines = [
             $this->pipelineFactory->create(
-                'movingFunctionPipeline',
+                PipelineInterface::TYPE_MOVING_FUNCTION,
                 [
                     'name'        => $maName,
                     'bucketsPath' => 'event_count',
