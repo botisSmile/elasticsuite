@@ -6,10 +6,7 @@
  */
 -->
 <listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
-    <argument name="context" xsi:type="configurableObject">
-        <argument name="class" xsi:type="string">Magento\Framework\View\Element\UiComponent\Context</argument>
-        <argument name="namespace" xsi:type="string">widget_visitor_recommendations</argument>
-    </argument>
+
     <argument name="data" xsi:type="array">
         <item name="js_config" xsi:type="array">
             <item name="provider" xsi:type="string">widget_visitor_recommendations.visitor_recommendations_datasource</item>
