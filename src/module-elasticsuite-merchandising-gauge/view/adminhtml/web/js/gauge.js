@@ -20,6 +20,7 @@ define([
             dimensions: [],
             dimension: null,
             showSpinner: true,
+            automaticRefresh: true,
             imports: {
                 products: "${ $.productsProvider }:products",
                 editPositions: "${ $.productsProvider }:editPositions",
@@ -50,7 +51,7 @@ define([
             console.log(this);
             */
             console.log("----------------------------");
-            this.observe(['loading', 'dimensions', 'dimension']);
+            this.observe(['loading', 'dimensions', 'dimension', 'automaticRefresh']);
             this.productsMemento = this.products;
             this.waitContent();
             /*
@@ -116,8 +117,14 @@ define([
             console.log("-P-P-P-P-P-P-P-P-P-P-P-P-P-P");
         },
         refreshMeasures: function (data) {
+            if (this.automaticRefresh()) {
+                this.refresh();
+            }
+        },
+        refresh: function () {
             console.log("-^-^-^-^-^-^-^-^-^-^-^-^-^-^");
             console.log("refreshMeasures");
+
             /*
             console.log(data);
             console.log(this.products);
@@ -138,10 +145,11 @@ define([
                 console.log(this.products);
                 console.log(this.productsMemento);
                 */
+                /*
                 console.log(this.editPositions);
                 console.log(this.blacklistedProducts);
                 console.log(this.formData);
-
+                */
                 var formData = this.prepareFormData(this.formData);
 
                 // 1) editPositions data (Taken from product-sorter.js)
@@ -219,6 +227,22 @@ define([
             } else {
                 // Program change : do nothing.
             }
+        },
+        hasAutomaticRefresh: function () {
+            console.log(' --- hasAutomaticRefresh --- ');
+
+            return this.automaticRefresh();
+        },
+        toggleAutomaticRefresh: function () {
+            console.log(' --- toggleAutomaticRefresh --- ');
+            this.automaticRefresh(!this.automaticRefresh());
+            console.log(this.automaticRefresh());
+            if (this.automaticRefresh()) {
+                this.refreshMeasures();
+            }
+        },
+        applyBestOrdering: function () {
+            console.log(' - - - applyBestOrdering  - - - ');
         },
         prepareFormData: function (formData) {
             if (this.excludedPreviewFields) {

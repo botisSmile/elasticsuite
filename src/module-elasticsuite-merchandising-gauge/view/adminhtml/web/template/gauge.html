@@ -1,20 +1,38 @@
 <div class="global-gauge">
-    <select name="dimension" class="admin__control-select dimension" data-bind="
-            attr: {
-                title: $t('Select metric')
-            },
-            options: getDimensions(),
-            optionsValue: 'identifier',
-            optionsText: 'label',
-            enable: hasDimensions(),
-            value: dimension,
-            event: {change: dimensionChanged}"
-    />
-    <div class="container" visible="hasDimensions()">
+    <div class="section dimension-selector">
+        <select name="dimension" class="admin__control-select dimension " data-bind="
+                attr: {
+                    title: $t('Select metric')
+                },
+                options: getDimensions(),
+                optionsValue: 'identifier',
+                optionsText: 'label',
+                enable: hasDimensions(),
+                value: dimension,
+                event: {change: dimensionChanged}"
+        />
+    </div>
+    <div class="section container" visible="hasDimensions()">
         <div class="progressbar">
             <div class="meter"></div>
             <div class="space"></div>
         </div>
+    </div>
+    <div class="section controls">
+        <div class="admin__actions-switch" data-role="switcher" data-bind="click: toggleAutomaticRefresh">
+            <input type="checkbox" class="admin__actions-switch-checkbox" simple-checked="hasAutomaticRefresh()" ko-value="hasAutomaticRefresh()" />
+            <label class="admin__actions-switch-label">
+                <span class="admin__actions-switch-text"
+                      attr="'data-text-on': $t('Automatic refresh enabled'), 'data-text-off': $t('Automatic refresh disabled'), 'title': $t('Automatic refresh will recompute the gauge when the position of a product is changed or when the product is blacklisted')">
+                </span>
+            </label>
+        </div>
+        <button type="button" class="action-default action-secondary scalable refresh" data-bind="visible: !hasAutomaticRefresh(), title: $t('Force refresh'), click: refresh">
+            <span text="$t('Force refresh')"></span>
+        </button>
+        <button type="button" class="action-default action-secondary scalable reorder" data-bind="title: $t('Apply best ordering'), click: applyBestOrdering">
+            <span text="$t('Order according to metric')"></span>
+        </button>
     </div>
 </div>
 <div data-role="spinner" class="admin__data-grid-loading-mask" visible="loading" if="showSpinner">
