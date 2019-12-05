@@ -139,15 +139,17 @@ class TrendingQueryService implements TrendingQueryServiceInterface
         if ($searchBucket) {
             /** @var \Smile\ElasticsuiteCore\Search\Adapter\Elasticsuite\Response\Aggregation\Value $childBucket */
             foreach ($searchBucket->getValues() as $childBucket) {
-                $metrics   = $childBucket->getMetrics();
-                $queries[] = $this->searchQueryFactory->create(
-                    [
-                        'data' => [
-                            'query_text'  => $this->string->cleanString($childBucket->getValue()),
-                            'num_results' => round($metrics['product_count'] ?? 0),
-                        ],
-                    ]
-                );
+                if ($childBucket->getValue() != '__other_docs') {
+                    $metrics   = $childBucket->getMetrics();
+                    $queries[] = $this->searchQueryFactory->create(
+                        [
+                            'data' => [
+                                'query_text'  => $this->string->cleanString($childBucket->getValue()),
+                                'num_results' => round($metrics['product_count'] ?? 0),
+                            ],
+                        ]
+                    );
+                }
             }
         }
 
