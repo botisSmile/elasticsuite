@@ -1,0 +1,34 @@
+{
+    "name": "smile/module-elasticsuite-react-autocomplete",
+    "type": "magento2-module",
+    "license": "OSL-3.0",
+    "authors": [{
+            "name": "Romain Ruaud",
+            "email": "romain.ruaud@smile.fr"
+        }
+    ],
+    "description": "ElasticSuite - React autocomplete module.",
+    "homepage": "https://elasticsuite.io",
+    "keywords": [
+        "magento",
+        "magento2",
+        "elasticsearch",
+        "search",
+        "merchandising",
+        "core",
+        "setup"
+    ],
+    "require": {
+        "smile/elasticsuite" : "~2.8.0",
+        "yireo/magento2-react": "dev-master as 16.12.0"
+    },
+    "version": "2.8.0",
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Smile\\ElasticsuiteReactAutocomplete\\": ""
+        }
+    }
+}
