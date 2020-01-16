@@ -7,7 +7,7 @@
  *
  *
  * @category  Smile
- * @package   Smile\ElasticsuiteReactAutocomplete
+ * @package   Smile\ElasticsuiteInstantSearch
  * @author    Romain Ruaud <romain.ruaud@smile.fr>
  * @copyright 2019 Smile
  * @license   Open Software License ("OSL") v. 3.0
@@ -15,6 +15,6 @@
 
 \Magento\Framework\Component\ComponentRegistrar::register(
     \Magento\Framework\Component\ComponentRegistrar::MODULE,
-    'Smile_ElasticsuiteReactAutocomplete',
+    'Smile_ElasticsuiteInstantSearch',
     __DIR__
 );

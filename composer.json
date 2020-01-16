@@ -1,13 +1,14 @@
 {
-    "name": "smile/module-elasticsuite-react-autocomplete",
+    "name": "smile/module-elasticsuite-instant-search",
     "type": "magento2-module",
     "license": "OSL-3.0",
-    "authors": [{
+    "authors": [
+        {
             "name": "Romain Ruaud",
             "email": "romain.ruaud@smile.fr"
         }
     ],
-    "description": "ElasticSuite - React autocomplete module.",
+    "description": "ElasticSuite - Instant Search module.",
     "homepage": "https://elasticsuite.io",
     "keywords": [
         "magento",
@@ -28,7 +29,7 @@
             "registration.php"
         ],
         "psr-4": {
-            "Smile\\ElasticsuiteReactAutocomplete\\": ""
+            "Smile\\ElasticsuiteInstantSearch\\": ""
         }
     }
 }

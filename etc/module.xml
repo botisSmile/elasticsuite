@@ -10,14 +10,14 @@
  *
  *
  * @category  Smile
- * @package   Smile\ElasticsuiteReactAutocomplete
+ * @package   Smile\ElasticsuiteInstantSearch
  * @author    Romain Ruaud <romain.ruaud@smile.fr>
  * @copyright 2019 Smile
  * @license   Open Software License ("OSL") v. 3.0
  */
  -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
-    <module name="Smile_ElasticsuiteReactAutocomplete" setup_version="1.0.0">
+    <module name="Smile_ElasticsuiteInstantSearch" setup_version="1.0.0">
         <sequence>
             <module name="Smile_ElasticsuiteCore" />
             <module name="Yireo_React" />
