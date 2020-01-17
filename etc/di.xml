@@ -19,4 +19,14 @@
     <type name="Magento\Framework\App\FrontControllerInterface">
         <plugin name="front-controller-fast-dispatch" type="Smile\ElasticsuiteInstantSearch\Plugin\FrontController\DispatchPlugin"/>
     </type>
+
+
+    <!-- REMOVE ME -->
+    <!--<preference for="Magento\Framework\DB\LoggerInterface" type="Magento\Framework\DB\Logger\File"/>
+    <type name="Magento\Framework\DB\Logger\File">
+        <arguments>
+            <argument name="logAllQueries" xsi:type="boolean">true</argument>
+            <argument name="debugFile" xsi:type="string">log/sql.log</argument>
+        </arguments>
+    </type>-->
 </config>

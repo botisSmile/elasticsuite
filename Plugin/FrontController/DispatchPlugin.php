@@ -14,6 +14,7 @@
 namespace Smile\ElasticsuiteInstantSearch\Plugin\FrontController;
 
 use Magento\Framework\App\Response\Http as ResponseHttp;
+use Magento\Framework\App\ResponseInterface;
 
 /**
  * Fast Dispatch plugin for instant-search.
@@ -31,13 +32,21 @@ class DispatchPlugin
     private $actionFactory;
 
     /**
+     * @var \Magento\Framework\App\ResponseInterface
+     */
+    private $response;
+
+    /**
      * DispatchPlugin constructor.
      *
      * @param \Magento\Framework\App\ActionFactory $actionFactory Action Factory
      */
-    public function __construct(\Magento\Framework\App\ActionFactory $actionFactory)
-    {
+    public function __construct(
+        \Magento\Framework\App\ActionFactory $actionFactory,
+        ResponseInterface $response
+    ) {
         $this->actionFactory = $actionFactory;
+        $this->response      = $response;
     }
 
     /**
@@ -55,6 +64,7 @@ class DispatchPlugin
     ) {
         try {
             if ($this->matchInstantSearchRequest($request)) {
+                $this->response->setNoCacheHeaders();
                 $action = $this->actionFactory->create(\Magento\Search\Controller\Ajax\Suggest::class);
 
                 return $action->execute();

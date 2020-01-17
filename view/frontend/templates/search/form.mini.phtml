@@ -16,7 +16,7 @@
  * Template for quick search mini form.
  * Overridden to manage template injection for the rendering of autocomplete results.
  *
- * @var $block \Smile\ElasticsuiteCore\Block\Search\Form\Autocomplete
+ * @var $block \Smile\ElasticsuiteInstantSearch\Block\Search\Form\Autocomplete
  */
 ?>
 
@@ -63,6 +63,7 @@ $helper = $this->helper('Magento\Search\Helper\Data');
     window.ES_REACT_AUTOCOMPLETE_PROPS = {
         formSelector:"#search_mini_form",
         url:"<?php /* @escapeNotVerified */ echo $block->getUrl('search/ajax/suggest'); ?>",
+        storeCode:"<?php /* @escapeNotVerified */ echo $block->getStoreCode(); ?>",
         destinationSelector:"#search_autocomplete",
         name:"<?php /* @escapeNotVerified */ echo $helper->getQueryParamName() ?>",
         maxLength: <?php /* @escapeNotVerified */ echo $helper->getMaxQueryLength();?>,

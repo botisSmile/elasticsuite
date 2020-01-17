@@ -20,6 +20,7 @@ class ReactESAutocomplete extends Component {
         this.templates = props.templates ||  [];
         this.priceFormat = props.priceFormat || '';
         this.minSearchLength = props.minSearchLength || 2;
+        this.storeCode = props.storeCode || null;
 
         this.state = {
             value : props.value || '',
@@ -29,9 +30,13 @@ class ReactESAutocomplete extends Component {
     }
 
     onChange(event) {
-        const { url, minSearchLength, state : {loading} } = this;
+        const { url, minSearchLength, storeCode, state : {loading} } = this;
 
         let data = {q: event.target.value};
+        if (storeCode !== null) {
+            data.__store = storeCode;
+        }
+
         let queryString = Object.keys(data).map(key => key + '=' + data[key]).join('&');
         this.setState((state) => { return {value: data.q}; });
 
