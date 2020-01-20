@@ -102,7 +102,7 @@ class DataProvider implements DataProviderInterface
         \Magento\Framework\Profiler::start('INSTANT_SEARCH::ATTRIBUTES::GET ITEMS');
 
         if ($this->autocompleteHelper->isEnabled($this->getType())) {
-            foreach ($this->attributeConfig->getAutocompleteAttributes() as $attribute) {
+            foreach ($this->attributeConfig->getAutocompleteAttributes() ?? [] as $attribute) {
                 $filterField = $attribute['filter_field'];
                 $facetData   = $this->getFacetedData($filterField);
 
