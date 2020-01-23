@@ -52,8 +52,12 @@ class ReactESAutocomplete extends Component {
         let hash = window.btoa(data.q.trim());
         // Same search has been already processed, serve the results from the cache.
         if (resultsBuffer[hash] !== undefined) {
-            this.setState((state) => {return {results: resultsBuffer[hash], loading: false};});
-
+            if (resultsBuffer[hash].length > 0) {
+                this.setState((state) => {
+                    return {results: resultsBuffer[hash], loading: false};
+                });
+            }
+            
             return;
         }
 
@@ -72,10 +76,11 @@ class ReactESAutocomplete extends Component {
             .then(responseJson => {
                 // Append results to the cache of previous requests.
                 resultsBuffer[hash] = responseJson;
-                this.setState((state) => {
-                    return {results: responseJson, resultsBuffer: resultsBuffer, loading: false};
-                });
-                console.log(this.state);
+                if (responseJson.length > 0) {
+                    this.setState((state) => {
+                        return {results: responseJson, resultsBuffer: resultsBuffer, loading: false};
+                    });
+                }
             })
         //.catch(error => setError(error));
 

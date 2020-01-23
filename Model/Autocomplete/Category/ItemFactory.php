@@ -34,43 +34,23 @@ class ItemFactory extends \Magento\Search\Model\Autocomplete\ItemFactory
     const XML_PATH_CATEGORY_URL_SUFFIX = 'catalog/seo/category_url_suffix';
 
     /**
-     * @var array An array containing category names, to use as local cache
-     */
-    protected $categoryNames = [];
-
-    /**
-     * @var \Magento\Framework\UrlInterface
-     */
-    private $urlBuilder;
-
-    /**
      * @var null
      */
     private $categoryUrlSuffix = null;
 
     /**
-     * @var \Magento\Catalog\Model\ResourceModel\Category|null
-     */
-    private $categoryResource = null;
-
-    /**
      * ItemFactory constructor.
      *
      * @param ObjectManagerInterface $objectManager    The Object Manager
-     * @param UrlInterface           $urlBuilder       The Url Builder
      * @param ScopeConfigInterface   $scopeConfig      The Scope Config
      * @param CategoryResource       $categoryResource Category Resource Model
      */
     public function __construct(
         ObjectManagerInterface $objectManager,
-        UrlInterface $urlBuilder,
-        ScopeConfigInterface $scopeConfig,
-        CategoryResource $categoryResource
+        ScopeConfigInterface $scopeConfig
     ) {
         parent::__construct($objectManager);
-        $this->urlBuilder = $urlBuilder;
         $this->categoryUrlSuffix = $scopeConfig->getValue(self::XML_PATH_CATEGORY_URL_SUFFIX);
-        $this->categoryResource = $categoryResource;
     }
 
     /**
@@ -79,7 +59,7 @@ class ItemFactory extends \Magento\Search\Model\Autocomplete\ItemFactory
     public function create(array $data)
     {
         $data = $this->addCategoryData($data);
-        unset($data['category']);
+        unset($data['source']);
 
         return parent::create($data);
     }
@@ -93,19 +73,17 @@ class ItemFactory extends \Magento\Search\Model\Autocomplete\ItemFactory
      */
     private function addCategoryData($data)
     {
-        $category = $data['category'];
-        $source   = $data['source'];
+        $source         = $data['source'];
+        $source['type'] = $data['type'];
 
-        $documentSource = $category->getDocumentSource();
-
-        $title = $documentSource['name'];
+        $title = $source['name'];
         if (is_array($title)) {
             $title = current($title);
         }
 
         $categoryData = [
             'title'      => html_entity_decode($title),
-            //'url'        => $this->getCategoryUrl($category),
+            'url'        => $this->getCategoryUrl($source),
             //'breadcrumb' => $this->getCategoryBreadcrumb($category),
         ];
 
@@ -118,23 +96,21 @@ class ItemFactory extends \Magento\Search\Model\Autocomplete\ItemFactory
      * Retrieve category Url from the document source.
      * Done from the document source to prevent having to use addUrlRewrite to result on category collection.
      *
-     * @param \Magento\Catalog\Model\Category $category The category.
+     * @param array $documentSource Document Source.
      *
      * @return string
      */
-    private function getCategoryUrl($category)
+    private function getCategoryUrl($documentSource)
     {
-        $documentSource = $category->getDocumentSource();
-
         if ($documentSource && isset($documentSource['url_path'])) {
             $urlPath = is_array($documentSource['url_path']) ? current($documentSource['url_path']) : $documentSource['url_path'];
 
-            $url = trim($this->urlBuilder->getUrl($urlPath), '/') . $this->categoryUrlSuffix;
+            $url = trim($urlPath, '/') . $this->categoryUrlSuffix;
 
             return $url;
         }
 
-        return $category->getUrl();
+        return '';
     }
 
     /**

@@ -20,7 +20,11 @@
         <plugin name="front-controller-fast-dispatch" type="Smile\ElasticsuiteInstantSearch\Plugin\FrontController\DispatchPlugin"/>
     </type>
 
-
+    <type name="Smile\ElasticsuiteInstantSearch\Plugin\FrontController\DispatchPlugin">
+        <arguments>
+            <argument name="thumbnailHelper" xsi:type="object">\Smile\ElasticsuiteInstantSearch\Model\Autocomplete\Product\ThumbnailHelper\Proxy</argument>
+        </arguments>
+    </type>
     <!-- REMOVE ME -->
     <!--<preference for="Magento\Framework\DB\LoggerInterface" type="Magento\Framework\DB\Logger\File"/>
     <type name="Magento\Framework\DB\Logger\File">

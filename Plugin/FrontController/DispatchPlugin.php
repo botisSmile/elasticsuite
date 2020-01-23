@@ -15,6 +15,8 @@ namespace Smile\ElasticsuiteInstantSearch\Plugin\FrontController;
 
 use Magento\Framework\App\Response\Http as ResponseHttp;
 use Magento\Framework\App\ResponseInterface;
+use Smile\ElasticsuiteInstantSearch\Model\Autocomplete\Product\ThumbnailHelper;
+use Magento\Framework\Controller\Result\RedirectFactory;
 
 /**
  * Fast Dispatch plugin for instant-search.
@@ -37,16 +39,33 @@ class DispatchPlugin
     private $response;
 
     /**
+     * @var \Smile\ElasticsuiteInstantSearch\Model\Autocomplete\Product\ThumbnailHelper
+     */
+    private $thumbnailHelper;
+
+    /**
+     * @var \Magento\Framework\Controller\Result\RedirectFactory
+     */
+    private $redirectFactory;
+
+    /**
      * DispatchPlugin constructor.
      *
-     * @param \Magento\Framework\App\ActionFactory $actionFactory Action Factory
+     * @param \Magento\Framework\App\ActionFactory $actionFactory   Action Factory
+     * @param ResponseInterface                    $response        The response
+     * @param ThumbnailHelper                      $thumbnailHelper Thumbnail Helper
+     * @param RedirectFactory                      $redirectFactory Redirect Factory
      */
     public function __construct(
         \Magento\Framework\App\ActionFactory $actionFactory,
-        ResponseInterface $response
+        ResponseInterface $response,
+        ThumbnailHelper $thumbnailHelper,
+        RedirectFactory $redirectFactory
     ) {
-        $this->actionFactory = $actionFactory;
-        $this->response      = $response;
+        $this->actionFactory   = $actionFactory;
+        $this->response        = $response;
+        $this->thumbnailHelper = $thumbnailHelper;
+        $this->redirectFactory = $redirectFactory;
     }
 
     /**
@@ -68,6 +87,13 @@ class DispatchPlugin
                 $action = $this->actionFactory->create(\Magento\Search\Controller\Ajax\Suggest::class);
 
                 return $action->execute();
+            } elseif ($this->matchThumbnailRequest($request)) {
+                $thumbnailUrl = $this->thumbnailHelper->getImageUrl($request->getParam('productId', null));
+                if ($thumbnailUrl !== '') {
+                    $this->response->setPrivateHeaders(3600);
+
+                    return $this->redirectFactory->create()->setUrl($thumbnailUrl);
+                }
             }
         } catch (\Exception $exception) {
             ;
@@ -88,5 +114,19 @@ class DispatchPlugin
         $requestPath = trim($request->getPathInfo(), '/');
 
         return $requestPath === 'search/ajax/suggest';
+    }
+
+    /**
+     * Check if this is an instant search request.
+     *
+     * @param \Magento\Framework\App\RequestInterface $request The request
+     *
+     * @return bool
+     */
+    private function matchThumbnailRequest($request)
+    {
+        $requestPath = trim($request->getPathInfo(), '/');
+
+        return $requestPath === 'instantsearch/ajax/thumbnail';
     }
 }

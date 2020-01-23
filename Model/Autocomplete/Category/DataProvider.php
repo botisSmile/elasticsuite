@@ -24,7 +24,6 @@ use Smile\ElasticsuiteCatalog\Model\ResourceModel\Category\Fulltext\CollectionFa
 use Smile\ElasticsuiteCore\Model\Autocomplete\Terms\DataProvider as TermDataProvider;
 use Smile\ElasticsuiteCore\Search\Request\Builder as RequestBuilder;
 use Smile\ElasticsuiteCore\Search\RequestInterface;
-use Smile\ElasticsuiteInstantSearch\Model\Autocomplete\Product\ItemFactory;
 
 /**
  * Catalog category autocomplete data provider.

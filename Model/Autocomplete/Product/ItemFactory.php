@@ -6,8 +6,8 @@
  * versions in the future.
  *
  * @category  Smile
- * @package   Smile\ElasticsuiteCatalog
- * @author    Aurelien FOUCRET <aurelien.foucret@smile.fr>
+ * @package   Smile\ElasticsuiteInstantSearch
+ * @author    Romain Ruaud <romain.ruaud@smile.fr>
  * @copyright 2019 Smile
  * @license   Open Software License ("OSL") v. 3.0
  */
@@ -23,7 +23,7 @@ use Magento\Framework\Pricing\Render;
  * Create an autocomplete item from a product.
  *
  * @category Smile
- * @package  Smile\ElasticsuiteCatalog
+ * @package  Smile\ElasticsuiteInstantSearch
  * @author   Aurelien FOUCRET <aurelien.foucret@smile.fr>
  */
 class ItemFactory extends \Magento\Search\Model\Autocomplete\ItemFactory
@@ -34,21 +34,14 @@ class ItemFactory extends \Magento\Search\Model\Autocomplete\ItemFactory
     const AUTOCOMPLETE_IMAGE_ID = 'smile_elasticsuite_autocomplete_product_image';
 
     /**
-     * @var ImageHelper
-     */
-    private $imageHelper;
-
-    /**
      * Constructor.
      *
-     * @param ImageHelper $imageHelper Catalog product image helper.
+     * @param ObjectManagerInterface $objectManager Object manager.
      */
     public function __construct(
-        ObjectManagerInterface $objectManager,
-        ImageHelper $imageHelper
+        ObjectManagerInterface $objectManager
     ) {
         parent::__construct($objectManager);
-        $this->imageHelper = $imageHelper;
     }
 
     /**
@@ -71,22 +64,10 @@ class ItemFactory extends \Magento\Search\Model\Autocomplete\ItemFactory
      */
     private function addProductData($data)
     {
-        $source = $data['source'];
+        $source              = $data['source'];
+        $source['type']      = $data['type'];
+        $source['thumbnail'] = 'instantsearch/ajax/thumbnail?productId=' . $source['entity_id'];
 
         return $source;
-    }
-
-    /**
-     * Get resized image URL.
-     *
-     * @param ProductInterface $product Current product.
-     *
-     * @return string
-     */
-    private function getImageUrl($product)
-    {
-        $this->imageHelper->init($product, self::AUTOCOMPLETE_IMAGE_ID);
-
-        return $this->imageHelper->getUrl();
     }
 }
