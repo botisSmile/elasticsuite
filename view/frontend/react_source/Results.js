@@ -57,7 +57,7 @@ class Results extends Component {
                                 return (
                                     <a href={'//' + window.location.hostname + '/' + result.url} alt={result.name}>
                                         <dd className={result.row_class} role="option" key={index}>
-                                            <span className="qs-option-name">{result.name}</span>
+                                            <span className="qs-option-name">{result.tree.join(' > ')}</span>
                                             <span aria-hidden="true" className="amount">{result.num_results}</span>
                                         </dd>
                                     </a>
