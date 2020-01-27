@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Price from "@magento/peregrine/lib/Price";
 
 class Results extends Component {
     componentWillMount() {
@@ -27,6 +28,7 @@ class Results extends Component {
         } = this;
 
         let groupedResults = this.groupBy(items, 'type');
+        let currencyCode = 'EUR';
 
         return (
             <div id="search_autocomplete" className="instant-search-result-box" style={{display: items.length > 0 ? 'flex' : 'none' }}>
@@ -81,7 +83,7 @@ class Results extends Component {
                                                 <div className="info">{result.name}
                                                     <div className="autocomplete-category">in Hoodies &amp; Sweatshirts</div>
                                                 <div className="price">
-                                                    <span className="autocomplete-price">$ {result.price[0].price}</span>
+                                                    <Price currencyCode={currencyCode} value={result.price[0].price} />
                                                 </div>
                                             </div>
                                         </a>
