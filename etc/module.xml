@@ -20,7 +20,7 @@
     <module name="Smile_ElasticsuiteInstantSearch" setup_version="1.0.0">
         <sequence>
             <module name="Smile_ElasticsuiteCatalog" />
-            <module name="Yireo_React" />
+            <module name="Smile_React" />
         </sequence>
     </module>
 </config>
