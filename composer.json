@@ -21,7 +21,7 @@
     ],
     "require": {
         "smile/elasticsuite" : "~2.8.0",
-        "yireo/magento2-react": "dev-master as 16.12.0"
+        "smile/magento2-react": "dev-master as 16.12.0"
     },
     "version": "2.8.0",
     "autoload": {
