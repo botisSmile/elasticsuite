@@ -24,4 +24,7 @@
 
     <preference for="Smile\ElasticsuiteCatalog\Model\Autocomplete\Product\Attribute\DataProvider"
                 type="Smile\ElasticsuiteInstantSearch\Model\Autocomplete\Product\Attribute\DataProvider"/>
+
+    <preference for="Smile\ElasticsuiteCore\Model\Autocomplete\Terms\DataProvider"
+                type="Smile\ElasticsuiteInstantSearch\Model\Autocomplete\Terms\DataProvider"/>
 </config>
