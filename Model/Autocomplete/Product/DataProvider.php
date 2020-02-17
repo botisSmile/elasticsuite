@@ -1,7 +1,6 @@
 <?php
 /**
  * DISCLAIMER
- *
  * Do not edit or add to this file if you wish to upgrade Smile ElasticSuite to newer
  * versions in the future.
  *
@@ -11,6 +10,7 @@
  * @copyright 2019 Smile
  * @license   Open Software License ("OSL") v. 3.0
  */
+
 namespace Smile\ElasticsuiteInstantSearch\Model\Autocomplete\Product;
 
 use Magento\Framework\Search\SearchEngineInterface;
@@ -23,6 +23,8 @@ use Smile\ElasticsuiteCore\Search\RequestInterface;
 use Smile\ElasticsuiteCore\Model\Autocomplete\Terms\DataProvider as TermDataProvider;
 use Smile\ElasticsuiteCore\Search\Request\Builder as RequestBuilder;
 use Magento\Search\Model\QueryFactory;
+use Smile\ElasticsuiteInstantSearch\Model\Search\QueryStringProvider;
+use Smile\ElasticsuiteInstantSearch\Model\Search\QueryStringProviderFactory;
 
 /**
  * Catalog product autocomplete data provider.
@@ -76,11 +78,6 @@ class DataProvider implements DataProviderInterface
     private $termDataProvider;
 
     /**
-     * @var QueryFactory
-     */
-    private $queryFactory;
-
-    /**
      * @var \Magento\Store\Model\StoreManagerInterface
      */
     private $storeManager;
@@ -96,17 +93,22 @@ class DataProvider implements DataProviderInterface
     private $attributeConfig;
 
     /**
+     * @var \Smile\ElasticsuiteInstantSearch\Model\Search\QueryStringProviderFactory
+     */
+    private $queryStringProviderFactory;
+
+    /**
      * Constructor.
      *
-     * @param ItemFactory           $itemFactory           Suggest item factory.
-     * @param ConfigurationHelper   $configurationHelper   Autocomplete configuration helper.
-     * @param RequestBuilder        $requestBuilder        Search Request Builder.
-     * @param SearchEngineInterface $searchEngineInterface Search Engine Interface.
-     * @param TermDataProvider      $termDataProvider      Terms Data Provider.
-     * @param QueryFactory          $queryFactory          Search Query Factory.
-     * @param StoreManagerInterface $storeManager          Store Manager Interface.
-     * @param string                $type                  Autocomplete provider type.
-     * @param string                $searchRequestName     Search Request Name.
+     * @param ItemFactory                $itemFactory                Suggest item factory.
+     * @param ConfigurationHelper        $configurationHelper        Autocomplete configuration helper.
+     * @param RequestBuilder             $requestBuilder             Search Request Builder.
+     * @param SearchEngineInterface      $searchEngineInterface      Search Engine Interface.
+     * @param TermDataProvider           $termDataProvider           Terms Data Provider.
+     * @param QueryStringProviderFactory $queryStringProviderFactory Query String provider factory.
+     * @param StoreManagerInterface      $storeManager               Store Manager Interface.
+     * @param string                     $type                       Autocomplete provider type.
+     * @param string                     $searchRequestName          Search Request Name.
      */
     public function __construct(
         ItemFactory $itemFactory,
@@ -114,20 +116,20 @@ class DataProvider implements DataProviderInterface
         RequestBuilder $requestBuilder,
         SearchEngineInterface $searchEngineInterface,
         TermDataProvider $termDataProvider,
-        QueryFactory $queryFactory,
+        QueryStringProviderFactory $queryStringProviderFactory,
         StoreManagerInterface $storeManager,
         $type = self::AUTOCOMPLETE_TYPE,
         $searchRequestName = 'catalog_product_autocomplete'
     ) {
-        $this->itemFactory         = $itemFactory;
-        $this->configurationHelper = $configurationHelper;
-        $this->requestBuilder      = $requestBuilder;
-        $this->searchEngine        = $searchEngineInterface;
-        $this->termDataProvider    = $termDataProvider;
-        $this->queryFactory        = $queryFactory;
-        $this->storeManager        = $storeManager;
-        $this->type                = $type;
-        $this->searchRequestName   = $searchRequestName;
+        $this->itemFactory                = $itemFactory;
+        $this->configurationHelper        = $configurationHelper;
+        $this->requestBuilder             = $requestBuilder;
+        $this->searchEngine               = $searchEngineInterface;
+        $this->termDataProvider           = $termDataProvider;
+        $this->storeManager               = $storeManager;
+        $this->type                       = $type;
+        $this->searchRequestName          = $searchRequestName;
+        $this->queryStringProviderFactory = $queryStringProviderFactory;
     }
 
     /**
@@ -230,9 +232,17 @@ class DataProvider implements DataProviderInterface
         );
 
         if (empty($terms)) {
-            $terms = [$this->queryFactory->get()->getQueryText()];
+            $terms = [$this->getQueryStringProvider()->get()];
         }
 
         return $terms;
+    }
+
+    /**
+     * @return QueryStringProvider
+     */
+    private function getQueryStringProvider()
+    {
+        return $this->queryStringProviderFactory->create();
     }
 }

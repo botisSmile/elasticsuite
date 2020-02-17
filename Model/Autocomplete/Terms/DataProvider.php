@@ -23,6 +23,8 @@ use Smile\ElasticsuiteCore\Helper\Autocomplete as ConfigurationHelper;
 use Smile\ElasticsuiteCore\Search\Request\BucketInterface;
 use Smile\ElasticsuiteCore\Search\Request\Builder as RequestBuilder;
 use Smile\ElasticsuiteCore\Search\Request\QueryInterface;
+use Smile\ElasticsuiteInstantSearch\Model\Search\QueryStringProvider;
+use Smile\ElasticsuiteInstantSearch\Model\Search\QueryStringProviderFactory;
 
 /**
  * Instant Search popular queries data provider.
@@ -49,9 +51,9 @@ class DataProvider extends \Smile\ElasticsuiteCore\Model\Autocomplete\Terms\Data
     private $requestBuilder;
 
     /**
-     * @var RequestInterface
+     * @var \Smile\ElasticsuiteInstantSearch\Model\Search\QueryStringProviderFactory
      */
-    private $request;
+    private $queryStringProviderFactory;
 
     /**
      * @var string
@@ -61,13 +63,13 @@ class DataProvider extends \Smile\ElasticsuiteCore\Model\Autocomplete\Terms\Data
     /**
      * Constructor.
      *
-     * @param QueryFactory          $queryFactory        Search query text factory.
-     * @param ItemFactory           $itemFactory         Suggest terms item facory.
-     * @param RequestBuilder        $requestBuilder      Search Request Builder.
-     * @param SearchEngineInterface $searchEngine        Search Engine Interface.
-     * @param ConfigurationHelper   $configurationHelper Autocomplete configuration helper.
-     * @param RequestInterface      $request             Request Interface
-     * @param string                $type                Autocomplete items type.
+     * @param QueryFactory               $queryFactory               Search query text factory.
+     * @param ItemFactory                $itemFactory                Suggest terms item facory.
+     * @param RequestBuilder             $requestBuilder             Search Request Builder.
+     * @param SearchEngineInterface      $searchEngine               Search Engine Interface.
+     * @param ConfigurationHelper        $configurationHelper        Autocomplete configuration helper.
+     * @param QueryStringProviderFactory $queryStringProviderFactory Query String provider factory.
+     * @param string                     $type                       Autocomplete items type.
      */
     public function __construct(
         QueryFactory $queryFactory,
@@ -75,15 +77,15 @@ class DataProvider extends \Smile\ElasticsuiteCore\Model\Autocomplete\Terms\Data
         ConfigurationHelper $configurationHelper,
         RequestBuilder $requestBuilder,
         SearchEngineInterface $searchEngine,
-        RequestInterface $request,
+        QueryStringProviderFactory $queryStringProviderFactory,
         $type = self::AUTOCOMPLETE_TYPE
     ) {
-        $this->requestBuilder      = $requestBuilder;
-        $this->searchEngine        = $searchEngine;
-        $this->itemFactory         = $itemFactory;
-        $this->configurationHelper = $configurationHelper;
-        $this->request             = $request;
-        $this->type                = $type;
+        $this->requestBuilder             = $requestBuilder;
+        $this->searchEngine               = $searchEngine;
+        $this->itemFactory                = $itemFactory;
+        $this->configurationHelper        = $configurationHelper;
+        $this->queryStringProviderFactory = $queryStringProviderFactory;
+        $this->type                       = $type;
 
         parent::__construct($queryFactory, $itemFactory, $configurationHelper, $type);
     }
@@ -105,10 +107,10 @@ class DataProvider extends \Smile\ElasticsuiteCore\Model\Autocomplete\Terms\Data
             $this->items = [];
 
             try {
-                $collection = $this->getSearchTerms($this->getRawQueryText(), $this->getResultsPageSize());
+                $collection = $this->getSearchTerms($this->getQueryStringProvider()->get(), $this->getResultsPageSize());
                 if ($this->configurationHelper->isEnabled($this->getType())) {
                     foreach ($collection as $item) {
-                        $resultItem = $this->itemFactory->create([
+                        $resultItem    = $this->itemFactory->create([
                             'title'       => $item->getQueryText(),
                             'num_results' => $item->getNumResults(),
                             'type'        => $this->getType(),
@@ -311,5 +313,13 @@ class DataProvider extends \Smile\ElasticsuiteCore\Model\Autocomplete\Terms\Data
                 ],
             ],
         ];
+    }
+
+    /**
+     * @return QueryStringProvider
+     */
+    private function getQueryStringProvider()
+    {
+        return $this->queryStringProviderFactory->create();
     }
 }
