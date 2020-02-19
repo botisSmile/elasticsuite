@@ -78,10 +78,10 @@ class Results extends Component {
                                 groupedResults.product.map(function(result, index) {
                                     return (
                                         <dd className={result.row_class} role="option" key={index}>
-                                        <a className="instant-search-result" href={result.url_path}>
+                                        <a className="instant-search-result" href={'//' + window.location.hostname + '/' + result.url} alt={result.name}>
                                             <div className="thumbnail"><img src={'//' + window.location.hostname + '/' + result.thumbnail}/></div>
                                                 <div className="info">{result.name}
-                                                    <div className="autocomplete-category">in Hoodies &amp; Sweatshirts</div>
+                                                    <div className="autocomplete-category">in {result.highlightCategory}</div>
                                                 <div className="price">
                                                     <Price currencyCode={currencyCode} value={result.price[0].price} />
                                                 </div>
