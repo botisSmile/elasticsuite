@@ -20,6 +20,7 @@ use Smile\ElasticsuiteRecommender\Model\CoOccurrence;
 use Smile\ElasticsuiteRecommender\Model\Product\Matcher\SearchQueryBuilderInterface;
 use Smile\ElasticsuiteCore\Search\Request\Query\Nested;
 use Magento\Catalog\Api\Data\ProductInterface;
+use Smile\ElasticsuiteRecommender\Helper\Data as DataHelper;
 
 /**
  * Upsell search query category clause builder
@@ -41,15 +42,22 @@ class Category implements SearchQueryBuilderInterface
     private $coOccurrence;
 
     /**
+     * @var DataHelper
+     */
+    private $helper;
+
+    /**
      * Constructor.
      *
      * @param QueryFactory $queryFactory Query factory.
      * @param CoOccurrence $coOccurrence Co-occurrence finder.
+     * @param DataHelper   $helper       Data helper.
      */
-    public function __construct(QueryFactory $queryFactory, CoOccurrence $coOccurrence)
+    public function __construct(QueryFactory $queryFactory, CoOccurrence $coOccurrence, DataHelper $helper)
     {
         $this->queryFactory = $queryFactory;
         $this->coOccurrence = $coOccurrence;
+        $this->helper       = $helper;
     }
 
     /**
@@ -83,12 +91,16 @@ class Category implements SearchQueryBuilderInterface
      */
     private function getCategories(ProductInterface $product)
     {
-        $categoryIds = $this->coOccurrence->getCoOccurrences(
-            'product_view',
-            $product->getId(),
-            $product->getStoreId(),
-            'category_view'
-        );
+        $categoryIds = [];
+
+        if ($this->helper->useCategoryViewsCoOccurrencesForUpsells()) {
+            $categoryIds = $this->coOccurrence->getCoOccurrences(
+                'product_view',
+                $product->getId(),
+                $product->getStoreId(),
+                'category_view'
+            );
+        }
 
         if (empty($categoryIds)) {
             $categoryIds = $product->getCategoryIds();

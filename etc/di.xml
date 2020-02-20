@@ -17,7 +17,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
 
     <!-- Upsell products -->
-    <virtualType name="Smile\ElasticsuiteRecommender\Model\Product\Upsell\SearchQueryBuilder" 
+    <virtualType name="Smile\ElasticsuiteRecommender\Model\Product\Upsell\SearchQueryBuilder"
                  type="Smile\ElasticsuiteRecommender\Model\Product\Matcher\SearchQueryBuilder">
         <arguments>
             <argument name="searchQueries" xsi:type="array">
@@ -60,7 +60,7 @@
         </arguments>
     </virtualType>
 
-    <virtualType name="Smile\ElasticsuiteRecommender\Model\Product\Upsell" 
+    <virtualType name="Smile\ElasticsuiteRecommender\Model\Product\Upsell"
                  type="Smile\ElasticsuiteRecommender\Model\Product\Matcher">
         <arguments>
             <argument name="searchQueryBuilder" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Upsell\SearchQueryBuilder</argument>
@@ -68,7 +68,7 @@
             <argument name="collectionProvider" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Upsell\CollectionProvider</argument>
         </arguments>
     </virtualType>
-    
+
     <virtualType name="Smile\ElasticsuiteRecommender\Block\Product\Upsell"
                  type="Smile\ElasticsuiteRecommender\Block\Product\RecommenderList">
         <arguments>
@@ -83,29 +83,29 @@
             <argument name="boost" xsi:type="string">5</argument>
         </arguments>
     </virtualType>
-    
+
     <virtualType name="orderRelated" type="Smile\ElasticsuiteRecommender\Model\Product\Related\SearchQuery\CoOccurrenceQuery">
         <arguments>
             <argument name="coOccurrenceField" xsi:type="string">product_sale</argument>
             <argument name="boost" xsi:type="string">10</argument>
         </arguments>
     </virtualType>
-    
+
     <virtualType name="addToCartSimilarRelated" type="Smile\ElasticsuiteRecommender\Model\Product\Related\SearchQuery\SimilarProductCoOccurrenceQuery">
         <arguments>
             <argument name="coOccurrenceField" xsi:type="string">product_cart</argument>
             <argument name="boost" xsi:type="string">1</argument>
         </arguments>
     </virtualType>
-    
+
     <virtualType name="orderSimilarRelated" type="Smile\ElasticsuiteRecommender\Model\Product\Related\SearchQuery\SimilarProductCoOccurrenceQuery">
         <arguments>
             <argument name="coOccurrenceField" xsi:type="string">product_sale</argument>
             <argument name="boost" xsi:type="string">2</argument>
         </arguments>
     </virtualType>
-    
-    <virtualType name="Smile\ElasticsuiteRecommender\Model\Product\Related\SearchQueryBuilder" 
+
+    <virtualType name="Smile\ElasticsuiteRecommender\Model\Product\Related\SearchQueryBuilder"
                  type="Smile\ElasticsuiteRecommender\Model\Product\Matcher\SearchQueryBuilder">
         <arguments>
             <argument name="searchQueries" xsi:type="array">
@@ -154,7 +154,7 @@
             <argument name="collectionProvider" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Related\CollectionProvider</argument>
         </arguments>
     </virtualType>
-    
+
     <virtualType name="Smile\ElasticsuiteRecommender\Block\Product\Related"
                  type="Smile\ElasticsuiteRecommender\Block\Product\RecommenderList">
         <arguments>
@@ -299,4 +299,11 @@
     </type>
 
     <preference for="Smile\ElasticsuiteRecommender\Model\Product\Matcher\ProductProvider\ContextInterface" type="Smile\ElasticsuiteRecommender\Model\Product\Visitor\Context"/>
+
+    <!-- More Like This / Similar Products service -->
+    <type name="Smile\ElasticsuiteRecommender\Model\Similarity">
+        <arguments>
+            <argument name="collectionProvider" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Related\CollectionProvider</argument>
+        </arguments>
+    </type>
 </config>

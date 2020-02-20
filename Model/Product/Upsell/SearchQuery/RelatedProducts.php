@@ -66,20 +66,21 @@ class RelatedProducts implements SearchQueryBuilderInterface
     {
         $query = false;
 
-        if ($productIds = $this->getProducts($product)) {
-            $queryParams = [
-                'includeOriginalDocs' => true,
-                'fields'              => $this->config->getSimilarityFields($product->getStoreId()),
-                'like'                => [],
-            ];
+        $queryParams = [
+            'includeOriginalDocs' => true,
+            'fields'              => $this->config->getSimilarityFields($product->getStoreId()),
+            'like'                => [],
+        ];
 
-            $queryParams['like'][] = ['_id' => $product->getId()];
+        $queryParams['like'][] = ['_id' => $product->getId()];
+
+        if ($productIds = $this->getProducts($product)) {
             foreach ($productIds as $relatedProduct) {
                 $queryParams['like'][] = ['_id' => $relatedProduct];
             }
-
-            $query = $this->queryFactory->create(QueryInterface::TYPE_MORELIKETHIS, $queryParams);
         }
+
+        $query = $this->queryFactory->create(QueryInterface::TYPE_MORELIKETHIS, $queryParams);
 
         return $query;
     }
