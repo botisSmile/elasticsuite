@@ -31,6 +31,7 @@
                 <upsell_native_selection_complement>1</upsell_native_selection_complement>
                 <upsell_force_higher_price>0</upsell_force_higher_price>
                 <upsell_categories_use_category_views_cooccurrence>0</upsell_categories_use_category_views_cooccurrence>
+                <upsell_related_use_product_views_cooccurrence>0</upsell_related_use_product_views_cooccurrence>
             </general>
             <cooccurrence>
                 <min_doc_count>5</min_doc_count>
