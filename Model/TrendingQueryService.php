@@ -267,7 +267,7 @@ class TrendingQueryService implements TrendingQueryServiceInterface
         );
 
         $matchFilter = $this->queryFactory->create(
-            'matchPhrasePrefixQuery',
+            QueryInterface::TYPE_MATCHPHRASEPREFIX,
             ['field' => 'page.search.query', 'queryText' => $queryText]
         );
 
