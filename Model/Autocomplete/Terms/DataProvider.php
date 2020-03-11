@@ -16,9 +16,12 @@ namespace Smile\ElasticsuiteInstantSearch\Model\Autocomplete\Terms;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Search\ResponseInterface;
 use Magento\Framework\Search\SearchEngineInterface;
+use Magento\Framework\Stdlib\StringUtils;
 use Magento\Search\Model\Autocomplete\DataProviderInterface;
 use Magento\Search\Model\Autocomplete\ItemFactory;
-use Magento\Search\Model\QueryFactory;
+use Magento\Search\Model\QueryFactory as SearchQueryFactory;
+use Smile\ElasticsuiteCore\Search\Request\Query\QueryFactory as ElasticsearchQueryFactory;
+use Magento\Store\Model\StoreManagerInterface;
 use Smile\ElasticsuiteCore\Helper\Autocomplete as ConfigurationHelper;
 use Smile\ElasticsuiteCore\Search\Request\BucketInterface;
 use Smile\ElasticsuiteCore\Search\Request\Builder as RequestBuilder;
@@ -46,6 +49,11 @@ class DataProvider extends \Smile\ElasticsuiteCore\Model\Autocomplete\Terms\Data
     private $searchEngine;
 
     /**
+     * @var \Smile\ElasticsuiteCore\Search\Request\Query\QueryFactory
+     */
+    private $esQueryFactory;
+
+    /**
      * @var RequestBuilder
      */
     private $requestBuilder;
@@ -56,6 +64,16 @@ class DataProvider extends \Smile\ElasticsuiteCore\Model\Autocomplete\Terms\Data
     private $queryStringProviderFactory;
 
     /**
+     * @var int
+     */
+    private $storeId;
+
+    /**
+     * @var \Magento\Framework\Stdlib\StringUtils
+     */
+    private $string;
+
+    /**
      * @var string
      */
     private $type;
@@ -63,31 +81,40 @@ class DataProvider extends \Smile\ElasticsuiteCore\Model\Autocomplete\Terms\Data
     /**
      * Constructor.
      *
-     * @param QueryFactory               $queryFactory               Search query text factory.
+     * @param ElasticsearchQueryFactory  $esQueryFactory             Elasticsearch query factory.
+     * @param SearchQueryFactory         $searchQueryFactory         Search query text factory.
      * @param ItemFactory                $itemFactory                Suggest terms item facory.
      * @param RequestBuilder             $requestBuilder             Search Request Builder.
      * @param SearchEngineInterface      $searchEngine               Search Engine Interface.
      * @param ConfigurationHelper        $configurationHelper        Autocomplete configuration helper.
      * @param QueryStringProviderFactory $queryStringProviderFactory Query String provider factory.
+     * @param StoreManagerInterface      $storeManager               Store Manager Interface.
+     * @param StringUtils                $string                     String utils
      * @param string                     $type                       Autocomplete items type.
      */
     public function __construct(
-        QueryFactory $queryFactory,
+        ElasticsearchQueryFactory $esQueryFactory,
+        SearchQueryFactory $searchQueryFactory,
         ItemFactory $itemFactory,
         ConfigurationHelper $configurationHelper,
         RequestBuilder $requestBuilder,
         SearchEngineInterface $searchEngine,
         QueryStringProviderFactory $queryStringProviderFactory,
+        StoreManagerInterface $storeManager,
+        StringUtils $string,
         $type = self::AUTOCOMPLETE_TYPE
     ) {
+        $this->esQueryFactory             = $esQueryFactory;
         $this->requestBuilder             = $requestBuilder;
         $this->searchEngine               = $searchEngine;
         $this->itemFactory                = $itemFactory;
         $this->configurationHelper        = $configurationHelper;
         $this->queryStringProviderFactory = $queryStringProviderFactory;
         $this->type                       = $type;
+        $this->string                     = $string;
+        $this->storeId                    = $storeManager->getStore()->getId();
 
-        parent::__construct($queryFactory, $itemFactory, $configurationHelper, $type);
+        parent::__construct($searchQueryFactory, $itemFactory, $configurationHelper, $type);
     }
 
     /**
@@ -136,14 +163,13 @@ class DataProvider extends \Smile\ElasticsuiteCore\Model\Autocomplete\Terms\Data
      * @param string   $queryText The Query Text
      * @param int|null $maxSize   Number of search terms to retrieve
      *
-     * @return \Smile\ElasticsuiteFacetRecommender\Api\Data\FacetRecommendationInterface[]
+     * @return array
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     private function getSearchTerms($queryText, $maxSize = null)
     {
         $request = $this->getRequest($queryText, $maxSize);
         $result  = $this->searchEngine->search($request);
-
         $queries = $this->buildQueries($result);
 
         return $queries;
@@ -174,7 +200,7 @@ class DataProvider extends \Smile\ElasticsuiteCore\Model\Autocomplete\Terms\Data
     /**
      * @param \Magento\Framework\Search\ResponseInterface $response Search Response
      *
-     * @return \Smile\ElasticsuiteFacetRecommender\Api\Data\FacetRecommendationInterface[]
+     * @return array
      */
     private function buildQueries(ResponseInterface $response)
     {
@@ -187,7 +213,7 @@ class DataProvider extends \Smile\ElasticsuiteCore\Model\Autocomplete\Terms\Data
             foreach ($searchBucket->getValues() as $childBucket) {
                 if ($childBucket->getValue() != '__other_docs') {
                     $metrics   = $childBucket->getMetrics();
-                    $queries[] = $this->searchQueryFactory->create(
+                    $queries[] = $this->queryFactory->create(
                         [
                             'data' => [
                                 'query_text'  => $this->string->cleanString($childBucket->getValue()),
@@ -216,14 +242,13 @@ class DataProvider extends \Smile\ElasticsuiteCore\Model\Autocomplete\Terms\Data
         $storeId      = $this->getStoreId();
         $aggregations = $this->getAggregations($maxSize);
         $searchQuery  = $this->getSearchQuery($queryText);
-        $boostedQuery = $this->getBoostedQuery($searchQuery);
 
         return $this->requestBuilder->create(
             $storeId,
             'tracking_log_event',
             0,
             0,
-            $boostedQuery,
+            $searchQuery,
             [],
             [],
             [],
@@ -239,7 +264,7 @@ class DataProvider extends \Smile\ElasticsuiteCore\Model\Autocomplete\Terms\Data
      */
     private function getStoreId()
     {
-        return $this->storeManager->getStore()->getId();
+        return $this->storeId;
     }
 
     /**
@@ -251,35 +276,35 @@ class DataProvider extends \Smile\ElasticsuiteCore\Model\Autocomplete\Terms\Data
      */
     private function getSearchQuery($queryText)
     {
-        $pageFilter = $this->queryFactory->create(
+        $pageFilter = $this->esQueryFactory->create(
             QueryInterface::TYPE_TERM,
             ['field' => 'page.type.identifier', 'value' => 'catalogsearch_result_index']
         );
 
-        $spellcheckFilter = $this->queryFactory->create(
+        $spellcheckFilter = $this->esQueryFactory->create(
             QueryInterface::TYPE_TERM,
             ['field' => 'page.search.is_spellchecked', 'value' => false]
         );
 
-        $productCountFilter = $this->queryFactory->create(
+        $productCountFilter = $this->esQueryFactory->create(
             QueryInterface::TYPE_RANGE,
             ['field' => 'page.product_list.product_count', 'bounds' => ['gt' => 0]]
         );
 
-        $noFilterFilter = $this->queryFactory->create(
+        $noFilterFilter = $this->esQueryFactory->create(
             QueryInterface::TYPE_NESTED,
             [
-                'query' => $this->queryFactory->create(QueryInterface::TYPE_EXISTS, ['field' => 'page.product_list.filters']),
+                'query' => $this->esQueryFactory->create(QueryInterface::TYPE_EXISTS, ['field' => 'page.product_list.filters']),
                 'path'  => 'page.product_list.filters',
             ]
         );
 
-        $matchFilter = $this->queryFactory->create(
-            'matchPhrasePrefixQuery',
+        $matchFilter = $this->esQueryFactory->create(
+            QueryInterface::TYPE_MATCHPHRASEPREFIX,
             ['field' => 'page.search.query', 'queryText' => $queryText]
         );
 
-        return $this->queryFactory->create(
+        return $this->esQueryFactory->create(
             QueryInterface::TYPE_BOOL,
             [
                 'must'    => [$pageFilter, $spellcheckFilter, $productCountFilter, $matchFilter],
@@ -303,7 +328,7 @@ class DataProvider extends \Smile\ElasticsuiteCore\Model\Autocomplete\Terms\Data
                 'field'     => 'page.search.query.sortable',
                 'name'      => 'search_query',
                 'size'      => (int) $maxSize,
-                'sortOrder' => BucketInterface::SORT_ORDER_RELEVANCE,
+                'sortOrder' => BucketInterface::SORT_ORDER_COUNT,
                 'metrics'   => [
                     [
                         'name'  => 'product_count',
