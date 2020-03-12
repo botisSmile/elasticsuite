@@ -6,7 +6,7 @@
  * versions in the future.
  *
  * @category  Smile
- * @package   Smile\Elasticsuite
+ * @package   Smile\ElasticsuiteCatalogOptimizerCustomerSegment
  * @author    Richard BAYET <richard.bayet@smile.fr>
  * @copyright 2019 Smile
  * @license   Open Software License ("OSL") v. 3.0

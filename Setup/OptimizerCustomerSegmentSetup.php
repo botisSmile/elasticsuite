@@ -36,7 +36,7 @@ class OptimizerCustomerSegmentSetup
     public function createOptimizerCustomerSegmentTable(SchemaSetupInterface $setup)
     {
         if (!$setup->getConnection()->isTableExists($setup->getTable(OptimizerCustomerSegmentInterface::TABLE_NAME))) {
-            $optimizerCategoryTable = $setup->getConnection()
+            $optimizerCustomerSegmentTable = $setup->getConnection()
                 ->newTable($setup->getTable(OptimizerCustomerSegmentInterface::TABLE_NAME))
                 ->addColumn(
                     OptimizerCustomerSegmentInterface::OPTIMIZER_ID,
@@ -85,7 +85,7 @@ class OptimizerCustomerSegmentSetup
                 )
                 ->setComment('Search optimizer customer segment Table');
 
-            $setup->getConnection()->createTable($optimizerCategoryTable);
+            $setup->getConnection()->createTable($optimizerCustomerSegmentTable);
         }
     }
 }

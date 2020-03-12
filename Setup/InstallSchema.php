@@ -37,7 +37,7 @@ class InstallSchema implements InstallSchemaInterface
     /**
      * InstallSchema constructor.
      *
-     * @param OptimizerCustomerSegmentSetupFactory $optimizerSetupFactory Setup Factory
+     * @param OptimizerCustomerSegmentSetupFactory $optimizerCustomerSegmentSetupFactory Setup Factory
      */
     public function __construct(OptimizerCustomerSegmentSetupFactory $optimizerCustomerSegmentSetupFactory)
     {
