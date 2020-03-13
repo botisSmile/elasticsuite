@@ -6,9 +6,9 @@
  * versions in the future.
  *
  * @category  Smile
- * @package   Smile\Elasticsuite
+ * @package   Smile\ElasticsuiteCatalogOptimizerCustomerSegment
  * @author    Richard BAYET <richard.bayet@smile.fr>
- * @copyright 2019 Smile
+ * @copyright 2020 Smile
  * @license   Open Software License ("OSL") v. 3.0
  */
 
@@ -20,7 +20,7 @@ use Smile\ElasticsuiteCatalogOptimizer\Api\Data\OptimizerInterface;
  * Optimizer Customer Segment Read Handler
  *
  * @category Smile
- * @package  Smile\ElasticsuiteCatalogOptimizer
+ * @package  Smile\ElasticsuiteCatalogOptimizerCustomerSegment
  * @author   Richard BAYET <richard.bayet@smile.fr>
  */
 class ReadHandler implements \Magento\Framework\EntityManager\Operation\ExtensionInterface
@@ -47,27 +47,25 @@ class ReadHandler implements \Magento\Framework\EntityManager\Operation\Extensio
     public function execute($entity, $arguments = [])
     {
         if ($entity->getId()) {
-            $this->getCustomerSegmentLimitation($entity);
+            $this->setCustomerSegmentLimitation($entity);
         }
 
         return $entity;
     }
 
     /**
-     * Retrieve customer segment ids limitation for the current optimizer, if any.
+     * Retrieve and set customer segment ids limitation for the current optimizer, if any.
      *
      * @param OptimizerInterface $entity The optimizer being saved.
      *
-     * @return array
+     * @return void
      */
-    private function getCustomerSegmentLimitation($entity)
+    private function setCustomerSegmentLimitation($entity)
     {
         $segmentIds = $this->resource->getSegmentIdsByOptimizer($entity);
         $containerData = [
             'segment_ids' => $segmentIds,
         ];
         $entity->setData('customer_segment', $containerData);
-
-        return $entity;
     }
 }

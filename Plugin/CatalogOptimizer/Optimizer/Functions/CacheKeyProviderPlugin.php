@@ -9,7 +9,7 @@
  * @category  Smile
  * @package   Smile\ElasticsuiteCatalogOptimizerCustomerSegment
  * @author    Richard BAYET <richard.bayet@smile.fr>
- * @copyright 2019 Smile
+ * @copyright 2020 Smile
  * @license   Open Software License ("OSL") v. 3.0
  */
 
@@ -23,7 +23,7 @@ use Smile\ElasticsuiteCatalogOptimizerCustomerSegment\Model\Service\CustomerSegm
  * Used to vary the optimizers functions cache according to customer segments.
  *
  * @category Smile
- * @package  Smile\ElasticsuiteCatalogOptimizerCustomerSegment\Plugin\CatalogOptimizer\Functions
+ * @package  Smile\ElasticsuiteCatalogOptimizerCustomerSegment
  * @author   Richard BAYET <richard.bayet@smile.fr>
  */
 class CacheKeyProviderPlugin

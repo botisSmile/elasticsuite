@@ -6,9 +6,9 @@
  * versions in the future.
  *
  * @category  Smile
- * @package   Smile\Elasticsuite
+ * @package   Smile\ElasticsuiteCatalogOptimizerCustomerSegment
  * @author    Richard BAYET <richard.bayet@smile.fr>
- * @copyright 2019 Smile
+ * @copyright 2020 Smile
  * @license   Open Software License ("OSL") v. 3.0
  */
 
@@ -20,7 +20,7 @@ use Smile\ElasticsuiteCatalogOptimizer\Api\Data\OptimizerInterface;
  * Optimizer Customer Segment Save Handler
  *
  * @category Smile
- * @package  Smile\ElasticsuiteCatalogOptimizer
+ * @package  Smile\ElasticsuiteCatalogOptimizerCustomerSegment
  * @author   Richard BAYET <richard.bayet@smile.fr>
  */
 class SaveHandler implements \Magento\Framework\EntityManager\Operation\ExtensionInterface

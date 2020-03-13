@@ -9,7 +9,7 @@
  * @category  Smile
  * @package   Smile\ElasticsuiteCatalogOptimizerCustomerSegment
  * @author    Richard BAYET <richard.bayet@smile.fr>
- * @copyright 2019 Smile
+ * @copyright 2020 Smile
  * @license   Open Software License ("OSL") v. 3.0
  */
 
@@ -37,7 +37,7 @@ class InstallSchema implements InstallSchemaInterface
     /**
      * InstallSchema constructor.
      *
-     * @param OptimizerCustomerSegmentSetupFactory $optimizerSetupFactory Setup Factory
+     * @param OptimizerCustomerSegmentSetupFactory $optimizerCustomerSegmentSetupFactory Setup Factory
      */
     public function __construct(OptimizerCustomerSegmentSetupFactory $optimizerCustomerSegmentSetupFactory)
     {
