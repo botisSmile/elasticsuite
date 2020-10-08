@@ -20,11 +20,11 @@
     "setup"
   ],
   "require" : {
-    "magento/framework" : ">=102.0.0",
-    "magento/module-customer-segment" : ">=102.0.0",
-    "smile/elasticsuite" : "^2.6.0@dev"
+    "magento/framework" : "^101.0",
+    "magento/module-customer-segment" : "^101.0||^102.0||^103.0",
+    "smile/elasticsuite" : "~2.6.0"
   },
-  "version" : "2.8.0",
+  "version" : "2.6.0",
   "autoload" : {
     "files" : [
       "registration.php"

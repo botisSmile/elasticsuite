@@ -9,6 +9,17 @@ For instance, you could imagine
 - having created a customer segment corresponding to visitors or registered customers having more than one *running* gear products in their cart
 - and then create an optimizer that boosts a series of DVDs dedicated to long distance running.
 
+**Which version should I use ?**
+
+The module version patterns are identical to those of Elasticsuite.
+
+Magento Version                                     | ElasticSuite Version    | Module version | Module composer install                                                                     | Supported Elasticsearch Version | Actively maintained
+----------------------------------------------------|-------------------------|----------------|---------------------------------------------------------------------------------------------|---------------------------------|---------------------
+Magento **2.2.x** Opensource (CE) / Commerce (EE)   | ElasticSuite **2.6.x**  | **2.6.x**      | ```composer require smile/module-elasticsuite-catalog-optimizer-customer-segment ~2.6.0```  | 5.x & 6.x                       | No
+Magento **<2.3.5** Opensource (CE) / Commerce (EE)  | ElasticSuite **2.8.x**  | **2.8.x**      | ```composer require smile/module-elasticsuite-catalog-optimizer-customer-segment ~2.8.0```  | 5.x & 6.x                       | No
+Magento **>-2.3.5** Opensource (CE) / Commerce (EE) | ElasticSuite **2.9.x**  | **2.9.x**      | ```composer require smile/module-elasticsuite-catalog-optimizer-customer-segment ~2.9.0```  | 6.x & 7.x                       | **Yes**
+Magento **>-2.4.0** Opensource (CE) / Commerce (EE) | ElasticSuite **2.10.x** | **2.10.x**     | ```composer require smile/module-elasticsuite-catalog-optimizer-customer-segment ~2.10.0``` | 6.x & 7.x                       | **Yes**
+
 ### Search optimizers edit form changes
 
 If the `Magento_CustomerSegment` module is installed and enabled and the feature enabled in **Stores > Configuration > Customers > Customer Configuration > Customer Segments**, the optimizer edit form will display a new section named **Customer Segments**.
