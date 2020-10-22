@@ -21,12 +21,12 @@
     ],
     "require": {
         "magento/framework": ">=101.0.0",
-        "smile/elasticsuite" : "^2.6.0@dev"
+        "smile/elasticsuite" : "~2.6.0"
     },
+    "version" : "2.6.0",
     "require-dev": {
         "smile/magento2-smilelab-quality-suite": "^1.0.4"
     },
-    "version": "2.4.0",
     "autoload": {
         "files": [
             "registration.php"
