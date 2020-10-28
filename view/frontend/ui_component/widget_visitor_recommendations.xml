@@ -20,18 +20,21 @@
     </settings>
 
     <dataSource name="visitor_recommendations_datasource" component="Magento_Ui/js/grid/provider">
-        <settings>
-            <storageConfig>
-                <param name="indexField" xsi:type="string">entity_id</param>
-            </storageConfig>
-            <updateUrl path="mui/index/render"/>
-        </settings>
-        <dataProvider class="Smile\ElasticsuiteRecommender\Ui\Product\Visitor\Listing\DataProvider" name="visitor_recommendations_datasource">
-            <settings>
-                <requestFieldName>id</requestFieldName>
-                <primaryFieldName>entity_id</primaryFieldName>
-            </settings>
-        </dataProvider>
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Smile\ElasticsuiteRecommender\Ui\Product\Visitor\Listing\DataProvider</argument>
+            <argument name="name" xsi:type="string">visitor_recommendations_datasource</argument>
+            <argument name="requestFieldName" xsi:type="string">id</argument>
+            <argument name="primaryFieldName" xsi:type="string">entity_id</argument>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/provider</item>
+                    <item name="update_url" xsi:type="url" path="mui/index/render"/>
+                    <item name="storageConfig" xsi:type="array">
+                        <item name="indexField" xsi:type="string">entity_id</item>
+                    </item>
+                </item>
+            </argument>
+        </argument>
     </dataSource>
 
     <columns name="widget_columns" component="Magento_Catalog/js/product/list/listing" template="Magento_Catalog/product/list/listing">
