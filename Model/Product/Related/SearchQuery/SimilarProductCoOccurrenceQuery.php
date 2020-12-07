@@ -153,6 +153,6 @@ class SimilarProductCoOccurrenceQuery implements SearchQueryBuilderInterface
             );
         }
 
-        return array_diff(array_map('intval', $coOccurrences), $productIds);
+        return array_diff(array_map('intval', $coOccurrences), [$productId]);
     }
 }
