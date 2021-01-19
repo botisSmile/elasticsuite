@@ -16,21 +16,141 @@
  */
  -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <!-- Handle saving of relationship between optimizer and categories or search terms -->
-    <type name="Magento\Framework\EntityManager\Operation\ExtensionPool">
+    <preference for="Smile\ElasticsuiteBeacon\Api\Data\BeaconBeepInterface" type="Smile\ElasticsuiteBeacon\Model\BeaconBeep" />
+    <preference for="Smile\ElasticsuiteBeacon\Api\BeaconBeepRepositoryInterface" type="Smile\ElasticsuiteBeacon\Model\BeaconBeepRepository" />
+    <preference for="Smile\ElasticsuiteBeacon\Api\Data\BeaconBeepSearchResultsInterface" type="Magento\Framework\Api\SearchResults" />
+    <preference for="Smile\ElasticsuiteBeacon\Model\ConfigInterface" type="Smile\ElasticsuiteBeacon\Model\Config" />
+
+    <type name="Smile\ElasticsuiteBeacon\Model\BeaconBeep\Generator">
         <arguments>
-            <argument name="extensionActions" xsi:type="array">
-                <item name="Smile\ElasticsuiteBeacon\Api\Data\BeaconBipInterface" xsi:type="array">
-                    <item name="create" xsi:type="array">
-                        <item name="beaconBipCreator" xsi:type="string">Smile\ElasticsuiteCatalogOptimizer\Model\Optimizer\Limitation\CreateHandler</item>
-                    </item>
-                    <item name="update" xsi:type="array">
-                        <item name="beaconBipUpdater" xsi:type="string">Smile\ElasticsuiteCatalogOptimizer\Model\Optimizer\Limitation\SaveHandler</item>
-                    </item>
-                    <item name="read" xsi:type="array">
-                        <item name="beaconBipReader" xsi:type="string">Smile\ElasticsuiteCatalogOptimizer\Model\Optimizer\Limitation\ReadHandler</item>
-                    </item>
-                </item>
+            <argument name="initialContextProvidersPool" xsi:type="array">
+                <item name="client" xsi:type="object">Smile\ElasticsuiteBeacon\Model\ContextProvider\Client</item>
+                <item name="date" xsi:type="object">Smile\ElasticsuiteBeacon\Model\ContextProvider\Date</item>
+                <item name="host" xsi:type="object">Smile\ElasticsuiteBeacon\Model\ContextProvider\Host</item>
+            </argument>
+            <argument name="additionalContextProvidersPool" xsi:type="array">
+                <item name="magento" xsi:type="object">Smile\ElasticsuiteBeacon\Model\ContextProvider\Magento</item>
+                <item name="modules" xsi:type="object">Smile\ElasticsuiteBeacon\Model\ContextProvider\Modules</item>
+                <item name="store" xsi:type="object">Smile\ElasticsuiteBeacon\Model\ContextProvider\Store</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Smile\ElasticsuiteTracker\Api\CustomerTrackingServiceInterface">
+        <plugin name="registerBeepOnTrackerHit" type="Smile\ElasticsuiteBeacon\Plugin\EventTrackerPlugin" sortOrder="1" />
+    </type>
+
+    <!-- Performance tests -->
+    <virtualType name="staticHostContext" type="Smile\ElasticsuiteBeacon\Test\Load\ContextProvider\Host">
+        <arguments>
+            <argument name="maxHosts" xsi:type="number">1</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="randomHostContext" type="Smile\ElasticsuiteBeacon\Test\Load\ContextProvider\Host">
+        <arguments>
+            <argument name="maxHosts" xsi:type="number">10</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="staticDateContext" type="Smile\ElasticsuiteBeacon\Test\Load\ContextProvider\Date">
+        <arguments>
+            <argument name="maxDays" xsi:type="number">1</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="randomDateContext" type="Smile\ElasticsuiteBeacon\Test\Load\ContextProvider\Date">
+        <arguments>
+            <argument name="maxDays" xsi:type="number">10</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="randomHugeDateContext" type="Smile\ElasticsuiteBeacon\Test\Load\ContextProvider\Date">
+        <arguments>
+            <argument name="maxDays" xsi:type="number">100</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="stressTestClient" type="Smile\ElasticsuiteBeacon\Model\ContextProvider\Client">
+        <arguments>
+            <argument name="config" xsi:type="object">Smile\ElasticsuiteBeacon\Test\Load\Config</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="stressTestGenerator" type="Smile\ElasticsuiteBeacon\Test\Load\Generator">
+        <arguments>
+            <argument name="initialContextProvidersPool" xsi:type="array">
+                <item name="client" xsi:type="object">stressTestClient</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="staticHostDayGenerator" type="stressTestGenerator">
+        <arguments>
+            <argument name="initialContextProvidersPool" xsi:type="array">
+                <item name="date" xsi:type="object">staticDateContext</item>
+                <item name="host" xsi:type="object">staticHostContext</item>
+            </argument>
+            <argument name="name" xsi:type="string">Static Host/Day Generator</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="randomHostGenerator" type="stressTestGenerator">
+        <arguments>
+            <argument name="initialContextProvidersPool" xsi:type="array">
+                <item name="date" xsi:type="object">staticDateContext</item>
+                <item name="host" xsi:type="object">randomHostContext</item>
+            </argument>
+            <argument name="name" xsi:type="string">Random Host/Static Day Generator</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="randomDayGenerator" type="stressTestGenerator">
+        <arguments>
+            <argument name="initialContextProvidersPool" xsi:type="array">
+                <item name="date" xsi:type="object">randomDateContext</item>
+                <item name="host" xsi:type="object">staticHostContext</item>
+            </argument>
+            <argument name="name" xsi:type="string">Static Host/Random Day Generator</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="randomHostDayGenerator" type="stressTestGenerator">
+        <arguments>
+            <argument name="initialContextProvidersPool" xsi:type="array">
+                <item name="date" xsi:type="object">randomDateContext</item>
+                <item name="host" xsi:type="object">randomHostContext</item>
+            </argument>
+            <argument name="name" xsi:type="string">Random Host/Random Day Generator</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="randomHostHugeDayGenerator" type="stressTestGenerator">
+        <arguments>
+            <argument name="initialContextProvidersPool" xsi:type="array">
+                <item name="date" xsi:type="object">randomHugeDateContext</item>
+                <item name="host" xsi:type="object">randomHostContext</item>
+            </argument>
+            <argument name="name" xsi:type="string">Random Host/Huge Random Day Generator</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Smile\ElasticsuiteBeacon\Console\Command\BeaconStressTest">
+        <arguments>
+            <argument name="generatorModels" xsi:type="array">
+                <item name="static" xsi:type="object">staticHostDayGenerator</item>
+                <item name="randomHost" xsi:type="object">randomHostGenerator</item>
+                <item name="randomDay" xsi:type="object">randomDayGenerator</item>
+                <item name="randomHostDayGenerator" xsi:type="object">randomHostDayGenerator</item>
+                <item name="randomHostHugeDayGenerator" xsi:type="object">randomHostHugeDayGenerator</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Framework\Console\CommandListInterface">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="beaconStressTest" xsi:type="object">Smile\ElasticsuiteBeacon\Console\Command\BeaconStressTest</item>
             </argument>
         </arguments>
     </type>

@@ -17,10 +17,10 @@ namespace Smile\ElasticsuiteBeacon\Model;
 
 use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\DataObject\IdentityInterface;
-use Smile\ElasticsuiteBeacon\Api\Data\BeaconBipInterface;
+use Smile\ElasticsuiteBeacon\Api\Data\BeaconBeepInterface;
 
 /**
- * Beacon bip model.
+ * Beacon beep model.
  *
  * @SuppressWarnings(CamelCasePropertyName)
  *
@@ -28,12 +28,12 @@ use Smile\ElasticsuiteBeacon\Api\Data\BeaconBipInterface;
  * @package  Smile\ElasticsuiteBeacon
  * @author   Richard Bayet <richard.bayet@smile.fr>
  */
-class BeaconBip extends AbstractModel implements BeaconBipInterface, IdentityInterface
+class BeaconBeep extends AbstractModel implements BeaconBeepInterface, IdentityInterface
 {
     /**
      * @var string
      */
-    const CACHE_TAG = 'smile_elasticsuite_beacon_bip';
+    const CACHE_TAG = 'smile_elasticsuite_beacon_beep';
 
     /**
      * @var string
@@ -53,7 +53,7 @@ class BeaconBip extends AbstractModel implements BeaconBipInterface, IdentityInt
      */
     public function getId()
     {
-        return $this->getData(self::BIP_ID);
+        return $this->getData(self::BEEP_ID);
     }
 
     /**
@@ -78,6 +78,14 @@ class BeaconBip extends AbstractModel implements BeaconBipInterface, IdentityInt
     public function getHostId()
     {
         return (string) $this->getData(self::HOST_ID);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getStoreUrl()
+    {
+        return (string) $this->getData(self::STORE_URL);
     }
 
     /**
@@ -127,7 +135,7 @@ class BeaconBip extends AbstractModel implements BeaconBipInterface, IdentityInt
      */
     public function setId($id)
     {
-        return $this->setData(self::BIP_ID, $id);
+        return $this->setData(self::BEEP_ID, $id);
     }
 
     /**
@@ -152,6 +160,14 @@ class BeaconBip extends AbstractModel implements BeaconBipInterface, IdentityInt
     public function setHostId($hostId)
     {
         return $this->setData(self::HOST_ID, $hostId);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setStoreUrl($storeUrl)
+    {
+        return $this->setData(self::STORE_URL, $storeUrl);
     }
 
     /**

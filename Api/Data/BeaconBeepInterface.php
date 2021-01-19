@@ -15,35 +15,22 @@
 namespace Smile\ElasticsuiteBeacon\Api\Data;
 
 /**
- * Beacon Bip interface
+ * Beacon Beep interface
  *
  * @category Smile
  * @package  Smile\ElasticsuiteBeacon
  */
-interface BeaconBipInterface
+interface BeaconBeepInterface
 {
     /**
      * Name of the main DB Table.
      */
-    const TABLE_NAME = 'smile_elasticsuite_beacon_bip';
-
-    /*
-        bip id // no for insert ignore
-        customer identifier
-        hostname
-        host id
-        date
-        date (day)
-        magento edition
-        magento version
-        (module name)
-        module data
-    */
+    const TABLE_NAME    = 'smile_elasticsuite_beacon_beep';
 
     /**
-     * Constant for field bip_id
+     * Constant for field beep_id
      */
-    const BIP_ID         = 'bip_id';
+    const BEEP_ID         = 'beep_id';
 
     /**
      * Constant for field client_id
@@ -59,6 +46,11 @@ interface BeaconBipInterface
      * Constant for field host_id
      */
     const HOST_ID         = 'host_id';
+
+    /**
+     * Constant for field store_url
+     */
+    const STORE_URL        = 'store_url';
 
     /**
      * Constant for field created_at
@@ -86,7 +78,7 @@ interface BeaconBipInterface
     const MODULE_DATA     = 'module_data';
 
     /**
-     * Get Bip ID
+     * Get Beep ID
      *
      * @return int|null
      */
@@ -108,9 +100,17 @@ interface BeaconBipInterface
 
     /**
      * Get Host ID
+     *
      * @return string
      */
     public function getHostId();
+
+    /**
+     * Get Store URL
+     *
+     * @return string
+     */
+    public function getStoreUrl();
 
     /**
      * Get Created At
@@ -148,13 +148,13 @@ interface BeaconBipInterface
     public function getModuleData();
 
     /**
-     * Set Bip ID
+     * Set Beep ID
      *
      * @SuppressWarnings(PHPMD.ShortVariable)
      *
-     * @param int $id Bip ID
+     * @param int $id Beep ID
      *
-     * @return BeaconBipInterface
+     * @return BeaconBeepInterface
      */
     public function setId($id);
 
@@ -163,7 +163,7 @@ interface BeaconBipInterface
      *
      * @param string $clientId Client ID
      *
-     * @return BeaconBipInterface
+     * @return BeaconBeepInterface
      */
     public function setClientId($clientId);
 
@@ -172,7 +172,7 @@ interface BeaconBipInterface
      *
      * @param string $hostname Hostname
      *
-     * @return BeaconBipInterface
+     * @return BeaconBeepInterface
      */
     public function setHostname($hostname);
 
@@ -181,16 +181,25 @@ interface BeaconBipInterface
      *
      * @param string $hostId Host ID
      *
-     * @return BeaconBipInterface
+     * @return BeaconBeepInterface
      */
     public function setHostId($hostId);
+
+    /**
+     * Set Store URL
+     *
+     * @param string $storeUrl Store URL
+     *
+     * @return BeaconBeepInterface
+     */
+    public function setStoreUrl($storeUrl);
 
     /**
      * Set Created At
      *
      * @param string $createdAt Created At
      *
-     * @return BeaconBipInterface
+     * @return BeaconBeepInterface
      */
     public function setCreatedAt($createdAt);
 
@@ -199,7 +208,7 @@ interface BeaconBipInterface
      *
      * @param string $createdAtDate Created At Date
      *
-     * @return BeaconBipInterface
+     * @return BeaconBeepInterface
      */
     public function setCreatedAtDate($createdAtDate);
 
@@ -208,7 +217,7 @@ interface BeaconBipInterface
      *
      * @param string $edition Magento edition
      *
-     * @return BeaconBipInterface
+     * @return BeaconBeepInterface
      */
     public function setMagentoEdition($edition);
 
@@ -217,7 +226,7 @@ interface BeaconBipInterface
      *
      * @param string $version Magento version
      *
-     * @return BeaconBipInterface
+     * @return BeaconBeepInterface
      */
     public function setMagentoVersion($version);
 
@@ -226,7 +235,7 @@ interface BeaconBipInterface
      *
      * @param string $moduleData Module data
      *
-     * @return BeaconBipInterface
+     * @return BeaconBeepInterface
      */
     public function setModuleData($moduleData);
 }

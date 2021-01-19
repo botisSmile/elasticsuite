@@ -18,8 +18,8 @@ namespace Smile\ElasticsuiteBeacon\Setup;
 use Magento\Framework\Setup\InstallSchemaInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
-use Smile\ElasticsuiteBeacon\Setup\BeaconBipSetup;
-use Smile\ElasticsuiteBeacon\Setup\BeaconBipSetupFactory;
+use Smile\ElasticsuiteBeacon\Setup\BeaconBeepSetup;
+use Smile\ElasticsuiteBeacon\Setup\BeaconBeepSetupFactory;
 
 
 /**
@@ -32,18 +32,18 @@ use Smile\ElasticsuiteBeacon\Setup\BeaconBipSetupFactory;
 class InstallSchema implements InstallSchemaInterface
 {
     /**
-     * @var BeaconBipSetup
+     * @var BeaconBeepSetup
      */
-    private $beaconBipSetup;
+    private $beaconBeepSetup;
 
     /**
      * InstallSchema constructor.
      *
-     * @param BeaconBipSetupFactory $beaconBipSetupFactory Setup Factory
+     * @param BeaconBeepSetupFactory $beaconBeepSetupFactory Setup Factory
      */
-    public function __construct(BeaconBipSetupFactory $beaconBipSetupFactory)
+    public function __construct(BeaconBeepSetupFactory $beaconBeepSetupFactory)
     {
-        $this->beaconBipSetup = $beaconBipSetupFactory->create();
+        $this->beaconBeepSetup = $beaconBeepSetupFactory->create();
     }
 
     /**
@@ -52,7 +52,7 @@ class InstallSchema implements InstallSchemaInterface
     public function install(SchemaSetupInterface $setup, ModuleContextInterface $context)
     {
         $setup->startSetup();
-        $this->beaconBipSetup->createBeaconBipTable($setup);
+        $this->beaconBeepSetup->createBeaconBeepTable($setup);
         $setup->endSetup();
     }
 }

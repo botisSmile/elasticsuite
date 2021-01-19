@@ -6,23 +6,20 @@
  * versions in the future.
  *
  * @category  Smile
- * @package   Smile\ElasticSuiteBeacon
+ * @package   Smile\ElasticsuiteBeacon
  * @author    Richard Bayet <richard.bayet@smile.fr>
- * @copyright 2020 Smile
+ * @copyright 2021 Smile
  * @license   Open Software License ("OSL") v. 3.0
  */
 
-
-namespace Smile\ElasticsuiteBeacon\Model\Environment;
+namespace Smile\ElasticsuiteBeacon\Model\BeaconBeep\Exporter;
 
 /**
- * Class IdentifierInterface
+ * Class ServerErrorException
  *
  * @category Smile
  * @package  Smile\ElasticsuiteBeacon
- * @author   Richard Bayet <richard.bayet@smile.fr>
  */
-class IdentifierInterface
+class ServerErrorException extends ExporterException
 {
-
 }

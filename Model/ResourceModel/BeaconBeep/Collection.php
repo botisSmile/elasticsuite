@@ -12,11 +12,11 @@
  * @license   Open Software License ("OSL") v. 3.0
  */
 
-namespace Smile\ElasticsuiteBeacon\Model\ResourceModel\BeaconBip;
+namespace Smile\ElasticsuiteBeacon\Model\ResourceModel\BeaconBeep;
 
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
-use Smile\ElasticsuiteBeacon\Model\BeaconBip as Model;
-use Smile\ElasticsuiteBeacon\Model\ResourceModel\BeaconBip as ResourceModel;
+use Smile\ElasticsuiteBeacon\Model\BeaconBeep as Model;
+use Smile\ElasticsuiteBeacon\Model\ResourceModel\BeaconBeep as ResourceModel;
 
 /**
  * Class Collection

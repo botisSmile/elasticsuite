@@ -6,7 +6,7 @@
  * versions in the future.
  *
  * @category  Smile
- * @package   Smile\Elasticsuite
+ * @package   Smile\ElasticsuiteBeacon
  * @author    Richard Bayet <richard.bayet@smile.fr>
  * @copyright 2021 Smile
  * @license   Open Software License ("OSL") v. 3.0
@@ -17,24 +17,24 @@ namespace Smile\ElasticsuiteBeacon\Api\Data;
 use Magento\Framework\Api\SearchResultsInterface;
 
 /**
- * Interface BeaconBipSearchResultsInterface
+ * Interface BeaconBeepSearchResultsInterface
  *
  * @¢ategory Smile
  * @package  Smile\ElasticsuiteBeacon
  */
-interface BeaconBipSearchResultsInterface extends SearchResultsInterface
+interface BeaconBeepSearchResultsInterface extends SearchResultsInterface
 {
     /**
-     * Get beacon bips.
+     * Get beacon beeps.
      *
-     * @return BeaconBipInterface[]
+     * @return BeaconBeepInterface[]
      */
     public function getItems();
 
     /**
-     * Set beacon bips.
+     * Set beacon beeps.
      *
-     * @param BeaconBipInterface[] $items Beacon bips.
+     * @param BeaconBeepInterface[] $items Beacon beeps.
      *
      * @return self
      */
