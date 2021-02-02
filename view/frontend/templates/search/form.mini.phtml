@@ -148,6 +148,7 @@ $helper = $this->helper('Magento\Search\Helper\Data');
         label:"<?php echo $block->escapeHtml(__('Search')); ?>",
         submitButton:"<?php echo $block->escapeHtml(__('Search')); ?>",
         templates: <?php /* @noEscape */ echo $block->getJsonSuggestRenderers();?>,
-        priceFormat : <?php /* @noEscape */ echo $block->getJsonPriceFormat();?>
+        priceFormat : <?php /* @noEscape */ echo $block->getJsonPriceFormat();?>,
+        currencyCode : "<?php /* @noEscape */ echo $block->getCurrencyCode();?>"
     }
 </script>

@@ -32,7 +32,6 @@ class Results extends Component {
         } = this;
 
         let groupedResults = this.groupBy(items, 'type');
-        let currencyCode = 'EUR';
 
         return (
             <div id="search_autocomplete" className="instant-search-result-box" style={{display: ((items.length > 0) && (expanded === true)) ? 'flex' : 'none' }}>
