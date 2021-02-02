@@ -14,9 +14,9 @@ class ReactESAutocomplete extends Component {
         this.name = props.name || '';
         this.placeholder = props.placeholder || '';
         this.maxLength = props.maxLength || 255;
-        this.formSelector = props.name || "#search_mini_form";
+        this.formSelector = props.formSelector || "#search_mini_form";
         this.url = props.url || '';
-        this.destinationSelector = props.name || "#search_autocomplete";
+        this.destinationSelector = props.destinationSelector || "#search_autocomplete";
         this.templates = props.templates ||  [];
         this.priceFormat = props.priceFormat || '';
         this.minSearchLength = props.minSearchLength || 2;
