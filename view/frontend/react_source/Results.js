@@ -23,7 +23,8 @@ class Results extends Component {
     render() {
         const {
             props : {
-                items
+                items,
+                expanded
             }
         } = this;
 
@@ -31,7 +32,7 @@ class Results extends Component {
         let currencyCode = 'EUR';
 
         return (
-            <div id="search_autocomplete" className="instant-search-result-box" style={{display: items.length > 0 ? 'flex' : 'none' }}>
+            <div id="search_autocomplete" className="instant-search-result-box" style={{display: ((items.length > 0) && (expanded === true)) ? 'flex' : 'none' }}>
                 <div className="col-3">
                     <dl id="search_autocomplete_term" className="term">
                         <dt>Search terms</dt>
@@ -59,7 +60,9 @@ class Results extends Component {
                                 return (
                                     <a href={'//' + window.location.hostname + '/' + result.url} alt={result.name}>
                                         <dd className={result.row_class} role="option" key={index}>
-                                            <span className="qs-option-name">{result.tree.join(' > ')}</span>
+                                            {result.tree !== undefined && result.tree.length > 0 &&
+                                                <span className="qs-option-name">{result.tree.join(' > ')}</span>
+                                            }
                                             <span aria-hidden="true" className="amount">{result.num_results}</span>
                                         </dd>
                                     </a>

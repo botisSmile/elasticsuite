@@ -27,7 +27,20 @@ class ReactESAutocomplete extends Component {
             results : [],
             resultsBuffer : {},
             loading: false,
+            expanded: false,
         };
+    }
+
+    expand() {
+        this.setState((state) => { return { expanded: true }; });
+    }
+
+    collapse() {
+        this.setState((state) => { return { expanded: false }; });
+    }
+
+    toggle() {
+        this.setState(state => { return {expanded: !state.expanded}; });
     }
 
     onChange(event) {
@@ -57,7 +70,7 @@ class ReactESAutocomplete extends Component {
                     return {results: resultsBuffer[hash], loading: false};
                 });
             }
-            
+
             return;
         }
 
@@ -70,6 +83,7 @@ class ReactESAutocomplete extends Component {
                     throw Error(response.statusText);
                 }
                 this.setState((state) => { return {loading: true}; });
+                this.expand();
                 return response;
             })
             .then(response => response.json())
@@ -93,7 +107,8 @@ class ReactESAutocomplete extends Component {
             placeholder,
             maxLength,
             state : {
-                results
+                results,
+                expanded
             }
         } = this;
 
@@ -111,8 +126,11 @@ class ReactESAutocomplete extends Component {
                    aria-autocomplete="both"
                    autoComplete="off"
                    onChange={this.onChange.bind(this)}
-                   data-block="autocomplete-form" data-rorua="react"/>
-                <Results ref={this.resultsElement} items={results}/>
+                   onBlur={this.toggle.bind(this)}
+                   onFocus={this.toggle.bind(this)}
+                   data-block="autocomplete-form" />
+
+                <Results ref={this.resultsElement} items={results} expanded={expanded}/>
             </div>
         );
     }
