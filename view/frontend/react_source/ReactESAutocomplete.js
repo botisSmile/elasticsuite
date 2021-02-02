@@ -12,6 +12,9 @@ class ReactESAutocomplete extends Component {
         this.resultsElement = React.createRef();
 
         this.name = props.name || '';
+        this.title = props.title || '';
+        this.label = props.label || '';
+        this.submitButton = props.submitButton || '';
         this.placeholder = props.placeholder || '';
         this.maxLength = props.maxLength || 255;
         this.formSelector = props.formSelector || "#search_mini_form";
@@ -105,6 +108,9 @@ class ReactESAutocomplete extends Component {
             name,
             value,
             placeholder,
+            title,
+            label,
+            submitButton,
             maxLength,
             state : {
                 results,
@@ -113,25 +119,39 @@ class ReactESAutocomplete extends Component {
         } = this;
 
         return (
-            <div className="control">
-            <input id="search"
-                   type="text"
-                   name={name}
-                   defaultValue={value}
-                   placeholder={placeholder}
-                   className="input-text"
-                   maxLength={maxLength}
-                   role="combobox"
-                   aria-haspopup="false"
-                   aria-autocomplete="both"
-                   autoComplete="off"
-                   onChange={this.onChange.bind(this)}
-                   onBlur={this.toggle.bind(this)}
-                   onFocus={this.toggle.bind(this)}
-                   data-block="autocomplete-form" />
+            <React.Fragment>
+                <div className="field search">
+                    <label className="label" htmlFor="search" data-role="minisearch-label">
+                        <span>{this.label}</span>
+                    </label>
+                    <div className="control">
+                        <input id="search"
+                               type="text"
+                               name={name}
+                               defaultValue={value}
+                               placeholder={placeholder}
+                               className="input-text"
+                               maxLength={maxLength}
+                               role="combobox"
+                               aria-haspopup="false"
+                               aria-autocomplete="both"
+                               autoComplete="off"
+                               onChange={this.onChange.bind(this)}
+                               onBlur={this.toggle.bind(this)}
+                               onFocus={this.toggle.bind(this)}
+                               data-block="autocomplete-form" />
 
-                <Results ref={this.resultsElement} items={results} expanded={expanded}/>
-            </div>
+                            <Results ref={this.resultsElement} items={results} expanded={expanded}/>
+                    </div>
+                </div>
+                <div className="actions">
+                    <button type="submit"
+                            title={this.submitButton}
+                            className="action search">
+                        <span>{this.submitButton}</span>
+                    </button>
+                </div>
+            </React.Fragment>
         );
     }
 };
