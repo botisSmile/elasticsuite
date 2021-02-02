@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import Price from "@magento/peregrine/lib/Price";
+
+import Product from './Product';
+import Category from './Category';
+import Term from './Term';
 
 class Results extends Component {
     componentWillMount() {
@@ -41,11 +44,8 @@ class Results extends Component {
                         }
                         {groupedResults.term !== undefined && groupedResults.term.length > 0 &&
                             groupedResults.term.map(function(result, index) {
-                                    return (
-                                        <dd className={result.row_class} role="option" key={index}>
-                                        <span className="qs-option-name">{result.title}</span>
-                                        <span aria-hidden="true" className="amount"> ({result.num_results})</span>
-                                        </dd>
+                                return (
+                                    <Term item={result} key={"term" + index}/>
                                 );
                             })
                         }
@@ -58,14 +58,7 @@ class Results extends Component {
                         {groupedResults.category !== undefined && groupedResults.category.length > 0 &&
                             groupedResults.category.map(function(result, index) {
                                 return (
-                                    <a href={'//' + window.location.hostname + '/' + result.url} alt={result.name}>
-                                        <dd className={result.row_class} role="option" key={index}>
-                                            {result.tree !== undefined && result.tree.length > 0 &&
-                                                <span className="qs-option-name">{result.tree.join(' > ')}</span>
-                                            }
-                                            <span aria-hidden="true" className="amount">{result.num_results}</span>
-                                        </dd>
-                                    </a>
+                                    <Category item={result} key={result.entity_id || "category" + index}/>
                                 );
                             })
                         }
@@ -80,17 +73,7 @@ class Results extends Component {
                             {groupedResults.product !== undefined && groupedResults.product.length > 0 &&
                                 groupedResults.product.map(function(result, index) {
                                     return (
-                                        <dd className={result.row_class} role="option" key={index}>
-                                        <a className="instant-search-result" href={'//' + window.location.hostname + '/' + result.url} alt={result.name}>
-                                            <div className="thumbnail"><img src={'//' + window.location.hostname + '/' + result.thumbnail}/></div>
-                                                <div className="info">{result.name}
-                                                    <div className="autocomplete-category">in {result.highlightCategory}</div>
-                                                <div className="price">
-                                                    <Price currencyCode={currencyCode} value={result.price[0].price} />
-                                                </div>
-                                            </div>
-                                        </a>
-                                        </dd>
+                                        <Product item={result} key={result.entity_id || "product" + index} />
                                     );
                                 })
                             }
