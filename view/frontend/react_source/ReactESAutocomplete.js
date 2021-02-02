@@ -17,37 +17,41 @@ class ReactESAutocomplete extends Component {
         this.submitButton = props.submitButton || '';
         this.placeholder = props.placeholder || '';
         this.maxLength = props.maxLength || 255;
-        this.formSelector = props.formSelector || "#search_mini_form";
         this.url = props.url || '';
-        this.destinationSelector = props.destinationSelector || "#search_autocomplete";
-        this.templates = props.templates ||  [];
+        this.templates = props.templates || [];
         this.priceFormat = props.priceFormat || '';
         this.minSearchLength = props.minSearchLength || 2;
         this.storeCode = props.storeCode || null;
 
         this.state = {
-            value : props.value || '',
-            results : [],
-            resultsBuffer : {},
+            value: props.value || '',
+            results: [],
+            resultsBuffer: {},
             loading: false,
             expanded: false,
         };
     }
 
     expand() {
-        this.setState((state) => { return { expanded: true }; });
+        this.setState((state) => {
+            return {expanded: true};
+        });
     }
 
     collapse() {
-        this.setState((state) => { return { expanded: false }; });
+        this.setState((state) => {
+            return {expanded: false};
+        });
     }
 
     toggle() {
-        this.setState(state => { return {expanded: !state.expanded}; });
+        this.setState(state => {
+            return {expanded: !state.expanded};
+        });
     }
 
     onChange(event) {
-        const { url, minSearchLength, storeCode, state : {loading, resultsBuffer} } = this;
+        const {url, minSearchLength, storeCode, state: {loading, resultsBuffer}} = this;
 
         let data = {q: event.target.value};
         if (storeCode !== null) {
@@ -55,11 +59,15 @@ class ReactESAutocomplete extends Component {
         }
         let queryString = Object.keys(data).map(key => key + '=' + data[key]).join('&');
 
-        this.setState((state) => { return {value: data.q}; });
+        this.setState((state) => {
+            return {value: data.q};
+        });
 
         // If search is too short, do nothing.
         if (data.q.length < minSearchLength) {
-            this.setState((state) => { return { results: []}});
+            this.setState((state) => {
+                return {results: []}
+            });
 
             return;
         }
@@ -85,7 +93,9 @@ class ReactESAutocomplete extends Component {
                 if (!response.ok) {
                     throw Error(response.statusText);
                 }
-                this.setState((state) => { return {loading: true}; });
+                this.setState((state) => {
+                    return {loading: true};
+                });
                 this.expand();
                 return response;
             })
@@ -105,18 +115,18 @@ class ReactESAutocomplete extends Component {
 
     render() {
         const {
-            name,
-            value,
-            placeholder,
-            title,
-            label,
-            submitButton,
-            maxLength,
-            state : {
-                results,
-                expanded
-            }
-        } = this;
+                  name,
+                  value,
+                  placeholder,
+                  title,
+                  label,
+                  submitButton,
+                  maxLength,
+                  state: {
+                      results,
+                      expanded
+                  }
+              } = this;
 
         return (
             <React.Fragment>
@@ -139,9 +149,9 @@ class ReactESAutocomplete extends Component {
                                onChange={this.onChange.bind(this)}
                                onBlur={this.toggle.bind(this)}
                                onFocus={this.toggle.bind(this)}
-                               data-block="autocomplete-form" />
+                               data-block="autocomplete-form"/>
 
-                            <Results ref={this.resultsElement} items={results} expanded={expanded}/>
+                        <Results ref={this.resultsElement} items={results} expanded={expanded}/>
                     </div>
                 </div>
                 <div className="actions">

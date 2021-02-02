@@ -138,10 +138,9 @@ $helper = $this->helper('Magento\Search\Helper\Data');
 </div>
 <script>
     window.ES_REACT_AUTOCOMPLETE_PROPS = {
-        formSelector:"#search_mini_form",
+        formSelector:"search_mini_form",
         url:"<?php /* @escapeNotVerified */ echo $block->getUrl('search/ajax/suggest'); ?>",
         storeCode:"<?php /* @escapeNotVerified */ echo $block->getStoreCode(); ?>",
-        destinationSelector:"#search_autocomplete",
         name:"<?php /* @escapeNotVerified */ echo $helper->getQueryParamName() ?>",
         maxLength: <?php /* @escapeNotVerified */ echo $helper->getMaxQueryLength();?>,
         placeholder:"<?php /* @escapeNotVerified */ echo __('Search entire store here...'); ?>",
