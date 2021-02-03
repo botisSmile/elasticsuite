@@ -9,7 +9,7 @@ class Term extends Component {
         } = this;
 
         return (
-            <a href={item.url} alt={item.title} key={item.url} onMouseDown={(e) => e.preventDefault()} >
+            <a href={item.url} title={item.title} key={item.url} onMouseDown={(e) => e.preventDefault()} >
                 <dd className={item.row_class} role="option">
                     <span className="qs-option-name">{item.title}</span>
                     <span aria-hidden="true" className="amount"> ({item.num_results})</span>
