@@ -22,7 +22,7 @@ class Product extends Component {
 
         return (
             <dd className={item.row_class} role="option">
-                <a className="instant-search-result" href={'//' + window.location.hostname + '/' + item.url} alt={item.name}>
+                <a className="instant-search-result" href={'//' + window.location.hostname + '/' + item.url} alt={item.name} onMouseDown={(e) => e.preventDefault()}>
                     <div className="thumbnail"><img src={'//' + window.location.hostname + '/' + item.thumbnail}/></div>
                     <div className="info">{item.name}
                         <div className="autocomplete-category">in {item.highlightCategory}</div>
