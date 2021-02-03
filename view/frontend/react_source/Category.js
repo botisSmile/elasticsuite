@@ -12,7 +12,7 @@ class Category extends Component {
         let currencyCode = 'EUR';
 
         return (
-            <a href={'//' + window.location.hostname + '/' + item.url} alt={item.name} onMouseDown={(e) => e.preventDefault()}>
+            <a href={'//' + window.location.hostname + '/' + item.url} title={item.name} onMouseDown={(e) => e.preventDefault()}>
                 <dd className={item.row_class} role="option">
                     {item.tree !== undefined && item.tree.length > 0 &&
                     <span className="qs-option-name">{item.tree.join(' > ')}</span>
