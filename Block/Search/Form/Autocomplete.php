@@ -32,4 +32,16 @@ class Autocomplete extends \Smile\ElasticsuiteCore\Block\Search\Form\Autocomplet
     {
         return $this->_storeManager->getStore()->getCode();
     }
+
+    /**
+     * Get current currency code.
+     *
+     * @return string
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function getCurrencyCode()
+    {
+        return $this->_storeManager->getStore()->getCurrentCurrency()->getCode();
+    }
 }

@@ -18,7 +18,6 @@ use Magento\Framework\Search\ResponseInterface;
 use Magento\Framework\Search\SearchEngineInterface;
 use Magento\Framework\Stdlib\StringUtils;
 use Magento\Search\Model\Autocomplete\DataProviderInterface;
-use Magento\Search\Model\Autocomplete\ItemFactory;
 use Magento\Search\Model\QueryFactory as SearchQueryFactory;
 use Smile\ElasticsuiteCore\Search\Request\Query\QueryFactory as ElasticsearchQueryFactory;
 use Magento\Store\Model\StoreManagerInterface;
@@ -26,6 +25,7 @@ use Smile\ElasticsuiteCore\Helper\Autocomplete as ConfigurationHelper;
 use Smile\ElasticsuiteCore\Search\Request\BucketInterface;
 use Smile\ElasticsuiteCore\Search\Request\Builder as RequestBuilder;
 use Smile\ElasticsuiteCore\Search\Request\QueryInterface;
+use Smile\ElasticsuiteInstantSearch\Model\Autocomplete\Terms\ItemFactory;
 use Smile\ElasticsuiteInstantSearch\Model\Search\QueryStringProvider;
 use Smile\ElasticsuiteInstantSearch\Model\Search\QueryStringProviderFactory;
 

@@ -12,26 +12,46 @@ class ReactESAutocomplete extends Component {
         this.resultsElement = React.createRef();
 
         this.name = props.name || '';
+        this.title = props.title || '';
+        this.label = props.label || '';
+        this.submitButton = props.submitButton || '';
         this.placeholder = props.placeholder || '';
         this.maxLength = props.maxLength || 255;
-        this.formSelector = props.name || "#search_mini_form";
         this.url = props.url || '';
-        this.destinationSelector = props.name || "#search_autocomplete";
-        this.templates = props.templates ||  [];
+        this.templates = props.templates || [];
         this.priceFormat = props.priceFormat || '';
         this.minSearchLength = props.minSearchLength || 2;
         this.storeCode = props.storeCode || null;
 
         this.state = {
-            value : props.value || '',
-            results : [],
-            resultsBuffer : {},
+            value: props.value || '',
+            results: [],
+            resultsBuffer: {},
             loading: false,
+            expanded: false,
         };
     }
 
+    expand() {
+        this.setState((state) => {
+            return {expanded: true};
+        });
+    }
+
+    collapse() {
+        this.setState((state) => {
+            return {expanded: false};
+        });
+    }
+
+    toggle() {
+        this.setState(state => {
+            return {expanded: !state.expanded};
+        });
+    }
+
     onChange(event) {
-        const { url, minSearchLength, storeCode, state : {loading, resultsBuffer} } = this;
+        const {url, minSearchLength, storeCode, state: {loading, resultsBuffer}} = this;
 
         let data = {q: event.target.value};
         if (storeCode !== null) {
@@ -39,11 +59,15 @@ class ReactESAutocomplete extends Component {
         }
         let queryString = Object.keys(data).map(key => key + '=' + data[key]).join('&');
 
-        this.setState((state) => { return {value: data.q}; });
+        this.setState((state) => {
+            return {value: data.q};
+        });
 
         // If search is too short, do nothing.
         if (data.q.length < minSearchLength) {
-            this.setState((state) => { return { results: []}});
+            this.setState((state) => {
+                return {results: []}
+            });
 
             return;
         }
@@ -57,7 +81,7 @@ class ReactESAutocomplete extends Component {
                     return {results: resultsBuffer[hash], loading: false};
                 });
             }
-            
+
             return;
         }
 
@@ -69,7 +93,10 @@ class ReactESAutocomplete extends Component {
                 if (!response.ok) {
                     throw Error(response.statusText);
                 }
-                this.setState((state) => { return {loading: true}; });
+                this.setState((state) => {
+                    return {loading: true};
+                });
+                this.expand();
                 return response;
             })
             .then(response => response.json())
@@ -88,32 +115,53 @@ class ReactESAutocomplete extends Component {
 
     render() {
         const {
-            name,
-            value,
-            placeholder,
-            maxLength,
-            state : {
-                results
-            }
-        } = this;
+                  name,
+                  value,
+                  placeholder,
+                  title,
+                  label,
+                  submitButton,
+                  maxLength,
+                  state: {
+                      results,
+                      expanded
+                  }
+              } = this;
 
         return (
-            <div className="control">
-            <input id="search"
-                   type="text"
-                   name={name}
-                   defaultValue={value}
-                   placeholder={placeholder}
-                   className="input-text"
-                   maxLength={maxLength}
-                   role="combobox"
-                   aria-haspopup="false"
-                   aria-autocomplete="both"
-                   autoComplete="off"
-                   onChange={this.onChange.bind(this)}
-                   data-block="autocomplete-form" data-rorua="react"/>
-                <Results ref={this.resultsElement} items={results}/>
-            </div>
+            <React.Fragment>
+                <div className="field search">
+                    <label className="label" htmlFor="search" data-role="minisearch-label">
+                        <span>{this.label}</span>
+                    </label>
+                    <div className="control">
+                        <input id="search"
+                               type="text"
+                               name={name}
+                               defaultValue={value}
+                               placeholder={placeholder}
+                               className="input-text"
+                               maxLength={maxLength}
+                               role="combobox"
+                               aria-haspopup="false"
+                               aria-autocomplete="both"
+                               autoComplete="off"
+                               onChange={this.onChange.bind(this)}
+                               onBlur={this.toggle.bind(this)}
+                               onFocus={this.toggle.bind(this)}
+                               data-block="autocomplete-form"/>
+
+                        <Results ref={this.resultsElement} items={results} expanded={expanded}/>
+                    </div>
+                </div>
+                <div className="actions">
+                    <button type="submit"
+                            title={this.submitButton}
+                            className="action search">
+                        <span>{this.submitButton}</span>
+                    </button>
+                </div>
+            </React.Fragment>
         );
     }
 };

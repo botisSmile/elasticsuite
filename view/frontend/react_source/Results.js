@@ -1,7 +1,24 @@
 import React, { Component } from 'react';
-import Price from "@magento/peregrine/lib/Price";
+
+import Product from './Product';
+import Category from './Category';
+import Term from './Term';
 
 class Results extends Component {
+
+    constructor(props) {
+        super(props);
+
+        if (window && window.ES_REACT_AUTOCOMPLETE_PROPS) {
+            props = {...props, ...window.ES_REACT_AUTOCOMPLETE_PROPS};
+        }
+
+        this.productTitle = props.productTitle || "Products";
+        this.categoryTitle = props.categoryTitle || "Categories";
+        this.termTitle = props.termTitle || "Search terms";
+        this.noResultTitle = props.noResultTitle || "No results";
+    }
+
     componentWillMount() {
         this.setState((state, props) => {
             let items = props.items || false;
@@ -23,46 +40,38 @@ class Results extends Component {
     render() {
         const {
             props : {
-                items
+                items,
+                expanded
             }
         } = this;
 
         let groupedResults = this.groupBy(items, 'type');
-        let currencyCode = 'EUR';
 
         return (
-            <div id="search_autocomplete" className="instant-search-result-box" style={{display: items.length > 0 ? 'flex' : 'none' }}>
+            <div id="search_autocomplete" className="instant-search-result-box" style={{display: ((items.length > 0) && (expanded === true)) ? 'flex' : 'none' }}>
                 <div className="col-3">
                     <dl id="search_autocomplete_term" className="term">
-                        <dt>Search terms</dt>
+                        <dt>{this.termTitle}</dt>
                         {(groupedResults.term === undefined || groupedResults.term.length === 0) &&
-                            <span className="no-results">No results</span>
+                            <span className="no-results">{this.noResultTitle}</span>
                         }
                         {groupedResults.term !== undefined && groupedResults.term.length > 0 &&
                             groupedResults.term.map(function(result, index) {
-                                    return (
-                                        <dd className={result.row_class} role="option" key={index}>
-                                        <span className="qs-option-name">{result.title}</span>
-                                        <span aria-hidden="true" className="amount"> ({result.num_results})</span>
-                                        </dd>
+                                return (
+                                    <Term item={result} key={"term" + index}/>
                                 );
                             })
                         }
                     </dl>
                 <dl id="search_autocomplete_category" className="category">
-                    <dt>Categories</dt>
+                    <dt>{this.categoryTitle}</dt>
                         {(groupedResults.category === undefined || groupedResults.category.length === 0) &&
-                            <span className="no-results">No results</span>
+                            <span className="no-results">{this.noResultTitle}</span>
                         }
                         {groupedResults.category !== undefined && groupedResults.category.length > 0 &&
                             groupedResults.category.map(function(result, index) {
                                 return (
-                                    <a href={'//' + window.location.hostname + '/' + result.url} alt={result.name}>
-                                        <dd className={result.row_class} role="option" key={index}>
-                                            <span className="qs-option-name">{result.tree.join(' > ')}</span>
-                                            <span aria-hidden="true" className="amount">{result.num_results}</span>
-                                        </dd>
-                                    </a>
+                                    <Category item={result} key={result.entity_id || "category" + index}/>
                                 );
                             })
                         }
@@ -70,24 +79,14 @@ class Results extends Component {
                 </div>
                 <div className="col-7">
                     <dl id="search_autocomplete_product" className="product">
-                        <dt>Products</dt>
+                        <dt>{this.productTitle}</dt>
                             {(groupedResults.product === undefined || groupedResults.product.length === 0) &&
-                                <span className="no-results">No results</span>
+                                <span className="no-results">{this.noResultTitle}</span>
                             }
                             {groupedResults.product !== undefined && groupedResults.product.length > 0 &&
                                 groupedResults.product.map(function(result, index) {
                                     return (
-                                        <dd className={result.row_class} role="option" key={index}>
-                                        <a className="instant-search-result" href={'//' + window.location.hostname + '/' + result.url} alt={result.name}>
-                                            <div className="thumbnail"><img src={'//' + window.location.hostname + '/' + result.thumbnail}/></div>
-                                                <div className="info">{result.name}
-                                                    <div className="autocomplete-category">in {result.highlightCategory}</div>
-                                                <div className="price">
-                                                    <Price currencyCode={currencyCode} value={result.price[0].price} />
-                                                </div>
-                                            </div>
-                                        </a>
-                                        </dd>
+                                        <Product item={result} key={result.entity_id || "product" + index} />
                                     );
                                 })
                             }
