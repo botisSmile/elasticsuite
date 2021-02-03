@@ -13,6 +13,88 @@
 //  */
 
 //
+//  Common
+//  _____________________________________________
+
+& when (@media-common = true) {
+    .instant-search-result-box {
+        display: none;
+        overflow: hidden;
+        position: absolute;
+        z-index: 3;
+        border: 1px solid #BBB;
+        border-top: 3px solid #1979c3;
+        border-radius: 1px;
+        background: white;
+        width: 70%;
+        min-width: 800px;
+
+        a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        .thumbnail {
+            float: left;
+
+            img {
+                width: 50px;
+                padding-top: 10px;
+            }
+        }
+
+        .info {
+            margin-left: 60px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+
+        span.amount {
+            margin-left:5px;
+        }
+
+        .col-3 {
+            width: 30%;
+            float:left;
+        }
+
+        .col-7 {
+            width:70%;
+            border-left: solid 1px #eeeeee;
+
+            dd {
+                width: 50%;
+                display: inline-block;
+            }
+        }
+
+        dl {
+            padding-left: 15px;
+            padding-top: 10px;
+        }
+
+        dt {
+            color: #575757;
+        }
+
+        dd {
+            line-height: 25px;
+        }
+
+        dd:hover {
+            background: #e8e8e8;
+            cursor: pointer;
+        }
+
+        span.no-results {
+            padding: 10px;
+            font-style: italic;
+        }
+    }
+}
+
+//
 //  Desktop
 //  _____________________________________________
 
@@ -21,5 +103,49 @@
         .block-search {
             float: left;
         }
+    }
+}
+
+
+//
+//  Mobile
+//  _____________________________________________
+
+.media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__m) {
+    .instant-search-result-box {
+        top: -15px;
+        position: relative;
+        width: 100%;
+        min-width: 80%;
+        display: flex;
+        flex-direction: row-reverse;
+        flex-wrap: wrap;
+
+        .col-3 {
+            width: 100%;
+            float: left;
+            min-width: 100%;
+        }
+
+        .col-7 {
+            width: 100%;
+            float: left;
+            min-width: 100%;
+            display: flex;
+            height: 100%;
+            flex: 1;
+
+            dd {
+                width: 100%;
+            }
+        }
+    }
+
+    .block-search {
+        margin-top: 10px;
+    }
+
+    input#search {
+        position: static;
     }
 }
