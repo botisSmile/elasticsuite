@@ -156,6 +156,7 @@ class SimilarProductCoOccurrenceQuery implements SearchQueryBuilderInterface
     private function getProducts(ProductInterface $product)
     {
         $storeId        = $product->getStoreId();
+        $productId      = $product->getId();
         $coOccurrences  = [];
         $productIds     = $this->getSimilarProducts($product);
 
