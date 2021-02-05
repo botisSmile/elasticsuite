@@ -73,6 +73,18 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     const CONFIG_UPSELL_FORCE_HIGHER_PRICE_XPATH = 'smile_elasticsuite_recommender/general/upsell_force_higher_price';
 
     /**
+     * Whether to use category views co-occurrence when building the categories clauses for upsell.
+     * @var string
+     */
+    const CONFIG_UPSELL_CATEGORIES_USE_CATEGORY_VIEWS_XPATH = 'smile_elasticsuite_recommender/general/upsell_categories_use_category_views_cooccurrence';
+
+    /**
+     * Whether to use product views co-occurrence when building the related product clause for upsell.
+     * @var string
+     */
+    const CONFIG_UPSELL_RELATED_PRODUCTS_USE_PRODUCT_VIEWS_XPATH = 'smile_elasticsuite_recommender/general/upsell_related_use_product_views_cooccurrence';
+
+    /**
      * Whether to exclude products already bought by the visitor configuration path
      * @var string
      */
@@ -189,6 +201,28 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     public function isNativeComplementAllowedForUpsells()
     {
         return $this->scopeConfig->isSetFlag(self::CONFIG_UPSELL_NATIVE_SELECTION_COMPL_XPATH);
+    }
+
+    /**
+     * Returns true if category_view events co-occurrent with the product views should be taken into account
+     * when building the 'categories' for upsells.
+     *
+     * @return bool
+     */
+    public function useCategoryViewsCoOccurrencesForUpsells()
+    {
+        return $this->scopeConfig->isSetFlag(self::CONFIG_UPSELL_CATEGORIES_USE_CATEGORY_VIEWS_XPATH);
+    }
+
+    /**
+     * Returns true if product_view events co-occurrent with the product views should be taken into account
+     * when building the 'relatedProducts' for upsells.
+     *
+     * @return bool
+     */
+    public function useProductViewsCoOccurrencesForRelatedUpsells()
+    {
+        return $this->scopeConfig->isSetFlag(self::CONFIG_UPSELL_RELATED_PRODUCTS_USE_PRODUCT_VIEWS_XPATH);
     }
 
     /**

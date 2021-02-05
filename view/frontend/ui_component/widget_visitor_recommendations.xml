@@ -40,7 +40,7 @@
     <columns name="widget_columns" component="Magento_Catalog/js/product/list/listing" template="Magento_Catalog/product/list/listing">
         <argument name="data" xsi:type="array">
             <item name="config" xsi:type="array">
-                <item name="label" xsi:type="string" translate="true">Visitor Recommendations</item>
+                <item name="label" xsi:type="string" translate="true">Inspired by your visits</item>
                 <item name="additionalClasses" xsi:type="string">widget block-compared-products-grid</item>
                 <item name="listTemplate" xsi:type="string">Magento_Catalog/product/list/listing</item>
             </item>

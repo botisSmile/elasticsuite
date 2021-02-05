@@ -20,6 +20,7 @@ use Smile\ElasticsuiteRecommender\Model\Product\Upsell\Config as UpsellConfig;
 use Smile\ElasticsuiteRecommender\Model\Product\Matcher\SearchQueryBuilderInterface;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Smile\ElasticsuiteRecommender\Model\CoOccurrence;
+use Smile\ElasticsuiteRecommender\Model\Similarity;
 
 /**
  * Generic 2nd order event co-occurrence search query builder.
@@ -41,6 +42,11 @@ class SimilarProductCoOccurrenceQuery implements SearchQueryBuilderInterface
      * @var UpsellConfig
      */
     private $config;
+
+    /**
+     * @var Similarity
+     */
+    private $similarity;
 
     /**
      * @var CoOccurrence
@@ -68,6 +74,7 @@ class SimilarProductCoOccurrenceQuery implements SearchQueryBuilderInterface
      * @param QueryFactory $queryFactory       Query factory.
      * @param CoOccurrence $coOccurrence       Co-occurrence finder.
      * @param UpsellConfig $config             Upsell config model.
+     * @param Similarity   $similarity         Similar products provider.
      * @param string       $coOccurrenceField  Co-occurrence field.
      * @param int          $boost              Query boost.
      * @param string       $minimumShouldMatch Minimum should match.
@@ -76,6 +83,7 @@ class SimilarProductCoOccurrenceQuery implements SearchQueryBuilderInterface
         QueryFactory $queryFactory,
         CoOccurrence $coOccurrence,
         UpsellConfig $config,
+        Similarity $similarity,
         $coOccurrenceField,
         $boost = 1,
         $minimumShouldMatch = "30%"
@@ -83,6 +91,7 @@ class SimilarProductCoOccurrenceQuery implements SearchQueryBuilderInterface
         $this->queryFactory       = $queryFactory;
         $this->coOccurrence       = $coOccurrence;
         $this->config             = $config;
+        $this->similarity         = $similarity;
         $this->coOccurrenceField  = $coOccurrenceField;
         $this->boost              = $boost;
         $this->minimumShouldMatch = $minimumShouldMatch;
@@ -118,14 +127,21 @@ class SimilarProductCoOccurrenceQuery implements SearchQueryBuilderInterface
     /**
      * Get products similar to the given product according to product view co-occurrences.
      *
-     * @param int $productId Product Id
-     * @param int $storeId   Store Id
+     * @param ProductInterface $product Product to get similar products for.
      *
      * @return string[]
      */
-    private function getSimilarProducts($productId, $storeId)
+    private function getSimilarProducts($product)
     {
-        return $this->coOccurrence->getCoOccurrences("product_view", $productId, $storeId, "product_view", 10);
+        $productIds = $this->similarity->getSimilarProductIds($product);
+
+        if (empty($productIds)) {
+            $productId  = $product->getId();
+            $storeId    = $product->getStoreId();
+            $productIds = $this->coOccurrence->getCoOccurrences("product_view", $productId, $storeId, "product_view", 10);
+        }
+
+        return $productIds;
     }
 
     /**
@@ -139,10 +155,10 @@ class SimilarProductCoOccurrenceQuery implements SearchQueryBuilderInterface
      */
     private function getProducts(ProductInterface $product)
     {
-        $storeId     = $product->getStoreId();
-        $productId   = $product->getId();
-        $coOccurrences = [];
-        $productIds  = $this->getSimilarProducts($productId, $storeId);
+        $storeId        = $product->getStoreId();
+        $productId      = $product->getId();
+        $coOccurrences  = [];
+        $productIds     = $this->getSimilarProducts($product);
 
         if (!empty($productIds)) {
             $coOccurrences = $this->coOccurrence->getCoOccurrences(

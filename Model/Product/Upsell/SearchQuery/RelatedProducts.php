@@ -20,6 +20,7 @@ use Smile\ElasticsuiteRecommender\Model\Product\Upsell\Config as UpsellConfig;
 use Smile\ElasticsuiteRecommender\Model\Product\Matcher\SearchQueryBuilderInterface;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Smile\ElasticsuiteRecommender\Model\CoOccurrence;
+use Smile\ElasticsuiteRecommender\Helper\Data as DataHelper;
 
 /**
  * Upsell search query product view based related/more like this products clause builder.
@@ -46,17 +47,24 @@ class RelatedProducts implements SearchQueryBuilderInterface
     private $coOccurrence;
 
     /**
+     * @var DataHelper
+     */
+    private $helper;
+
+    /**
      * Constructor.
      *
      * @param QueryFactory $queryFactory Query factory.
      * @param CoOccurrence $coOccurrence Co-occurrence finder.
      * @param UpsellConfig $config       Upsell config model.
+     * @param DataHelper   $helper       Data helper.
      */
-    public function __construct(QueryFactory $queryFactory, CoOccurrence $coOccurrence, UpsellConfig $config)
+    public function __construct(QueryFactory $queryFactory, CoOccurrence $coOccurrence, UpsellConfig $config, DataHelper $helper)
     {
         $this->queryFactory = $queryFactory;
-        $this->coOccurrence   = $coOccurrence;
+        $this->coOccurrence = $coOccurrence;
         $this->config       = $config;
+        $this->helper       = $helper;
     }
 
     /**
@@ -66,20 +74,23 @@ class RelatedProducts implements SearchQueryBuilderInterface
     {
         $query = false;
 
-        if ($productIds = $this->getProducts($product)) {
-            $queryParams = [
-                'includeOriginalDocs' => true,
-                'fields'              => $this->config->getSimilarityFields($product->getStoreId()),
-                'like'                => [],
-            ];
+        $queryParams = [
+            'includeOriginalDocs' => true,
+            'fields'              => $this->config->getSimilarityFields($product->getStoreId()),
+            'like'                => [],
+        ];
 
-            $queryParams['like'][] = ['_id' => $product->getId()];
-            foreach ($productIds as $relatedProduct) {
-                $queryParams['like'][] = ['_id' => $relatedProduct];
+        $queryParams['like'][] = ['_id' => $product->getId()];
+
+        if ($this->helper->useProductViewsCoOccurrencesForRelatedUpsells()) {
+            if ($productIds = $this->getProducts($product)) {
+                foreach ($productIds as $relatedProduct) {
+                    $queryParams['like'][] = ['_id' => $relatedProduct];
+                }
             }
-
-            $query = $this->queryFactory->create(QueryInterface::TYPE_MORELIKETHIS, $queryParams);
         }
+
+        $query = $this->queryFactory->create(QueryInterface::TYPE_MORELIKETHIS, $queryParams);
 
         return $query;
     }
