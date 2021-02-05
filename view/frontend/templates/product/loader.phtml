@@ -15,7 +15,8 @@
 
 /** @var \Smile\ElasticsuiteRecommender\Block\Product\AjaxLoader $block */
 ?>
-<div id="elasticsuite-recommender-container"></div>
+<?php $blockId = uniqid('elasticsuite-recommender-container-');?>
+<div id="<?php echo $blockId ;?>"></div>
 
 <script type="text/x-magento-init">
     {
@@ -23,7 +24,7 @@
             "Smile_ElasticsuiteRecommender/js/loader": {
                 "recommenderUrl": "<?= $block->escapeJs($block->escapeUrl($block->getProductRecommenderUrl())) ?>",
                 "redirectUrl": "<?= $block->getRedirectEncodedUrl() ?>",
-                "container" : "#elasticsuite-recommender-container"
+                "container" : "#<?php echo $blockId ;?>"
             }
         }
     }
