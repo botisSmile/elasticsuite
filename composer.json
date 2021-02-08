@@ -24,7 +24,6 @@
     "magento/module-customer-segment" : "^101.0||^102.0||^103.0",
     "smile/elasticsuite" : "~2.8.0"
   },
-  "version" : "2.8.0",
   "autoload" : {
     "files" : [
       "registration.php"
