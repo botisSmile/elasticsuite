@@ -21,7 +21,6 @@
     "require": {
         "smile/elasticsuite" : "~2.8.0"
     },
-    "version": "2.8.0",
     "autoload": {
         "files": [
             "registration.php"
