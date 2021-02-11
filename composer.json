@@ -19,7 +19,7 @@
         "setup"
     ],
     "require": {
-        "smile/module-elasticsuite-beacon" : "~2.8.0"
+        "smile/module-elasticsuite-beacon" : "*"
     },
     "autoload": {
         "files": [
