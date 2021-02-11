@@ -9,7 +9,7 @@
  * @category  Smile
  * @package   Smile\ElasticsuiteBeacon
  * @author    Richard Bayet <richard.bayet@smile.fr>
- * @copyright 2029 Smile
+ * @copyright 2021 Smile
  * @license   Open Software License ("OSL") v. 3.0
  */
 
