@@ -28,6 +28,7 @@ use Smile\ElasticsuiteBeacon\Model\BeaconBeepFactory;
 use Smile\ElasticsuiteBeacon\Model\ResourceModel\BeaconBeep as BeaconBeepResource;
 use Smile\ElasticsuiteBeacon\Model\ResourceModel\BeaconBeep\Collection as BeaconBeepCollection;
 use Smile\ElasticsuiteBeacon\Model\ResourceModel\BeaconBeep\CollectionFactory as BeaconBeepCollectionFactory;
+use Magento\Framework\Stdlib\DateTime;
 
 /**
  * Class BeaconBeepRepository
@@ -196,7 +197,7 @@ class BeaconBeepRepository implements BeaconBeepRepositoryInterface
                 BeaconBeepInterface::CREATED_AT_DATE,
                 $this->datetime->date($item->getCreatedAtDate())
                     ->setTimezone(new \DateTimeZone('UTC'))
-                    ->format(\DateTimeInterface::ISO8601)
+                    ->format(DateTime::DATETIME_PHP_FORMAT)
             )
             ->setPageSize(1);
 

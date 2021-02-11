@@ -89,13 +89,15 @@ class BeepExporter
     private function getExportableDailyBeeps()
     {
         $exportableDays = array_reverse($this->beepResource->getExportableDays());
-        do {
-            $day = array_pop($exportableDays);
-            $beeps = $this->beepResource->getSpecificDayBeeps($day);
-            if (!empty($beeps)) {
-                yield $day => $beeps;
-            }
+        if (!empty($exportableDays)) {
+            do {
+                $day = array_pop($exportableDays);
+                $beeps = $this->beepResource->getSpecificDayBeeps($day);
+                if (!empty($beeps)) {
+                    yield $day => $beeps;
+                }
 
-        } while (!empty($exportableDays));
+            } while (!empty($exportableDays));
+        }
     }
 }

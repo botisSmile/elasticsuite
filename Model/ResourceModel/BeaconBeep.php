@@ -23,6 +23,7 @@ use Magento\Framework\Model\ResourceModel\Db\Context;
 use Psr\Log\LoggerInterface;
 use Smile\ElasticsuiteBeacon\Api\Data\BeaconBeepInterface;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
+use Magento\Framework\Stdlib\DateTime;
 
 /**
  * Class BeaconBeep
@@ -109,7 +110,7 @@ class BeaconBeep extends AbstractDb
 
         $select->limit($limit);
         $select->where(BeaconBeepInterface::BEEP_ID . ' > ?', $fromId);
-        $select->where(BeaconBeepInterface::CREATED_AT_DATE . ' < ?', $currentDate->format('Y-m-d H:i:s'));
+        $select->where(BeaconBeepInterface::CREATED_AT_DATE . ' < ?', $currentDate->format(DateTime::DATETIME_PHP_FORMAT));
         $select->order(BeaconBeepInterface::BEEP_ID);
 
         return $connection->fetchAll($select);
@@ -128,7 +129,7 @@ class BeaconBeep extends AbstractDb
         $select = $connection->select()
             ->from($this->getTable(BeaconBeepInterface::TABLE_NAME), [BeaconBeepInterface::CREATED_AT_DATE])
             ->distinct(true)
-            ->where(BeaconBeepInterface::CREATED_AT_DATE . ' < ?', $currentDate->format('Y-m-d H:i:s'))
+            ->where(BeaconBeepInterface::CREATED_AT_DATE . ' < ?', $currentDate->format(DateTime::DATETIME_PHP_FORMAT))
             ->order(BeaconBeepInterface::CREATED_AT_DATE);
 
         return $connection->fetchCol($select);
