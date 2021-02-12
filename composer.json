@@ -28,7 +28,8 @@
         "magento/framework" : ">=100.2.0",
         "magento/magento-composer-installer" : "*",
         "magento/module-catalog-rule" : ">=101.0.0",
-        "smile/elasticsuite" : "~2.8.0"
+        "smile/elasticsuite" : "~2.8.0",
+	"smile/module-elasticsuite-beacon" : "*"
     },
     "require-dev" : {
         "smile/magento2-smilelab-quality-suite" : "^1.0.4"
