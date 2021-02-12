@@ -20,7 +20,8 @@
     ],
     "require": {
         "smile/elasticsuite" : "~2.8.0",
-        "smile/module-elasticsuite-behavioral-data" : "~2.8.0"
+        "smile/module-elasticsuite-behavioral-data" : "~2.8.0",
+	"smile/module-elasticsuite-beacon" : "*"
     },
     "autoload": {
         "files": [
