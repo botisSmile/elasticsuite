@@ -6,13 +6,13 @@
  * versions in the future.
  *
  * @category  Smile
- * @package   Smile\ElasticsuiteBeaconTest
+ * @package   Smile\ElasticsuiteBeaconTools
  * @author    Richard Bayet <richard.bayet@smile.fr>
  * @copyright 2021 Smile
  * @license   Open Software License ("OSL") v. 3.0
  */
 
-namespace Smile\ElasticsuiteBeaconTest\Test\Load;
+namespace Smile\ElasticsuiteBeaconTools\Test\Load;
 
 use Psr\Log\LoggerInterface;
 use Smile\ElasticsuiteBeacon\Api\BeaconBeepRepositoryInterface;
@@ -24,7 +24,7 @@ use Smile\ElasticsuiteBeacon\Model\ContextProviderInterface;
  * Class Generator
  *
  * @category Smile
- * @package  Smile\ElasticsuiteBeaconTest
+ * @package  Smile\ElasticsuiteBeaconTools
  */
 class Generator extends BeaconBeepGenerator
 {

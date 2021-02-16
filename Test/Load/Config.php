@@ -6,13 +6,13 @@
  * versions in the future.
  *
  * @category  Smile
- * @package   Smile\ElasticsuiteBeaconTest
+ * @package   Smile\ElasticsuiteBeaconTools
  * @author    Richard Bayet <richard.bayet@smile.fr>
  * @copyright 2021 Smile
  * @license   Open Software License ("OSL") v. 3.0
  */
 
-namespace Smile\ElasticsuiteBeaconTest\Test\Load;
+namespace Smile\ElasticsuiteBeaconTools\Test\Load;
 
 use Smile\ElasticsuiteBeacon\Model\Config as DefaultConfig;
 
@@ -20,7 +20,7 @@ use Smile\ElasticsuiteBeacon\Model\Config as DefaultConfig;
  * Class Config
  *
  * @category Smile
- * @package  Smile\ElasticsuiteBeaconTest
+ * @package  Smile\ElasticsuiteBeaconTools
  */
 class Config extends DefaultConfig
 {

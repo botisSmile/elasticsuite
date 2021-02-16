@@ -1,5 +1,5 @@
 {
-    "name": "smile/module-elasticsuite-beacon-test",
+    "name": "smile/module-elasticsuite-beacon-tools",
     "type": "magento2-module",
     "license": "OSL-3.0",
     "authors": [{
@@ -7,7 +7,7 @@
             "email": "richard.bayet@smile.fr"
         }
     ],
-    "description": "ElasticSuite - Beacon Test module.",
+    "description": "ElasticSuite - Beacon Tools module.",
     "homepage": "https://elasticsuite.io",
     "keywords": [
         "magento",
@@ -26,7 +26,7 @@
             "registration.php"
         ],
         "psr-4": {
-            "Smile\\ElasticsuiteBeaconTest\\": ""
+            "Smile\\ElasticsuiteBeaconTools\\": ""
         }
     }
 }

@@ -6,24 +6,24 @@
  * versions in the future.
  *
  * @category  Smile
- * @package   Smile\ElasticSuiteBeaconTest
+ * @package   Smile\ElasticsuiteBeaconTools
  * @author    Richard Bayet <richard.bayet@smile.fr>
  * @copyright 2021 Smile
  * @license   Open Software License ("OSL") v. 3.0
  */
 
-namespace Smile\ElasticSuiteBeaconTest\Console\Command;
+namespace Smile\ElasticsuiteBeaconTools\Console\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Smile\ElasticSuiteBeaconTest\Test\Load\Generator;
+use Smile\ElasticsuiteBeaconTools\Test\Load\Generator;
 
 /**
  * Class BeaconStressTest
  *
  * @category Smile
- * @package  Smile\ElasticSuiteBeaconTest
+ * @package  Smile\ElasticsuiteBeaconTools
  */
 class BeaconStressTest extends Command
 {

@@ -6,13 +6,13 @@
  * versions in the future.
  *
  * @category  Smile
- * @package   Smile\ElasticsuiteBeaconTest
+ * @package   Smile\ElasticsuiteBeaconTools
  * @author    Richard Bayet <richard.bayet@smile.fr>
  * @copyright 2021 Smile
  * @license   Open Software License ("OSL") v. 3.0
  */
 
-namespace Smile\ElasticsuiteBeaconTest\Test\Load\ContextProvider;
+namespace Smile\ElasticsuiteBeaconTools\Test\Load\ContextProvider;
 
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Smile\ElasticsuiteBeacon\Api\Data\BeaconBeepInterface;
@@ -22,7 +22,7 @@ use Smile\ElasticsuiteBeacon\Model\ContextProviderInterface;
  * Class Date
  *
  * @category Smile
- * @package  Smile\ElasticsuiteBeaconTest
+ * @package  Smile\ElasticsuiteBeaconTools
  */
 class Date implements ContextProviderInterface
 {

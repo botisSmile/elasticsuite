@@ -7,7 +7,7 @@
  *
  *
  * @category  Smile
- * @package   Smile\ElasticsuiteBeaconTest
+ * @package   Smile\ElasticsuiteBeaconTools
  * @author    Richard Bayet <richard.bayet@smile.fr>
  * @copyright 2021 Smile
  * @license   Open Software License ("OSL") v. 3.0
@@ -15,6 +15,6 @@
 
 \Magento\Framework\Component\ComponentRegistrar::register(
     \Magento\Framework\Component\ComponentRegistrar::MODULE,
-    'Smile_ElasticsuiteBeaconTest',
+    'Smile_ElasticsuiteBeaconTools',
     __DIR__
 );

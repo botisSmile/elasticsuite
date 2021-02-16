@@ -9,7 +9,7 @@
  * versions in the future.
  *
  * @category  Smile
- * @package   Smile\ElasticsuiteBeaconTest
+ * @package   Smile\ElasticsuiteBeaconTools
  * @author    Richard BAYET <richard.bayet@smile.fr>
  * @copyright 2021 Smile
  * @license   Open Software License ("OSL") v. 3.0
@@ -17,31 +17,31 @@
  -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <!-- Performance tests -->
-    <virtualType name="staticHostContext" type="Smile\ElasticsuiteBeaconTest\Test\Load\ContextProvider\Host">
+    <virtualType name="staticHostContext" type="Smile\ElasticsuiteBeaconTools\Test\Load\ContextProvider\Host">
         <arguments>
             <argument name="maxHosts" xsi:type="number">1</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="randomHostContext" type="Smile\ElasticsuiteBeaconTest\Test\Load\ContextProvider\Host">
+    <virtualType name="randomHostContext" type="Smile\ElasticsuiteBeaconTools\Test\Load\ContextProvider\Host">
         <arguments>
             <argument name="maxHosts" xsi:type="number">10</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="staticDateContext" type="Smile\ElasticsuiteBeaconTest\Test\Load\ContextProvider\Date">
+    <virtualType name="staticDateContext" type="Smile\ElasticsuiteBeaconTools\Test\Load\ContextProvider\Date">
         <arguments>
             <argument name="maxDays" xsi:type="number">1</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="randomDateContext" type="Smile\ElasticsuiteBeaconTest\Test\Load\ContextProvider\Date">
+    <virtualType name="randomDateContext" type="Smile\ElasticsuiteBeaconTools\Test\Load\ContextProvider\Date">
         <arguments>
             <argument name="maxDays" xsi:type="number">10</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="randomHugeDateContext" type="Smile\ElasticsuiteBeaconTest\Test\Load\ContextProvider\Date">
+    <virtualType name="randomHugeDateContext" type="Smile\ElasticsuiteBeaconTools\Test\Load\ContextProvider\Date">
         <arguments>
             <argument name="maxDays" xsi:type="number">100</argument>
         </arguments>
@@ -49,11 +49,11 @@
 
     <virtualType name="stressTestClient" type="Smile\ElasticsuiteBeacon\Model\ContextProvider\Client">
         <arguments>
-            <argument name="config" xsi:type="object">Smile\ElasticsuiteBeaconTest\Test\Load\Config</argument>
+            <argument name="config" xsi:type="object">Smile\ElasticsuiteBeaconTools\Test\Load\Config</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="stressTestGenerator" type="Smile\ElasticsuiteBeaconTest\Test\Load\Generator">
+    <virtualType name="stressTestGenerator" type="Smile\ElasticsuiteBeaconTools\Test\Load\Generator">
         <arguments>
             <argument name="initialContextProvidersPool" xsi:type="array">
                 <item name="client" xsi:type="object">stressTestClient</item>
@@ -111,7 +111,7 @@
         </arguments>
     </virtualType>
 
-    <type name="Smile\ElasticsuiteBeaconTest\Console\Command\BeaconStressTest">
+    <type name="Smile\ElasticsuiteBeaconTools\Console\Command\BeaconStressTest">
         <arguments>
             <argument name="generatorModels" xsi:type="array">
                 <item name="static" xsi:type="object">staticHostDayGenerator</item>
@@ -126,7 +126,7 @@
     <type name="Magento\Framework\Console\CommandListInterface">
         <arguments>
             <argument name="commands" xsi:type="array">
-                <item name="beaconStressTest" xsi:type="object">Smile\ElasticsuiteBeaconTest\Console\Command\BeaconStressTest</item>
+                <item name="beaconStressTest" xsi:type="object">Smile\ElasticsuiteBeaconTools\Console\Command\BeaconStressTest</item>
             </argument>
         </arguments>
     </type>
