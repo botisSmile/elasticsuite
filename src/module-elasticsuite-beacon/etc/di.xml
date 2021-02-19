@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Smile_ElasticsuiteBeacon dependency injection configuration.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Smile ElasticSuite to newer
+ * versions in the future.
+ *
+ * @category  Smile
+ * @package   Smile\ElasticsuiteBeacon
+ * @author    Richard BAYET <richard.bayet@smile.fr>
+ * @copyright 2021 Smile
+ * @license   Open Software License ("OSL") v. 3.0
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Smile\ElasticsuiteBeacon\Api\Data\BeaconBeepInterface" type="Smile\ElasticsuiteBeacon\Model\BeaconBeep" />
+    <preference for="Smile\ElasticsuiteBeacon\Api\BeaconBeepRepositoryInterface" type="Smile\ElasticsuiteBeacon\Model\BeaconBeepRepository" />
+    <preference for="Smile\ElasticsuiteBeacon\Api\Data\BeaconBeepSearchResultsInterface" type="Magento\Framework\Api\SearchResults" />
+    <preference for="Smile\ElasticsuiteBeacon\Model\ConfigInterface" type="Smile\ElasticsuiteBeacon\Model\Config" />
+
+    <type name="Smile\ElasticsuiteBeacon\Model\BeaconBeep\Generator">
+        <arguments>
+            <argument name="initialContextProvidersPool" xsi:type="array">
+                <item name="client" xsi:type="object">Smile\ElasticsuiteBeacon\Model\ContextProvider\Client</item>
+                <item name="date" xsi:type="object">Smile\ElasticsuiteBeacon\Model\ContextProvider\Date</item>
+                <item name="host" xsi:type="object">Smile\ElasticsuiteBeacon\Model\ContextProvider\Host</item>
+            </argument>
+            <argument name="additionalContextProvidersPool" xsi:type="array">
+                <item name="magento" xsi:type="object">Smile\ElasticsuiteBeacon\Model\ContextProvider\Magento</item>
+                <item name="modules" xsi:type="object">Smile\ElasticsuiteBeacon\Model\ContextProvider\Modules</item>
+                <item name="store" xsi:type="object">Smile\ElasticsuiteBeacon\Model\ContextProvider\Store</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Smile\ElasticsuiteTracker\Api\CustomerTrackingServiceInterface">
+        <plugin name="registerBeepOnTrackerHit" type="Smile\ElasticsuiteBeacon\Plugin\EventTrackerPlugin" sortOrder="1" />
+    </type>
+</config>

@@ -1,0 +1,33 @@
+<!--
+/**
+ * Elasticsuite Premium Beacon module configuration
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Smile ElasticSuite to newer
+ * versions in the future.
+ *
+ * @category  Smile
+ * @package   Smile\ElasticsuiteBeacon
+ * @author    Richard BAYET <richard.bayet@smile.fr>
+ * @copyright 2021 Smile
+ * @license   Open Software License ("OSL") v. 3.0
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="smile_elasticsuite_beacon" translate="label" type="text" sortOrder="2000" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Elasticsuite Premium Beacon</label>
+            <tab>smile_elasticsuite</tab>
+            <resource>Magento_Backend::smile_elasticsuite_beacon</resource>
+            <group id="general" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Global Configuration</label>
+                <field id="client_id" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Client ID</label>
+                    <validate>required</validate>
+                    <comment><![CDATA[The Client ID provided to you by our Elasticsuite Premium support team.]]></comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
