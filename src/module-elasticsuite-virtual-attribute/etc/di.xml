@@ -1,0 +1,161 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Smile_ElasticsuiteVirtualAttribute dependency injection configuration.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Smile Elastic Suite to newer
+ * versions in the future.
+ *
+ *
+ * @category  Smile
+ * @package   Smile\ElasticsuiteVirtualAttribute
+ * @author    Romain Ruaud <romain.ruaud@smile.fr>
+ * @copyright 2018 Smile
+ * @license   Open Software License ("OSL") v. 3.0
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <!-- Dependency Injection for Virtual Attribute Rule models -->
+    <preference for="Smile\ElasticsuiteVirtualAttribute\Api\RuleRepositoryInterface" type="Smile\ElasticsuiteVirtualAttribute\Model\RuleRepository" />
+    <preference for="Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterface" type="Smile\ElasticsuiteVirtualAttribute\Model\Rule" />
+    <preference for="Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleSearchResultsInterface" type="Magento\Framework\Api\SearchResults" />
+    <preference for="Smile\ElasticsuiteVirtualAttribute\Api\RuleServiceInterface" type="Smile\ElasticsuiteVirtualAttribute\Model\RuleService" />
+
+    <type name="Magento\Framework\Model\Entity\RepositoryFactory">
+        <arguments>
+            <argument name="entities" xsi:type="array">
+                <item name="Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterface" xsi:type="string">Smile\ElasticsuiteVirtualAttribute\Api\RuleRepositoryInterface</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Framework\EntityManager\MetadataPool">
+        <arguments>
+            <argument name="metadata" xsi:type="array">
+                <item name="Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterface" xsi:type="array">
+                    <item name="entityTableName" xsi:type="string">smile_elasticsuite_virtual_attribute_rule</item>
+                    <item name="identifierField" xsi:type="string">rule_id</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Framework\EntityManager\HydratorPool">
+        <arguments>
+            <argument name="hydrators" xsi:type="array">
+                <item name="Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterface" xsi:type="string">Smile\ElasticsuiteVirtualAttribute\Model\Rule\Hydrator</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Framework\EntityManager\Operation\ExtensionPool">
+        <arguments>
+            <argument name="extensionActions" xsi:type="array">
+                <item name="Smile\ElasticsuiteVirtualAttribute\Api\Data\RuleInterface" xsi:type="array">
+                    <item name="read" xsi:type="array">
+                        <item name="storeReader" xsi:type="string">Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\Store\ReadHandler</item>
+                    </item>
+                    <item name="create" xsi:type="array">
+                        <item name="storeCreator" xsi:type="string">Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\Store\SaveHandler</item>
+                    </item>
+                    <item name="update" xsi:type="array">
+                        <item name="storeUpdater" xsi:type="string">Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\Store\SaveHandler</item>
+                    </item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="smile_elasticsuite_virtual_attribute_rule_listing_data_source"
+                      xsi:type="string">Smile\ElasticsuiteVirtualAttribute\Model\ResourceModel\Rule\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <virtualType name="Smile\ElasticsuiteVirtualAttribute\Model\Api\SearchCriteria\CollectionProcessor\RuleFilterProcessor" type="Magento\Framework\Api\SearchCriteria\CollectionProcessor\FilterProcessor">
+        <arguments>
+            <argument name="customFilters" xsi:type="array">
+                <item name="store_id" xsi:type="object">Smile\ElasticsuiteVirtualAttribute\Model\Api\SearchCriteria\CollectionProcessor\FilterProcessor\RuleStoreFilter</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Smile\ElasticsuiteVirtualAttribute\Model\Api\SearchCriteria\RuleCollectionProcessor" type="Magento\Framework\Api\SearchCriteria\CollectionProcessor">
+        <arguments>
+            <argument name="processors" xsi:type="array">
+                <item name="filters" xsi:type="object">Smile\ElasticsuiteVirtualAttribute\Model\Api\SearchCriteria\CollectionProcessor\RuleFilterProcessor</item>
+                <item name="sorting" xsi:type="object">Magento\Framework\Api\SearchCriteria\CollectionProcessor\SortingProcessor</item>
+                <item name="pagination" xsi:type="object">Magento\Framework\Api\SearchCriteria\CollectionProcessor\PaginationProcessor</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Smile\ElasticsuiteVirtualAttribute\Model\RuleRepository">
+        <arguments>
+            <argument name="collectionProcessor" xsi:type="object">Smile\ElasticsuiteVirtualAttribute\Model\Api\SearchCriteria\RuleCollectionProcessor</argument>
+        </arguments>
+    </type>
+
+    <!-- Virtual Types for Rules -->
+    <virtualType name="virtualAttributeCombineFactory" type="\Magento\CatalogRule\Model\Rule\Condition\CombineFactory">
+        <arguments>
+            <argument name="instanceName" xsi:type="string">Smile\ElasticsuiteVirtualAttribute\Model\Rule\Condition\Combine</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="virtualAttributeRule" type="\Magento\CatalogRule\Model\Rule">
+        <arguments>
+            <argument name="combineFactory" xsi:type="object">virtualAttributeCombineFactory</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="virtualAttributeRuleFactory" type="\Magento\CatalogRule\Model\RuleFactory">
+        <arguments>
+            <argument name="instanceName" xsi:type="string">virtualAttributeRule</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Smile\ElasticsuiteVirtualAttribute\Model\Rule">
+        <arguments>
+            <argument name="ruleFactory" xsi:type="object">virtualAttributeRuleFactory</argument>
+        </arguments>
+    </type>
+
+    <type name="Smile\ElasticsuiteVirtualAttribute\Model\Rule\Hydrator">
+        <arguments>
+            <argument name="ruleFactory" xsi:type="object">virtualAttributeRuleFactory</argument>
+        </arguments>
+    </type>
+
+    <type name="Smile\ElasticsuiteVirtualAttribute\Block\Adminhtml\Rule\Condition">
+        <arguments>
+            <argument name="ruleFactory" xsi:type="object">virtualAttributeRuleFactory</argument>
+        </arguments>
+    </type>
+
+    <type name="Smile\ElasticsuiteVirtualAttribute\Block\Adminhtml\Rule\Renderer\Condition">
+        <arguments>
+            <argument name="ruleFactory" xsi:type="object">virtualAttributeRuleFactory</argument>
+        </arguments>
+    </type>
+
+    <type name="Smile\ElasticsuiteVirtualAttribute\Controller\Adminhtml\Rule\Conditions">
+        <arguments>
+            <argument name="ruleFactory" xsi:type="object">virtualAttributeRuleFactory</argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="elasticSuiteVirtualAttributeRun" xsi:type="object">Smile\ElasticsuiteVirtualAttribute\Command\ApplyRules</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

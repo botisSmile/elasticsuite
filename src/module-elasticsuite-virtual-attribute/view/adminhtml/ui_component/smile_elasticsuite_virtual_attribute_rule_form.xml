@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Smile_ElasticsuiteVirtualAttribute rule edit UI Component
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this module to newer
+ * versions in the future.
+ *
+ * @category  Smile
+ * @package   Smile\ElasticsuiteVirtualAttribute
+ * @author    Romain Ruaud <romain.ruaud@smile.fr>
+ * @copyright 2018 Smile
+ * @license   Apache License Version 2.0
+ */
+-->
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">smile_elasticsuite_virtual_attribute_rule_form.smile_elasticsuite_virtual_attribute_rule_form_data_source</item>
+        </item>
+        <item name="label" xsi:type="string" translate="true">Rule Information</item>
+        <item name="template" xsi:type="string">templates/form/collapsible</item>
+
+        <item name="config" xsi:type="array">
+            <item name="dataScope" xsi:type="string">data</item>
+            <item name="namespace" xsi:type="string">smile_elasticsuite_virtual_attribute_rule_form</item>
+        </item>
+        <item name="reverseMetadataMerge" xsi:type="boolean">true</item>
+    </argument>
+
+    <settings>
+        <reloadItem>general.attribute_id:value</reloadItem>
+        <buttons>
+            <button name="back" class="Smile\ElasticsuiteVirtualAttribute\Block\Adminhtml\Rule\Edit\Button\Back"/>
+            <button name="save" class="Smile\ElasticsuiteVirtualAttribute\Block\Adminhtml\Rule\Edit\Button\Save"/>
+            <button name="delete" class="Smile\ElasticsuiteVirtualAttribute\Block\Adminhtml\Rule\Edit\Button\Delete"/>
+            <button name="save_and_continue" class="Smile\ElasticsuiteVirtualAttribute\Block\Adminhtml\Rule\Edit\Button\SaveAndContinue"/>
+            <button name="refresh" class="Smile\ElasticsuiteVirtualAttribute\Block\Adminhtml\Rule\Edit\Button\Refresh"/>
+        </buttons>
+        <deps>
+            <dep>smile_elasticsuite_virtual_attribute_rule_form.smile_elasticsuite_virtual_attribute_rule_form_data_source</dep>
+        </deps>
+    </settings>
+
+    <dataSource name="smile_elasticsuite_virtual_attribute_rule_form_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Smile\ElasticsuiteVirtualAttribute\Ui\Component\Rule\Form\DataProvider</argument>
+            <argument name="name" xsi:type="string">smile_elasticsuite_virtual_attribute_rule_form_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">rule_id</argument>
+            <argument name="requestFieldName" xsi:type="string">id</argument>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="submit_url" xsi:type="url" path="smile_elasticsuite_virtual_attribute/rule/save"/>
+                </item>
+            </argument>
+        </argument>
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+            </item>
+        </argument>
+    </dataSource>
+
+    <fieldset name="general">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="label" xsi:type="string"/>
+            </item>
+        </argument>
+
+        <field name="rule_id" formElement="input">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">rule</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>text</dataType>
+                <visible>false</visible>
+                <dataScope>rule_id</dataScope>
+            </settings>
+        </field>
+
+        <field name="is_active" sortOrder="10" formElement="checkbox">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">rule</item>
+                    <item name="default" xsi:type="number">1</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>boolean</dataType>
+                <label translate="true">Enable rule</label>
+                <dataScope>is_active</dataScope>
+            </settings>
+            <formElements>
+                <checkbox>
+                    <settings>
+                        <valueMap>
+                            <map name="false" xsi:type="number">0</map>
+                            <map name="true" xsi:type="number">1</map>
+                        </valueMap>
+                        <prefer>toggle</prefer>
+                    </settings>
+                </checkbox>
+            </formElements>
+        </field>
+
+        <field name="attribute_id" formElement="select" component="Magento_Ui/js/form/element/ui-select" sortOrder="20">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filterOptions" xsi:type="boolean">true</item>
+                    <item name="showCheckbox" xsi:type="boolean">false</item>
+                    <item name="disableLabel" xsi:type="boolean">true</item>
+                    <item name="multiple" xsi:type="boolean">false</item>
+                    <item name="levelsVisibility" xsi:type="number">1</item>
+                </item>
+            </argument>
+            <settings>
+                <imports>
+                    <link name="visible">true</link>
+                </imports>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                </validation>
+                <dataType>int</dataType>
+                <label translate="true">Attribute</label>
+                <dataScope>attribute_id</dataScope>
+                <componentType>field</componentType>
+                <elementTmpl>ui/grid/filters/elements/ui-select</elementTmpl>
+            </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <options class="Smile\ElasticsuiteVirtualAttribute\Ui\Component\Rule\Source\Attribute\Options"/>
+                    </settings>
+                </select>
+            </formElements>
+        </field>
+
+        <field name="attribute_label" formElement="select" sortOrder="21">
+            <settings>
+                <disabled>true</disabled>
+                <imports>
+                    <link name="visible">true</link>
+                </imports>
+                <dataType>int</dataType>
+                <label translate="true">Attribute</label>
+                <componentType>field</componentType>
+            </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <options class="Smile\ElasticsuiteVirtualAttribute\Ui\Component\Rule\Source\Attribute\Options"/>
+                    </settings>
+                </select>
+            </formElements>
+        </field>
+
+        <field name="option_id" formElement="select" component="Magento_Ui/js/form/element/ui-select" sortOrder="30">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filterOptions" xsi:type="boolean">true</item>
+                    <item name="showCheckbox" xsi:type="boolean">false</item>
+                    <item name="disableLabel" xsi:type="boolean">true</item>
+                    <item name="multiple" xsi:type="boolean">false</item>
+                    <item name="levelsVisibility" xsi:type="number">1</item>
+                </item>
+            </argument>
+            <settings>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                </validation>
+                <dataType>int</dataType>
+                <label translate="true">Option</label>
+                <dataScope>option_id</dataScope>
+                <componentType>field</componentType>
+                <elementTmpl>ui/grid/filters/elements/ui-select</elementTmpl>
+            </settings>
+        </field>
+
+        <field name="option_label" formElement="select" sortOrder="31">
+            <settings>
+                <disabled>true</disabled>
+                <dataType>int</dataType>
+                <label translate="true">Option</label>
+                <dataScope>option_id</dataScope>
+                <componentType>field</componentType>
+            </settings>
+        </field>
+
+        <field name="storeviews" formElement="multiselect" sortOrder="40">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">rule</item>
+                    <item name="default" xsi:type="number">0</item>
+                </item>
+            </argument>
+            <settings>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                </validation>
+                <dataType>int</dataType>
+                <label translate="true">Store View</label>
+                <dataScope>store_id</dataScope>
+            </settings>
+            <formElements>
+                <multiselect>
+                    <settings>
+                        <options class="Smile\ElasticsuiteVirtualAttribute\Ui\Component\Rule\Source\Store\Options"/>
+                    </settings>
+                </multiselect>
+            </formElements>
+        </field>
+
+        <field name="priority" formElement="input" sortOrder="50">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">rule</item>
+                </item>
+            </argument>
+            <settings>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                </validation>
+                <dataType>int</dataType>
+                <label translate="true">Priority</label>
+                <visible>true</visible>
+                <dataScope>priority</dataScope>
+            </settings>
+        </field>
+    </fieldset>
+
+    <fieldset name="rule_rule_fieldset">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="label" xsi:type="string" translate="true">Apply to products</item>
+            </item>
+        </argument>
+
+        <container name="rule_rule_container">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="sortOrder" xsi:type="number">20</item>
+                </item>
+            </argument>
+            <htmlContent name="condition">
+                <argument name="block" xsi:type="object">Smile\ElasticsuiteVirtualAttribute\Block\Adminhtml\Rule\Condition</argument>
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="sortOrder" xsi:type="number">10</item>
+                        <item name="component" xsi:type="string">Smile_ElasticsuiteCatalogRule/js/component/catalog/product/form/rule</item>
+                        <item name="dataScope" xsi:type="string">condition</item>
+                    </item>
+                </argument>
+            </htmlContent>
+        </container>
+    </fieldset>
+
+</form>

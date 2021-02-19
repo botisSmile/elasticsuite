@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Smile_ElasticsuiteVirtualAttribute dependency injection configuration.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Smile Elastic Suite to newer
+ * versions in the future.
+ *
+ *
+ * @category  Smile
+ * @package   Smile\ElasticsuiteVirtualAttribute
+ * @author    Romain Ruaud <romain.ruaud@smile.fr>
+ * @copyright 2018 Smile
+ * @license   Open Software License ("OSL") v. 3.0
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <preference for="Smile\ElasticsuiteVirtualAttribute\Model\Rule\Locator\LocatorInterface" type="Smile\ElasticsuiteVirtualAttribute\Model\Rule\Locator\RegistryLocator" />
+
+    <virtualType name="Smile\ElasticsuiteVirtualAttribute\Ui\Component\Rule\Form\Modifier\Pool" type="Magento\Ui\DataProvider\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="system" xsi:type="array">
+                    <item name="class" xsi:type="string">Smile\ElasticsuiteVirtualAttribute\Ui\Component\Rule\Form\Modifier\System</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+                <item name="attribute" xsi:type="array">
+                    <item name="class" xsi:type="string">Smile\ElasticsuiteVirtualAttribute\Ui\Component\Rule\Form\Modifier\Attribute</item>
+                    <item name="sortOrder" xsi:type="number">20</item>
+                </item>
+                <item name="attribute_options" xsi:type="array">
+                    <item name="class" xsi:type="string">Smile\ElasticsuiteVirtualAttribute\Ui\Component\Rule\Form\Modifier\AttributeOptions</item>
+                    <item name="sortOrder" xsi:type="number">30</item>
+                </item>
+                <item name="stores" xsi:type="array">
+                    <item name="class" xsi:type="string">Smile\ElasticsuiteVirtualAttribute\Ui\Component\Rule\Form\Modifier\Stores</item>
+                    <item name="sortOrder" xsi:type="number">40</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Smile\ElasticsuiteVirtualAttribute\Ui\Component\Rule\Form\DataProvider">
+        <arguments>
+            <argument name="modifierPool" xsi:type="object">Smile\ElasticsuiteVirtualAttribute\Ui\Component\Rule\Form\Modifier\Pool</argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\Eav">
+        <plugin name="elasticsuiteVirtualAttributeTooltip" type="Smile\ElasticsuiteVirtualAttribute\Plugin\Catalog\Ui\DataProvider\Product\Form\Modifier\EavPlugin" />
+    </type>
+
+</config>
