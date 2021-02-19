@@ -1,0 +1,64 @@
+<div class="admin__field preview-button-container" data-bind="css: $data.additionalClasses, attr: {'data-index': index}, visible: visible" data-index="preview_button">
+    <div class="admin__field-label" data-bind="visible: $data.labelVisible">
+        <!-- ko if: $data.label -->
+            <label data-bind="attr: {for: uid}" for="preview-button">
+                <span data-bind="attr: {'data-config-scope': $data.scopeLabel}, i18n: label"> </span>
+            </label>
+        <!-- /ko -->
+    </div>
+    <div class="admin__field-control" data-bind="css: {'_with-tooltip': $data.tooltip, '_with-reset': $data.showFallbackReset &amp;&amp; $data.isDifferedFromDefault}">
+        <button id="preview-button" data-bind="{ click : refreshProductList, attr: { title: $t('Explain') }}"
+                type="button" class="action- scalable add primary">
+            <span data-bind="i18n: 'Explain'"></span>
+        </button>
+
+        <!-- ko if: hasAddons() --><!-- /ko -->
+
+        <!-- ko if: $data.tooltip --><!-- /ko -->
+
+        <!-- ko if: $data.showFallbackReset && $data.isDifferedFromDefault --><!-- /ko -->
+
+        <!-- ko if: error --><!-- /ko -->
+
+        <!-- ko if: $data.notice --><!-- /ko -->
+
+        <!-- ko if: $data.additionalInfo --><!-- /ko -->
+
+        <!-- ko if: $data.hasService() --><!-- /ko -->
+    </div>
+</div>
+
+<div class="admin__fieldset">
+
+    <div class="elasticsuite-admin-product-sorter">
+        <div data-role="spinner" class="admin__data-grid-loading-mask" visible="loading" if="showSpinner">
+            <div class="spinner"><span repeat="8"></span></div>
+        </div>
+
+        <div data-bind="if: hasProducts()">
+
+            <div class="product-list-container">
+                <ul data-bind="foreach: products" class="product-list">
+                    <li class="product-list-item" data-bind="
+                    attr: {'data-product-id': getId()},
+                    css: {'manual-sorting': hasPosition(), 'automatic-sorting': !hasPosition(), 'blacklisted': isBlacklisted() }
+                ">
+                        <div class="product-image"><img data-bind="attr: { src: getImageUrl() }" /></div>
+
+                        <div class="info">
+                            <h1><span data-bind="html: getName(), attr: {title: getName()}"></span></h1>
+                            <p class="sku" data-bind="text: getSku()"></p>
+                            <p class="price" data-bind="text: getFormattedPrice()"></p>
+                            <p class="stock" data-bind="text: getStockLabel()"></p>
+                        </div>
+
+                    </li>
+                </ul>
+            </div>
+
+            <p class="bottom-links" data-bind="visible: hasMoreProducts()">
+                <a href="#" data-bind="click: showMoreProducts, text: messages.showMore" class="show-more-link"></a>
+            </p>
+        </div>
+    </div>
+</div>

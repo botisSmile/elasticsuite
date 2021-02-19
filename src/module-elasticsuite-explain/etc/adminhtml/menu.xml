@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * ElasticSuite Catalog Optimizers menu configuration
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this module to newer
+ * versions in the future.
+ *
+ * @category  Smile
+ * @package   Smile\ElasticsuiteExplain
+ * @author    Romain Ruaud <romain.ruaud@smile.fr>
+ * @copyright 2020 Smile
+ * @license   Open Software License ("OSL") v. 3.0
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add
+            id="ElasticsuiteExplain::explain"
+            title="Explain results"
+            module="Smile_ElasticsuiteExplain"
+            sortOrder="30"
+            parent="Smile_ElasticsuiteCore::manage_search"
+            action="smile_elasticsuite_explain/explain/index"
+            resource="Smile_ElasticsuiteExplain::explain"/>
+    </menu>
+</config>

@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Smile_ElasticsuiteExplain dependency injection configuration.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this module to newer
+ * versions in the future.
+ *
+ * @category  Smile
+ * @package   Smile\ElasticsuiteExplain
+ * @author    Romain Ruaud <romain.ruaud@smile.fr>
+ * @copyright 2020 Smile
+ * @license   Open Software License ("OSL") v. 3.0
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <virtualType name="Smile\ElasticsuiteExplain\Ui\Component\Explain\Form\Modifier\Pool" type="Magento\Ui\DataProvider\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="preview" xsi:type="array">
+                    <item name="class" xsi:type="string">Smile\ElasticsuiteExplain\Ui\Component\Explain\Form\Modifier\Preview</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Smile\ElasticsuiteExplain\Ui\Component\Explain\Form\DataProvider">
+        <arguments>
+            <argument name="pool" xsi:type="object">Smile\ElasticsuiteExplain\Ui\Component\Explain\Form\Modifier\Pool</argument>
+        </arguments>
+    </type>
+
+    <virtualType name="debugExplainDocumentFact" type="\Smile\ElasticsuiteCore\Search\Adapter\Elasticsuite\Response\DocumentFactory">
+        <arguments>
+            <argument name="instanceName" xsi:type="string">Smile\ElasticsuiteExplain\Search\Adapter\Elasticsuite\Response\ExplainDocument</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="debugExplainResponse" type="\Smile\ElasticsuiteCore\Search\Adapter\Elasticsuite\Response\QueryResponse">
+        <arguments>
+            <argument name="documentFactory" xsi:type="object">debugExplainDocumentFact</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="debugExplainResponseFact" type="\Smile\ElasticsuiteCore\Search\Adapter\Elasticsuite\Response\QueryResponseFactory">
+        <arguments>
+            <argument name="instanceName" xsi:type="string">debugExplainResponse</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="\Smile\ElasticsuiteExplain\Model\Result">
+        <arguments>
+            <argument name="queryResponseFactory" xsi:type="object">debugExplainResponseFact</argument>
+            <argument name="collectors" xsi:type="array">
+                <item name="optimizers" xsi:type="object">Smile\ElasticsuiteExplain\Model\Result\Collector\Optimizers</item>
+                <item name="synonyms" xsi:type="object">Smile\ElasticsuiteExplain\Model\Result\Collector\Synonyms</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Smile\ElasticsuiteExplain\Model\Result\Collector\Optimizers">
+        <arguments>
+            <argument name="provider" xsi:type="object">Smile\ElasticsuiteCatalogOptimizer\Model\Optimizer\Collection\Provider\DefaultProvider</argument>
+            <argument name="filters" xsi:type="array">
+                <item name="quick_search_container" xsi:type="object">Smile\ElasticsuiteCatalogOptimizer\Model\Optimizer\Search\OptimizerFilter</item>
+                <item name="catalog_view_container" xsi:type="object">Smile\ElasticsuiteCatalogOptimizer\Model\Optimizer\Category\OptimizerFilter</item>
+                <item name="catalog_product_autocomplete" xsi:type="object">autocompleteOptimizerFilter</item>
+            </argument>
+        </arguments>
+    </type>
+
+</config>
