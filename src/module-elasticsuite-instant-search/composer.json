@@ -1,0 +1,35 @@
+{
+    "name": "smile/module-elasticsuite-instant-search",
+    "type": "magento2-module",
+    "license": "OSL-3.0",
+    "authors": [
+        {
+            "name": "Romain Ruaud",
+            "email": "romain.ruaud@smile.fr"
+        }
+    ],
+    "description": "ElasticSuite - Instant Search module.",
+    "homepage": "https://elasticsuite.io",
+    "keywords": [
+        "magento",
+        "magento2",
+        "elasticsearch",
+        "search",
+        "merchandising",
+        "core",
+        "setup"
+    ],
+    "require": {
+        "smile/elasticsuite" : "~2.8.0",
+        "smile/module-elasticsuite-beacon" : "*",
+        "smile/magento2-react": "~16"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Smile\\ElasticsuiteInstantSearch\\": ""
+        }
+    }
+}

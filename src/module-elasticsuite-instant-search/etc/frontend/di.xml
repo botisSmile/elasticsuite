@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Smile_ElasticsuiteInstantSearch dependency injection configuration.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Smile ElasticSuite to newer
+ * versions in the future.
+ *
+ * @category  Smile
+ * @package   Smile\ElasticsuiteInstantSearch
+ * @author    Romain Ruaud <romain.ruaud@smile.fr>
+ * @copyright 2019 Smile
+ * @license   Open Software License ("OSL") v. 3.0
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Smile\ElasticsuiteCatalog\Model\Autocomplete\Product\DataProvider"
+                type="Smile\ElasticsuiteInstantSearch\Model\Autocomplete\Product\DataProvider"/>
+
+    <preference for="Smile\ElasticsuiteCatalog\Model\Autocomplete\Category\DataProvider"
+                type="Smile\ElasticsuiteInstantSearch\Model\Autocomplete\Category\DataProvider"/>
+
+    <preference for="Smile\ElasticsuiteCatalog\Model\Autocomplete\Product\Attribute\DataProvider"
+                type="Smile\ElasticsuiteInstantSearch\Model\Autocomplete\Product\Attribute\DataProvider"/>
+
+    <preference for="Smile\ElasticsuiteCore\Model\Autocomplete\Terms\DataProvider"
+                type="Smile\ElasticsuiteInstantSearch\Model\Autocomplete\Terms\DataProvider"/>
+</config>
