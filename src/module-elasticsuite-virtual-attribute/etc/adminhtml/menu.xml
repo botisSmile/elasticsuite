@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Smile_ElasticsuiteVirtualAttribute menu configuration
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Smile Searchandising Suite to newer
+ * versions in the future.
+ *
+ * @category  Smile
+ * @package   Smile\ElasticsuiteVirtualAttribute
+ * @author    Romain Ruaud <romain.ruaud@smile.fr>
+ * @copyright 2018 Smile
+ * @license   Apache License Version 2.0
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add
+             id="ElasticsuiteVirtualAttribute::attributes"
+             title="Virtual Attributes Rules"
+             translate="title"
+             module="Smile_ElasticsuiteVirtualAttribute"
+             sortOrder="200"
+             parent="Smile_ElasticsuiteCore::elasticsuite_menu"
+             resource="Smile_ElasticsuiteVirtualAttribute::manage"/>
+        <add
+            id="ElasticsuiteVirtualAttribute::products"
+            title="Products"
+            translate="title"
+            module="Smile_ElasticsuiteVirtualAttribute"
+            sortOrder="10"
+            parent="ElasticsuiteVirtualAttribute::attributes"
+            action="smile_elasticsuite_virtual_attribute/rule/index"
+            resource="Smile_ElasticsuiteVirtualAttribute::manage"/>
+    </menu>
+</config>

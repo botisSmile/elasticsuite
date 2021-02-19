@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Smile_ElasticsuiteVirtualAttribute rule listing UI Component
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this module to newer
+ * versions in the future.
+ *
+ * @category  Smile
+ * @package   Smile\ElasticsuiteVirtualAttribute
+ * @author    Romain Ruaud <romain.ruaud@smile.fr>
+ * @copyright 2018 Smile
+ * @license   Apache License Version 2.0
+ */
+-->
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">smile_elasticsuite_virtual_attribute_rule_listing.smile_elasticsuite_virtual_attribute_rule_listing_data_source</item>
+        </item>
+    </argument>
+
+    <settings>
+        <buttons>
+            <button name="add">
+                <url path="*/*/create"/>
+                <class>primary</class>
+                <label translate="true">Add New Rule</label>
+            </button>
+        </buttons>
+        <spinner>smile_elasticsuite_virtual_attribute_rule_columns</spinner>
+        <deps>
+            <dep>smile_elasticsuite_virtual_attribute_rule_listing.smile_elasticsuite_virtual_attribute_rule_listing_data_source</dep>
+        </deps>
+    </settings>
+
+    <dataSource name="smile_elasticsuite_virtual_attribute_rule_listing_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <storageConfig>
+                <param name="indexField" xsi:type="string">rule_id</param>
+            </storageConfig>
+            <updateUrl path="mui/index/render"/>
+        </settings>
+        <aclResource>Smile_ElasticsuiteVirtualAttribute::manage</aclResource>
+        <dataProvider
+                class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider"
+                name="smile_elasticsuite_virtual_attribute_rule_listing_data_source">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>rule_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+
+    <listingToolbar name="listing_top">
+        <settings>
+            <sticky>true</sticky>
+        </settings>
+
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+
+        <filters name="listing_filters">
+            <settings>
+                <templates>
+                    <filters>
+                        <select>
+                            <param name="template" xsi:type="string">ui/grid/filters/elements/ui-select</param>
+                            <param name="component" xsi:type="string">Magento_Ui/js/form/element/ui-select</param>
+                        </select>
+                    </filters>
+                </templates>
+            </settings>
+
+            <filterSelect sortOrder="10" name="store_id" provider="${ $.parentName }">
+                <settings>
+                    <captionValue>0</captionValue>
+                    <options class="Smile\ElasticsuiteVirtualAttribute\Ui\Component\Rule\Source\Store\Options"/>
+                    <label translate="true">Store View</label>
+                    <dataScope>store_id</dataScope>
+                    <imports>
+                        <link name="visible">componentType = column, index = ${ $.index }:visible</link>
+                    </imports>
+                </settings>
+            </filterSelect>
+
+            <filterSelect sortOrder="20" name="attribute_id" provider="${ $.parentName }" component="Magento_Ui/js/form/element/ui-select" template="ui/grid/filters/elements/ui-select">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="filterOptions" xsi:type="boolean">true</item>
+                        <item name="showCheckbox" xsi:type="boolean">false</item>
+                        <item name="multiple" xsi:type="boolean">false</item>
+                        <item name="levelsVisibility" xsi:type="number">1</item>
+                    </item>
+                </argument>
+                <settings>
+                    <captionValue>0</captionValue>
+                    <options class="Smile\ElasticsuiteVirtualAttribute\Ui\Component\Rule\Source\Attribute\Options"/>
+                    <label translate="true">Attribute</label>
+                    <dataScope>attribute_id</dataScope>
+                    <imports>
+                        <link name="visible">componentType = column, index = ${ $.index }:visible</link>
+                    </imports>
+                    <caption>Select...</caption>
+                </settings>
+            </filterSelect>
+
+        </filters>
+
+        <massaction name="listing_massaction" component="Magento_Ui/js/grid/tree-massactions">
+            <action name="delete">
+                <settings>
+                    <confirm>
+                        <message translate="true">Are you sure you want to delete selected items?</message>
+                        <title translate="true">Delete items</title>
+                    </confirm>
+                    <url path="*/*/massDelete"/>
+                    <type>delete</type>
+                    <label translate="true">Delete</label>
+                </settings>
+            </action>
+            <action name="refresh">
+                <settings>
+                    <confirm>
+                        <message translate="true">Are you sure you want to refresh selected items?</message>
+                        <title translate="true">Refresh items</title>
+                    </confirm>
+                    <url path="*/*/massRefresh"/>
+                    <type>refresh</type>
+                    <label translate="true">Refresh</label>
+                </settings>
+            </action>
+            <action name="status">
+                <settings>
+                    <type>status</type>
+                    <label translate="true">Change status</label>
+                    <actions>
+                        <action name="0">
+                            <type>enable</type>
+                            <label translate="true">Active</label>
+                            <url path="*/*/massStatus">
+                                <param name="is_active">1</param>
+                            </url>
+                        </action>
+                        <action name="1">
+                            <type>disable</type>
+                            <label translate="true">Inactive</label>
+                            <url path="*/*/massStatus">
+                                <param name="is_active">0</param>
+                            </url>
+                        </action>
+                    </actions>
+                </settings>
+            </action>
+        </massaction>
+
+        <paging name="listing_paging"/>
+
+    </listingToolbar>
+
+    <columns name="smile_elasticsuite_virtual_attribute_rule_columns">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="childDefaults" xsi:type="array">
+                    <item name="fieldAction" xsi:type="array">
+                        <item name="provider" xsi:type="string">smile_elasticsuite_virtual_attribute_rule_listing.smile_elasticsuite_virtual_attribute_rule_listing.smile_elasticsuite_virtual_attribute_rule_columns.actions</item>
+                        <item name="target" xsi:type="string">applyAction</item>
+                        <item name="params" xsi:type="array">
+                            <item name="0" xsi:type="string">edit</item>
+                            <item name="1" xsi:type="string">${ $.$data.rowIndex }</item>
+                        </item>
+                    </item>
+                </item>
+            </item>
+        </argument>
+
+        <selectionsColumn name="ids">
+            <settings>
+                <indexField>rule_id</indexField>
+                <resizeEnabled>false</resizeEnabled>
+                <resizeDefaultWidth>50</resizeDefaultWidth>
+            </settings>
+        </selectionsColumn>
+
+        <column name="rule_id" sortOrder="10">
+            <settings>
+                <filter>textRange</filter>
+                <editor>
+                    <validation>
+                        <rule name="required-entry" xsi:type="boolean">true</rule>
+                        <rule name="validate-xml-identifier" xsi:type="boolean">true</rule>
+                    </validation>
+                    <editorType>text</editorType>
+                </editor>
+                <label translate="true">Identifier</label>
+                <sortable>true</sortable>
+                <resizeEnabled>false</resizeEnabled>
+                <resizeDefaultWidth>80</resizeDefaultWidth>
+            </settings>
+        </column>
+
+        <column name="frontend_label" sortOrder="20">
+            <settings>
+                <label translate="true">Attribute</label>
+                <bodyTmpl>ui/grid/cells/html</bodyTmpl>
+                <sortable>true</sortable>
+            </settings>
+        </column>
+
+        <column name="option_label" sortOrder="30">
+            <settings>
+                <label translate="true">Value</label>
+                <bodyTmpl>ui/grid/cells/html</bodyTmpl>
+                <sortable>true</sortable>
+            </settings>
+        </column>
+
+        <column name="priority" sortOrder="40">
+            <settings>
+                <label translate="true">Priority</label>
+                <bodyTmpl>ui/grid/cells/html</bodyTmpl>
+                <sortable>true</sortable>
+                <resizeEnabled>false</resizeEnabled>
+                <resizeDefaultWidth>20</resizeDefaultWidth>
+            </settings>
+        </column>
+
+        <column name="is_active" component="Magento_Ui/js/grid/columns/select" sortOrder="50">
+            <settings>
+                <options>
+                    <option name="active" xsi:type="array">
+                        <item name="value" xsi:type="string">1</item>
+                        <item name="label" xsi:type="string" translate="true">Active</item>
+                    </option>
+                    <option name="inactive" xsi:type="array">
+                        <item name="value" xsi:type="string">0</item>
+                        <item name="label" xsi:type="string" translate="true">Inactive</item>
+                    </option>
+                </options>
+                <filter>select</filter>
+                <editor>
+                    <editorType>select</editorType>
+                </editor>
+                <dataType>select</dataType>
+                <label translate="true">Status</label>
+            </settings>
+        </column>
+
+        <column name="store_id" class="Magento\Store\Ui\Component\Listing\Column\Store" sortOrder="60">
+            <settings>
+                <label translate="true">Store View</label>
+                <bodyTmpl>ui/grid/cells/html</bodyTmpl>
+                <sortable>false</sortable>
+            </settings>
+        </column>
+
+        <column name="to_refresh" component="Magento_Ui/js/grid/columns/select" sortOrder="70">
+            <settings>
+                <options>
+                    <option name="active" xsi:type="array">
+                        <item name="value" xsi:type="string">1</item>
+                        <item name="label" xsi:type="string" translate="true">Yes</item>
+                    </option>
+                    <option name="inactive" xsi:type="array">
+                        <item name="value" xsi:type="string">0</item>
+                        <item name="label" xsi:type="string" translate="true">No</item>
+                    </option>
+                </options>
+                <filter>select</filter>
+                <editor>
+                    <editorType>select</editorType>
+                </editor>
+                <dataType>select</dataType>
+                <label translate="true">Refresh scheduled</label>
+            </settings>
+        </column>
+
+        <actionsColumn name="actions" class="Smile\ElasticsuiteVirtualAttribute\Ui\Component\Rule\Listing\Column\RuleActions" sortOrder="80">
+            <settings>
+                <resizeEnabled>false</resizeEnabled>
+                <resizeDefaultWidth>100</resizeDefaultWidth>
+                <indexField>rule_id</indexField>
+            </settings>
+        </actionsColumn>
+    </columns>
+</listing>
