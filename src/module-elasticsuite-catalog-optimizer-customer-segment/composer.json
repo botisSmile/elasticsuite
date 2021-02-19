@@ -1,0 +1,36 @@
+{
+  "name" : "smile/module-elasticsuite-catalog-optimizer-customer-segment",
+  "type" : "magento2-module",
+  "license" : "OSL-3.0",
+  "authors" : [
+    {
+      "name" : "Richard Bayet",
+      "email" : "richard.bayet@smile.fr"
+    }
+  ],
+  "description" : "ElasticSuite - Catalog optimizer customer segments support implementation module.",
+  "homepage" : "https://github.com/Smile-SA/elasticsuite",
+  "keywords" : [
+    "magento",
+    "magento2",
+    "elasticsearch",
+    "search",
+    "merchandising",
+    "core",
+    "setup"
+  ],
+  "require" : {
+    "magento/framework" : "^101.0||^102.0||^103.0",
+    "magento/module-customer-segment" : "^101.0||^102.0||^103.0",
+    "smile/elasticsuite" : "~2.8.0",
+    "smile/module-elasticsuite-beacon" : "*"
+  },
+  "autoload" : {
+    "files" : [
+      "registration.php"
+    ],
+    "psr-4" : {
+      "Smile\\ElasticsuiteCatalogOptimizerCustomerSegment\\" : ""
+    }
+  }
+}
