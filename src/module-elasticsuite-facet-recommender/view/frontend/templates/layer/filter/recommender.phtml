@@ -1,0 +1,39 @@
+<?php
+/**
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Smile ElasticSuite to newer
+ * versions in the future.
+ *
+ * @category  Smile
+ * @package   Smile\ElasticSuiteFacetRecommender
+ * @author    Romain Ruaud <romain.ruaud@smile.fr>
+ * @copyright 2019 Smile
+ * @license   Open Software License ("OSL") v. 3.0
+ */
+ ?>
+
+<?php
+/** @var \Smile\ElasticsuiteFacetRecommender\ViewModel\Navigation\FilterRecommender $viewModel */
+$viewModel = $block->getViewModel();
+?>
+<div id="smile-elasticsuite-filter-recommender" data-bind="scope:'smile-elasticsuite-filter-recommender'">
+    <!-- ko template: getTemplate() --><!-- /ko -->
+</div>
+<script type="text/x-magento-init">
+    {
+        "#smile-elasticsuite-filter-recommender": {
+            "Magento_Ui/js/core/app": {
+               "components": {
+                    "smile-elasticsuite-filter-recommender": {
+                        "component": "smileEsFilterRecommender",
+                        "baseUrl":"<?php /* @escapeNotVerified */ echo $viewModel->getBaseUrl(); ?>",
+                        "categoryId":"<?php /* @escapeNotVerified */ echo $viewModel->getCategoryId(); ?>",
+                        "categoryName":"<?php /* @escapeNotVerified */ echo $viewModel->getCategoryName(); ?>",
+                        "cookieConfig":<?php /* @escapeNotVerified */ echo json_encode($viewModel->getCookieConfig()); ?>
+                    }
+                }
+            }
+        }
+    }
+</script>

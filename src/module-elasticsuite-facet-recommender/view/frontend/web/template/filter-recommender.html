@@ -1,0 +1,12 @@
+<div data-bind="visible: hasItems()" class="block filter elasticsuite-filter-recommender" data-collapsible="true">
+    <div class="filter-current">
+        <strong data-bind="html: getTitle()" class="block-subtitle filter-current-subtitle"></strong>
+        <ol class="items" data-bind="foreach: items, visible: hasItems()">
+            <li class="item" data-bind="css: {'active': active}">
+                <a data-bind="attr: {href:url}, css: {'': active}">
+                    <span data-bind="html: value"></span>
+                </a>
+            </li>
+        </ol>
+    </div>
+</div>

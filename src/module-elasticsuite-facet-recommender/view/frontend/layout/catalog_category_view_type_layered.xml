@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Smile ElasticSuite to newer
+ * versions in the future.
+ *
+ * @category  Smile
+ * @package   Smile\ElasticSuiteFacetRecommender
+ * @author    Romain Ruaud <romain.ruaud@smile.fr>
+ * @copyright 2019 Smile
+ * @license   Open Software License ("OSL") v. 3.0
+ */
+ -->
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="sidebar.main">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="catalog.navigation.recommender"
+                   as="catalog.navigation.recommender"
+                   before="catalog.leftnav"
+                   template="Smile_ElasticsuiteFacetRecommender::layer/filter/recommender.phtml"
+            >
+                <arguments>
+                    <argument name="view_model" xsi:type="object">Smile\ElasticsuiteFacetRecommender\ViewModel\Navigation\FilterRecommender</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+        <move element="catalog.leftnav" destination="sidebar.main" after="catalog.navigation.recommender"/>
+    </body>
+</page>
