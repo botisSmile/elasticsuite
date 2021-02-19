@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * ElasticsuiteCatalogOptimizer listing UI Component
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Smile ElasticSuite to newer
+ * versions in the future.
+ *
+ * @category  Smile
+ * @package   Smile\ElasticsuiteCatalogOptimizer
+ * @author    Fanny DECLERCK <fadec@smile.fr>
+ * @copyright 2019 Smile
+ * @license   Open Software License ("OSL") v. 3.0
+ */
+-->
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">smile_elasticsuite_catalog_optimizer_form.smile_elasticsuite_catalog_optimizer_form_data_source</item>
+            <item name="deps" xsi:type="string">smile_elasticsuite_catalog_optimizer_form.smile_elasticsuite_catalog_optimizer_form_data_source</item>
+        </item>
+        <item name="label" xsi:type="string" translate="true">Optimizer Information</item>
+        <item name="template" xsi:type="string">templates/form/collapsible</item>
+        <item name="buttons" xsi:type="array">
+            <item name="back" xsi:type="string">Smile\ElasticsuiteCatalogOptimizer\Block\Adminhtml\Optimizer\Edit\Button\Back</item>
+            <item name="save" xsi:type="string">Smile\ElasticsuiteCatalogOptimizer\Block\Adminhtml\Optimizer\Edit\Button\Save</item>
+            <item name="delete" xsi:type="string">Smile\ElasticsuiteCatalogOptimizer\Block\Adminhtml\Optimizer\Edit\Button\Delete</item>
+            <item name="save_and_continue" xsi:type="string">Smile\ElasticsuiteCatalogOptimizer\Block\Adminhtml\Optimizer\Edit\Button\SaveAndContinue</item>
+        </item>
+        <item name="config" xsi:type="array">
+            <item name="dataScope" xsi:type="string">data</item>
+            <item name="namespace" xsi:type="string">smile_elasticsuite_catalog_optimizer_form</item>
+        </item>
+        <item name="reverseMetadataMerge" xsi:type="boolean">true</item>
+    </argument>
+    <dataSource name="smile_elasticsuite_catalog_optimizer_form_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Smile\ElasticsuiteCatalogOptimizer\Ui\Component\Optimizer\Form\DataProvider</argument>
+            <argument name="name" xsi:type="string">smile_elasticsuite_catalog_optimizer_form_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">optimizer_id</argument>
+            <argument name="requestFieldName" xsi:type="string">id</argument>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="submit_url" xsi:type="url" path="smile_elasticsuite_catalog_optimizer/optimizer/save"/>
+                </item>
+            </argument>
+        </argument>
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+            </item>
+        </argument>
+    </dataSource>
+
+    <fieldset name="quick_search_container" sortOrder="50"/>
+
+    <fieldset name="catalog_view_container" sortOrder="60"/>
+
+    <fieldset name="constant_score" sortOrder="30"/>
+
+    <fieldset name="attribute_value" sortOrder="40"/>
+
+    <fieldset name="optimizer_rule_fieldset" sortOrder="90"/>
+
+    <fieldset name="optimizer_preview_fieldset" sortOrder="100"/>
+
+    <fieldset name="general" sortOrder="10">
+        <field name="model">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="array">
+                    <item name="10" xsi:type="array">
+                        <item name="value" xsi:type="string">behavioral</item>
+                        <item name="label" xsi:type="string" translate="true">Based on behavioral data</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+    </fieldset>
+
+    <fieldset name="behavioral" sortOrder="45">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="label" xsi:type="string" translate="true">Configuration</item>
+                <item name="component" xsi:type="string">Smile_ElasticsuiteCatalogOptimizer/js/components/form/optimizer/fieldset-visibility</item>
+            </item>
+        </argument>
+
+        <field name="metric" formElement="select" component="Magento_Ui/js/form/element/ui-select" sortOrder="10">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filterOptions" xsi:type="boolean">false</item>
+                    <item name="showCheckbox" xsi:type="boolean">false</item>
+                    <item name="disableLabel" xsi:type="boolean">true</item>
+                    <item name="multiple" xsi:type="boolean">false</item>
+                    <item name="levelsVisibility" xsi:type="number">1</item>
+                </item>
+            </argument>
+            <settings>
+                <imports>
+                    <link name="visible">true</link>
+                    <link name="disabled">${ $.parentName}:disableChildren</link>
+                </imports>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                </validation>
+                <dataType>text</dataType>
+                <label translate="true">Metric</label>
+                <dataScope>config.metric</dataScope>
+                <elementTmpl>ui/grid/filters/elements/ui-select</elementTmpl>
+            </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <options class="Smile\ElasticsuiteBehavioralOptimizer\Ui\Component\Optimizer\Source\Config\BehavioralData\Options"/>
+                    </settings>
+                </select>
+            </formElements>
+        </field>
+
+        <field name="scale_function" formElement="select" sortOrder="20">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="array">
+                    <item name="0" xsi:type="array">
+                        <item name="value" xsi:type="string">ln1p</item>
+                        <item name="label" xsi:type="string" translate="true">Logarithmic</item>
+                    </item>
+                    <item name="1" xsi:type="array">
+                        <item name="value" xsi:type="string">sqrt</item>
+                        <item name="label" xsi:type="string" translate="true">Square Root</item>
+                    </item>
+                    <item name="2" xsi:type="array">
+                        <item name="value" xsi:type="string">none</item>
+                        <item name="label" xsi:type="string" translate="true">Linear</item>
+                    </item>
+                </item>
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">optimizer</item>
+                </item>
+            </argument>
+            <settings>
+                <label translate="true">Scale function</label>
+                <dataType>string</dataType>
+                <dataScope>config.scale_function</dataScope>
+            </settings>
+        </field>
+
+        <field name="scale_factor" sortOrder="30" formElement="input">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">optimizer</item>
+                    <item name="imports" xsi:type="array">
+                        <item name="disabled" xsi:type="string">${ $.parentName}:disableChildren</item>
+                    </item>
+                    <item name="default" xsi:type="number">1</item>
+                </item>
+            </argument>
+            <settings>
+                <label translate="true">Boost value (multiply)</label>
+                <dataType>string</dataType>
+                <dataScope>config.scale_factor</dataScope>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                    <rule name="validate-number" xsi:type="boolean">true</rule>
+                </validation>
+                <tooltip>
+                    <description translate="true">Value the field will be multiplied by before applying the scale function</description>
+                </tooltip>
+            </settings>
+        </field>
+    </fieldset>
+
+</form>
