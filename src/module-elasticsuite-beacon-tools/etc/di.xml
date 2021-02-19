@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Smile_ElasticsuiteBeacon dependency injection configuration.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Smile ElasticSuite to newer
+ * versions in the future.
+ *
+ * @category  Smile
+ * @package   Smile\ElasticsuiteBeaconTools
+ * @author    Richard BAYET <richard.bayet@smile.fr>
+ * @copyright 2021 Smile
+ * @license   Open Software License ("OSL") v. 3.0
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- Performance tests -->
+    <virtualType name="staticHostContext" type="Smile\ElasticsuiteBeaconTools\Test\Load\ContextProvider\Host">
+        <arguments>
+            <argument name="maxHosts" xsi:type="number">1</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="randomHostContext" type="Smile\ElasticsuiteBeaconTools\Test\Load\ContextProvider\Host">
+        <arguments>
+            <argument name="maxHosts" xsi:type="number">10</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="staticDateContext" type="Smile\ElasticsuiteBeaconTools\Test\Load\ContextProvider\Date">
+        <arguments>
+            <argument name="maxDays" xsi:type="number">1</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="randomDateContext" type="Smile\ElasticsuiteBeaconTools\Test\Load\ContextProvider\Date">
+        <arguments>
+            <argument name="maxDays" xsi:type="number">10</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="randomHugeDateContext" type="Smile\ElasticsuiteBeaconTools\Test\Load\ContextProvider\Date">
+        <arguments>
+            <argument name="maxDays" xsi:type="number">100</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="stressTestClient" type="Smile\ElasticsuiteBeacon\Model\ContextProvider\Client">
+        <arguments>
+            <argument name="config" xsi:type="object">Smile\ElasticsuiteBeaconTools\Test\Load\Config</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="stressTestGenerator" type="Smile\ElasticsuiteBeaconTools\Test\Load\Generator">
+        <arguments>
+            <argument name="initialContextProvidersPool" xsi:type="array">
+                <item name="client" xsi:type="object">stressTestClient</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="staticHostDayGenerator" type="stressTestGenerator">
+        <arguments>
+            <argument name="initialContextProvidersPool" xsi:type="array">
+                <item name="date" xsi:type="object">staticDateContext</item>
+                <item name="host" xsi:type="object">staticHostContext</item>
+            </argument>
+            <argument name="name" xsi:type="string">Static Host/Day Generator</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="randomHostGenerator" type="stressTestGenerator">
+        <arguments>
+            <argument name="initialContextProvidersPool" xsi:type="array">
+                <item name="date" xsi:type="object">staticDateContext</item>
+                <item name="host" xsi:type="object">randomHostContext</item>
+            </argument>
+            <argument name="name" xsi:type="string">Random Host/Static Day Generator</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="randomDayGenerator" type="stressTestGenerator">
+        <arguments>
+            <argument name="initialContextProvidersPool" xsi:type="array">
+                <item name="date" xsi:type="object">randomDateContext</item>
+                <item name="host" xsi:type="object">staticHostContext</item>
+            </argument>
+            <argument name="name" xsi:type="string">Static Host/Random Day Generator</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="randomHostDayGenerator" type="stressTestGenerator">
+        <arguments>
+            <argument name="initialContextProvidersPool" xsi:type="array">
+                <item name="date" xsi:type="object">randomDateContext</item>
+                <item name="host" xsi:type="object">randomHostContext</item>
+            </argument>
+            <argument name="name" xsi:type="string">Random Host/Random Day Generator</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="randomHostHugeDayGenerator" type="stressTestGenerator">
+        <arguments>
+            <argument name="initialContextProvidersPool" xsi:type="array">
+                <item name="date" xsi:type="object">randomHugeDateContext</item>
+                <item name="host" xsi:type="object">randomHostContext</item>
+            </argument>
+            <argument name="name" xsi:type="string">Random Host/Huge Random Day Generator</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Smile\ElasticsuiteBeaconTools\Console\Command\BeaconStressTest">
+        <arguments>
+            <argument name="generatorModels" xsi:type="array">
+                <item name="static" xsi:type="object">staticHostDayGenerator</item>
+                <item name="randomHost" xsi:type="object">randomHostGenerator</item>
+                <item name="randomDay" xsi:type="object">randomDayGenerator</item>
+                <item name="randomHostDayGenerator" xsi:type="object">randomHostDayGenerator</item>
+                <item name="randomHostHugeDayGenerator" xsi:type="object">randomHostHugeDayGenerator</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Framework\Console\CommandListInterface">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="beaconStressTest" xsi:type="object">Smile\ElasticsuiteBeaconTools\Console\Command\BeaconStressTest</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

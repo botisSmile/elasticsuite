@@ -1,0 +1,32 @@
+{
+    "name": "smile/module-elasticsuite-beacon-tools",
+    "type": "magento2-module",
+    "license": "OSL-3.0",
+    "authors": [{
+            "name": "Richard Bayet",
+            "email": "richard.bayet@smile.fr"
+        }
+    ],
+    "description": "ElasticSuite - Beacon Tools module.",
+    "homepage": "https://elasticsuite.io",
+    "keywords": [
+        "magento",
+        "magento2",
+        "elasticsearch",
+        "search",
+        "merchandising",
+        "core",
+        "setup"
+    ],
+    "require": {
+        "smile/module-elasticsuite-beacon" : "*"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Smile\\ElasticsuiteBeaconTools\\": ""
+        }
+    }
+}
