@@ -1,0 +1,309 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Smile ElasticSuite to newer
+ * versions in the future.
+ *
+ *
+ * @category  Smile
+ * @package   Smile\ElasticsuiteRecommender
+ * @author    Aurelien FOUCRET <aurelien.foucret@smile.fr>
+ * @copyright 2018 Smile
+ * @license   Open Software License ("OSL") v. 3.0
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <!-- Upsell products -->
+    <virtualType name="Smile\ElasticsuiteRecommender\Model\Product\Upsell\SearchQueryBuilder"
+                 type="Smile\ElasticsuiteRecommender\Model\Product\Matcher\SearchQueryBuilder">
+        <arguments>
+            <argument name="searchQueries" xsi:type="array">
+                <item name="must" xsi:type="array">
+                    <item name="categories" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Upsell\SearchQuery\Category</item>
+                    <item name="higherPrice" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Upsell\SearchQuery\HigherPrice</item>
+                </item>
+                <item name="should" xsi:type="array">
+                    <item name="searchTerms" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Upsell\SearchQuery\SearchTerms</item>
+                    <item name="relatedProducts" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Upsell\SearchQuery\RelatedProducts</item>
+                    <item name="manualProducts" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Upsell\SearchQuery\ManualProducts</item>
+                </item>
+                <item name="mustNot" xsi:type="array">
+                    <item name="productFilter" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Upsell\SearchQuery\ProductFilter</item>
+                    <item name="cartProductFilter" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Matcher\SearchQuery\CartProductFilter</item>
+                    <item name="alreadyBoughtFilter" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Matcher\SearchQuery\AlreadyBoughtFilter</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Smile\ElasticsuiteRecommender\Model\ResourceModel\Product\Upsell\Collection"
+                 type="Smile\ElasticsuiteCatalog\Model\ResourceModel\Product\Fulltext\Collection">
+        <arguments>
+            <argument name="searchRequestName" xsi:type="string">upsell_products_container</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Smile\ElasticsuiteRecommender\Model\ResourceModel\Product\Upsell\CollectionFactory"
+                 type="Smile\ElasticsuiteCatalog\Model\ResourceModel\Product\Fulltext\CollectionFactory">
+        <arguments>
+            <argument name="instanceName" xsi:type="string">Smile\ElasticsuiteRecommender\Model\ResourceModel\Product\Upsell\Collection</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Smile\ElasticsuiteRecommender\Model\Product\Upsell\CollectionProvider"
+                 type="Smile\ElasticsuiteRecommender\Model\Product\Matcher\CollectionProvider">
+        <arguments>
+            <argument name="productCollectionFactory" xsi:type="object">Smile\ElasticsuiteRecommender\Model\ResourceModel\Product\Upsell\CollectionFactory</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Smile\ElasticsuiteRecommender\Model\Product\Upsell"
+                 type="Smile\ElasticsuiteRecommender\Model\Product\Matcher">
+        <arguments>
+            <argument name="searchQueryBuilder" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Upsell\SearchQueryBuilder</argument>
+            <argument name="itemProvider" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Upsell\ItemProvider</argument>
+            <argument name="collectionProvider" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Upsell\CollectionProvider</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Smile\ElasticsuiteRecommender\Block\Product\Upsell"
+                 type="Smile\ElasticsuiteRecommender\Block\Product\RecommenderList">
+        <arguments>
+            <argument name="model" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Upsell</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Related products -->
+    <virtualType name="addToCartRelated" type="Smile\ElasticsuiteRecommender\Model\Product\Related\SearchQuery\CoOccurrenceQuery">
+        <arguments>
+            <argument name="coOccurrenceField" xsi:type="string">product_cart</argument>
+            <argument name="boost" xsi:type="string">5</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="orderRelated" type="Smile\ElasticsuiteRecommender\Model\Product\Related\SearchQuery\CoOccurrenceQuery">
+        <arguments>
+            <argument name="coOccurrenceField" xsi:type="string">product_sale</argument>
+            <argument name="boost" xsi:type="string">10</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="addToCartSimilarRelated" type="Smile\ElasticsuiteRecommender\Model\Product\Related\SearchQuery\SimilarProductCoOccurrenceQuery">
+        <arguments>
+            <argument name="coOccurrenceField" xsi:type="string">product_cart</argument>
+            <argument name="boost" xsi:type="string">1</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="orderSimilarRelated" type="Smile\ElasticsuiteRecommender\Model\Product\Related\SearchQuery\SimilarProductCoOccurrenceQuery">
+        <arguments>
+            <argument name="coOccurrenceField" xsi:type="string">product_sale</argument>
+            <argument name="boost" xsi:type="string">2</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Smile\ElasticsuiteRecommender\Model\Product\Related\SearchQueryBuilder"
+                 type="Smile\ElasticsuiteRecommender\Model\Product\Matcher\SearchQueryBuilder">
+        <arguments>
+            <argument name="searchQueries" xsi:type="array">
+                <item name="should" xsi:type="array">
+                    <item name="addToCartRelated" xsi:type="object">addToCartRelated</item>
+                    <item name="orderRelated" xsi:type="object">orderRelated</item>
+                    <item name="addToCartSimilarRelated" xsi:type="object">addToCartSimilarRelated</item>
+                    <item name="orderSimilarRelated" xsi:type="object">orderSimilarRelated</item>
+                </item>
+                <item name="mustNot" xsi:type="array">
+                    <item name="productFilter" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Related\SearchQuery\ProductFilter</item>
+                    <item name="cartProductFilter" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Matcher\SearchQuery\CartProductFilter</item>
+                    <item name="alreadyBoughtFilter" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Matcher\SearchQuery\AlreadyBoughtFilter</item>
+                    <item name="compositeProductTypeFilter" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Related\SearchQuery\CompositeProductTypeFilter</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Smile\ElasticsuiteRecommender\Model\ResourceModel\Product\Related\Collection"
+                 type="Smile\ElasticsuiteCatalog\Model\ResourceModel\Product\Fulltext\Collection">
+        <arguments>
+            <argument name="searchRequestName" xsi:type="string">related_products_container</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Smile\ElasticsuiteRecommender\Model\ResourceModel\Product\Related\CollectionFactory"
+                 type="Smile\ElasticsuiteCatalog\Model\ResourceModel\Product\Fulltext\CollectionFactory">
+        <arguments>
+            <argument name="instanceName" xsi:type="string">Smile\ElasticsuiteRecommender\Model\ResourceModel\Product\Related\Collection</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Smile\ElasticsuiteRecommender\Model\Product\Related\CollectionProvider"
+                 type="Smile\ElasticsuiteRecommender\Model\Product\Matcher\CollectionProvider">
+        <arguments>
+            <argument name="productCollectionFactory" xsi:type="object">Smile\ElasticsuiteRecommender\Model\ResourceModel\Product\Related\CollectionFactory</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Smile\ElasticsuiteRecommender\Model\Product\Related"
+                 type="Smile\ElasticsuiteRecommender\Model\Product\Matcher">
+        <arguments>
+            <argument name="searchQueryBuilder" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Related\SearchQueryBuilder</argument>
+            <argument name="itemProvider" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Related\ItemProvider</argument>
+            <argument name="collectionProvider" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Related\CollectionProvider</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Smile\ElasticsuiteRecommender\Block\Product\Related"
+                 type="Smile\ElasticsuiteRecommender\Block\Product\RecommenderList">
+        <arguments>
+            <argument name="model" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Related</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Cross-sell products -->
+    <virtualType name="Smile\ElasticsuiteRecommender\Model\Product\CrossSell\SearchQueryBuilder"
+                 type="Smile\ElasticsuiteRecommender\Model\Product\Matcher\SearchQueryBuilder">
+        <arguments>
+            <argument name="searchQueries" xsi:type="array">
+                <item name="should" xsi:type="array">
+                    <item name="addToCartRelated" xsi:type="object">addToCartRelated</item>
+                    <item name="orderRelated" xsi:type="object">orderRelated</item>
+                    <item name="addToCartSimilarRelated" xsi:type="object">addToCartSimilarRelated</item>
+                    <item name="orderSimilarRelated" xsi:type="object">orderSimilarRelated</item>
+                </item>
+                <item name="mustNot" xsi:type="array">
+                    <item name="productFilter" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\CrossSell\SearchQuery\ProductFilter</item>
+                    <item name="cartProductFilter" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Matcher\SearchQuery\CartProductFilter</item>
+                    <item name="alreadyBoughtFilter" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Matcher\SearchQuery\AlreadyBoughtFilter</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Smile\ElasticsuiteRecommender\Model\ResourceModel\Product\CrossSell\Collection"
+                 type="Smile\ElasticsuiteCatalog\Model\ResourceModel\Product\Fulltext\Collection">
+        <arguments>
+            <argument name="searchRequestName" xsi:type="string">crosssell_products_container</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Smile\ElasticsuiteRecommender\Model\ResourceModel\Product\CrossSell\CollectionFactory"
+                 type="Smile\ElasticsuiteCatalog\Model\ResourceModel\Product\Fulltext\CollectionFactory">
+        <arguments>
+            <argument name="instanceName" xsi:type="string">Smile\ElasticsuiteRecommender\Model\ResourceModel\Product\CrossSell\Collection</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Smile\ElasticsuiteRecommender\Model\Product\CrossSell\CollectionProvider"
+                 type="Smile\ElasticsuiteRecommender\Model\Product\Matcher\CollectionProvider">
+        <arguments>
+            <argument name="productCollectionFactory" xsi:type="object">Smile\ElasticsuiteRecommender\Model\ResourceModel\Product\CrossSell\CollectionFactory</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Smile\ElasticsuiteRecommender\Model\Product\CrossSell"
+                 type="Smile\ElasticsuiteRecommender\Model\Product\Matcher">
+        <arguments>
+            <argument name="searchQueryBuilder" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\CrossSell\SearchQueryBuilder</argument>
+            <argument name="itemProvider" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\CrossSell\ItemProvider</argument>
+            <argument name="collectionProvider" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\CrossSell\CollectionProvider</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Smile\ElasticsuiteRecommender\Block\Product\CrossSell"
+                 type="Smile\ElasticsuiteRecommender\Block\Product\Cart\RecommenderList">
+        <arguments>
+            <argument name="model" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\CrossSell</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Visitor personal recommendations -->
+    <virtualType name="Smile\ElasticsuiteRecommender\Model\Product\Visitor\SearchQueryBuilder"
+                 type="Smile\ElasticsuiteRecommender\Model\Product\Matcher\SearchQueryBuilder">
+        <arguments>
+            <argument name="searchQueries" xsi:type="array">
+                <item name="must" xsi:type="array">
+                    <item name="categories" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Upsell\SearchQuery\Category</item>
+                </item>
+                <item name="should" xsi:type="array">
+                    <!-- First part is : recommend to the user products similar to the products he already viewed or bought -->
+                    <item name="searchTerms" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Upsell\SearchQuery\SearchTerms</item>
+                    <item name="relatedProducts" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Upsell\SearchQuery\RelatedProducts</item>
+                    <item name="manualProducts" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Upsell\SearchQuery\ManualProducts</item>
+                    <!-- Second part is : recommend to the user products complementary (cross-sell) to the products he already viewed or bought -->
+                    <item name="addToCartRelated" xsi:type="object">addToCartRelated</item>
+                    <item name="orderRelated" xsi:type="object">orderRelated</item>
+                    <item name="addToCartSimilarRelated" xsi:type="object">addToCartSimilarRelated</item>
+                    <item name="orderSimilarRelated" xsi:type="object">orderSimilarRelated</item>
+                </item>
+                <item name="mustNot" xsi:type="array">
+                    <item name="cartProductFilter" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Matcher\SearchQuery\CartProductFilter</item>
+                    <item name="alreadyBoughtFilter" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Matcher\SearchQuery\AlreadyBoughtFilter</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Smile\ElasticsuiteRecommender\Model\ResourceModel\Product\Visitor\Collection"
+                 type="Smile\ElasticsuiteCatalog\Model\ResourceModel\Product\Fulltext\Collection">
+        <arguments>
+            <argument name="searchRequestName" xsi:type="string">visitor_products_container</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Smile\ElasticsuiteRecommender\Model\ResourceModel\Product\Visitor\CollectionFactory"
+                 type="Smile\ElasticsuiteCatalog\Model\ResourceModel\Product\Fulltext\CollectionFactory">
+        <arguments>
+            <argument name="instanceName" xsi:type="string">Smile\ElasticsuiteRecommender\Model\ResourceModel\Product\Visitor\Collection</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Smile\ElasticsuiteRecommender\Model\Product\Visitor\CollectionProvider">
+        <arguments>
+            <argument name="productCollectionFactory" xsi:type="object">Smile\ElasticsuiteRecommender\Model\ResourceModel\Product\Visitor\CollectionFactory</argument>
+        </arguments>
+    </type>
+
+    <virtualType name="Smile\ElasticsuiteRecommender\Model\Product\Visitor"
+                 type="Smile\ElasticsuiteRecommender\Model\Product\Matcher\Multiple">
+        <arguments>
+            <argument name="searchQueryBuilder" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Visitor\SearchQueryBuilder</argument>
+            <argument name="collectionProvider" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Visitor\CollectionProvider</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Smile\ElasticsuiteRecommender\Model\Product\Visitor\ProductProvider">
+        <arguments>
+            <argument name="aggregationProviders" xsi:type="array">
+                <item name="sales" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Visitor\Sales\AggregationProvider</item>
+                <item name="views" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Visitor\Views\AggregationProvider</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <virtualType name="Smile\ElasticsuiteRecommender\Model\Product\Visitor\ProductProviderFactory"
+                 type="Smile\ElasticsuiteRecommender\Model\Product\Matcher\ProductProviderInterfaceFactory">
+        <arguments>
+            <argument name="instanceName" xsi:type="string">Smile\ElasticsuiteRecommender\Model\Product\Visitor\ProductProvider</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Visitor Recommendations Service -->
+    <type name="Smile\ElasticsuiteRecommender\Model\Product\Visitor\Service">
+        <arguments>
+            <argument name="productProviderFactory" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Visitor\ProductProviderFactory</argument>
+            <argument name="model" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Visitor</argument>
+        </arguments>
+    </type>
+
+    <preference for="Smile\ElasticsuiteRecommender\Model\Product\Matcher\ProductProvider\ContextInterface" type="Smile\ElasticsuiteRecommender\Model\Product\Visitor\Context"/>
+
+    <!-- More Like This / Similar Products service -->
+    <type name="Smile\ElasticsuiteRecommender\Model\Similarity">
+        <arguments>
+            <argument name="collectionProvider" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Related\CollectionProvider</argument>
+        </arguments>
+    </type>
+</config>

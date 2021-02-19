@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Smile\ElasticsuiteRecommender search requests configuration.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Smile ElasticSuite to newer
+ * versions in the future.
+ *
+ *
+ * @category  Smile
+ * @package   Smile\ElasticsuiteRecommender
+ * @author    Richard BAYET <richard.bayet@smile.fr>
+ * @copyright 2019 Smile
+ * @license   Open Software License ("OSL") v. 3.0
+ */
+ -->
+<requests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:module:Smile_ElasticsuiteCore:etc/elasticsuite_search_request.xsd">
+
+    <request name="related_products_container" label="Related Products" index="catalog_product" type="product" fulltext="false">
+        <filters>
+            <filter name="stockFilter">Smile\ElasticsuiteCatalog\Model\Product\Search\Request\Container\Filter\Stock</filter>
+            <filter name="visibleInCatalog">Smile\ElasticsuiteCatalog\Model\Product\Search\Request\Container\Filter\VisibleInCatalog</filter>
+        </filters>
+    </request>
+
+    <request name="upsell_products_container" label="Upsell Products" index="catalog_product" type="product" fulltext="false">
+        <filters>
+            <filter name="stockFilter">Smile\ElasticsuiteCatalog\Model\Product\Search\Request\Container\Filter\Stock</filter>
+            <filter name="visibleInCatalog">Smile\ElasticsuiteCatalog\Model\Product\Search\Request\Container\Filter\VisibleInCatalog</filter>
+        </filters>
+    </request>
+
+    <request name="crosssell_products_container" label="Cross-sell Products" index="catalog_product" type="product" fulltext="false">
+        <filters>
+            <filter name="stockFilter">Smile\ElasticsuiteCatalog\Model\Product\Search\Request\Container\Filter\Stock</filter>
+            <filter name="visibleInCatalog">Smile\ElasticsuiteCatalog\Model\Product\Search\Request\Container\Filter\VisibleInCatalog</filter>
+        </filters>
+    </request>
+
+    <request name="visitor_products_container" label="Visitor Products" index="catalog_product" type="product" fulltext="false">
+        <filters>
+            <filter name="stockFilter">Smile\ElasticsuiteCatalog\Model\Product\Search\Request\Container\Filter\Stock</filter>
+            <filter name="visibleInCatalog">Smile\ElasticsuiteCatalog\Model\Product\Search\Request\Container\Filter\VisibleInCatalog</filter>
+        </filters>
+    </request>
+
+</requests>

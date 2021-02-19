@@ -1,0 +1,41 @@
+<!--
+/**
+ * Elasticsuite Recommender module configuration
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Smile Searchandising Suite to newer
+ * versions in the future.
+ *
+ * @category  Smile
+ * @package   Smile\ElasticsuiteRecommender
+ * @author    Richard BAYET <richard.bayet@smile.fr>
+ * @copyright 2019 Smile
+ * @license   Open Software License ("OSL") v. 3.0
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <smile_elasticsuite_recommender>
+            <general>
+                <exclude_already_bought>1</exclude_already_bought>
+                <exclude_already_bought_max_age>90</exclude_already_bought_max_age>
+                <prevent_zero_constraints_queries>1</prevent_zero_constraints_queries>
+                <related_position_limit>6</related_position_limit>
+                <related_behavior>0</related_behavior>
+                <related_exclude_composite_products>0</related_exclude_composite_products>
+                <crosssell_position_limit>5</crosssell_position_limit>
+                <crosssell_behavior>0</crosssell_behavior>
+                <upsell_position_limit>8</upsell_position_limit>
+                <upsell_behavior>0</upsell_behavior>
+                <upsell_native_selection_complement>1</upsell_native_selection_complement>
+                <upsell_force_higher_price>0</upsell_force_higher_price>
+                <upsell_categories_use_category_views_cooccurrence>0</upsell_categories_use_category_views_cooccurrence>
+                <upsell_related_use_product_views_cooccurrence>0</upsell_related_use_product_views_cooccurrence>
+            </general>
+            <cooccurrence>
+                <min_doc_count>5</min_doc_count>
+            </cooccurrence>
+        </smile_elasticsuite_recommender>
+    </default>
+</config>
