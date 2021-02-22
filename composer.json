@@ -63,7 +63,7 @@
             "src/module-elasticsuite-behavioral-optimizer/registration.php",
             "src/module-elasticsuite-catalog-optimizer-customer-segment/registration.php",
             "src/module-elasticsuite-facet-recommender/registration.php",
-            "src/module-elasticsuite-react-autocomplete/registration.php",
+            "src/module-elasticsuite-instant-search/registration.php",
             "src/module-elasticsuite-recommender/registration.php",
             "src/module-elasticsuite-virtual-attribute/registration.php"
         ],
@@ -75,7 +75,7 @@
             "Smile\\ElasticsuiteBehavioralOptimizer\\": "src/module-elasticsuite-behavioral-optimizer",
             "Smile\\ElasticsuiteCatalogOptimizerCustomerSegment\\": "src/module-elasticsuite-catalog-optimizer-customer-segment",
             "Smile\\ElasticsuiteFacetRecommender\\": "src/module-elasticsuite-facet-recommender",
-            "Smile\\ElasticsuiteInstantSearch\\": "src/module-elasticsuite-react-autocomplete",
+            "Smile\\ElasticsuiteInstantSearch\\": "src/module-elasticsuite-instant-search",
             "Smile\\ElasticsuiteRecommender\\": "src/module-elasticsuite-recommender",
             "Smile\\ElasticsuiteVirtualAttribute\\": "src/module-elasticsuite-virtual-attribute"
         }
