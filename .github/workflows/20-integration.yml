@@ -63,6 +63,11 @@ jobs:
                   extensions: hash, iconv, mbstring, intl, bcmath, ctype, gd, pdo, mysql, curl, zip, dom, sockets, soap, openssl, simplexml, xsl
                   ini-values: post_max_size=256M, max_execution_time=180
 
+            - name: "[Init] Disable xdebug"
+              env:
+                  version: ${{ matrix.php-versions }}
+              run: sudo phpdismod xdebug
+
             - name: "[Init] Add php-fpm"
               env:
                   version: ${{ matrix.php-versions }}
