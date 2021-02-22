@@ -47,6 +47,12 @@ jobs:
             - name: "[Init] Checkout"
               uses: actions/checkout@v2
 
+            - name: "[Init] Checkout full repository to be used as a composer repository"
+              uses: actions/checkout@v2
+              with:
+                  fetch-depth: 0
+                  path: repository
+
             - name: "[Init] Setup PHP"
               uses: shivammathur/setup-php@v2
               with:
@@ -145,7 +151,7 @@ jobs:
             - name: "[Init] Prepare Elasticsuite repo"
               working-directory: ${{ env.magento-directory }}
               run: |
-                  composer config --global --no-interaction --ansi repositories.elasticsuite-premium git "git@github.com:$GITHUB_REPOSITORY.git"
+                  composer config --global --no-interaction --ansi repositories.elasticsuite-premium git "$GITHUB_WORKSPACE/$GITHUB_REPOSITORY.git"
                   composer config --global repositories
 
             - name: "[Init] Cache Magento install"
