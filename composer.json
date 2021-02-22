@@ -1,0 +1,48 @@
+{
+    "name": "smile/elasticsuite-premium",
+    "type": "magento2-component",
+    "license": "OSL-3.0",
+    "authors": [
+        {
+            "name": "Romain Ruaud",
+            "email": "romain.ruaud@smile.fr"
+        }
+    ],
+    "description": "Magento 2 Elasticsuite Premium modules built on top of Elasticsuite",
+    "homepage": "https://github.com/Smile-SA/elasticsuite",
+    "keywords": [
+        "magento",
+        "magento2",
+        "elasticsearch",
+        "search",
+        "merchandising",
+        "core",
+        "setup",
+        "graphql"
+    ],
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://repo.magento.com/"
+        }
+    ],
+    "require": {
+        "smile/elasticsuite": "~2.8.0"
+    },
+    "replace": {
+        "smile/module-elasticsuite-virtual-attribute": "self.version"
+    },
+    "require-dev": {
+        "smile/magento2-smilelab-quality-suite": "~2.2.0"
+    },
+    "autoload": {
+        "files": [
+            "src/module-elasticsuite-virtual-attribute/registration.php"
+        ],
+        "psr-4": {
+            "Smile\\ElasticsuiteVirtualAttribute\\": "src/module-elasticsuite-virtual-attribute"
+        }
+    },
+   "minimum-stability": "dev",
+   "prefer-stable": true
+}
