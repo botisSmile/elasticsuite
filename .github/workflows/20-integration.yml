@@ -202,7 +202,7 @@ jobs:
                 sudo rm -rf $MAGENTO_ROOT
                 sudo mkdir -p $MAGENTO_ROOT
                 sudo chown -R $USER:www-data $MAGENTO_ROOT
-                composer create-project --repository-url=https://repo.magento.com magento/project-$MAGENTO_EDITION-edition=$MAGENTO_VERSION $STABILITY $MAGENTO_ROOT
+                composer create-project --repository-url=https://repo.magento.com magento/project-$MAGENTO_EDITION-edition=$MAGENTO_VERSION $STABILITY $MAGENTO_ROOT --quiet
 
             - name: "[Init] Add current build of Elasticsuite Premium"
               working-directory: ${{ env.magento-directory }}
@@ -224,7 +224,7 @@ jobs:
 
             - name: "[Test] Install Magento"
               working-directory: ${{ env.magento-directory }}
-              run: php bin/magento setup:install --db-host="0.0.0.0" --db-password="magento2" --admin-user="admin" --admin-password="smile1234" --admin-email="admin@example.com" --admin-firstname="Admin" --admin-lastname="Smile" --db-name="magento2" --elasticsearch-host="localhost" --elasticsearch-port="9200" -q
+              run: php bin/magento setup:install --db-host="0.0.0.0" --db-password="magento2" --admin-user="admin" --admin-password="smile1234" --admin-email="admin@example.com" --admin-firstname="Admin" --admin-lastname="Smile" --db-name="magento2" -q
 
             - name: "[Test] Setup Upgrade"
               working-directory: ${{ env.magento-directory }}
