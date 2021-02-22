@@ -151,7 +151,7 @@ jobs:
             - name: "[Init] Prepare Elasticsuite repo"
               working-directory: ${{ env.magento-directory }}
               run: |
-                  composer config --global --no-interaction --ansi repositories.elasticsuite-premium git "$GITHUB_WORKSPACE/$GITHUB_REPOSITORY.git"
+                  composer config --global --no-interaction --ansi repositories.elasticsuite-premium git "$GITHUB_WORKSPACE/repository"
                   composer config --global repositories
 
             - name: "[Init] Cache Magento install"
