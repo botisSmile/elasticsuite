@@ -224,11 +224,11 @@ jobs:
 
             - name: "[Test] Install Magento"
               working-directory: ${{ env.magento-directory }}
-              run: php bin/magento setup:install --db-host="0.0.0.0" --db-password="magento2" --admin-user="admin" --admin-password="smile1234" --admin-email="admin@example.com" --admin-firstname="Admin" --admin-lastname="Smile" --db-name="magento2" -q
+              run: php bin/magento setup:install --db-host="0.0.0.0" --db-password="magento2" --admin-user="admin" --admin-password="smile1234" --admin-email="admin@example.com" --admin-firstname="Admin" --admin-lastname="Smile" --db-name="magento2"
 
             - name: "[Test] Setup Upgrade"
               working-directory: ${{ env.magento-directory }}
-              run: php bin/magento setup:upgrade -q
+              run: php bin/magento setup:upgrade
 
             - name: "[Test] Reindex"
               working-directory: ${{ env.magento-directory }}
