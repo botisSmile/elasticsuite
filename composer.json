@@ -27,7 +27,7 @@
         }
     ],
     "require": {
-        "smile/elasticsuite": "~2.6.0"
+        "smile/elasticsuite": "~2.8.0"
     },
     "replace": {
         "smile/module-elasticsuite-virtual-attribute": "self.version"
