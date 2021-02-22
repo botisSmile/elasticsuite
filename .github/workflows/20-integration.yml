@@ -73,6 +73,9 @@ jobs:
                 sudo service php$version-fpm start
                 sudo service php$version-fpm status
 
+            - name: "[Init] Remove hhvm if installed"
+              run: sudo apt-get remove hhvm --ignore-missing
+
             - name: "[Init] Setup Apache with PHP-FPM"
               env:
                   MAGENTO_ROOT: ${{ env.magento-directory }}
