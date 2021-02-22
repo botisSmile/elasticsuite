@@ -6,6 +6,14 @@
         {
             "name": "Romain Ruaud",
             "email": "romain.ruaud@smile.fr"
+        },
+        {
+            "name": "Richard Bayet",
+            "email": "richard.bayet@smile.fr"
+        },
+        {
+            "name": "Aurélien FOUCRET",
+            "email": "aurelien.foucret@smile.fr"
         }
     ],
     "description": "Magento 2 Elasticsuite Premium modules built on top of Elasticsuite",
@@ -27,9 +35,20 @@
         }
     ],
     "require": {
-        "smile/elasticsuite": "~2.8.0"
+        "smile/elasticsuite": "~2.8.0",
+        "ezimuel/ringphp" : "*",
+        "smile/magento2-react": "~16"
     },
     "replace": {
+        "smile/module-elasticsuite-beacon": "self.version",
+        "smile/module-elasticsuite-beacon-tools": "self.version",
+        "smile/module-elasticsuite-behavioral-autocomplete": "self.version",
+        "smile/module-elasticsuite-behavioral-data": "self.version",
+        "smile/module-elasticsuite-behavioral-optimizer": "self.version",
+        "smile/module-elasticsuite-catalog-optimizer-customer-segment": "self.version",
+        "smile/module-elasticsuite-facet-recommender": "self.version",
+        "smile/module-elasticsuite-instant-search": "self.version",
+        "smile/module-elasticsuite-recommender": "self.version",
         "smile/module-elasticsuite-virtual-attribute": "self.version"
     },
     "require-dev": {
@@ -37,9 +56,27 @@
     },
     "autoload": {
         "files": [
+            "src/module-elasticsuite-beacon/registration.php",
+            "src/module-elasticsuite-beacon-tools/registration.php",
+            "src/module-elasticsuite-behavioral-autocomplete/registration.php",
+            "src/module-elasticsuite-behavioral-data/registration.php",
+            "src/module-elasticsuite-behavioral-optimizer/registration.php",
+            "src/module-elasticsuite-catalog-optimizer-customer-segment/registration.php",
+            "src/module-elasticsuite-facet-recommender/registration.php",
+            "src/module-elasticsuite-react-autocomplete/registration.php",
+            "src/module-elasticsuite-recommender/registration.php",
             "src/module-elasticsuite-virtual-attribute/registration.php"
         ],
         "psr-4": {
+            "Smile\\ElasticsuiteBeacon\\": "src/module-elasticsuite-beacon",
+            "Smile\\ElasticsuiteBeaconTools\\": "src/module-elasticsuite-beacon-tools",
+            "Smile\\ElasticsuiteBehavioralAutocomplete\\": "src/module-elasticsuite-behavioral-autocomplete",
+            "Smile\\ElasticsuiteBehavioralData\\": "src/module-elasticsuite-behavioral-data",
+            "Smile\\ElasticsuiteBehavioralOptimizer\\": "src/module-elasticsuite-behavioral-optimizer",
+            "Smile\\ElasticsuiteCatalogOptimizerCustomerSegment\\": "src/module-elasticsuite-catalog-optimizer-customer-segment",
+            "Smile\\ElasticsuiteFacetRecommender\\": "src/module-elasticsuite-facet-recommender",
+            "Smile\\ElasticsuiteInstantSearch\\": "src/module-elasticsuite-react-autocomplete",
+            "Smile\\ElasticsuiteRecommender\\": "src/module-elasticsuite-recommender",
             "Smile\\ElasticsuiteVirtualAttribute\\": "src/module-elasticsuite-virtual-attribute"
         }
     },
