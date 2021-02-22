@@ -29,7 +29,70 @@
 </div>
 
 <div class="admin__fieldset">
+    <div class="dashboard-container row">
+        <div class="dashboard-secondary col-m-5">
+            <div data-bind="if: hasSynonyms()">
+                <div class="dashboard-item" id="elasticsuite-explain-synonyms">
+                    <div class="dashboard-item-title">
+                        <span data-bind="i18n: 'Synonyms and expansions'"></span>
+                    </div>
+                    <div class="dashboard-item-help dashboard-data" id="elasticsuite-explain-synonyms_help">
+                        <p></p>
+                    </div>
+                    <div class="dashboard-item-content">
+                        <table class="admin__table-primary dashboard-data terms-report">
+                            <thead>
+                                <tr>
+                                    <th class="data-grid-th no-link"><span data-bind="i18n: 'Queries'"></span></th>
+                                </tr>
+                            </thead>
+                            <tbody data-bind="foreach: synonyms">
+                                <tr>
+                                    <td><span data-bind="text: $data"></span></td>
+                                </tr>
+                            </tbody>
+                            <tbody class="extra" id="elasticsuite-explain-synonyms_extra">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <div class="dashboard-secondary col-m-5">
+            <div data-bind="if: hasOptimizers()">
+
+                <div class="dashboard-item" id="elasticsuite-explain-optimizers">
+                    <div class="dashboard-item-title">
+                        <span data-bind="i18n: 'Optimizers'"></span>
+                    </div>
+                    <div class="dashboard-item-help dashboard-data" id="elasticsuite-explain-optimizers_help">
+                        <p></p>
+                    </div>
+                    <div class="dashboard-item-content">
+                        <table class="admin__table-primary dashboard-data terms-report">
+                            <thead>
+                            <tr>
+                                <th class="data-grid-th no-link"><span data-bind="i18n: 'Name'"></span></th>
+                                <th class="data-grid-th no-link"><span data-bind="i18n: 'Boost'"></span></th>
+                                <th class="data-grid-th no-link"><span data-bind="i18n: 'Rule'"></span></th>
+                            </tr>
+                            </thead>
+                            <tbody data-bind="foreach: optimizers">
+                            <tr>
+                                <td><a data-bind="attr: { href: url, title: name }"><span data-bind="text: name"></span></a></td>
+                                <td><span data-bind="text: boost"></span></td>
+                                <td><span data-bind="html: rule"></span></td>
+                            </tr>
+                            </tbody>
+                            <tbody class="extra" id="elasticsuite-explain-optimizers_extra">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="elasticsuite-admin-product-sorter">
         <div data-role="spinner" class="admin__data-grid-loading-mask" visible="loading" if="showSpinner">
             <div class="spinner"><span repeat="8"></span></div>

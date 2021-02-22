@@ -38,6 +38,8 @@ define([
             this._super();
 
             this.products           = [];
+            this.synonyms           = [];
+            this.optimizers         = [];
             this.countTotalProducts = 0;
             this.pageSize           = parseInt(this.pageSize, 10);
             this.currentSize        = this.pageSize;
@@ -48,7 +50,9 @@ define([
                 'currentSize',
                 'loading',
                 'showSpinner',
-                'queryText'
+                'queryText',
+                'synonyms',
+                'optimizers'
             ]);
         },
 
@@ -78,6 +82,14 @@ define([
                 this.currentSize(Math.max(this.currentSize(), this.products().length));
             }
 
+            if (loadedData.synonyms) {
+                this.synonyms(loadedData.synonyms);
+            }
+
+            if (loadedData.optimizers) {
+                this.optimizers(loadedData.optimizers);
+            }
+
             this.loading(false);
         },
 
@@ -97,6 +109,14 @@ define([
         showMoreProducts: function () {
             this.currentSize(this.currentSize() + this.pageSize);
             this.refreshProductList();
-        }
+        },
+
+        hasSynonyms: function () {
+            return (this.synonyms().length > 0);
+        },
+
+        hasOptimizers: function () {
+            return (this.optimizers().length > 0);
+        },
     });
 });

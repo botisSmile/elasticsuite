@@ -14,6 +14,7 @@
 
 namespace Smile\ElasticsuiteExplain\Model\Result\Collector;
 
+use Magento\Framework\UrlInterface;
 use Smile\ElasticsuiteCatalogOptimizer\Api\Data\OptimizerInterface;
 use Smile\ElasticsuiteCatalogOptimizer\Model\Optimizer\OptimizerFilterInterface;
 use Smile\ElasticsuiteCore\Api\Search\ContextInterface;
@@ -46,15 +47,23 @@ class Optimizers implements CollectorInterface
     private $filters;
 
     /**
+     * Url Builder
+     *
+     * @var UrlInterface
+     */
+    private $urlBuilder;
+
+    /**
      * Optimizers constructor.
      *
      * @param ProviderInterface          $provider Optimizers Provider
      * @param OptimizerFilterInterface[] $filters  Optimizer filters.
      */
-    public function __construct(ProviderInterface $provider, array $filters = [])
+    public function __construct(ProviderInterface $provider, UrlInterface $urlBuilder, $filters = [])
     {
-        $this->provider = $provider;
-        $this->filters  = $filters;
+        $this->provider   = $provider;
+        $this->urlBuilder = $urlBuilder;
+        $this->filters    = $filters;
     }
 
     /**
@@ -76,9 +85,12 @@ class Optimizers implements CollectorInterface
         /** @var OptimizerInterface $optimizer */
         foreach ($optimizers as $optimizer) {
             $results[$optimizer->getId()] = [
-                'name'  => $optimizer->getName(),
-                'boost' => $optimizer->getConfig('constant_score_value'),
-                'rule'  => $optimizer->getRuleCondition()->getConditions()->asStringRecursive(),
+                'id'        => $optimizer->getId(),
+                'name'      => $optimizer->getName(),
+                'boost'     => $optimizer->getConfig('constant_score_value'),
+                'rule'      => nl2br($optimizer->getRuleCondition()->getConditions()->asStringRecursive()),
+                'rule_html' => $optimizer->getRuleCondition()->getConditions()->asHtmlRecursive(),
+                'url'       => $this->urlBuilder->getUrl('smile_elasticsuite_catalog_optimizer/optimizer/edit', ['id' => $optimizer->getId()]),
             ];
         }
 
@@ -87,6 +99,6 @@ class Optimizers implements CollectorInterface
             $results      = array_intersect_key($results, array_flip($optimizerIds));
         }
 
-        return $results;
+        return array_values($results);
     }
 }
