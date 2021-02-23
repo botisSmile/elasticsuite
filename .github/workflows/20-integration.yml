@@ -227,8 +227,17 @@ jobs:
               env:
                   MAGENTO_VERSION: ${{ matrix.magento-versions }}
                   MAGENTO_EDITION: ${{ matrix.magento-editions }}
+                  M2SETUP_DB_HOST: "0.0.0.0"
+                  M2SETUP_DB_NAME: "magento2"
+                  M2SETUP_DB_USER: "magento2"
+                  M2SETUP_DB_PASSWORD: "magento2"
+                  M2SETUP_ADMIN_EMAIL: "elasticsuite@smile.fr"
+                  M2SETUP_ADMIN_USER: "admin"
+                  M2SETUP_ADMIN_PASSWORD: "Smile1234"
+                  M2SETUP_ADMIN_FIRSTNAME: "Elastic"
+                  M2SETUP_ADMIN_LASTNAME: "Suite"
               run: |
-                INSTALL_COMMAND='php bin/magento setup:install --db-host="0.0.0.0" --db-password="magento2" --admin-user="admin" --admin-password="smile1234" --admin-email="elasticsuite@smile.fr" --admin-firstname="Admin" --admin-lastname="Smile" --db-name="magento2"'
+                INSTALL_COMMAND="php bin/magento setup:install --db-host=$M2SETUP_DB_HOST --db-name=$M2SETUP_DB_NAME --db-password=$M2SETUP_DB_PASSWORD --admin-email=$M2SETUP_ADMIN_EMAIL --admin-user=$M2SETUP_ADMIN_USER --admin-firstname=$M2SETUP_ADMIN_FIRSTNAME --admin-lastname=$M2SETUP_ADMIN_LASTNAME --admin-password=$M2SETUP_ADMIN_PASSWORD"
                 function version { echo "$@" | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,$4); }'; }
                 # Magento >= 2.4.0 will test connection to Elasticsearch
                 if [ $(version $MAGENTO_VERSION) -ge $(version "2.4.0") ]; then
@@ -238,6 +247,7 @@ jobs:
                 if [ "$MAGENTO_EDITION" = "community" ]; then
                    INSTALL_COMMAND="$INSTALL_COMMAND --disable-modules=Smile_ElasticsuiteCatalogOptimizerCustomerSegment"
                 fi
+                echo $INSTALL_COMMAND
                 $INSTALL_COMMAND
 
             - name: "[Test] Setup Upgrade"
