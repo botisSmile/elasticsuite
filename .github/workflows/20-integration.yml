@@ -247,12 +247,11 @@ jobs:
                 if [ "$MAGENTO_EDITION" = "community" ]; then
                    INSTALL_COMMAND="$INSTALL_COMMAND --disable-modules=Smile_ElasticsuiteCatalogOptimizerCustomerSegment"
                 fi
-                echo $INSTALL_COMMAND
-                $INSTALL_COMMAND
+                $INSTALL_COMMAND --quiet
 
             - name: "[Test] Setup Upgrade"
               working-directory: ${{ env.magento-directory }}
-              run: php bin/magento setup:upgrade
+              run: php bin/magento setup:upgrade --quiet
 
             - name: "[Test] Reindex"
               working-directory: ${{ env.magento-directory }}
@@ -288,7 +287,7 @@ jobs:
 
             - name: "[Test] Data : Install"
               working-directory: ${{ env.magento-directory }}
-              run: php bin/magento setup:upgrade --keep-generated --quiet
+              run: php bin/magento setup:upgrade --keep-generated
 
             - name: "[Test] Data : Index"
               working-directory: ${{ env.magento-directory }}
