@@ -18,16 +18,18 @@ namespace Smile\ElasticsuiteBeacon\Model\BeaconBeep\Exporter;
 use GuzzleHttp\Ring\Client\CurlHandler;
 use GuzzleHttp\Ring\Exception\ConnectException;
 use GuzzleHttp\Ring\Exception\RingException;
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Magento\Framework\Serialize\Serializer\Json;
 use Psr\Log\LoggerInterface;
 use Smile\ElasticsuiteBeacon\Api\Data\BeaconBeepInterface;
 use Smile\ElasticsuiteBeacon\Model\ConfigInterface;
-use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
+use Smile\ElasticsuiteBeacon\Model\BeaconBeep\Exporter\Exception as Exceptions;
 
 /**
  * Class Transport
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(MEQP1.Exceptions.Namespace)
  *
  * @category Smile
  * @package  Smile\ElasticsuiteBeacon
@@ -79,7 +81,7 @@ class Transport
      * @param array $items Raw beeps to send
      *
      * @return bool
-     * @throws ExporterException
+     * @throws Exceptions\ExporterException
      * @SuppressWarnings(PHPMD.ElseExpression)
      */
     public function send($items):bool
@@ -111,14 +113,14 @@ class Transport
             if ($response['error'] instanceof ConnectException || $response['error'] instanceof RingException) {
                 $exception = $response['error'];
                 $this->logger->critical($exception->getMessage());
-                throw new TransportException(
+                throw new Exceptions\TransportException(
                     $exception->getMessage(),
                     0,
                     $response['error']
                 );
             } else {
                 $this->logger->critical($response['error']);
-                throw new TransportException($response['error']);
+                throw new Exceptions\TransportException($response['error']);
             }
         }
 
@@ -127,9 +129,9 @@ class Transport
         }
 
         if ($response['status'] >= 400 && $response['status'] < 500) {
-            throw new GenericErrorException($response['body'], $response['status']);
+            throw new Exceptions\GenericErrorException($response['body'], $response['status']);
         } elseif ($response['status'] >= 500) {
-            throw new ServerErrorException($response['body'], $response['status']);
+            throw new Exceptions\ServerErrorException($response['body'], $response['status']);
         }
 
         return true;

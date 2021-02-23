@@ -13,14 +13,14 @@
  *            Unauthorized copying of this file, via any medium, is strictly prohibited.
  */
 
-namespace Smile\ElasticsuiteBeacon\Model\BeaconBeep\Exporter;
+namespace Smile\ElasticsuiteBeacon\Model\BeaconBeep\Exporter\Exception;
 
 /**
- * Class GenericErrorException
+ * Class TransportException
  *
  * @category Smile
  * @package  Smile\ElasticsuiteBeacon
  */
-class GenericErrorException extends ExporterException
+class TransportException extends ExporterException
 {
 }
