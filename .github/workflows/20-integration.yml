@@ -262,6 +262,17 @@ jobs:
               working-directory: ${{ env.magento-directory }}
               run: php bin/magento cache:flush
 
+            - name: "[Init] Remove Customer Segment Optimizer module for compiling."
+              working-directory: ${{ env.magento-directory }}
+              env:
+                  MAGENTO_EDITION: ${{ matrix.magento-editions }}
+              run: |
+                  if [ "$MAGENTO_EDITION" = "community" ]; then
+                      rm -rf vendor/smile/elasticsuite-premium/src/module-elasticsuite-catalog-optimizer-customer-segment/registration.php
+                      touch vendor/smile/elasticsuite-premium/src/module-elasticsuite-catalog-optimizer-customer-segment/registration.php
+                      ls -ail vendor/smile/elasticsuite-premium/src/module-elasticsuite-catalog-optimizer-customer-segment
+                  fi
+
             - name: "[Test] Compile"
               working-directory: ${{ env.magento-directory }}
               run: php bin/magento setup:di:compile
