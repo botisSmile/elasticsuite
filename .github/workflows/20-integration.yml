@@ -228,7 +228,7 @@ jobs:
                   MAGENTO_VERSION: ${{ matrix.magento-versions }}
                   MAGENTO_EDITION: ${{ matrix.magento-editions }}
               run: |
-                INSTALL_COMMAND='php bin/magento setup:install --db-host="0.0.0.0" --db-password="magento2" --admin-user="admin" --admin-password="smile1234" --admin-email="admin@example.com" --admin-firstname="Admin" --admin-lastname="Smile" --db-name="magento2"'
+                INSTALL_COMMAND='php bin/magento setup:install --db-host="0.0.0.0" --db-password="magento2" --admin-user="admin" --admin-password="smile1234" --admin-email="elasticsuite@smile.fr" --admin-firstname="Admin" --admin-lastname="Smile" --db-name="magento2"'
                 function version { echo "$@" | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,$4); }'; }
                 # Magento >= 2.4.0 will test connection to Elasticsearch
                 if [ $(version $MAGENTO_VERSION) -ge $(version "2.4.0") ]; then
