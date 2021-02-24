@@ -263,7 +263,7 @@ jobs:
                   MAGENTO_EDITION: ${{ matrix.magento-editions }}
               run: |
                   if [ "$MAGENTO_EDITION" = "community" ]; then
-                      rm -rf vendor/smile/elasticsuite-premium/src/module-elasticsuite-catalog-optimizer-customer-segment/registration.php
+                      cp -rf vendor/smile/elasticsuite-premium/src/module-elasticsuite-catalog-optimizer-customer-segment/registration.php vendor/smile/elasticsuite-premium/src/module-elasticsuite-catalog-optimizer-customer-segment/registration.php.bak
                       touch vendor/smile/elasticsuite-premium/src/module-elasticsuite-catalog-optimizer-customer-segment/registration.php
                       ls -ail vendor/smile/elasticsuite-premium/src/module-elasticsuite-catalog-optimizer-customer-segment
                   fi
@@ -287,6 +287,7 @@ jobs:
                   function version { echo "$@" | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,$4); }'; }
                   if [ $(version $MAGENTO_VERSION) -lt $(version "2.3.5") ]; then
                       sed -i '/^<\/config>/i <preference for="Magento\\Framework\\Filesystem\\DriverInterface" type="Magento\\Framework\\Filesystem\\Driver\\File" />' app/etc/di.xml
+                      sed -i 's/xdebug_disable/\/\/xdebug_disable/g' vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/_bootstrap.php
                   fi
 
             - name: "[Test] Data : Install"
