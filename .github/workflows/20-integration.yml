@@ -1,10 +1,6 @@
 name: Integration
 
 on:
-    push:
-        branches:
-            - 2.8.x
-
     pull_request_target:
         branches:
             - 2.8.x
@@ -36,6 +32,10 @@ jobs:
                 exclude:
                     - php-versions: '7.3'
                       magento-versions: '2.3.2'
+                    - php-versions: '7.2'
+                      magento-versions: '2.3.3-p1'
+                    - php-versions: '7.2'
+                      magento-versions: '2.3.4-p2'                      
 
         env:
             magento-directory: /var/www/magento

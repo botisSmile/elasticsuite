@@ -1,16 +1,9 @@
 name: PHP Code Quality
 
 on:
-    push:
-        branches:
-        - 2.8.x
-        - 2.9.x
-        - 2.10.x
     pull_request_target:
         branches:
         - 2.8.x
-        - 2.9.x
-        - 2.10.x
 
 jobs:
     qualit:
