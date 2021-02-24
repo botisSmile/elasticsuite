@@ -1,5 +1,26 @@
 query productSearch($inputText: String!, $categoryId: String) {
   products(search: $inputText, filter: {category_id: {eq: $categoryId}}) {
+    filters {
+      name
+      filter_items_count
+      request_var
+      filter_items {
+        label
+        value_string
+        __typename
+      }
+      __typename
+    }
+    aggregations {
+      attribute_code
+      label
+      count
+      options {
+        label
+        value
+        count
+      }
+    }
     items {
       id
       name
@@ -22,27 +43,6 @@ query productSearch($inputText: String!, $categoryId: String) {
       __typename
     }
     total_count
-    filters {
-      name
-      filter_items_count
-      request_var
-      filter_items {
-        label
-        value_string
-        __typename
-      }
-      __typename
-    }
-    aggregations {
-      attribute_code
-      label
-      count
-      options {
-        label
-        value
-        count
-      }
-    }
     __typename
   }
 }
