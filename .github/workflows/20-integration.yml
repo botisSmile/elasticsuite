@@ -264,6 +264,7 @@ jobs:
               run: |
                   if [ "$MAGENTO_EDITION" = "community" ]; then
                       cp -rf vendor/smile/elasticsuite-premium/src/module-elasticsuite-catalog-optimizer-customer-segment/registration.php vendor/smile/elasticsuite-premium/src/module-elasticsuite-catalog-optimizer-customer-segment/registration.php.bak
+                      rm -rf vendor/smile/elasticsuite-premium/src/module-elasticsuite-catalog-optimizer-customer-segment/registration.php
                       touch vendor/smile/elasticsuite-premium/src/module-elasticsuite-catalog-optimizer-customer-segment/registration.php
                       ls -ail vendor/smile/elasticsuite-premium/src/module-elasticsuite-catalog-optimizer-customer-segment
                   fi
