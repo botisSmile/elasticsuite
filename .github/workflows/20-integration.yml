@@ -304,6 +304,7 @@ jobs:
                 echo ${curl_status}
                 if [[ ${curl_status} -ge 400 ]];
                 then
+                  cat /var/log/apache2/apache-error.log
                   exit 2;
                 fi;
 
@@ -314,6 +315,7 @@ jobs:
                 echo ${curl_status}
                 if [[ ${curl_status} -ge 400 ]];
                 then
+                  cat /var/log/apache2/apache-error.log
                   exit 2;
                 fi;
 
@@ -324,6 +326,7 @@ jobs:
                 echo ${curl_status}
                 if [[ ${curl_status} -ge 400 ]];
                 then
+                  cat /var/log/apache2/apache-error.log
                   exit 2;
                 fi;
 
