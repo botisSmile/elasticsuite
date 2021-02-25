@@ -147,7 +147,7 @@ class Transport
         $data = [];
 
         foreach ($items as $item) {
-            $createdAtDate = $this->dateTime->date($item[BeaconBeepInterface::CREATED_AT_DATE]);
+            $createdAtDate = $this->dateTime->date(new \DateTime($item[BeaconBeepInterface::CREATED_AT_DATE]));
             $data[] = [
                 BeaconBeepInterface::CLIENT_ID  => $item[BeaconBeepInterface::CLIENT_ID],
                 BeaconBeepInterface::HOST_ID    => $item[BeaconBeepInterface::HOST_ID],
