@@ -45,6 +45,8 @@ jobs:
         steps:
             - name: "[Init] Checkout"
               uses: actions/checkout@v2
+            with:
+                ref: ${{ github.event.pull_request.head.sha }}
 
             - name: "[Init] Checkout full repository to be used as a composer repository"
               uses: actions/checkout@v2
