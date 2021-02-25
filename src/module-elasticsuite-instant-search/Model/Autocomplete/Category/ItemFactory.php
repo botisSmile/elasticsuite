@@ -41,9 +41,8 @@ class ItemFactory extends \Magento\Search\Model\Autocomplete\ItemFactory
     /**
      * ItemFactory constructor.
      *
-     * @param ObjectManagerInterface $objectManager    The Object Manager
-     * @param ScopeConfigInterface   $scopeConfig      The Scope Config
-     * @param CategoryResource       $categoryResource Category Resource Model
+     * @param ObjectManagerInterface $objectManager The Object Manager
+     * @param ScopeConfigInterface   $scopeConfig   The Scope Config
      */
     public function __construct(
         ObjectManagerInterface $objectManager,
@@ -82,9 +81,8 @@ class ItemFactory extends \Magento\Search\Model\Autocomplete\ItemFactory
         }
 
         $categoryData = [
-            'title'      => html_entity_decode($title),
-            'url'        => $this->getCategoryUrl($source),
-            //'breadcrumb' => $this->getCategoryBreadcrumb($category),
+            'title' => html_entity_decode($title),
+            'url'   => $this->getCategoryUrl($source),
         ];
 
         $data = array_merge($source, $categoryData);
@@ -111,49 +109,5 @@ class ItemFactory extends \Magento\Search\Model\Autocomplete\ItemFactory
         }
 
         return '';
-    }
-
-    /**
-     * Return a mini-breadcrumb for a category
-     *
-     * @param \Magento\Catalog\Model\Category $category The category
-     *
-     * @return array
-     */
-    private function getCategoryBreadcrumb(\Magento\Catalog\Model\Category $category)
-    {
-        $path    = $category->getPath();
-        $rawPath = explode('/', $path);
-
-        // First occurence is root category (1), second is root category of store.
-        $rawPath = array_slice($rawPath, 2);
-
-        // Last occurence is the category displayed.
-        array_pop($rawPath);
-
-        $breadcrumb = [];
-        foreach ($rawPath as $categoryId) {
-            $breadcrumb[] = html_entity_decode($this->getCategoryNameById($categoryId, $category->getStoreId()));
-        }
-
-        return $breadcrumb;
-    }
-
-    /**
-     * Retrieve a category name by it's id, and store it in local cache
-     *
-     * @param int $categoryId The category Id
-     * @param int $storeId    The store Id
-     *
-     * @return string
-     */
-    private function getCategoryNameById($categoryId, $storeId)
-    {
-        if (!isset($this->categoryNames[$categoryId])) {
-            $categoryResource = $this->categoryResource;
-            $this->categoryNames[$categoryId] = $categoryResource->getAttributeRawValue($categoryId, "name", $storeId);
-        }
-
-        return $this->categoryNames[$categoryId];
     }
 }

@@ -26,6 +26,8 @@ use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 /**
  * Class Transport
  *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  * @category Smile
  * @package  Smile\ElasticsuiteBeacon
  */

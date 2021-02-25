@@ -21,7 +21,6 @@ use Smile\ElasticsuiteCore\Search\Request\QueryInterface;
 
 /**
  * Class Multiple
- * TODO ribay@smile.fr : merge with \Smile\ElasticsuiteRecommender\Model\Product\Matcher ?
  *
  * @category Smile
  * @package  Smile\ElasticsuiteRecommender

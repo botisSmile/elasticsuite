@@ -29,6 +29,8 @@ use Smile\ElasticsuiteInstantSearch\Model\Search\QueryStringProviderFactory;
 /**
  * Catalog product autocomplete data provider.
  *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  * @category Smile
  * @package  Smile\ElasticsuiteCatalog
  * @author   Romain Ruaud <romain.ruaud@smile.fr>
@@ -88,11 +90,6 @@ class DataProvider implements DataProviderInterface
     private $queryResponse;
 
     /**
-     * @var AttributeConfig
-     */
-    private $attributeConfig;
-
-    /**
      * @var \Smile\ElasticsuiteInstantSearch\Model\Search\QueryStringProviderFactory
      */
     private $queryStringProviderFactory;
@@ -142,6 +139,7 @@ class DataProvider implements DataProviderInterface
 
     /**
      * {@inheritDoc}
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function getItems()
     {

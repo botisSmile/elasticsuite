@@ -22,6 +22,8 @@ use Smile\ElasticsuiteInstantSearch\Model\Autocomplete\Product\DataProvider as P
 /**
  * Catalog product attributes autocomplete data provider.
  *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  * @category Smile
  * @package  Smile\ElasticsuiteCatalog
  * @author   Aurelien FOUCRET <aurelien.foucret@smile.fr>
@@ -95,6 +97,7 @@ class DataProvider implements DataProviderInterface
 
     /**
      * {@inheritDoc}
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function getItems()
     {

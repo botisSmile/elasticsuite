@@ -76,13 +76,15 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      * Whether to use category views co-occurrence when building the categories clauses for upsell.
      * @var string
      */
-    const CONFIG_UPSELL_CATEGORIES_USE_CATEGORY_VIEWS_XPATH = 'smile_elasticsuite_recommender/general/upsell_categories_use_category_views_cooccurrence';
+    const CONFIG_UPSELL_CATEGORIES_USE_CATEGORY_VIEWS_XPATH
+        = 'smile_elasticsuite_recommender/general/upsell_categories_use_category_views_cooccurrence';
 
     /**
      * Whether to use product views co-occurrence when building the related product clause for upsell.
      * @var string
      */
-    const CONFIG_UPSELL_RELATED_PRODUCTS_USE_PRODUCT_VIEWS_XPATH = 'smile_elasticsuite_recommender/general/upsell_related_use_product_views_cooccurrence';
+    const CONFIG_UPSELL_RELATED_PRODUCTS_USE_PRODUCT_VIEWS_XPATH
+        = 'smile_elasticsuite_recommender/general/upsell_related_use_product_views_cooccurrence';
 
     /**
      * Whether to exclude products already bought by the visitor configuration path

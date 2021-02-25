@@ -32,6 +32,8 @@ use Smile\ElasticsuiteInstantSearch\Model\Search\QueryStringProviderFactory;
 /**
  * Instant Search popular queries data provider.
  *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  * @category Smile
  * @package  Smile\ElasticsuiteInstantSearch
  * @author   Romain Ruaud <romain.ruaud@smile.fr>
@@ -64,7 +66,7 @@ class DataProvider extends \Smile\ElasticsuiteCore\Model\Autocomplete\Terms\Data
     private $queryStringProviderFactory;
 
     /**
-     * @var int
+     * @var integer
      */
     private $storeId;
 
@@ -80,13 +82,14 @@ class DataProvider extends \Smile\ElasticsuiteCore\Model\Autocomplete\Terms\Data
 
     /**
      * Constructor.
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      *
      * @param ElasticsearchQueryFactory  $esQueryFactory             Elasticsearch query factory.
      * @param SearchQueryFactory         $searchQueryFactory         Search query text factory.
      * @param ItemFactory                $itemFactory                Suggest terms item facory.
+     * @param ConfigurationHelper        $configurationHelper        Autocomplete configuration helper.
      * @param RequestBuilder             $requestBuilder             Search Request Builder.
      * @param SearchEngineInterface      $searchEngine               Search Engine Interface.
-     * @param ConfigurationHelper        $configurationHelper        Autocomplete configuration helper.
      * @param QueryStringProviderFactory $queryStringProviderFactory Query String provider factory.
      * @param StoreManagerInterface      $storeManager               Store Manager Interface.
      * @param StringUtils                $string                     String utils
@@ -183,18 +186,6 @@ class DataProvider extends \Smile\ElasticsuiteCore\Model\Autocomplete\Terms\Data
     private function getResultsPageSize()
     {
         return $this->configurationHelper->getMaxSize($this->getType());
-    }
-
-    /**
-     * Retrieve search query text
-     *
-     * @return string
-     */
-    private function getRawQueryText()
-    {
-        $queryText = $this->request->getParam(QueryFactory::QUERY_VAR_NAME);
-
-        return ($queryText === null || is_array($queryText)) ? '' : $this->string->cleanString(trim($queryText));
     }
 
     /**

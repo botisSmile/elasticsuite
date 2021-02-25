@@ -96,7 +96,6 @@ class BeepExporter
                 if (!empty($beeps)) {
                     yield $day => $beeps;
                 }
-
             } while (!empty($exportableDays));
         }
     }

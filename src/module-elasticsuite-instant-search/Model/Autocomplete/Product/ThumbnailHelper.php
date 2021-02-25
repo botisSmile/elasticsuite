@@ -49,7 +49,9 @@ class ThumbnailHelper
     /**
      * Constructor.
      *
-     * @param ImageHelperFactory $imageHelperFactory Catalog product image helper.
+     * @param ImageHelperFactory                $imageHelperFactory       Catalog product image helper.
+     * @param ProductRepositoryInterfaceFactory $productRepositoryFactory Product Repository
+     * @param StoreManagerInterfaceFactory      $storeManagerFactory      Store Manager
      */
     public function __construct(
         ImageHelperFactory $imageHelperFactory,
@@ -64,8 +66,8 @@ class ThumbnailHelper
     /**
      * Get resized image URL.
      *
-     * @param int   $productId Product Id
-     * @param string $imageId  The image name
+     * @param int    $productId Product Id
+     * @param string $imageId   The image name
      *
      * @return string
      */
@@ -96,7 +98,11 @@ class ThumbnailHelper
      */
     private function getStoreManager()
     {
-        return $this->storeManagerFactory->create();
+        if (null === $this->storeManager) {
+            $this->storeManager = $this->storeManagerFactory->create();
+        }
+
+        return $this->storeManager;
     }
 
     /**
@@ -106,5 +112,4 @@ class ThumbnailHelper
     {
         return $this->imageHelperFactory->create();
     }
-
 }

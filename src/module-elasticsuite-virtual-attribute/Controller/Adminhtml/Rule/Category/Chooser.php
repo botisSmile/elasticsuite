@@ -53,19 +53,19 @@ class Chooser extends \Magento\Backend\App\Action
      */
     private function getIds()
     {
-        $ids = $this->getRequest()->getParam('selected', []);
+        $categoryIds = $this->getRequest()->getParam('selected', []);
 
-        if (!is_array($ids)) {
-            $ids = [];
+        if (!is_array($categoryIds)) {
+            $categoryIds = [];
         }
 
-        foreach ($ids as $key => &$id) {
-            $id = (int) $id;
-            if ($id <= 0) {
-                unset($ids[$key]);
+        foreach ($categoryIds as $key => &$categoryId) {
+            $categoryId = (int) $categoryId;
+            if ($categoryIds <= 0) {
+                unset($categoryIds[$key]);
             }
         }
 
-        return array_unique($ids);
+        return array_unique($categoryIds);
     }
 }

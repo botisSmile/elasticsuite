@@ -68,18 +68,18 @@ class CustomerSegments implements \Magento\Ui\DataProvider\Modifier\ModifierInte
      * @param WebsiteCollectionFactory         $websiteCollectionFactory Website collection factory.
      * @param Yesno                            $yesNo                    Yes/No source model.
      */
-    public function __construct (
+    public function __construct(
         OptimizerLocatorInterface $locator,
         CustomerSegmentCollectionFactory $segmentCollectionFactory,
         CustomerSegmentHelper $segmentHelper,
         WebsiteCollectionFactory $websiteCollectionFactory,
         Yesno $yesNo
     ) {
-        $this->locator  = $locator;
-        $this->yesNo    = $yesNo;
-        $this->segmentsCollection   = $segmentCollectionFactory->create();
-        $this->segmentHelper        = $segmentHelper;
-        $this->websiteCollection    = $websiteCollectionFactory->create();
+        $this->locator            = $locator;
+        $this->yesNo              = $yesNo;
+        $this->segmentsCollection = $segmentCollectionFactory->create();
+        $this->segmentHelper      = $segmentHelper;
+        $this->websiteCollection  = $websiteCollectionFactory->create();
         $this->initWebsiteNames();
     }
 

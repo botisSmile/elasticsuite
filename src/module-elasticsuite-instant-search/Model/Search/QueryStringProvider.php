@@ -18,6 +18,13 @@ use \Magento\Framework\Stdlib\StringUtils;
 use \Magento\Framework\App\RequestInterface;
 use Magento\Search\Model\QueryFactory;
 
+/**
+ * Query String provider : will fetch current search query from current request.
+ *
+ * @category Smile
+ * @package  Smile\ElasticsuiteInstantSearch
+ * @author   Romain Ruaud <romain.ruaud@smile.fr>
+ */
 class QueryStringProvider
 {
     /**
@@ -26,7 +33,7 @@ class QueryStringProvider
     private $request;
 
     /** @var \Magento\Framework\Stdlib\StringUtils */
-    private $stringUtils;
+    private $string;
 
     /**
      * @var null|string

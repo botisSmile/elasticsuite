@@ -123,7 +123,6 @@ class ItemFactory extends \Magento\Search\Model\Autocomplete\ItemFactory
                 foreach ($documentSource['category'] as $category) {
                     $categoryName = $category['name'] ?? '';
                     if ($categoryName !== '') {
-
                         return $categoryName;
                     }
                 }

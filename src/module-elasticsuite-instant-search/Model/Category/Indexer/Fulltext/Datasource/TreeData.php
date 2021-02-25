@@ -34,14 +34,18 @@ class TreeData implements DatasourceInterface
      */
     private $categoryNames = [];
 
+    /**
+     * TreeData constructor.
+     *
+     * @param \Magento\Catalog\Model\ResourceModel\Category $categoryResource Category Resource Model
+     */
     public function __construct(\Magento\Catalog\Model\ResourceModel\Category $categoryResource)
     {
         $this->categoryResource = $categoryResource;
     }
 
     /**
-     * Add inventory data to the index data.
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function addData($storeId, array $indexData)
     {
@@ -56,6 +60,8 @@ class TreeData implements DatasourceInterface
      * Return a mini-breadcrumb for a category
      *
      * @param array $categoryData The Category Data
+     * @param int   $storeId      The Store Id
+     * @param array $indexData    Category data being indexed
      *
      * @return array
      */
@@ -66,7 +72,7 @@ class TreeData implements DatasourceInterface
 
         // First occurence is root category (1), second is root category of store.
         $rawPath = array_slice($rawPath, 2);
-        
+
         $breadcrumb = [];
         foreach ($rawPath as $categoryId) {
             $breadcrumb[] = html_entity_decode($this->getCategoryNameById($categoryId, $storeId, $indexData));
@@ -78,9 +84,9 @@ class TreeData implements DatasourceInterface
     /**
      * Retrieve a category name by it's id, and store it in local cache
      *
-     * @param int $categoryId  The category Id
-     * @param int $storeId     The store Id
-     * @param array $indexData The categories being indexed, to fetch names from other categories from it.
+     * @param int   $categoryId The category Id
+     * @param int   $storeId    The store Id
+     * @param array $indexData  The categories being indexed, to fetch names from other categories from it.
      *
      * @return string
      */

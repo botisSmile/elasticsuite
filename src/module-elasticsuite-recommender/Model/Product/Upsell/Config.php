@@ -182,7 +182,7 @@ class Config
                 $field = $this->getMapping($storeId)->getField($fieldName);
                 $mappingProperty = $field->getMappingProperty(FieldInterface::ANALYZER_STANDARD);
                 $fields[] = $mappingProperty;
-            } catch (\Exception $e) {
+            } catch (\Exception $exception) {
                 ;
             }
         }

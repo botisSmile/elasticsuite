@@ -26,6 +26,8 @@ use Smile\ElasticsuiteCore\Search\Request\QueryInterface;
 /**
  * Trending Query service.
  *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  * @category Smile
  * @package  Smile\ElasticsuiteBehavioralAutocomplete
  * @author   Romain Ruaud <romain.ruaud@smile.fr>

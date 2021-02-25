@@ -67,7 +67,7 @@ class BeaconStressTest extends Command
             $progress->setMessage($generatorModel->getName());
             $progress->start();
             $startTimer = microtime(true);
-            for ($i = 0; $i < $beepAttempts; $i++) {
+            for ($cpt = 0; $cpt < $beepAttempts; $cpt++) {
                 $generatorModel->generate([]);
                 $progress->advance();
             }

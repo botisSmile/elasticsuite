@@ -28,6 +28,8 @@ use Smile\ElasticsuiteCore\Search\Request\QueryInterface;
 /**
  * Behavioral Data Index resource model
  *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  * @category Smile
  * @package  Smile\ElasticsuiteBehavioralData
  * @author   Romain Ruaud <romain.ruaud@smile.fr>
@@ -89,6 +91,18 @@ class BehavioralData
      */
     private $weeklyFrom = null;
 
+    /**
+     * BehavioralData constructor.
+     *
+     * @param \Smile\ElasticsuiteCore\Search\Request\Query\QueryFactory             $queryFactory       Query Factory
+     * @param \Magento\Framework\Search\SearchEngineInterface                       $searchEngine       Search Engine
+     * @param \Smile\ElasticsuiteCore\Search\Request\Builder                        $requestBuilder     Request Builder
+     * @param \Smile\ElasticsuiteCore\Search\Request\Aggregation\AggregationFactory $aggregationFactory Aggregation Factory
+     * @param \Smile\ElasticsuiteCore\Search\Request\Aggregation\MetricFactory      $metricFactory      Metric Factory
+     * @param \Smile\ElasticsuiteCore\Search\Request\Aggregation\PipelineFactory    $pipelineFactory    Pipeline Factory
+     * @param \Psr\Log\LoggerInterface                                              $logger             Logger Interface
+     * @param \Smile\ElasticsuiteBehavioralData\Model\Config                        $config             Module Configuration
+     */
     public function __construct(
         QueryFactory $queryFactory,
         SearchEngineInterface $searchEngine,
@@ -127,7 +141,6 @@ class BehavioralData
 
             // Not using array_merge_recursive here because it discards numeric keys (which are product ids).
             $data = array_replace_recursive($views, $sales);
-
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage());
         }
@@ -343,7 +356,9 @@ class BehavioralData
     }
 
     /**
-     * Compute sales data across query results.
+     * Compute behavioral data across query results.
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      *
      * @param \Smile\ElasticsuiteCore\Search\Adapter\Elasticsuite\Response\QueryResponse $queryResponse Query Response
      * @param string                                                                     $eventType     Event Type

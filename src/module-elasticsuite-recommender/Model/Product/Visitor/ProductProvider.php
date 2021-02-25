@@ -29,6 +29,7 @@ use Smile\ElasticsuiteTracker\Helper\Data as TrackerHelper;
 
 /**
  * Visitor product provider.
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  *
  * @category Smile
  * @package  Smile\ElasticsuiteRecommender

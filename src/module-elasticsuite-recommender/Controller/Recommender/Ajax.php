@@ -27,7 +27,6 @@ use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 
-
 /**
  * Ajax upsell and related products renderer
  *

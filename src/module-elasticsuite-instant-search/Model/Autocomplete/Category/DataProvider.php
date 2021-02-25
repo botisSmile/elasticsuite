@@ -131,6 +131,7 @@ class DataProvider implements DataProviderInterface
 
     /**
      * {@inheritDoc}
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function getItems()
     {
@@ -151,6 +152,7 @@ class DataProvider implements DataProviderInterface
             }
         }
         \Magento\Framework\Profiler::stop('INSTANT_SEARCH::CATEGORY::GET ITEMS');
+
         return $result;
     }
 

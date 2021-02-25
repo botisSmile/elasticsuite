@@ -24,6 +24,8 @@ use Smile\ElasticsuiteFacetRecommender\Api\FacetRecommenderServiceInterface;
 /**
  * ElasticSuite Smart facets service implementation
  *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  * @category Smile
  * @package  Smile\ElasticsuiteFacetRecommender
  * @author   Romain Ruaud <romain.ruaud@smile.fr>

@@ -5,9 +5,9 @@
  * versions in the future.
  *
  * @category  Smile
- * @package   Smile\ElasticSuite________
+ * @package   Smile\ElasticsuiteInstantSearch
  * @author    Romain Ruaud <romain.ruaud@smile.fr>
- * @copyright 2017 Smile
+ * @copyright 2021 Smile
  * @license   Open Software License ("OSL") v. 3.0
  */
 
@@ -21,16 +21,16 @@ use Magento\Store\Model\StoreManagerInterface;
 use Smile\ElasticsuiteCatalog\Helper\Autocomplete as AutocompleteHelper;
 
 /**
- * _________________________________________________
+ * Attribute Configuration for Autocomplete
  *
  * @category Smile
- * @package  Smile\ElasticSuite______________
+ * @package  Smile\ElasticsuiteInstantSearch
  * @author   Romain Ruaud <romain.ruaud@smile.fr>
  */
 class AttributeConfig
 {
     /**
-     * @var
+     * @var AttributeCollectionFactory
      */
     private $attributeCollectionFactory;
     /**
@@ -53,6 +53,14 @@ class AttributeConfig
      */
     private $autocompleteAttributes = null;
 
+    /**
+     * AttributeConfig constructor.
+     *
+     * @param \Magento\Catalog\Model\ResourceModel\Product\Attribute\CollectionFactory $attributeCollectionFactory Attributes Collection
+     * @param \Magento\Store\Model\StoreManagerInterface                               $storeManager               Store Manager
+     * @param \Smile\ElasticsuiteCatalog\Helper\Autocomplete                           $autocompleteHelper         Autocomplete Helper
+     * @param \Magento\Framework\App\CacheInterface                                    $cache                      Cache
+     */
     public function __construct(
         AttributeCollectionFactory $attributeCollectionFactory,
         StoreManagerInterface $storeManager,
@@ -67,6 +75,7 @@ class AttributeConfig
 
     /**
      * List of attributes displayed in autocomplete.
+     * @SuppressWarnings(PHPMD.ElseExpression)
      *
      * @return AttributeCollection
      */
@@ -83,7 +92,7 @@ class AttributeConfig
                     $this->autocompleteAttributes[] = [
                         'filter_field' => $this->autocompleteHelper->getAttributeAutocompleteField($attribute),
                         'code'         => $attribute->getAttributeCode(),
-                        'store_label'  => $attribute->getStoreLabel()
+                        'store_label'  => $attribute->getStoreLabel(),
                     ];
                 }
                 $this->cache->save(serialize($this->autocompleteAttributes), $cacheKey);
