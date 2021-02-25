@@ -1,7 +1,7 @@
 {
     "name": "smile/module-elasticsuite-facet-recommender",
     "type": "magento2-module",
-    "license": "OSL-3.0",
+    "license": "proprietary",
     "authors": [{
             "name": "Romain Ruaud",
             "email": "romain.ruaud@smile.fr"

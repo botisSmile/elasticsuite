@@ -1,7 +1,7 @@
 {
     "name": "smile/elasticsuite-premium",
     "type": "magento2-component",
-    "license": "OSL-3.0",
+    "license": "proprietary",
     "authors": [
         {
             "name": "Romain Ruaud",
