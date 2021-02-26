@@ -64,8 +64,8 @@ class Preview implements ModifierInterface
     public function modifyMeta(array $meta)
     {
         $config = [
-            'loadUrl'      => $this->getPreviewUrl(),
-            'price_format' => $this->localeFormat->getPriceFormat(),
+            'loadUrl'     => $this->getPreviewUrl(),
+            'priceFormat' => $this->localeFormat->getPriceFormat(),
         ];
 
         $meta['general']['children']['explain_preview']['arguments']['data']['config'] = $config;
