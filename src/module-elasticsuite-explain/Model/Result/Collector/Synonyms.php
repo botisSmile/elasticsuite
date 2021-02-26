@@ -66,7 +66,11 @@ class Synonyms implements CollectorInterface
      */
     private function getSynonyms(ContextInterface $searchContext, ContainerConfigurationInterface $containerConfiguration)
     {
-        $rewrites = $this->index->getQueryRewrites($containerConfiguration, $searchContext->getCurrentSearchQuery()->getQueryText());
+        $rewrites = [];
+
+        if ($searchContext->getCurrentSearchQuery()) {
+            $rewrites = $this->index->getQueryRewrites($containerConfiguration, $searchContext->getCurrentSearchQuery()->getQueryText());
+        }
 
         return array_keys($rewrites);
     }
