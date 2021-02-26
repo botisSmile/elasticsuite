@@ -67,7 +67,7 @@ class Item
      */
     public function getData()
     {
-        return [
+        $data = [
             'id'          => (int) $this->document->getId(),
             'name'        => $this->getDocumentSource('name'),
             'sku'         => $this->getDocumentSource('sku'),
@@ -75,8 +75,11 @@ class Item
             'image'       => $this->getProductImage(),
             'score'       => $this->getDocumentScore(),
             'explanation' => $this->getDocumentExplanation(),
+            'sort'        => $this->getDocumentSort(),
             'is_in_stock' => $this->isInStockProduct(),
         ];
+
+        return $data;
     }
 
     /**
@@ -114,13 +117,23 @@ class Item
     }
 
     /**
-     * Return the ES source document for the current product.
+     * Return the ES score for the current product.
      *
      * @return array
      */
     private function getDocumentScore()
     {
         return $this->document->getScore();
+    }
+
+    /**
+     * Return the ES sort values for the current product.
+     *
+     * @return array
+     */
+    private function getDocumentSort()
+    {
+        return $this->document->getSort() ?: [];
     }
 
     /**

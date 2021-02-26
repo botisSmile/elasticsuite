@@ -37,12 +37,12 @@ class Optimizers implements CollectorInterface
     const TYPE = 'optimizers';
 
     /**
-     * @var \Smile\ElasticsuiteCatalogOptimizer\Model\Optimizer\Collection\ProviderInterface
+     * @var ProviderInterface
      */
     private $provider;
 
     /**
-     * @var Smile\ElasticsuiteCatalogOptimizer\Model\Optimizer\OptimizerFilterInterface[]
+     * @var OptimizerFilterInterface[]
      */
     private $filters;
 
@@ -56,8 +56,9 @@ class Optimizers implements CollectorInterface
     /**
      * Optimizers constructor.
      *
-     * @param ProviderInterface          $provider Optimizers Provider
-     * @param OptimizerFilterInterface[] $filters  Optimizer filters.
+     * @param ProviderInterface          $provider   Optimizers Provider
+     * @param UrlInterface               $urlBuilder URL builder.
+     * @param OptimizerFilterInterface[] $filters    Optimizer filters.
      */
     public function __construct(ProviderInterface $provider, UrlInterface $urlBuilder, $filters = [])
     {
@@ -75,6 +76,10 @@ class Optimizers implements CollectorInterface
     }
 
     /**
+     * Get applicable optimizers.
+     *
+     * @param ContainerConfigurationInterface $containerConfiguration Container configuration.
+     *
      * @return array
      */
     private function getOptimizers(ContainerConfigurationInterface $containerConfiguration)

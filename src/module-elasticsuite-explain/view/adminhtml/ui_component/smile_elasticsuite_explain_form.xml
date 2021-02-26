@@ -11,7 +11,7 @@
             <item name="provider" xsi:type="string">smile_elasticsuite_explain_form.elasticsuite_explain_data_source</item>
             <item name="deps" xsi:type="string">smile_elasticsuite_explain_form.elasticsuite_explain_data_source</item>
         </item>
-        <item name="label" xsi:type="string" translate="true">Release Notification</item>
+        <item name="label" xsi:type="string" translate="true">Explain results</item>
         <item name="template" xsi:type="string">templates/form/collapsible</item>
     </argument>
     <settings>

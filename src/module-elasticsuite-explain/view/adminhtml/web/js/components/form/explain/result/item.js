@@ -32,8 +32,12 @@ define([
             return '';
         },
 
-        getScoreLabel: function() {
-            return $.mage.__("Score : ");
+        getScoreLabel : function () {
+            return $.mage.__("Score: %s").replace('%s', this.getScore());
+        },
+
+        getSort : function () {
+            return this.data.sort;
         }
     });
 

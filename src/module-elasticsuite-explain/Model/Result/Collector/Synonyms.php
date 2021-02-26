@@ -57,6 +57,11 @@ class Synonyms implements CollectorInterface
     }
 
     /**
+     * Get applicable synonyms.
+     *
+     * @param ContextInterface                $searchContext          Search Context
+     * @param ContainerConfigurationInterface $containerConfiguration Container configuration
+     *
      * @return array
      */
     private function getSynonyms(ContextInterface $searchContext, ContainerConfigurationInterface $containerConfiguration)

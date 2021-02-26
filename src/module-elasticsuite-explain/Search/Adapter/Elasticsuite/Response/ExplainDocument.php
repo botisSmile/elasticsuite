@@ -27,6 +27,11 @@ class ExplainDocument extends \Smile\ElasticsuiteCore\Search\Adapter\Elasticsuit
     const EXPLAIN_DOC_FIELD_NAME = "_explanation";
 
     /**
+     * @var string
+     */
+    const SORT_DOC_FIELD_NAME = "sort";
+
+    /**
      * Return search document explain.
      *
      * @return array
@@ -34,5 +39,15 @@ class ExplainDocument extends \Smile\ElasticsuiteCore\Search\Adapter\Elasticsuit
     public function getExplain()
     {
         return $this->_get(self::EXPLAIN_DOC_FIELD_NAME);
+    }
+
+    /**
+     * Return search document sort values.
+     *
+     * @return array
+     */
+    public function getSort()
+    {
+        return $this->_get(self::SORT_DOC_FIELD_NAME);
     }
 }
