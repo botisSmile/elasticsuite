@@ -9,7 +9,8 @@
  * @package   Smile\ElasticsuiteExplain
  * @author    Romain Ruaud <romain.ruaud@smile.fr>
  * @copyright 2021 Smile
- * @license   Open Software License ("OSL") v. 3.0
+ * @license   Licensed to Smile-SA. All rights reserved. No warranty, explicit or implicit, provided.
+ *            Unauthorized copying of this file, via any medium, is strictly prohibited.
  */
 
 namespace Smile\ElasticsuiteExplain\Ui\Component\Explain\Form\Modifier;
@@ -22,7 +23,7 @@ use Magento\Ui\DataProvider\Modifier\ModifierInterface;
  * Modifier for adminhtml explain form
  *
  * @category Smile
- * @package  Smile\ElasticsuiteCatalogOptimizer
+ * @package  Smile\ElasticsuiteExplain
  * @author   Romain Ruaud <romain.ruaud@smile.fr>
  */
 class Preview implements ModifierInterface

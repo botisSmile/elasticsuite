@@ -5,10 +5,11 @@
  * versions in the future.
  *
  * @category  Smile
- * @package   Smile\ElasticsuiteCatalog
- * @author    Aurelien FOUCRET <aurelien.foucret@smile.fr>
- * @copyright 2020 Smile
- * @license   Open Software License ("OSL") v. 3.0
+ * @package   Smile\ElasticSuiteExplain
+ * @author    Romain Ruaud <romain.ruaud@smile.fr>
+ * @copyright 2021 Smile
+ * @license   Licensed to Smile-SA. All rights reserved. No warranty, explicit or implicit, provided.
+ *            Unauthorized copying of this file, via any medium, is strictly prohibited.
  */
 
 define([

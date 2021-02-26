@@ -7,10 +7,11 @@
  *
  *
  * @category  Smile
- * @package   Smile\ElasticsuiteInstantSearch
+ * @package   Smile\ElasticsuiteExplain
  * @author    Romain Ruaud <romain.ruaud@smile.fr>
- * @copyright 2019 Smile
- * @license   Open Software License ("OSL") v. 3.0
+ * @copyright 2020 Smile
+ * @license   Licensed to Smile-SA. All rights reserved. No warranty, explicit or implicit, provided.
+ *            Unauthorized copying of this file, via any medium, is strictly prohibited.
  */
 
 \Magento\Framework\Component\ComponentRegistrar::register(

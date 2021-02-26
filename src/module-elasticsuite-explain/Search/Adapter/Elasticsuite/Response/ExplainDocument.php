@@ -8,7 +8,8 @@
  * @package   Smile\ElasticsuiteExplain
  * @author    Romain Ruaud <romain.ruaud@smile.fr>
  * @copyright 2021 Smile
- * @license   Open Software License ("OSL") v. 3.0
+ * @license   Licensed to Smile-SA. All rights reserved. No warranty, explicit or implicit, provided.
+ *            Unauthorized copying of this file, via any medium, is strictly prohibited.
  */
 namespace Smile\ElasticsuiteExplain\Search\Adapter\Elasticsuite\Response;
 
@@ -16,7 +17,7 @@ namespace Smile\ElasticsuiteExplain\Search\Adapter\Elasticsuite\Response;
  * Response document containing an explain field.
  *
  * @category Smile
- * @package  Smile\ElasticSuiteDebug
+ * @package  Smile\ElasticsuiteExplain
  * @author   Romain Ruaud <romain.ruaud@smile.fr>
  */
 class ExplainDocument extends \Smile\ElasticsuiteCore\Search\Adapter\Elasticsuite\Response\Document
