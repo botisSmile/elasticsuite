@@ -58,7 +58,7 @@
             <argument name="collectors" xsi:type="array">
                 <item name="optimizers" xsi:type="object">Smile\ElasticsuiteExplain\Model\Result\Collector\Optimizers</item>
                 <item name="synonyms" xsi:type="object">Smile\ElasticsuiteExplain\Model\Result\Collector\Synonyms</item>
-                <item name="searchPositions" xsi:type="object">Smile\ElasticsuiteExplain\Model\Result\Collector\Search\Position</item>
+                <item name="positions" xsi:type="object">Smile\ElasticsuiteExplain\Model\Result\Collector\Positions</item>
             </argument>
         </arguments>
     </type>
@@ -79,6 +79,15 @@
             <argument name="whitelist" xsi:type="array">
                 <item name="quick_search_container" xsi:type="string">quick_search_container</item>
                 <item name="catalog_view_container" xsi:type="string">catalog_view_container</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Smile\ElasticsuiteExplain\Model\Result\Collector\Positions">
+        <arguments>
+            <argument name="positionsProviders" xsi:type="array">
+                <item name="quick_search_container" xsi:type="object">Smile\ElasticsuiteExplain\Model\Result\Collector\Positions\Search</item>
+                <item name="catalog_view_container" xsi:type="object">Smile\ElasticsuiteExplain\Model\Result\Collector\Positions\Category</item>
             </argument>
         </arguments>
     </type>

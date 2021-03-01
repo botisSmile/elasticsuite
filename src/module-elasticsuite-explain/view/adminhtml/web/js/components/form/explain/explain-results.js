@@ -41,7 +41,7 @@ define([
             this.products           = [];
             this.synonyms           = [];
             this.optimizers         = [];
-            this.searchPositions    = {};
+            this.positions          = {};
             this.countTotalProducts = 0;
             this.pageSize           = parseInt(this.pageSize, 10);
             this.currentSize        = this.pageSize;
@@ -76,8 +76,8 @@ define([
 
         onProductListLoad: function (loadedData) {
 
-            if (loadedData.search_position) {
-                this.searchPositions = loadedData.search_position;
+            if (loadedData.positions) {
+                this.positions = loadedData.positions;
             }
 
             if (loadedData.products) {
@@ -101,8 +101,8 @@ define([
 
         createProduct: function (productData) {
             productData.priceFormat = this.priceFormat;
-            if (this.searchPositions.hasOwnProperty(productData.id)) {
-                productData.position = this.searchPositions[productData.id];
+            if (this.positions.hasOwnProperty(productData.id)) {
+                productData.position = this.positions[productData.id];
             }
 
             return new Product({data : productData});

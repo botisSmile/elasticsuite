@@ -13,12 +13,11 @@
  *            Unauthorized copying of this file, via any medium, is strictly prohibited.
  */
 
-namespace Smile\ElasticsuiteExplain\Model\Result\Collector\Search;
+namespace Smile\ElasticsuiteExplain\Model\Result\Collector\Positions;
 
 use Smile\ElasticsuiteCatalog\Model\ResourceModel\Product\Search\Position as PositionResource;
 use Smile\ElasticsuiteCore\Api\Search\ContextInterface;
 use Smile\ElasticsuiteCore\Api\Search\Request\ContainerConfigurationInterface;
-use Smile\ElasticsuiteExplain\Model\Result\CollectorInterface;
 
 /**
  * Applied search position collector.
@@ -27,13 +26,8 @@ use Smile\ElasticsuiteExplain\Model\Result\CollectorInterface;
  * @package  Smile\ElasticsuiteExplain
  * @author   Richard Bayet <richard.bayet@smile.fr>
  */
-class Position implements CollectorInterface
+class Search implements ProviderInterface
 {
-    /**
-     * Collector type
-     */
-    const TYPE = 'search_position';
-
     /**
      * @var PositionResource
      */
@@ -47,14 +41,6 @@ class Position implements CollectorInterface
     public function __construct(PositionResource $positionResource)
     {
         $this->positionResource = $positionResource;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function collect(ContextInterface $searchContext, ContainerConfigurationInterface $containerConfiguration)
-    {
-        return [self::TYPE => $this->getPositions($searchContext)];
     }
 
     /**
