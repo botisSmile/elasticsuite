@@ -106,6 +106,10 @@
                     attr: {'data-product-id': getId()},
                     css: {'manual-sorting': hasPosition(), 'automatic-sorting': !hasPosition(), 'blacklisted': isBlacklisted() }
                 ">
+                        <div data-bind="if: hasPosition()">
+                            <div class="position-info" data-bind="attr: { title: getPositionLabel() }"></div>
+                        </div>
+
                         <div class="product-image"><img data-bind="attr: { src: getImageUrl() }" /></div>
 
                         <div class="info">

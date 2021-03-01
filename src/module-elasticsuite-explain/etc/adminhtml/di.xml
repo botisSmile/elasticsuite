@@ -58,6 +58,7 @@
             <argument name="collectors" xsi:type="array">
                 <item name="optimizers" xsi:type="object">Smile\ElasticsuiteExplain\Model\Result\Collector\Optimizers</item>
                 <item name="synonyms" xsi:type="object">Smile\ElasticsuiteExplain\Model\Result\Collector\Synonyms</item>
+                <item name="searchPositions" xsi:type="object">Smile\ElasticsuiteExplain\Model\Result\Collector\Search\Position</item>
             </argument>
         </arguments>
     </type>

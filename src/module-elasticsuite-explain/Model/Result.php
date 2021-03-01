@@ -150,10 +150,10 @@ class Result
 
         $results = [
             'products' => array_values($products),
-            'size'     => $results->count()
+            'size'     => $results->count(),
         ];
 
-        foreach($this->collectors as $collector) {
+        foreach ($this->collectors as $collector) {
             $results = array_merge_recursive($results, $collector->collect($this->searchContext, $this->containerConfiguration));
         }
 

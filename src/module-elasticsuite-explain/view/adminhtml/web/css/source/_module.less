@@ -9,13 +9,34 @@
 //  * @package   Smile\ElasticsuiteExplain
 //  * @author    Richard BAYET <richard.bayet@smile.fr>
 //  * @copyright 2021 Smile
-//  // * @license   Licensed to Smile-SA. All rights reserved. No warranty, explicit or implicit, provided.
- // *            Unauthorized copying of this file, via any medium, is strictly prohibited.
+//  * @license   Licensed to Smile-SA. All rights reserved. No warranty, explicit or implicit, provided.
+//  *            Unauthorized copying of this file, via any medium, is strictly prohibited.
 //  */
 
 .elasticsuite-admin-product-sorter {
 
     .product-list {
+
+        .position-info {
+
+            display: inline-block;
+            font-size: 0;
+            margin: -4px 0 0 0;
+            vertical-align: middle;
+            padding: 0;
+            float: left;
+            position: absolute;
+            top: 5px;
+            left: 3px;
+
+            .lib-icon-font(
+                @icon-updater__content,
+                @_icon-font: @icons-admin__font-name,
+                @_icon-font-size: 1.8rem,
+                @_icon-font-color: @color-green-apple,
+                @_icon-font-color-hover: @color-gray52
+            );
+        }
 
         .scoring-info {
             margin: 10px;

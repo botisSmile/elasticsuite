@@ -39,6 +39,10 @@ define([
 
         getSort : function () {
             return this.data.sort;
+        },
+
+        getPositionLabel : function () {
+            return $.mage.__("Manually set at position %s").replace('%s', this.getPosition());
         }
     });
 

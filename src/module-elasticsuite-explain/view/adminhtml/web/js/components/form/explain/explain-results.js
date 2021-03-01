@@ -41,6 +41,7 @@ define([
             this.products           = [];
             this.synonyms           = [];
             this.optimizers         = [];
+            this.searchPositions    = {};
             this.countTotalProducts = 0;
             this.pageSize           = parseInt(this.pageSize, 10);
             this.currentSize        = this.pageSize;
@@ -75,6 +76,10 @@ define([
 
         onProductListLoad: function (loadedData) {
 
+            if (loadedData.search_position) {
+                this.searchPositions = loadedData.search_position;
+            }
+
             if (loadedData.products) {
                 var products = loadedData.products.map(this.createProduct.bind(this));
 
@@ -96,6 +101,10 @@ define([
 
         createProduct: function (productData) {
             productData.priceFormat = this.priceFormat;
+            if (this.searchPositions.hasOwnProperty(productData.id)) {
+                productData.position = this.searchPositions[productData.id];
+            }
+
             return new Product({data : productData});
         },
 
@@ -118,6 +127,6 @@ define([
 
         hasOptimizers: function () {
             return (this.optimizers().length > 0);
-        },
+        }
     });
 });
