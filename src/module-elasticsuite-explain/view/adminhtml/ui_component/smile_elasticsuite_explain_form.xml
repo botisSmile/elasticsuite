@@ -73,7 +73,7 @@
 
         <field name="search_container_preview">
             <argument name="data" xsi:type="array">
-                <item name="options" xsi:type="object">Smile\ElasticsuiteCatalogOptimizer\Model\Search\Request\Product\Source\Containers</item>
+                <item name="options" xsi:type="object">Smile\ElasticsuiteExplain\Ui\Component\Explain\Form\Field\Search\Request\Product\Source\Containers</item>
                 <item name="config" xsi:type="array">
                     <item name="component" xsi:type="string">Smile_ElasticsuiteExplain/js/components/form/explain/explain-results-type</item>
                     <item name="dataType" xsi:type="string">text</item>

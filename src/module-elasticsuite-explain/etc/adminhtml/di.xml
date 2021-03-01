@@ -74,4 +74,12 @@
         </arguments>
     </type>
 
+    <type name="Smile\ElasticsuiteExplain\Ui\Component\Explain\Form\Field\Search\Request\Product\Source\Containers">
+        <arguments>
+            <argument name="whitelist" xsi:type="array">
+                <item name="quick_search_container" xsi:type="string">quick_search_container</item>
+                <item name="catalog_view_container" xsi:type="string">catalog_view_container</item>
+            </argument>
+        </arguments>
+    </type>
 </config>
