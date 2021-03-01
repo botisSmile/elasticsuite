@@ -43,6 +43,14 @@ define([
 
         getPositionLabel : function () {
             return $.mage.__("Manually set at position %s").replace('%s', this.getPosition());
+        },
+
+        hasBoosts : function () {
+            return true;
+        },
+
+        getBoostsLabel : function () {
+            return $.mage.__("Score boosted by %s%").replace('%s', 100);
         }
     });
 
