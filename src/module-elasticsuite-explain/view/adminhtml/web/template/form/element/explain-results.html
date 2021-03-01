@@ -29,9 +29,9 @@
 </div>
 
 <div class="admin__fieldset">
-    <div class="dashboard-container row">
+    <div class="dashboard-container row" data-bind="if: hasProducts()">
         <div class="dashboard-secondary col-m-5">
-            <div data-bind="if: hasSynonyms()">
+            <div>
                 <div class="dashboard-item" id="elasticsuite-explain-synonyms">
                     <div class="dashboard-item-title">
                         <span data-bind="i18n: 'Synonyms and expansions'"></span>
@@ -39,7 +39,7 @@
                     <div class="dashboard-item-help dashboard-data" id="elasticsuite-explain-synonyms_help">
                         <p></p>
                     </div>
-                    <div class="dashboard-item-content">
+                    <div class="dashboard-item-content"  data-bind="if: hasSynonyms()">
                         <table class="admin__table-primary dashboard-data terms-report">
                             <thead>
                                 <tr>
@@ -55,12 +55,28 @@
                             </tbody>
                         </table>
                     </div>
+                    <div class="dashboard-item-content"  data-bind="if: !hasSynonyms()">
+                        <table class="admin__table-primary dashboard-data terms-report">
+                            <thead>
+                            <tr>
+                                <th class="data-grid-th no-link"><span data-bind="i18n: 'No thesaurus for this query'"></span></th>
+                            </tr>
+                            </thead>
+                            <tbody data-bind="foreach: synonyms">
+                            <tr>
+                                <td><span data-bind="text: $data"></span></td>
+                            </tr>
+                            </tbody>
+                            <tbody class="extra" id="elasticsuite-explain-synonyms_extra">
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="dashboard-secondary col-m-5">
-            <div data-bind="if: hasOptimizers()">
+            <div>
 
                 <div class="dashboard-item" id="elasticsuite-explain-optimizers">
                     <div class="dashboard-item-title">
@@ -69,7 +85,7 @@
                     <div class="dashboard-item-help dashboard-data" id="elasticsuite-explain-optimizers_help">
                         <p></p>
                     </div>
-                    <div class="dashboard-item-content">
+                    <div class="dashboard-item-content" data-bind="if: hasOptimizers()">
                         <table class="admin__table-primary dashboard-data terms-report">
                             <thead>
                             <tr>
@@ -86,6 +102,22 @@
                             </tr>
                             </tbody>
                             <tbody class="extra" id="elasticsuite-explain-optimizers_extra">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="dashboard-item-content"  data-bind="if: !hasOptimizers()">
+                        <table class="admin__table-primary dashboard-data terms-report">
+                            <thead>
+                            <tr>
+                                <th class="data-grid-th no-link"><span data-bind="i18n: 'No optimizers for this query'"></span></th>
+                            </tr>
+                            </thead>
+                            <tbody data-bind="foreach: synonyms">
+                            <tr>
+                                <td><span data-bind="text: $data"></span></td>
+                            </tr>
+                            </tbody>
+                            <tbody class="extra" id="elasticsuite-explain-synonyms_extra">
                             </tbody>
                         </table>
                     </div>
