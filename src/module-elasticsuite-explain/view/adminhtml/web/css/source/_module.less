@@ -60,7 +60,7 @@
         .scoring-info {
             margin: 10px;
             font-weight: bold;
-            color: #666666;
+            color: @color-gray40;
 
             .scoring-info-text {
                 width: 150px;
@@ -70,16 +70,22 @@
                 display: inline-block;
             }
 
-            .lib-icon-font(
-                @icon-help__content,
-                @icons-admin__font-name,
-                @_icon-font-size: @field-tooltip-icon__size,
-                @_icon-font-line-height: 1,
-                @_icon-font-color: @field-tooltip-icon__color
-            );
-
             .score-details {
                 vertical-align: middle;
+                color: @color-gray40;
+
+                .lib-icon-font(
+                    @icon-help__content,
+                    @icons-admin__font-name,
+                    @_icon-font-size: 1.8rem,
+                    @_icon-font-line-height: 1,
+                    @_icon-font-color: @field-tooltip-icon__color
+                );
+
+                &:before {
+                    margin: -10px 0 0 0;
+                    cursor: pointer;
+                }
             }
         }
     }
