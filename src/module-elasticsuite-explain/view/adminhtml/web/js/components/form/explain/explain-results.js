@@ -16,8 +16,9 @@ define([
     'Magento_Ui/js/form/element/abstract',
     'jquery',
     'Smile_ElasticsuiteExplain/js/components/form/explain/result/item',
+    'Magento_Ui/js/modal/modal',
     'MutationObserver'
-], function (Component, $, Product) {
+], function (Component, $, Product, modal) {
     'use strict';
 
     return Component.extend({
@@ -31,6 +32,12 @@ define([
             },
             messages : {
                 showMore : $.mage.__('Show more')
+            },
+            modalOptions : {
+                type: 'popup',
+                responsive: true,
+                innerScroll: true,
+                title: $.mage.__('Details')
             }
         },
 
@@ -54,7 +61,8 @@ define([
                 'showSpinner',
                 'queryText',
                 'synonyms',
-                'optimizers'
+                'optimizers',
+                'currentProduct'
             ]);
         },
 
@@ -127,6 +135,14 @@ define([
 
         hasOptimizers: function () {
             return (this.optimizers().length > 0);
+        },
+
+        showDetails: function(product) {
+            this.currentProduct(product);
+            if (this.modal === undefined) {
+                this.modal = $("#productDetails").modal(this.modalOptions);
+            }
+            this.modal.modal('openModal');
         }
     });
 });

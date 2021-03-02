@@ -157,7 +157,9 @@
 
                         <div class="scoring-info">
                             <label class="scoring-info-label">
-                                <span class="scoring-info-text" data-bind="text: getScoreLabel(), attr: {title: getScoreLabel()}"></span>
+                                <a class="score-details" data-bind="attr: {href: '#', title:getScoreDetailsLabel()}, click:$parent.showDetails.bind($parent)">
+                                    <span class="scoring-info-text" data-bind="text: getScoreLabel(), attr: {title: getScoreLabel()}"></span>
+                                </a>
                             </label>
                         </div>
 
@@ -169,5 +171,14 @@
                 <a href="#" data-bind="click: showMoreProducts, text: messages.showMore" class="show-more-link"></a>
             </p>
         </div>
+    </div>
+</div>
+
+<div class="modal" id="productDetails" data-bind="with: currentProduct">
+    <div class="info">
+        <h1><span data-bind="html: getName(), attr: {title: getName()}"></span></h1>
+        <p class="sku" data-bind="text: getSku()"></p>
+        <p class="price" data-bind="text: getFormattedPrice()"></p>
+        <p class="stock" data-bind="text: getStockLabel()"></p>
     </div>
 </div>

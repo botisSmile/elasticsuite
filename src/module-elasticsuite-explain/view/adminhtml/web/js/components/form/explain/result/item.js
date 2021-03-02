@@ -23,6 +23,7 @@ define([
     'use strict';
 
     return Item.extend({
+
         getEffectClass : function () {
             if (this.data.effect === -1) {
                 return 'down';
@@ -51,7 +52,11 @@ define([
 
         getBoostsLabel : function () {
             return $.mage.__("Score boosted by %s%").replace('%s', 100);
-        }
+        },
+
+        getScoreDetailsLabel : function () {
+            return $.mage.__("View score details");
+        },
     });
 
 });
