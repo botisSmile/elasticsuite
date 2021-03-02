@@ -78,6 +78,7 @@ class Item
             'explanation' => $this->getDocumentExplanation(),
             'sort'        => $this->getDocumentSort(),
             'is_in_stock' => $this->isInStockProduct(),
+            'boosts'      => $this->getBoosts(),
         ];
 
         return $data;
@@ -189,5 +190,55 @@ class Item
         }
 
         return $isInStock;
+    }
+
+    /**
+     * Return boosts applied to the product.
+     *
+     * @return array
+     */
+    private function getBoosts()
+    {
+        $boosts = [];
+
+        if ($explain = $this->getDocumentExplanation()) {
+            $boosts = $this->getBoostsWeightsFromExplain($explain);
+        }
+
+        return $boosts;
+    }
+
+    /**
+     * Get boost weights from explain.
+     *
+     * @param array $explain Explain data
+     *
+     * @return array
+     */
+    private function getBoostsWeightsFromExplain(array $explain)
+    {
+        $boostWeights = [];
+
+        if (array_key_exists('description', $explain)) {
+            $description = $explain['description'];
+
+            // On a function score node, extract boost/weight.
+            if (preg_match('/^function score, score mode/', $description)) {
+                if (array_key_exists('value', $explain)) {
+                    $boostWeights[] = $explain['value'];
+                }
+            } else {
+                if (array_key_exists('details', $explain)) {
+                    $details = $explain['details'];
+                    if (is_array($details)) {
+                        foreach ($details as $child) {
+                            $boostWeights = array_merge($boostWeights, $this->getBoostsWeightsFromExplain($child));
+                        }
+                    }
+                }
+            }
+        }
+
+        return $boostWeights;
     }
 }

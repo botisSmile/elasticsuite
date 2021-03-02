@@ -47,11 +47,11 @@ define([
         },
 
         hasBoosts : function () {
-            return true;
+            return (this.data.boosts.length > 0);
         },
 
         getBoostsLabel : function () {
-            return $.mage.__("Score boosted by %s%").replace('%s', 100);
+            return $.mage.__("Score boosted by %s").replace('%s', this.data.boosts.join(', '));
         },
 
         getScoreDetailsLabel : function () {
