@@ -107,3 +107,28 @@
         }
     }
 }
+
+.admin__table-primary {
+    &.dashboard-data {
+        &.matches-report {
+            .weight, .score {
+                text-align: right;
+            }
+
+            .extra {
+                td {
+                    text-align: right;
+                    &.total {
+                        font-weight: bold;
+                    }
+                }
+
+                tr:first-child {
+                    td {
+                        border-top: 4px solid @table-td__border-color;
+                    }
+                }
+            }
+        }
+    }
+}

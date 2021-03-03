@@ -79,6 +79,7 @@ class Item
             'sort'        => $this->getDocumentSort(),
             'is_in_stock' => $this->isInStockProduct(),
             'boosts'      => $this->getBoosts(),
+            'matches'     => $this->getMatches(),
         ];
 
         return $data;
@@ -247,5 +248,99 @@ class Item
         }
 
         return $boosts;
+    }
+
+
+    /**
+     * Get field/text matches from the explanation data, if available.
+     *
+     * @return array
+     */
+    private function getMatches()
+    {
+        $matches = [];
+
+        if ($explain = $this->getDocumentExplanation()) {
+            $matches = $this->getFieldMatches($explain);
+        }
+
+        return $matches;
+    }
+
+    /**
+     * Collect all field matches scores.
+     *
+     * @param array $explain Explain data.
+     *
+     * @return array
+     */
+    private function getFieldMatches(array $explain)
+    {
+        $fieldMatches = [];
+
+        if (array_key_exists('description', $explain)) {
+            $description = $explain['description'];
+
+            $matches = [];
+            if (preg_match('/^weight\(([^:]+):([^\s]+) in/', $description, $matches)) {
+                $field = $matches[1];
+                $query = $matches[2];
+                $score = $explain['value'] ?? 0;
+                $weight = 1;
+                if (array_key_exists('details', $explain)) {
+                    if (is_array($explain['details'])) {
+                        $weight = $this->getFieldBoost($explain['details']);
+                    }
+                }
+
+                $fieldMatches[] = [
+                    'field' => $field,
+                    'query' => $query,
+                    'weight' => $weight,
+                    'score' => $score,
+                ];
+
+            } elseif (array_key_exists('details', $explain)) {
+                $details = $explain['details'];
+                if (is_array($details)) {
+                    foreach ($details as $child) {
+                        $fieldMatches = array_merge($fieldMatches, $this->getFieldMatches($child));
+                    }
+                }
+            }
+        }
+
+        return $fieldMatches;
+    }
+
+    /**
+     * Look for a possible score boost node in the explain data.
+     *
+     * @param array $explain Explain data.
+     *
+     * @return float
+     */
+    private function getFieldBoost(array $explain)
+    {
+        $boost = 1;
+
+        foreach ($explain as $child) {
+            if (array_key_exists('description', $child)) {
+                $description = $child['description'];
+                if ($description === 'boost') {
+                    $boost = $child['value'];
+                    break;
+                }
+            }
+
+            if (array_key_exists('details', $child)) {
+                $details = $child['details'];
+                if (is_array($details)) {
+                    $boost = $this->getFieldBoost($details);
+                }
+            }
+        }
+
+        return $boost;
     }
 }

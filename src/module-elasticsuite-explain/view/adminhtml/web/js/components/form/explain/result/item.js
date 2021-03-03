@@ -54,9 +54,33 @@ define([
             return $.mage.__("Score boosted by %s").replace('%s', this.data.boosts.weight);
         },
 
+        getBoostsOperationLabel : function () {
+            return this.data.boosts.operator + " ( " + parseFloat(this.data.boosts.weight).toFixed(5) + " )";
+        },
+
         getScoreDetailsLabel : function () {
             return $.mage.__("View score details");
         },
+
+        hasMatches : function () {
+            return (this.data.matches.length > 0);
+        },
+
+        getMatches : function () {
+            return this.data.matches;
+        },
+
+        getFormattedScore : function (score) {
+            return parseFloat(score).toFixed(5);
+        },
+
+        getMatchesTotal : function () {
+            return this.data.matches.map(function (item) {
+                return parseFloat(item.score);
+            }).reduce(function (a, b) {
+                return a + b;
+            });
+        }
     });
 
 });
