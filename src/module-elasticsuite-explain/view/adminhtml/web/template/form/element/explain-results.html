@@ -56,7 +56,7 @@
                         </table>
                     </div>
                     <div class="dashboard-item-content"  data-bind="if: !hasSynonyms()">
-                        <table class="admin__table-primary dashboard-data terms-report">
+                        <table class="admin__table-primary dashboard-data synonyms-report">
                             <thead>
                             <tr>
                                 <th class="data-grid-th no-link"><span data-bind="i18n: 'No thesaurus for this query'"></span></th>
@@ -86,7 +86,7 @@
                         <p></p>
                     </div>
                     <div class="dashboard-item-content" data-bind="if: hasOptimizers()">
-                        <table class="admin__table-primary dashboard-data terms-report">
+                        <table class="admin__table-primary dashboard-data optimizers-report">
                             <thead>
                             <tr>
                                 <th class="data-grid-th no-link"><span data-bind="i18n: 'Name'"></span></th>
@@ -97,7 +97,9 @@
                             <tbody data-bind="foreach: optimizers">
                             <tr>
                                 <td><a data-bind="attr: { href: url, title: name }"><span data-bind="text: name"></span></a></td>
-                                <td><span data-bind="text: boost"></span></td>
+                                <td>
+                                    <span data-bind="text: boost, attr: { title: tooltip }" ></span>
+                                </td>
                                 <td><span data-bind="html: rule"></span></td>
                             </tr>
                             </tbody>
