@@ -47,6 +47,7 @@
             position: absolute;
             top: 5px;
             right: 5px;
+            transform: rotate(45deg);
 
             .lib-icon-font(
                 @icon-updater__content,
@@ -55,6 +56,22 @@
                 @_icon-font-color: @color-green-apple,
                 @_icon-font-color-hover: @color-gray52
             );
+
+            &.down {
+                transform: rotate(135deg);
+
+                .lib-icon-font(
+                    @icon-updater__content,
+                    @_icon-font: @icons-admin__font-name,
+                    @_icon-font-size: 1.8rem,
+                    @_icon-font-color: @color-red,
+                    @_icon-font-color-hover: @color-gray52
+                );
+
+                :before {
+
+                }
+            }
         }
 
         .scoring-info {

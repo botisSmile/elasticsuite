@@ -25,9 +25,9 @@ define([
     return Item.extend({
 
         getEffectClass : function () {
-            if (this.data.effect === -1) {
+            if (this.data.boosts.weight < 1) {
                 return 'down';
-            } else if (this.data.effect === 1) {
+            } else if (this.data.boosts.weight > 1) {
                 return 'up';
             }
 
@@ -47,11 +47,11 @@ define([
         },
 
         hasBoosts : function () {
-            return (this.data.boosts.length > 0);
+            return (parseInt(this.data.boosts.total, 10) > 0);
         },
 
         getBoostsLabel : function () {
-            return $.mage.__("Score boosted by %s").replace('%s', this.data.boosts.join(', '));
+            return $.mage.__("Score boosted by %s").replace('%s', this.data.boosts.weight);
         },
 
         getScoreDetailsLabel : function () {

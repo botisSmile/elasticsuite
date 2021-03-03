@@ -93,7 +93,7 @@ class Optimizers implements CollectorInterface
             $results[$optimizer->getId()] = [
                 'id'        => $optimizer->getId(),
                 'name'      => $optimizer->getName(),
-                'boost'     => $optimizer->getConfig('constant_score_value'),
+                'boost'     => $this->getBoost($optimizer),
                 'rule'      => nl2br($optimizer->getRuleCondition()->getConditions()->asStringRecursive()),
                 'rule_html' => $optimizer->getRuleCondition()->getConditions()->asHtmlRecursive(),
                 'url'       => $this->urlBuilder->getUrl('smile_elasticsuite_catalog_optimizer/optimizer/edit', ['id' => $optimizer->getId()]),
@@ -106,5 +106,27 @@ class Optimizers implements CollectorInterface
         }
 
         return array_values($results);
+    }
+
+    /**
+     * Get boost of a given optimizer.
+     *
+     * @param \Smile\ElasticsuiteCatalogOptimizer\Api\Data\OptimizerInterface $optimizer The optimizer
+     */
+    private function getBoost(OptimizerInterface $optimizer)
+    {
+        $result = null;
+
+        if ($optimizer->getConfig('constant_score_value')) {
+            $result = $optimizer->getConfig('constant_score_value') . '%';
+        } elseif ($optimizer->getConfig('scale_factor')) {
+            $factor   = $optimizer->getConfig('scale_factor') ?? '';
+            $modifier = $optimizer->getConfig('scale_function') ?? '';
+            $field    = $optimizer->getConfig('attribute_code') ?? $optimizer->getConfig('metric') ?? '';
+
+            $result = sprintf("%s(%s * %s)", $modifier, $factor, $field);
+        }
+
+        return $result;
     }
 }

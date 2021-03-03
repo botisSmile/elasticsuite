@@ -202,7 +202,7 @@ class Item
         $boosts = [];
 
         if ($explain = $this->getDocumentExplanation()) {
-            $boosts = $this->getBoostsWeightsFromExplain($explain);
+            $boosts = $this->getBoostsFromExplain($explain);
         }
 
         return $boosts;
@@ -215,9 +215,9 @@ class Item
      *
      * @return array
      */
-    private function getBoostsWeightsFromExplain(array $explain)
+    private function getBoostsFromExplain(array $explain)
     {
-        $boostWeights = [];
+        $boosts = [];
 
         if (array_key_exists('description', $explain)) {
             $description = $explain['description'];
@@ -225,20 +225,27 @@ class Item
             // On a function score node, extract boost/weight.
             if (preg_match('/^function score, score mode/', $description)) {
                 if (array_key_exists('value', $explain)) {
-                    $boostWeights[] = $explain['value'];
+                    $boosts['weight'] = $explain['value'];
                 }
-            } else {
-                if (array_key_exists('details', $explain)) {
-                    $details = $explain['details'];
-                    if (is_array($details)) {
-                        foreach ($details as $child) {
-                            $boostWeights = array_merge($boostWeights, $this->getBoostsWeightsFromExplain($child));
-                        }
+                if (array_key_exists('details', $explain) && is_array($explain['details'])) {
+                    $boosts['total'] = count($explain['details'] ?? []);
+                    if (!empty($explain['details'])) {
+                        $boosts['details'] = $explain['details'];
+                    }
+                }
+                if (preg_match('/\\[(.*?)\\]/', $description, $operator)) {
+                    $boosts['operator'] = next($operator);
+                }
+            } elseif (array_key_exists('details', $explain)) {
+                $details = $explain['details'];
+                if (is_array($details)) {
+                    foreach ($details as $child) {
+                        $boosts = array_replace_recursive($boosts, $this->getBoostsFromExplain($child));
                     }
                 }
             }
         }
 
-        return $boostWeights;
+        return $boosts;
     }
 }

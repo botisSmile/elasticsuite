@@ -143,7 +143,7 @@
                         </div>
 
                         <div data-bind="if: hasBoosts()">
-                            <div class="boosts-info" data-bind="attr: { title: getBoostsLabel() }"></div>
+                            <div class="boosts-info" data-bind="attr: { title: getBoostsLabel() }, css: getEffectClass()"></div>
                         </div>
 
                         <div class="product-image"><img data-bind="attr: { src: getImageUrl() }" /></div>
