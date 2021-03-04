@@ -51,7 +51,13 @@ define([
         },
 
         getBoostsLabel : function () {
-            return $.mage.__("Score boosted by %s").replace('%s', this.data.boosts.weight);
+            return $.mage.__("Score boosted by %s (%num boost(s))")
+                .replace('%s', this.data.boosts.weight)
+                .replace('%num', this.data.boosts.total);
+        },
+
+        getBootsNumLabel : function () {
+            return $.mage.__("(%num boost(s))").replace('%num', this.data.boosts.total);
         },
 
         getBoostsOperationLabel : function () {

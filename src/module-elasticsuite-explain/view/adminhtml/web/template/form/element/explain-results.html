@@ -215,7 +215,8 @@
                     <td class="value"><span data-bind="text: getFormattedScore(getMatchesTotal())"></span></td>
                 </tr>
                 <tr data-bind="if: hasBoosts()" class="subtotal">
-                    <td colspan="3" class="boost label"><span data-bind="i18n: 'Boost'"></span></td>
+                    <td colspan="3" class="boost label"><span data-bind="i18n: 'Boost'"></span>&nbsp;
+                        <span class="boost number" data-bind="text: getBootsNumLabel()"></span></td>
                     <td class="boost value"><span data-bind="text: getBoostsOperationLabel()"></span></td>
                 </tr>
                 <tr class="total">
