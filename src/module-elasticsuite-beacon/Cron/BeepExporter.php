@@ -18,7 +18,7 @@ namespace Smile\ElasticsuiteBeacon\Cron;
 
 use Psr\Log\LoggerInterface;
 use Smile\ElasticsuiteBeacon\Api\Data\BeaconBeepInterface;
-use Smile\ElasticsuiteBeacon\Model\BeaconBeep\Exporter\ExporterException;
+use Smile\ElasticsuiteBeacon\Model\BeaconBeep\Exporter\Exception\ExporterException;
 use Smile\ElasticsuiteBeacon\Model\ResourceModel\BeaconBeep as BeaconBeepResource;
 use Smile\ElasticsuiteBeacon\Model\BeaconBeep\Exporter\Transport;
 
