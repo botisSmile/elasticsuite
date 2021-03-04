@@ -1,0 +1,229 @@
+<div class="admin__field preview-button-container" data-bind="css: $data.additionalClasses, attr: {'data-index': index}, visible: visible" data-index="preview_button">
+    <div class="admin__field-label" data-bind="visible: $data.labelVisible">
+        <!-- ko if: $data.label -->
+            <label data-bind="attr: {for: uid}" for="preview-button">
+                <span data-bind="attr: {'data-config-scope': $data.scopeLabel}, i18n: label"> </span>
+            </label>
+        <!-- /ko -->
+    </div>
+    <div class="admin__field-control" data-bind="css: {'_with-tooltip': $data.tooltip, '_with-reset': $data.showFallbackReset &amp;&amp; $data.isDifferedFromDefault}">
+        <button id="preview-button" data-bind="{ click : refreshProductList, attr: { title: $t('Explain') }}"
+                type="button" class="action- scalable add primary">
+            <span data-bind="i18n: 'Explain'"></span>
+        </button>
+
+        <!-- ko if: hasAddons() --><!-- /ko -->
+
+        <!-- ko if: $data.tooltip --><!-- /ko -->
+
+        <!-- ko if: $data.showFallbackReset && $data.isDifferedFromDefault --><!-- /ko -->
+
+        <!-- ko if: error --><!-- /ko -->
+
+        <!-- ko if: $data.notice --><!-- /ko -->
+
+        <!-- ko if: $data.additionalInfo --><!-- /ko -->
+
+        <!-- ko if: $data.hasService() --><!-- /ko -->
+    </div>
+</div>
+
+<div class="admin__fieldset">
+    <div class="dashboard-container row" data-bind="if: hasProducts()">
+        <div class="dashboard-secondary col-m-5">
+            <div>
+                <div class="dashboard-item" id="elasticsuite-explain-synonyms">
+                    <div class="dashboard-item-title">
+                        <span data-bind="i18n: 'Synonyms and expansions'"></span>
+                    </div>
+                    <div class="dashboard-item-help dashboard-data" id="elasticsuite-explain-synonyms_help">
+                        <p></p>
+                    </div>
+                    <div class="dashboard-item-content"  data-bind="if: hasSynonyms()">
+                        <table class="admin__table-primary dashboard-data terms-report">
+                            <thead>
+                                <tr>
+                                    <th class="data-grid-th no-link"><span data-bind="i18n: 'Queries'"></span></th>
+                                </tr>
+                            </thead>
+                            <tbody data-bind="foreach: synonyms">
+                                <tr>
+                                    <td><span data-bind="text: $data"></span></td>
+                                </tr>
+                            </tbody>
+                            <tbody class="extra" id="elasticsuite-explain-synonyms_extra">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="dashboard-item-content"  data-bind="if: !hasSynonyms()">
+                        <table class="admin__table-primary dashboard-data synonyms-report">
+                            <thead>
+                            <tr>
+                                <th class="data-grid-th no-link"><span data-bind="i18n: 'No thesaurus for this query'"></span></th>
+                            </tr>
+                            </thead>
+                            <tbody data-bind="foreach: synonyms">
+                            <tr>
+                                <td><span data-bind="text: $data"></span></td>
+                            </tr>
+                            </tbody>
+                            <tbody class="extra" id="elasticsuite-explain-synonyms_extra">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-secondary col-m-5">
+            <div>
+
+                <div class="dashboard-item" id="elasticsuite-explain-optimizers">
+                    <div class="dashboard-item-title">
+                        <span data-bind="i18n: 'Optimizers'"></span>
+                    </div>
+                    <div class="dashboard-item-help dashboard-data" id="elasticsuite-explain-optimizers_help">
+                        <p></p>
+                    </div>
+                    <div class="dashboard-item-content" data-bind="if: hasOptimizers()">
+                        <table class="admin__table-primary dashboard-data optimizers-report">
+                            <thead>
+                            <tr>
+                                <th class="data-grid-th no-link"><span data-bind="i18n: 'Name'"></span></th>
+                                <th class="data-grid-th no-link"><span data-bind="i18n: 'Boost'"></span></th>
+                                <th class="data-grid-th no-link"><span data-bind="i18n: 'Rule'"></span></th>
+                            </tr>
+                            </thead>
+                            <tbody data-bind="foreach: optimizers">
+                            <tr>
+                                <td><a data-bind="attr: { href: url, title: name }"><span data-bind="text: name"></span></a></td>
+                                <td>
+                                    <span data-bind="text: boost, attr: { title: tooltip }" ></span>
+                                </td>
+                                <td><span data-bind="html: rule"></span></td>
+                            </tr>
+                            </tbody>
+                            <tbody class="extra" id="elasticsuite-explain-optimizers_extra">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="dashboard-item-content"  data-bind="if: !hasOptimizers()">
+                        <table class="admin__table-primary dashboard-data terms-report">
+                            <thead>
+                            <tr>
+                                <th class="data-grid-th no-link"><span data-bind="i18n: 'No optimizers for this query'"></span></th>
+                            </tr>
+                            </thead>
+                            <tbody data-bind="foreach: synonyms">
+                            <tr>
+                                <td><span data-bind="text: $data"></span></td>
+                            </tr>
+                            </tbody>
+                            <tbody class="extra" id="elasticsuite-explain-synonyms_extra">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="elasticsuite-admin-product-sorter">
+        <div data-role="spinner" class="admin__data-grid-loading-mask" visible="loading" if="showSpinner">
+            <div class="spinner"><span repeat="8"></span></div>
+        </div>
+
+        <div data-bind="if: hasProducts()">
+
+            <div class="product-list-container">
+                <ul data-bind="foreach: products" class="product-list">
+                    <li class="product-list-item" data-bind="
+                    attr: {'data-product-id': getId()},
+                    css: {'manual-sorting': hasPosition(), 'automatic-sorting': !hasPosition(), 'blacklisted': isBlacklisted() }
+                ">
+                        <div data-bind="if: hasPosition()">
+                            <div class="position-info" data-bind="attr: { title: getPositionLabel() }"></div>
+                        </div>
+
+                        <div data-bind="if: hasBoosts()">
+                            <div class="boosts-info" data-bind="attr: { title: getBoostsLabel() }, css: getEffectClass()"></div>
+                        </div>
+
+                        <div class="product-image"><img data-bind="attr: { src: getImageUrl() }" /></div>
+
+                        <div class="info">
+                            <h1><span data-bind="html: getName(), attr: {title: getName()}"></span></h1>
+                            <p class="sku" data-bind="text: getSku()"></p>
+                            <p class="price" data-bind="text: getFormattedPrice()"></p>
+                            <p class="stock" data-bind="text: getStockLabel()"></p>
+                        </div>
+
+                        <div class="scoring-info">
+                            <label class="scoring-info-label">
+                                <a class="score-details" data-bind="attr: {href: '#', title:getScoreDetailsLabel()}, click:$parent.showDetails.bind($parent)">
+                                    <span class="scoring-info-text" data-bind="text: getScoreLabel(), attr: {title: getScoreLabel()}"></span>
+                                </a>
+                            </label>
+                        </div>
+
+                    </li>
+                </ul>
+            </div>
+
+            <p class="bottom-links" data-bind="visible: hasMoreProducts()">
+                <a href="#" data-bind="click: showMoreProducts, text: messages.showMore" class="show-more-link"></a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="productDetails" data-bind="with: currentProduct">
+    <div class="info">
+        <h1><span data-bind="html: getName(), attr: {title: getName()}"></span></h1>
+        <p class="sku" data-bind="text: getSku()"></p>
+        <p class="price" data-bind="text: getFormattedPrice()"></p>
+        <p class="stock" data-bind="text: getStockLabel()"></p>
+
+        <table class="admin__table-primary dashboard-data matches-report">
+            <thead>
+                <tr>
+                    <th class="data-grid-th no-link field"><span data-bind="i18n: 'Field'"></span></th>
+                    <th class="data-grid-th no-link query"><span data-bind="i18n: 'Term'"></span></th>
+                    <th class="data-grid-th no-link weight"><span data-bind="i18n: 'Weight'"></span></th>
+                    <th class="data-grid-th no-link score"><span data-bind="i18n: 'Score'"></span></th>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: {data: getMatches(), as: 'match'}" class="matches">
+                <tr>
+                    <td class="field"><span data-bind="text: match.field"></span></td>
+                    <td class="query"><span data-bind="text: match.query"></span></td>
+                    <td class="weight"><span data-bind="text: match.weight"></span></td>
+                    <td class="score"><span data-bind="text: $parent.getFormattedScore(match.score)"></span></td>
+                </tr>
+            </tbody>
+            <tbody data-bind="if: !hasMatches()" class="matches empty">
+                <tr>
+                    <td colspan="3" class="label"><span data-bind="i18n: 'No field matches'"></span></td>
+                    <td class="score">
+                        <span class="default-label" data-bind="i18n: '(Default score)'"></span>
+                        <span class="default-value" data-bind="text: getFormattedScore(1)"></span>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot class="extra">
+                <tr data-bind="if: hasMatches()" class="extra-matches subtotal">
+                    <td colspan="3" class="label"><span data-bind="i18n: 'Field matches total'"></span></td>
+                    <td class="value"><span data-bind="text: getFormattedScore(getMatchesTotal())"></span></td>
+                </tr>
+                <tr data-bind="if: hasBoosts()" class="subtotal">
+                    <td colspan="3" class="boost label"><span data-bind="i18n: 'Boost'"></span>&nbsp;
+                        <span class="boost number" data-bind="text: getBootsNumLabel()"></span></td>
+                    <td class="boost value"><span data-bind="text: getBoostsOperationLabel()"></span></td>
+                </tr>
+                <tr class="total">
+                    <td colspan="3" class="total label"><span data-bind="i18n: 'Total'"></span></td>
+                    <td class="total value"><span data-bind="text: getScore()"></span></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
