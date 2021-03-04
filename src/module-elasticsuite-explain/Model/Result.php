@@ -20,6 +20,7 @@ use Smile\ElasticsuiteCatalog\Model\Category\Filter\Provider as CategoryFilterPr
 use Smile\ElasticsuiteCore\Api\Client\ClientInterface;
 use Smile\ElasticsuiteCore\Api\Search\ContextInterface;
 use Smile\ElasticsuiteCore\Api\Search\Request\ContainerConfigurationInterface;
+use Smile\ElasticsuiteCore\Search\Adapter\Elasticsuite\Response\QueryResponseFactory;
 use Smile\ElasticsuiteCore\Search\Request\Builder;
 use Smile\ElasticsuiteCore\Search\Request\SortOrderInterface;
 use Smile\ElasticsuiteCore\Search\RequestInterface;
@@ -31,6 +32,7 @@ use Smile\ElasticsuiteExplain\Model\Result\CollectorInterface;
  * @category Smile
  * @package  Smile\ElasticsuiteExplain
  * @author   Romain Ruaud <romain.ruaud@smile.fr>
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Result
 {
@@ -96,19 +98,20 @@ class Result
 
     /**
      * Constructor.
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      *
-     * @param \Smile\ElasticsuiteExplain\Model\Result\ItemFactory                               $previewItemFactory     Preview item factory.
-     * @param ContainerConfigurationInterface                                                   $containerConfig        Container Configuration
-     * @param \Smile\ElasticsuiteCore\Search\Request\Builder                                    $requestBuilder         Request Builder
-     * @param \Smile\ElasticsuiteCore\Search\Adapter\Elasticsuite\Request\Mapper                $requestMapper          Request Mapper
-     * @param \Smile\ElasticsuiteCore\Api\Client\ClientInterface                                $client                 Elasticsearch client
-     * @param \Smile\ElasticsuiteCore\Search\Adapter\Elasticsuite\Response\QueryResponseFactory $queryResponseFactory   Query Response
-     * @param \Smile\ElasticsuiteCore\Api\Search\ContextInterface                               $searchContext          Search Context
-     * @param \Smile\ElasticsuiteCatalog\Model\Category\Filter\Provider                         $categoryFilterProvider Category Filter Provider
-     * @param \Smile\ElasticsuiteExplain\Model\Result\CollectorInterface[]                      $collectors             Explain collectors
-     * @param \Magento\Catalog\Api\Data\CategoryInterface|null                                  $category               Category Id to preview, if any.
-     * @param null                                                                              $queryText              Query Text.
-     * @param int                                                                               $size                   Preview size.
+     * @param \Smile\ElasticsuiteExplain\Model\Result\ItemFactory                $previewItemFactory     Preview item factory.
+     * @param ContainerConfigurationInterface                                    $containerConfig        Container Configuration
+     * @param \Smile\ElasticsuiteCore\Search\Request\Builder                     $requestBuilder         Request Builder
+     * @param \Smile\ElasticsuiteCore\Search\Adapter\Elasticsuite\Request\Mapper $requestMapper          Request Mapper
+     * @param \Smile\ElasticsuiteCore\Api\Client\ClientInterface                 $client                 Elasticsearch client
+     * @param QueryResponseFactory                                               $queryResponseFactory   Query Response
+     * @param \Smile\ElasticsuiteCore\Api\Search\ContextInterface                $searchContext          Search Context
+     * @param \Smile\ElasticsuiteCatalog\Model\Category\Filter\Provider          $categoryFilterProvider Category Filter Provider
+     * @param \Smile\ElasticsuiteExplain\Model\Result\CollectorInterface[]       $collectors             Explain collectors
+     * @param \Magento\Catalog\Api\Data\CategoryInterface|null                   $category               Category Id to preview, if any.
+     * @param null                                                               $queryText              Query Text.
+     * @param int                                                                $size                   Preview size.
      */
     public function __construct(
         Result\ItemFactory $previewItemFactory,
@@ -116,7 +119,7 @@ class Result
         Builder $requestBuilder,
         \Smile\ElasticsuiteCore\Search\Adapter\Elasticsuite\Request\Mapper $requestMapper,
         \Smile\ElasticsuiteCore\Api\Client\ClientInterface $client,
-        \Smile\ElasticsuiteCore\Search\Adapter\Elasticsuite\Response\QueryResponseFactory $queryResponseFactory,
+        QueryResponseFactory $queryResponseFactory,
         ContextInterface $searchContext,
         CategoryFilterProvider $categoryFilterProvider,
         array $collectors = [],

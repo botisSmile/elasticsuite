@@ -92,8 +92,7 @@ class Results extends Action
         JsonHelper $jsonHelper,
         QueryFactory $queryFactory,
         ContextInterface $searchContext
-    )
-    {
+    ) {
         parent::__construct($context);
 
         $this->optimizerFactory       = $optimizerFactory;
@@ -176,7 +175,7 @@ class Results extends Action
      */
     private function getPageSize()
     {
-        return (int)$this->getRequest()->getParam('page_size');
+        return (int) $this->getRequest()->getParam('page_size');
     }
 
     /**
@@ -202,7 +201,7 @@ class Results extends Action
      */
     private function getQueryText()
     {
-        $queryText = trim(strtolower((string)$this->getRequest()->getParam('query_text_preview', '')));
+        $queryText = trim(strtolower((string) $this->getRequest()->getParam('query_text_preview', '')));
 
         if ($queryText == '') {
             $queryText = null;

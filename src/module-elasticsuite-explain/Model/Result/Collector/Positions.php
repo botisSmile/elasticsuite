@@ -13,9 +13,7 @@
  *            Unauthorized copying of this file, via any medium, is strictly prohibited.
  */
 
-
 namespace Smile\ElasticsuiteExplain\Model\Result\Collector;
-
 
 use Smile\ElasticsuiteCatalog\Model\ResourceModel\Product\Search\Position as PositionResource;
 use Smile\ElasticsuiteCore\Api\Search\ContextInterface;

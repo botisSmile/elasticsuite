@@ -88,11 +88,9 @@ class Item
     /**
      * Return the ES explanation document for the current product.
      *
-     * @param string $field The document field to retrieve.
-     *
      * @return array
      */
-    private function getDocumentExplanation($field = null)
+    private function getDocumentExplanation()
     {
         return $this->document->getExplain() ? : [];
     }
@@ -122,7 +120,7 @@ class Item
     /**
      * Return the ES score for the current product.
      *
-     * @return array
+     * @return float
      */
     private function getDocumentScore()
     {
@@ -212,6 +210,8 @@ class Item
     /**
      * Get boost weights from explain.
      *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      * @param array $explain Explain data
      *
      * @return array
@@ -299,7 +299,6 @@ class Item
                     'weight' => $weight,
                     'score' => $score,
                 ];
-
             } elseif (array_key_exists('details', $explain)) {
                 $details = $explain['details'];
                 if (is_array($details)) {

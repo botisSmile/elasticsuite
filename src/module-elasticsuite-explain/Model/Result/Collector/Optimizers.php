@@ -97,7 +97,10 @@ class Optimizers implements CollectorInterface
                 'tooltip'   => $this->getTooltip($optimizer),
                 'rule'      => nl2br($optimizer->getRuleCondition()->getConditions()->asStringRecursive()),
                 'rule_html' => $optimizer->getRuleCondition()->getConditions()->asHtmlRecursive(),
-                'url'       => $this->urlBuilder->getUrl('smile_elasticsuite_catalog_optimizer/optimizer/edit', ['id' => $optimizer->getId()]),
+                'url'       => $this->urlBuilder->getUrl(
+                    'smile_elasticsuite_catalog_optimizer/optimizer/edit',
+                    ['id' => $optimizer->getId()]
+                ),
             ];
         }
 
@@ -113,6 +116,8 @@ class Optimizers implements CollectorInterface
      * Get boost of a given optimizer.
      *
      * @param \Smile\ElasticsuiteCatalogOptimizer\Api\Data\OptimizerInterface $optimizer The optimizer
+     *
+     * @return string
      */
     private function getBoost(OptimizerInterface $optimizer)
     {
@@ -132,13 +137,15 @@ class Optimizers implements CollectorInterface
      * Get tooltip for a given optimizer.
      *
      * @param \Smile\ElasticsuiteCatalogOptimizer\Api\Data\OptimizerInterface $optimizer The optimizer
+     *
+     * @return string
      */
     private function getTooltip(OptimizerInterface $optimizer)
     {
         $result = null;
 
         if ($optimizer->getConfig('constant_score_value')) {
-            $result   = sprintf( "1 + (%s / 100)", (float) $optimizer->getConfig('constant_score_value'));
+            $result   = sprintf("1 + (%s / 100)", (float) $optimizer->getConfig('constant_score_value'));
         } elseif ($optimizer->getConfig('scale_factor')) {
             $factor   = $optimizer->getConfig('scale_factor') ?? '';
             $modifier = $optimizer->getConfig('scale_function') ?? '';
