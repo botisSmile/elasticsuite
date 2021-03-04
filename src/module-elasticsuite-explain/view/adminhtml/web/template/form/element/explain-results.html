@@ -187,33 +187,42 @@
             <thead>
                 <tr>
                     <th class="data-grid-th no-link field"><span data-bind="i18n: 'Field'"></span></th>
-                    <th class="data-grid-th no-link weight"><span data-bind="i18n: 'Weight'"></span></th>
                     <th class="data-grid-th no-link query"><span data-bind="i18n: 'Term'"></span></th>
+                    <th class="data-grid-th no-link weight"><span data-bind="i18n: 'Weight'"></span></th>
                     <th class="data-grid-th no-link score"><span data-bind="i18n: 'Score'"></span></th>
                 </tr>
             </thead>
             <tbody data-bind="foreach: {data: getMatches(), as: 'match'}" class="matches">
                 <tr>
                     <td class="field"><span data-bind="text: match.field"></span></td>
-                    <td class="weight"><span data-bind="text: match.weight"></span></td>
                     <td class="query"><span data-bind="text: match.query"></span></td>
+                    <td class="weight"><span data-bind="text: match.weight"></span></td>
                     <td class="score"><span data-bind="text: $parent.getFormattedScore(match.score)"></span></td>
                 </tr>
             </tbody>
-            <tbody class="extra">
-                <tr data-bind="if: hasMatches()" class="extra-matches">
-                    <td colspan="3" class="subtotal label"><span data-bind="i18n: 'Field matches total'"></span></td>
-                    <td class="subtotal value"><span data-bind="text: getFormattedScore(getMatchesTotal())"></span></td>
-                </tr>
+            <tbody data-bind="if: !hasMatches()" class="matches empty">
                 <tr>
+                    <td colspan="3" class="label"><span data-bind="i18n: 'No field matches'"></span></td>
+                    <td class="score">
+                        <span class="default-label" data-bind="i18n: '(Default score)'"></span>
+                        <span class="default-value" data-bind="text: getFormattedScore(1)"></span>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot class="extra">
+                <tr data-bind="if: hasMatches()" class="extra-matches subtotal">
+                    <td colspan="3" class="label"><span data-bind="i18n: 'Field matches total'"></span></td>
+                    <td class="value"><span data-bind="text: getFormattedScore(getMatchesTotal())"></span></td>
+                </tr>
+                <tr data-bind="if: hasBoosts()" class="subtotal">
                     <td colspan="3" class="boost label"><span data-bind="i18n: 'Boost'"></span></td>
                     <td class="boost value"><span data-bind="text: getBoostsOperationLabel()"></span></td>
                 </tr>
-                <tr>
+                <tr class="total">
                     <td colspan="3" class="total label"><span data-bind="i18n: 'Total'"></span></td>
                     <td class="total value"><span data-bind="text: getScore()"></span></td>
                 </tr>
-            </tbody>
+            </tfoot>
         </table>
     </div>
 </div>

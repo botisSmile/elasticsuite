@@ -115,17 +115,40 @@
                 text-align: right;
             }
 
+            .score {
+                .default-label {
+                    font-style: italic;
+                }
+            }
+
+            .matches {
+                &.empty {
+                    td {
+                        border-bottom: 4px solid @table-td__border-color;
+                    }
+                }
+
+                .label {
+                    text-align: center;
+                    font-style: italic;
+
+                }
+            }
+
             .extra {
                 td {
                     text-align: right;
-                    &.total {
-                        font-weight: bold;
-                    }
                 }
 
                 tr:first-child {
                     td {
                         border-top: 4px solid @table-td__border-color;
+                    }
+                }
+
+                .subtotal {
+                    .value {
+                        font-weight: normal;
                     }
                 }
             }
