@@ -97,6 +97,7 @@
                             <thead>
                             <tr>
                                 <th class="data-grid-th no-link"><span data-bind="i18n: 'Name'"></span></th>
+                                <th class="data-grid-th no-link"><span data-bind="i18n: 'Type'"></span></th>
                                 <th class="data-grid-th no-link"><span data-bind="i18n: 'Boost'"></span></th>
                                 <th class="data-grid-th no-link"><span data-bind="i18n: 'Rule'"></span></th>
                             </tr>
@@ -104,6 +105,9 @@
                             <tbody data-bind="foreach: optimizers">
                             <tr>
                                 <td><a data-bind="attr: { href: url, title: name }"><span data-bind="text: name"></span></a></td>
+                                <td>
+                                    <span data-bind="text: type, attr: { title: type }" ></span>
+                                </td>
                                 <td>
                                     <span data-bind="text: boost, attr: { title: tooltip }" ></span>
                                 </td>
