@@ -40,6 +40,7 @@
         "smile/magento2-react": "~16"
     },
     "replace": {
+        "smile/module-elasticsuite-ab-campaign": "self.version",
         "smile/module-elasticsuite-beacon": "self.version",
         "smile/module-elasticsuite-beacon-tools": "self.version",
         "smile/module-elasticsuite-behavioral-autocomplete": "self.version",
@@ -58,6 +59,7 @@
     },
     "autoload": {
         "files": [
+            "src/module-elasticsuite-ab-campaign/registration.php",
             "src/module-elasticsuite-beacon/registration.php",
             "src/module-elasticsuite-beacon-tools/registration.php",
             "src/module-elasticsuite-behavioral-autocomplete/registration.php",
@@ -72,6 +74,7 @@
             "src/module-elasticsuite-virtual-attribute/registration.php"
         ],
         "psr-4": {
+            "Smile\\ElasticsuiteAbCampaign\\": "src/module-elasticsuite-ab-campaign",
             "Smile\\ElasticsuiteBeacon\\": "src/module-elasticsuite-beacon",
             "Smile\\ElasticsuiteBeaconTools\\": "src/module-elasticsuite-beacon-tools",
             "Smile\\ElasticsuiteBehavioralAutocomplete\\": "src/module-elasticsuite-behavioral-autocomplete",
