@@ -153,6 +153,22 @@
                 .subtotal {
                     .value {
                         font-weight: normal;
+                        .score-mode {
+                            .lib-icon-font(
+                                @icon-help__content,
+                                @icons-admin__font-name,
+                                @_icon-font-size: 1.8rem,
+                                @_icon-font-line-height: 1,
+                                @_icon-font-color: @field-tooltip-icon__color,
+                                @_icon-font-position: before,
+                                @_icon-font-display: inline
+                            );
+                        }
+
+                        .boost-mode, .score-mode {
+                            text-decoration: underline dotted @color-green-apple;
+                            cursor: pointer;
+                        }
                     }
                     .boost {
                         &.number {

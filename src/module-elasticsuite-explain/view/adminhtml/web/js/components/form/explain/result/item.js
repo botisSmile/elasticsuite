@@ -23,6 +23,25 @@ define([
     'use strict';
 
     return Item.extend({
+        defaults: {
+            boostModeMessages : {
+                multiply    : $.mage.__('The field matches score is multiplied by the boosting score.'),
+                sum         : $.mage.__('The boosting score is added to the field matches score.'),
+                avg         : $.mage.__('An average of the field matches and boosting score is computed.'),
+                first       : $.mage.__('Only the first computed score is used.'),
+                replace     : $.mage.__('Only the boosting score is used, the field matches score is ignored.'),
+                max         : $.mage.__('Only the maximum value between the field matches score and the boosting score is used.'),
+                min         : $.mage.__('Only the minimum value between the field matches score and the boosting score is used.')
+            },
+            scoreModeMessages : {
+                multiply    : $.mage.__('Boost values are multiplied.'),
+                sum         : $.mage.__('Boost values are summed.'),
+                avg         : $.mage.__('A weighted arithmetic mean of boost scores is computed.'),
+                first       : $.mage.__('Only the first matching boost value is applied.'),
+                max         : $.mage.__('Only the maximum boost value is used.'),
+                min         : $.mage.__('Only the minimum boost value is used.')
+            }
+        },
 
         getEffectClass : function () {
             if (this.data.boosts.weight < 1) {
@@ -56,12 +75,30 @@ define([
                 .replace('%num', this.data.boosts.total);
         },
 
-        getBootsNumLabel : function () {
+        getBoostsNumLabel : function () {
             return $.mage.__("(%num boost(s))").replace('%num', this.data.boosts.total);
         },
 
-        getBoostsOperationLabel : function () {
-            return this.data.boosts.operator + " ( " + parseFloat(this.data.boosts.weight).toFixed(5) + " )";
+        getBoostsBoostMode : function () {
+            return this.data.boosts.boost_mode;
+        },
+
+        getBoostModeDescription : function () {
+            if (this.boostModeMessages[this.data.boosts.boost_mode]) {
+                return this.boostModeMessages[this.data.boosts.boost_mode];
+            }
+            return '';
+        },
+
+        getBoostsScoreModeDescription : function () {
+            if (this.scoreModeMessages[this.data.boosts.score_mode]) {
+                return this.scoreModeMessages[this.data.boosts.score_mode];
+            }
+            return '';
+        },
+
+        getBoostsWeight : function () {
+            return this.data.boosts.weight;
         },
 
         getScoreDetailsLabel : function () {

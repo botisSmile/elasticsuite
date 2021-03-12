@@ -18,6 +18,7 @@ namespace Smile\ElasticsuiteExplain\Model\Result;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Helper\Image as ImageHelper;
 use Magento\Customer\Api\Data\GroupInterface;
+use Smile\ElasticsuiteCore\Search\Request\Query\FunctionScore;
 use Smile\ElasticsuiteExplain\Model\Result\Item\SynonymManager;
 use Smile\ElasticsuiteExplain\Search\Adapter\Elasticsuite\Response\ExplainDocument;
 
@@ -234,6 +235,7 @@ class Item
 
             // On a function score node, extract boost/weight.
             if (preg_match('/^function score, score mode/', $description)) {
+                $boosts['boost_mode'] = FunctionScore::BOOST_MODE_MULTIPLY;
                 if (array_key_exists('value', $explain)) {
                     $boosts['weight'] = $explain['value'];
                 }
@@ -243,8 +245,8 @@ class Item
                         $boosts['details'] = $explain['details'];
                     }
                 }
-                if (preg_match('/\\[(.*?)\\]/', $description, $operator)) {
-                    $boosts['operator'] = next($operator);
+                if (preg_match('/\\[(.*?)\\]/', $description, $scoreMode)) {
+                    $boosts['score_mode'] = next($scoreMode);
                 }
             } elseif (array_key_exists('details', $explain)) {
                 $details = $explain['details'];
