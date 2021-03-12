@@ -18,6 +18,7 @@ namespace Smile\ElasticsuiteExplain\Model\Result;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Helper\Image as ImageHelper;
 use Magento\Customer\Api\Data\GroupInterface;
+use Smile\ElasticsuiteExplain\Model\Result\Item\SynonymManager;
 use Smile\ElasticsuiteExplain\Search\Adapter\Elasticsuite\Response\ExplainDocument;
 
 /**
@@ -45,20 +46,28 @@ class Item
     private $imageHelper;
 
     /**
+     * @var SynonymManager
+     */
+    private $synonymManager;
+
+    /**
      * Constructor.
      *
-     * @param ProductInterface $product     Product
-     * @param ExplainDocument  $document    Product Document.
-     * @param ImageHelper      $imageHelper Image helper.
+     * @param ProductInterface $product        Product
+     * @param ExplainDocument  $document       Product Document.
+     * @param ImageHelper      $imageHelper    Image helper.
+     * @param SynonymManager   $synonymManager Synonym Manager.
      */
     public function __construct(
         ProductInterface $product,
         ExplainDocument $document,
-        ImageHelper $imageHelper
+        ImageHelper $imageHelper,
+        SynonymManager $synonymManager
     ) {
-        $this->product       = $product;
-        $this->document      = $document;
-        $this->imageHelper   = $imageHelper;
+        $this->product        = $product;
+        $this->document       = $document;
+        $this->imageHelper    = $imageHelper;
+        $this->synonymManager = $synonymManager;
     }
 
     /**
@@ -277,7 +286,6 @@ class Item
     private function getFieldMatches(array $explain)
     {
         $fieldMatches = [];
-
         if (array_key_exists('description', $explain)) {
             $description = $explain['description'];
 
@@ -313,6 +321,7 @@ class Item
                     'query' => $query,
                     'weight' => $weight,
                     'score' => $score,
+                    'synonym' => $this->synonymManager->getSynonym($query),
                 ];
             } elseif (array_key_exists('details', $explain)) {
                 $details = $explain['details'];

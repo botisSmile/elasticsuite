@@ -206,7 +206,9 @@
             <tbody data-bind="foreach: {data: getMatches(), as: 'match'}" class="matches">
                 <tr>
                     <td class="field"><span data-bind="text: match.field"></span></td>
-                    <td class="query"><span data-bind="text: match.query"></span></td>
+                    <td class="query">
+                        <span data-bind="text: match.query, attr: {class: match.synonym ? 'synonym' : '', title: match.synonym ? $parent.getSynonymDescription(match) : match.query}"></span>
+                    </td>
                     <td class="weight"><span data-bind="text: match.weight"></span></td>
                     <td class="score"><span data-bind="text: $parent.getFormattedScore(match.score)"></span></td>
                 </tr>
