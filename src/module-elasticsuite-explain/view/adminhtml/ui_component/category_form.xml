@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+/**
+ * Smile_ElasticsuiteVirtualCategory category form modifications.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Smile ElasticSuite to newer
+ * versions in the future.
+ *
+ * @category  Smile
+ * @package   Smile\ElasticsuiteVirtualCategory
+ * @author    Aurelien FOUCRET <aurelien.foucret@smile.fr>
+ * @copyright 2020 Smile
+ * @license   Open Software License ("OSL") v. 3.0
+ */
+ -->
+
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+
+    <fieldset name="assign_products">
+        <container name="category_optimizer">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="sortOrder" xsi:type="number">25</item>
+                </item>
+            </argument>
+            <container name="button_set" template="ui/form/components/complex">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="label" xsi:type="string"/>
+                        <item name="content" xsi:type="string" translate="true">You can see if there are potentially applied optimizers.</item>
+                    </item>
+                </argument>
+                <button name="display_optimizers" displayArea="actions-secondary">
+                    <argument name="data" xsi:type="array">
+                        <item name="config" xsi:type="array">
+                            <item name="buttonClasses" xsi:type="string"></item>
+                            <item name="actions" xsi:type="array">
+                                <item name="0" xsi:type="array">
+                                    <item name="targetName" xsi:type="string">category_form.category_form.category_optimizer_modal</item>
+                                    <item name="actionName" xsi:type="string">toggleModal</item>
+                                </item>
+                            </item>
+                            <item name="title" xsi:type="string" translate="true">Display potentially applied optimizers</item>
+                        </item>
+                    </argument>
+                </button>
+            </container>
+        </container>
+    </fieldset>
+
+    <modal name="category_optimizer_modal">
+        <settings>
+            <options>
+                <option name="title" xsi:type="string" translate="true">Potentially Applied Optimizers</option>
+                <option name="type" xsi:type="string">slide</option>
+                <option name="responsive" xsi:type="boolean">true</option>
+                <option name="innerScroll" xsi:type="boolean">true</option>
+                <option name="autoOpen" xsi:type="boolean">false</option>
+            </options>
+        </settings>
+        <insertListing name="category_optimizer_listing" component="Magento_Ui/js/form/components/insert-listing">
+            <settings>
+                <externalProvider>${ $.ns }.category_optimizer_listing_data_source</externalProvider>
+                <selectionsProvider>${ $.ns }.${ $.ns }.category_optimizer_listing_columns.ids</selectionsProvider>
+                <realTimeLink>true</realTimeLink>
+                <autoRender>true</autoRender>
+                <externalFilterMode>true</externalFilterMode>
+                <dataScope>category_optimizer_listing</dataScope>
+                <dataLinks>
+                    <imports>false</imports>
+                    <exports>true</exports>
+                </dataLinks>
+                <ns>category_optimizer_listing</ns>
+                <imports>
+                    <link name="categoryId">${ $.provider }:data.entity_id</link>
+                    <link name="storeId">${ $.provider }:data.store_id</link>
+                </imports>
+                <exports>
+                    <link name="categoryId">${ $.externalProvider }:params.category_id</link>
+                    <link name="storeId">${ $.externalProvider }:params.store_id</link>
+                </exports>
+                <links>
+                    <link name="value">${ $.provider }:${ $.ns }</link>
+                </links>
+            </settings>
+        </insertListing>
+    </modal>
+</form>
