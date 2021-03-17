@@ -97,6 +97,11 @@ class Result
     private $size;
 
     /**
+     * @var boolean
+     */
+    private $isSpellchecked;
+
+    /**
      * Constructor.
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      *
@@ -152,8 +157,9 @@ class Result
         $products = $this->preparePreviewItems($results);
 
         $results = [
-            'products' => array_values($products),
-            'size'     => $results->count(),
+            'products'        => array_values($products),
+            'size'            => $results->count(),
+            'is_spellchecked' => $this->isSpellchecked,
         ];
 
         foreach ($this->collectors as $collector) {
@@ -171,6 +177,7 @@ class Result
         $request                   = $this->prepareRequest();
         $explainRequest            = $this->requestMapper->buildSearchRequest($request);
         $explainRequest['explain'] = true;
+        $this->isSpellchecked      = $request->isSpellchecked();
 
         $explainResponse = $this->client->search(['index' => $request->getIndex(), 'body' => $explainRequest]);
 
