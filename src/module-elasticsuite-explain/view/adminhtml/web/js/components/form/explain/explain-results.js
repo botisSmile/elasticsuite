@@ -52,6 +52,7 @@ define([
             this.countTotalProducts = 0;
             this.pageSize           = parseInt(this.pageSize, 10);
             this.currentSize        = this.pageSize;
+            this.isSpellchecked     = false;
 
             this.observe([
                 'products',
@@ -62,7 +63,8 @@ define([
                 'queryText',
                 'synonyms',
                 'optimizers',
-                'currentProduct'
+                'currentProduct',
+                'isSpellchecked'
             ]);
         },
 
@@ -94,6 +96,10 @@ define([
                 this.products(products);
                 this.countTotalProducts(parseInt(loadedData.size, 10));
                 this.currentSize(Math.max(this.currentSize(), this.products().length));
+            }
+
+            if (loadedData.hasOwnProperty('is_spellchecked')) {
+                this.isSpellchecked(loadedData.is_spellchecked);
             }
 
             if (loadedData.synonyms) {
@@ -135,6 +141,11 @@ define([
 
         hasOptimizers: function () {
             return (this.optimizers().length > 0);
+        },
+
+        getSpellcheckMessage: function () {
+            return $.mage.__("No exact results found for: '%1'. The displayed items are the closest matches.")
+                .replace('%1', $('[name="query_text_preview"]').val());
         },
 
         showDetails: function(product) {

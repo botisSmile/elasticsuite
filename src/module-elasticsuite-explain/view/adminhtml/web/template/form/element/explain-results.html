@@ -30,6 +30,13 @@
 
 <div class="admin__fieldset">
     <div class="dashboard-container row" data-bind="if: hasProducts()">
+        <div class="messages">
+            <!-- ko if: isSpellchecked() -->
+            <div class="message info message-info">
+                <div data-bind="text: getSpellcheckMessage()"></div>
+            </div>
+            <!-- /ko -->
+        </div>
         <div class="dashboard-secondary col-m-5">
             <div>
                 <div class="dashboard-item" id="elasticsuite-explain-synonyms">
