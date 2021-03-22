@@ -23,6 +23,7 @@
             <module name="Smile_ElasticsuiteCatalog"/>
             <module name="Smile_ElasticsuiteVirtualCategory"/>
             <module name="Smile_ElasticsuiteCatalogOptimizer"/>
+            <module name="Smile_ElasticsuiteBehavioralOptimizer"/>
             <module name="Smile_ElasticsuiteThesaurus"/>
         </sequence>
     </module>
