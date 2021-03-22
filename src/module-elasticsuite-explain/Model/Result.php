@@ -277,11 +277,12 @@ class Result
      */
     private function preparePreviewItems(\Magento\Framework\Search\ResponseInterface $queryResponse)
     {
-        $items = [];
+        $items  = [];
+        $fields = $this->containerConfiguration->getMapping()->getFields();
 
         /** @var \Smile\ElasticsuiteExplain\Search\Adapter\Elasticsuite\Response\ExplainDocument $document */
         foreach ($queryResponse->getIterator() as $document) {
-            $item                      = $this->previewItemFactory->create(['document' => $document]);
+            $item                      = $this->previewItemFactory->create(['document' => $document, 'fields' => $fields]);
             $items[$document->getId()] = $item->getData();
         }
 

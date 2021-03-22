@@ -194,6 +194,21 @@
         <p class="price" data-bind="text: getFormattedPrice()"></p>
         <p class="stock" data-bind="text: getStockLabel()"></p>
 
+        <table class="admin__table-primary dashboard-data source-report">
+            <thead>
+            <tr>
+                <th class="data-grid-th no-link field"><span data-bind="i18n: 'Field'"></span></th>
+                <th class="data-grid-th no-link highlighted-source"><span data-bind="i18n: 'Source'"></span></th>
+            </tr>
+            </thead>
+            <tbody data-bind="foreach: {data: getHighlights(), as: 'hl'}" class="matches">
+            <tr>
+                <td class="field"><span data-bind="text: hl.field"></span></td>
+                <td class="source"><span data-bind="text: hl.value"></span></td>
+            </tr>
+            </tbody>
+        </table>
+
         <table class="admin__table-primary dashboard-data matches-report">
             <thead>
                 <tr>

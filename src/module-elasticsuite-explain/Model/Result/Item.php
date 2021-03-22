@@ -18,6 +18,7 @@ namespace Smile\ElasticsuiteExplain\Model\Result;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Helper\Image as ImageHelper;
 use Magento\Customer\Api\Data\GroupInterface;
+use Smile\ElasticsuiteCore\Api\Index\Mapping\FieldInterface;
 use Smile\ElasticsuiteCore\Search\Request\Query\FunctionScore;
 use Smile\ElasticsuiteExplain\Model\Result\Item\SynonymManager;
 use Smile\ElasticsuiteExplain\Search\Adapter\Elasticsuite\Response\ExplainDocument;
@@ -42,9 +43,19 @@ class Item
     private $document;
 
     /**
+     * @var FieldInterface[]
+     */
+    private $fields;
+
+    /**
      * @var ImageHelper
      */
     private $imageHelper;
+
+    /**
+     * @var null|array
+     */
+    private $matches = null;
 
     /**
      * @var SynonymManager
@@ -58,17 +69,20 @@ class Item
      * @param ExplainDocument  $document       Product Document.
      * @param ImageHelper      $imageHelper    Image helper.
      * @param SynonymManager   $synonymManager Synonym Manager.
+     * @param FieldInterface[] $fields         All fields of the mapping.
      */
     public function __construct(
         ProductInterface $product,
         ExplainDocument $document,
         ImageHelper $imageHelper,
-        SynonymManager $synonymManager
+        SynonymManager $synonymManager,
+        array $fields = []
     ) {
         $this->product        = $product;
         $this->document       = $document;
         $this->imageHelper    = $imageHelper;
         $this->synonymManager = $synonymManager;
+        $this->fields         = $fields;
     }
 
     /**
@@ -90,6 +104,7 @@ class Item
             'is_in_stock' => $this->isInStockProduct(),
             'boosts'      => $this->getBoosts(),
             'matches'     => $this->getMatches(),
+            'highlights'  => $this->getHighlights(),
         ];
 
         return $data;
@@ -269,13 +284,17 @@ class Item
      */
     private function getMatches()
     {
-        $matches = [];
+        if (null === $this->matches) {
+            $matches = [];
 
-        if ($explain = $this->getDocumentExplanation()) {
-            $matches = $this->getFieldMatches($explain);
+            if ($explain = $this->getDocumentExplanation()) {
+                $matches = $this->getFieldMatches($explain);
+            }
+
+            $this->matches = $matches;
         }
 
-        return $matches;
+        return $this->matches;
     }
 
     /**
@@ -319,10 +338,10 @@ class Item
                 }
 
                 $fieldMatches[] = [
-                    'field' => $field,
-                    'query' => $query,
-                    'weight' => $weight,
-                    'score' => $score,
+                    'field'   => $field,
+                    'query'   => $query,
+                    'weight'  => $weight,
+                    'score'   => $score,
                     'synonym' => $this->synonymManager->getSynonym($query),
                 ];
             } elseif (array_key_exists('details', $explain)) {
@@ -367,5 +386,52 @@ class Item
         }
 
         return $boost;
+    }
+
+    private function getHighlights()
+    {
+        $fields         = $this->fields;
+        $highlights     = [];
+        $matchedQueries = [];
+        $matches        = $this->getMatches();
+
+        foreach ($matches as $match) {
+            if (isset($match['query']) && ($match['query'] !== '')) {
+                $matchedQueries[] = $match['query'];
+            }
+        }
+        $matchedQueries = array_unique($matchedQueries);
+
+        foreach ($this->getDocumentSource() as $fieldName => $value) {
+            $field = $fields[$fieldName] ?? null;
+            if ($field && $field->isSearchable()) {
+                $value = strip_tags(json_encode($value));
+                foreach ($matchedQueries as $query) {
+                    $value = preg_replace('/\b'.$query.'\b/i', "<em>$0</em>", $value);
+                }
+                $value = json_decode($value);
+            }
+            $highlights[$fieldName] = $value;
+        }
+
+        $results = [];
+        foreach ($highlights as $fieldName => $value) {
+            // Convert complex (array of objects) values to dot notation.
+            if (is_array($value) && (count($value) != count($value, COUNT_RECURSIVE))) {
+                $iterator = new \RecursiveIteratorIterator(new \RecursiveArrayIterator($value));
+                $result   = [];
+                foreach ($iterator as $leafValue) {
+                    $keys = [];
+                    foreach (range(0, $iterator->getDepth()) as $depth) {
+                        $keys[] = $iterator->getSubIterator($depth)->key();
+                    }
+                    $results[] = ['field' => $fieldName . '.' . join('.', $keys) , 'value' => $leafValue];
+                }
+            } else {
+                $results[] = ['field' =>  $fieldName , 'value' => $value];
+            }
+        }
+
+        return $results;
     }
 }

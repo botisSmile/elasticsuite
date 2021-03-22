@@ -17,8 +17,9 @@ define([
     'jquery',
     'Magento_Catalog/js/price-utils',
     'Smile_ElasticsuiteCatalog/js/form/element/product-sorter/item',
+    'ko',
     'mage/translate'
-], function (Component, $, priceUtil, Item) {
+], function (Component, $, priceUtil, Item, ko) {
 
     'use strict';
 
@@ -127,6 +128,10 @@ define([
             }).reduce(function (a, b) {
                 return a + b;
             });
+        },
+
+        getHighlights : function () {
+            return this.data.highlights;
         }
     });
 
