@@ -76,6 +76,10 @@ define([
             return this.data.matches;
         },
 
+        getSynonymDescription: function (match) {
+            return $.mage.__("Synonym of %1").replace('%1', match.synonym);
+        },
+
         getFormattedScore : function (score) {
             return parseFloat(score).toFixed(5);
         },
