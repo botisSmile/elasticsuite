@@ -56,12 +56,13 @@ class Optimizer
     /**
      * Get boost of a given optimizer.
      *
-     * @param \Smile\ElasticsuiteCatalogOptimizer\Api\Data\OptimizerInterface $optimizer The optimizer
-     *
+     * @param OptimizerInterface $optimizer The optimizer
      * @return string
      */
     public function renderBoost(OptimizerInterface $optimizer)
     {
+        $result = null;
+
         if ($optimizer->getConfig('constant_score_value')) {
             $result = $optimizer->getConfig('constant_score_value') . '%';
         } elseif ($optimizer->getConfig('scale_factor')) {

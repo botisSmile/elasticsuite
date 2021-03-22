@@ -25,7 +25,7 @@ use Magento\Ui\DataProvider\AddFilterToCollectionInterface;
 use Smile\ElasticsuiteCatalogOptimizer\Model\Optimizer;
 use Smile\ElasticsuiteCatalogOptimizer\Model\Optimizer\Category\OptimizerFilter;
 use Smile\ElasticsuiteCatalogOptimizer\Model\ResourceModel\Optimizer\CollectionFactory;
-use Smile\ElasticsuiteCatalogOptimizer\Ui\Component\Optimizer\Listing\DataProvider as BaseDataProvider;
+use Magento\Ui\DataProvider\AbstractDataProvider as BaseDataProvider;
 use Smile\ElasticsuiteCore\Api\Search\ContextInterface;
 use Smile\ElasticsuiteExplain\Model\Renderer\Optimizer as OptimizerRenderer;
 
@@ -91,8 +91,6 @@ class DataProvider extends BaseDataProvider
         ContextInterface $searchContext,
         OptimizerFilter $optimizerFilter,
         OptimizerRenderer $optimizerRenderer,
-        array $addFieldStrategies = [],
-        array $addFilterStrategies = [],
         array $meta = [],
         array $data = []
     ) {
@@ -100,12 +98,10 @@ class DataProvider extends BaseDataProvider
             $name,
             $primaryFieldName,
             $requestFieldName,
-            $collectionFactory,
-            $addFieldStrategies,
-            $addFilterStrategies,
             $meta,
             $data
         );
+        $this->collection         = $collectionFactory->create();
         $this->request            = $request;
         $this->optimizerFilter    = $optimizerFilter;
         $this->categoryRepository = $categoryRepository;
@@ -137,7 +133,7 @@ class DataProvider extends BaseDataProvider
                 $optimizer->toArray(),
                 [
                     'boost' => $this->optimizerRenderer->renderBoost($optimizer),
-                    'rule' => $this->optimizerRenderer->renderRuleConditions($optimizer),
+                    'rule'  => $this->optimizerRenderer->renderRuleConditions($optimizer),
                 ]
             );
         }
