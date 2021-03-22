@@ -282,9 +282,24 @@ class Item
             $description = $explain['description'];
 
             $matches = [];
-            if (preg_match('/^weight\(([^:]+):([^\s]+) in/', $description, $matches)) {
-                $field = $matches[1];
-                $query = $matches[2];
+            /**
+             * Example of descriptions that we want to retrieve:
+             *   - weight(search:atom in 618) [PerFieldSimilarity], result of:
+             *   - weight(Synonym(search.shingle:blue search.shingle:blue jacket) in 1318)
+             *       [PerFieldSimilarity], result of:
+             *   - weight(Synonym(name.shingle:atomic name.shingle:atomic endurance
+             *       name.shingle:atomic endurance running) in 618) [PerFieldSimilarity], result of:
+             */
+            if (preg_match(
+                '/^weight\((?:.*\()?(?:([^:]+):([^\)]*))\)? in/',
+                $description,
+                $matches
+            )) {
+                $field = $matches[1]; // We retrieve the field, like 'name.shingle'.
+                $termsMatch = $matches[2]; // We retrieve the part with terms, like 'blue search.shingle:blue jacket'.
+                $terms = explode("$field:", $termsMatch); // We have here an array like ['blue ', 'blue jacket'].
+                $terms = array_map("trim", $terms); // We remove unwanted spaces, ['blue', 'blue jacket'].
+                $query = implode(', ', $terms);
                 $score = $explain['value'] ?? 0;
                 $weight = 1;
                 if (array_key_exists('details', $explain)) {
