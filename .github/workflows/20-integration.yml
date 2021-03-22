@@ -275,6 +275,10 @@ jobs:
               working-directory: ${{ env.magento-directory }}
               run: php bin/magento setup:di:compile
 
+            - name: "[Test] Publish statics"
+              working-directory: ${{ env.magento-directory }}
+              run: php bin/magento setup:static-content:deploy
+
             - name: "[Test] Data : Require"
               working-directory: ${{ env.magento-directory }}
               run: |
