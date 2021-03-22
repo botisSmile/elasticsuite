@@ -17,14 +17,12 @@ namespace Smile\ElasticsuiteExplain\Model\Result\Collector;
 
 use Magento\Framework\UrlInterface;
 use Smile\ElasticsuiteCatalogOptimizer\Api\Data\OptimizerInterface;
+use Smile\ElasticsuiteCatalogOptimizer\Model\Optimizer\Collection\ProviderInterface;
 use Smile\ElasticsuiteCatalogOptimizer\Model\Optimizer\OptimizerFilterInterface;
 use Smile\ElasticsuiteCore\Api\Search\ContextInterface;
 use Smile\ElasticsuiteCore\Api\Search\Request\ContainerConfigurationInterface;
 use Smile\ElasticsuiteExplain\Model\Renderer\Optimizer as OptimizerRenderer;
 use Smile\ElasticsuiteExplain\Model\Result\CollectorInterface;
-use Smile\ElasticsuiteCatalogOptimizer\Model\Optimizer\Collection\ProviderInterface;
-use Smile\ElasticsuiteBehavioralOptimizer\Ui\Component\Optimizer\Source\Config\BehavioralData\Options;
-use Magento\Catalog\Api\ProductAttributeRepositoryInterface;
 
 /**
  * Applied optimizers collector.
@@ -61,21 +59,6 @@ class Optimizers implements CollectorInterface
      * @var UrlInterface
      */
     private $urlBuilder;
-
-    /**
-     * @var ProductAttributeRepositoryInterface
-     */
-    private $attributeRepository;
-
-    /**
-     * @var array behavioral data option-values
-     */
-    private $options = [];
-
-    /**
-     * @var array
-     */
-    private $typeLabels = [];
 
     /**
      * Optimizers constructor.
@@ -140,17 +123,5 @@ class Optimizers implements CollectorInterface
         }
 
         return array_values($results);
-    }
-
-    /**
-     * Get attribute by attribute code.
-     *
-     * @param string $attributeCode The attribute code
-     *
-     * @return \Magento\Catalog\Api\Data\ProductAttributeInterface
-     */
-    private function getAttribute($attributeCode)
-    {
-        return $this->attributeRepository->get($attributeCode);
     }
 }

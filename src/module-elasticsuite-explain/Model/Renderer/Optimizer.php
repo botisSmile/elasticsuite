@@ -34,10 +34,15 @@ use Smile\ElasticsuiteCatalogOptimizer\Model\Optimizer\Collection\ProviderInterf
  */
 class Optimizer
 {
-
+    /**
+     * Optimizer constructor.
+     *
+     * @param Options                             $optionsSource              Behavioral Data options source
+     * @param ProductAttributeRepositoryInterface $productAttributeRepository Attribute Repository
+     */
     public function __construct(
         Options $optionsSource,
-        ProductAttributeRepositoryInterface $productAttributeRepository,
+        ProductAttributeRepositoryInterface $productAttributeRepository
     ) {
         $this->attributeRepository = $productAttributeRepository;
         $this->options             = $optionsSource->toOptionArray();
@@ -46,8 +51,6 @@ class Optimizer
             'attribute_value' => 'Based on attribute value',
             'behavioral'      => 'Based on behavioral data',
         ];
-
-
     }
 
     /**
@@ -128,5 +131,17 @@ class Optimizer
         $model = $optimizer->getModel();
 
         return $this->typeLabels[$model] ?? $model ?? '';
+    }
+
+    /**
+     * Get attribute by attribute code.
+     *
+     * @param string $attributeCode The attribute code
+     *
+     * @return \Magento\Catalog\Api\Data\ProductAttributeInterface
+     */
+    private function getAttribute($attributeCode)
+    {
+        return $this->attributeRepository->get($attributeCode);
     }
 }
