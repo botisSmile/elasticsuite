@@ -15,6 +15,8 @@
 
 namespace Smile\ElasticsuiteAbCampaign\Api\Data;
 
+use Magento\Framework\Api\ExtensibleDataInterface;
+
 /**
  * Campaign interface
  *
@@ -30,6 +32,16 @@ interface CampaignInterface
     const TABLE_NAME  = 'smile_elasticsuite_campaign';
 
     /**
+     * Name of the join Mysql Table
+     */
+    const TABLE_NAME_SEARCH_CONTAINER = 'smile_elasticsuite_campaign_search_container';
+
+    /**
+     * Name of the campaign limitation Mysql Table
+     */
+    const TABLE_NAME_LIMITATION = 'smile_elasticsuite_campaign_limitation';
+
+    /**
      * Constant for field campaign_id
      */
     const CAMPAIGN_ID = 'campaign_id';
@@ -40,9 +52,14 @@ interface CampaignInterface
     const STORE_ID    = 'store_id';
 
     /**
-     * Constant for field author
+     * Constant for field author_id
      */
-    const AUTHOR      = 'author';
+    const AUTHOR_ID   = 'author_id';
+
+    /**
+     * Constant for field author_name
+     */
+    const AUTHOR_NAME = 'author_name';
 
     /**
      * Constant for field name
@@ -75,6 +92,18 @@ interface CampaignInterface
     const STATUS      = 'status';
 
     /**
+     * Constant for field search_container
+     */
+    const SEARCH_CONTAINER = 'search_container';
+
+    /**
+     * Campaign Statuses
+     */
+    const STATUS_DRAFT     = 'draft';
+    const STATUS_PUBLISHED = 'published';
+    const STATUS_COMPLETE  = 'complete';
+
+    /**
      * Get Campaign ID
      *
      * @return int|null
@@ -89,11 +118,18 @@ interface CampaignInterface
     public function getStoreId();
 
     /**
-     * Get Author
+     * Get Author Id
+     *
+     * @return int
+     */
+    public function getAuthorId();
+
+    /**
+     * Get Author Name
      *
      * @return string
      */
-    public function getAuthor();
+    public function getAuthorName();
 
     /**
      * Get Name
@@ -138,6 +174,13 @@ interface CampaignInterface
     public function getStatus();
 
     /**
+     * Get search containers associated with this campaign.
+     *
+     * @return array
+     */
+    public function getSearchContainers();
+
+    /**
      * Set Campaign ID
      *
      * @param int $campaignId Campaign ID
@@ -154,12 +197,20 @@ interface CampaignInterface
     public function setStoreId($storeId);
 
     /**
-     * Set Author
+     * Set Author Id
      *
-     * @param string $author Author
+     * @param int $authorId Author ID
      * @return CampaignInterface
      */
-    public function setAuthor($author);
+    public function setAuthorId($authorId);
+
+    /**
+     * Set Author Name
+     *
+     * @param string $authorName Author name
+     * @return CampaignInterface
+     */
+    public function setAuthorName($authorName);
 
     /**
      * Set Name
@@ -208,4 +259,12 @@ interface CampaignInterface
      * @return CampaignInterface
      */
     public function setStatus($status);
+
+    /**
+     * Set search container.
+     *
+     * @param string $searchContainer The value to search container.
+     * @return CampaignInterface
+     */
+    public function setSearchContainers($searchContainer);
 }

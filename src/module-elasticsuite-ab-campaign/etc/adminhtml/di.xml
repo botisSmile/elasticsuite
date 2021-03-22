@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Smile_ElasticsuiteAbCampaign dependency injection configuration.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Smile ElasticSuite to newer
+ * versions in the future.
+ *
+ * @category  Smile
+ * @package   Smile\ElasticsuiteAbCampaign
+ * @author    Pierre Le Maguer <pierre.lemaguer@smile.fr>
+ * @copyright 2021 Smile
+ * @license   Licensed to Smile-SA. All rights reserved. No warranty, explicit or implicit, provided.
+ *            Unauthorized copying of this file, via any medium, is strictly prohibited.
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- Session Proxies -->
+    <type name="Smile\ElasticsuiteAbCampaign\Controller\Adminhtml\Campaign\Save">
+        <arguments>
+            <argument name="backendSession" xsi:type="object">Magento\Backend\Model\Auth\Session\Proxy</argument>
+        </arguments>
+    </type>
+
+    <!-- Campaign Form Modifier -->
+    <virtualType name="Smile\ElasticsuiteAbCampaign\Ui\Component\Campaign\Form\Modifier\Pool" type="Magento\Ui\DataProvider\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="limitation" xsi:type="array">
+                    <item name="class" xsi:type="string">Smile\ElasticsuiteAbCampaign\Ui\Component\Campaign\Form\Modifier\Limitation</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+                <item name="search_terms" xsi:type="array">
+                    <item name="class" xsi:type="string">Smile\ElasticsuiteAbCampaign\Ui\Component\Campaign\Form\Modifier\SearchTerms</item>
+                    <item name="sortOrder" xsi:type="number">20</item>
+                </item>
+                <item name="unavailabilities" xsi:type="array">
+                    <item name="class" xsi:type="string">Smile\ElasticsuiteAbCampaign\Ui\Component\Campaign\Form\Modifier\Unavailabilities</item>
+                    <item name="sortOrder" xsi:type="number">30</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Smile\ElasticsuiteAbCampaign\Ui\Component\Campaign\Form\DataProvider">
+        <arguments>
+            <argument name="modifierPool" xsi:type="object">Smile\ElasticsuiteAbCampaign\Ui\Component\Campaign\Form\Modifier\Pool</argument>
+        </arguments>
+    </type>
+</config>

@@ -41,6 +41,7 @@
     },
     "replace": {
         "smile/module-elasticsuite-ab-campaign": "self.version",
+        "smile/module-elasticsuite-ab-campaign-customer-segment": "self.version",
         "smile/module-elasticsuite-beacon": "self.version",
         "smile/module-elasticsuite-beacon-tools": "self.version",
         "smile/module-elasticsuite-behavioral-autocomplete": "self.version",
@@ -60,6 +61,7 @@
     "autoload": {
         "files": [
             "src/module-elasticsuite-ab-campaign/registration.php",
+            "src/module-elasticsuite-ab-campaign-customer-segment/registration.php",
             "src/module-elasticsuite-beacon/registration.php",
             "src/module-elasticsuite-beacon-tools/registration.php",
             "src/module-elasticsuite-behavioral-autocomplete/registration.php",
@@ -75,6 +77,7 @@
         ],
         "psr-4": {
             "Smile\\ElasticsuiteAbCampaign\\": "src/module-elasticsuite-ab-campaign",
+            "Smile\\ElasticsuiteAbCampaignCustomerSegment\\": "src/module-elasticsuite-ab-campaign-customer-segment",
             "Smile\\ElasticsuiteBeacon\\": "src/module-elasticsuite-beacon",
             "Smile\\ElasticsuiteBeaconTools\\": "src/module-elasticsuite-beacon-tools",
             "Smile\\ElasticsuiteBehavioralAutocomplete\\": "src/module-elasticsuite-behavioral-autocomplete",

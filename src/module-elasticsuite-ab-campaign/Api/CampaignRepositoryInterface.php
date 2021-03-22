@@ -55,7 +55,7 @@ interface CampaignRepositoryInterface
      * @param SearchCriteriaInterface $searchCriteria Search criteria.
      * @return CampaignSearchResultsInterface
      */
-    public function getList(SearchCriteriaInterface $searchCriteria): CampaignSearchResultsInterface;
+    public function getList(SearchCriteriaInterface $searchCriteria);
 
     /**
      * Get campaign by id.

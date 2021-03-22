@@ -16,16 +16,14 @@
 namespace Smile\ElasticsuiteAbCampaign\Model;
 
 use Magento\Framework\Api\SearchCriteriaInterface;
-use Magento\Framework\Api\ExtensionAttribute\JoinProcessorInterface;
 use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
+use Magento\Framework\EntityManager\EntityManager;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Smile\ElasticsuiteAbCampaign\Api\CampaignRepositoryInterface;
 use Smile\ElasticsuiteAbCampaign\Api\Data\CampaignInterface;
 use Smile\ElasticsuiteAbCampaign\Api\Data\CampaignSearchResultsInterface;
 use Smile\ElasticsuiteAbCampaign\Api\Data\CampaignSearchResultsInterfaceFactory;
-use Smile\ElasticsuiteAbCampaign\Model\CampaignFactory;
 use Smile\ElasticsuiteAbCampaign\Model\ResourceModel\Campaign as CampaignResource;
 use Smile\ElasticsuiteAbCampaign\Model\ResourceModel\Campaign\Collection as CampaignCollection;
 use Smile\ElasticsuiteAbCampaign\Model\ResourceModel\Campaign\CollectionFactory as CampaignCollectionFactory;
@@ -55,11 +53,6 @@ class CampaignRepository implements CampaignRepositoryInterface
     private $collectionFactory;
 
     /**
-     * @var JoinProcessorInterface
-     */
-    private $joinProcessor;
-
-    /**
      * @var CollectionProcessorInterface
      */
     private $collectionProcessor;
@@ -77,9 +70,9 @@ class CampaignRepository implements CampaignRepositoryInterface
     private $campaignsById = [];
 
     /**
-     * @var TimezoneInterface
+     * @var EntityManager
      */
-    private $datetime;
+    private $entityManager;
 
     /**
      * CampaignRepository constructor.
@@ -87,27 +80,24 @@ class CampaignRepository implements CampaignRepositoryInterface
      * @param CampaignResource                      $resource             Resource model.
      * @param CampaignCollectionFactory             $collectionFactory    Collection factory.
      * @param CampaignFactory                       $factory              Model factory.
-     * @param JoinProcessorInterface                $joinProcessor        Collection join processor.
      * @param CollectionProcessorInterface          $collectionProcessor  Collection processor.
      * @param CampaignSearchResultsInterfaceFactory $searchResultsFactory Search results factory.
-     * @param TimezoneInterface                     $datetime             Datetime.
+     * @param EntityManager                         $entityManager        Entity Manager.
      */
     public function __construct(
         CampaignResource $resource,
         CampaignCollectionFactory $collectionFactory,
         CampaignFactory $factory,
-        JoinProcessorInterface $joinProcessor,
         CollectionProcessorInterface $collectionProcessor,
         CampaignSearchResultsInterfaceFactory $searchResultsFactory,
-        TimezoneInterface $datetime
+        EntityManager $entityManager
     ) {
         $this->resource = $resource;
         $this->collectionFactory = $collectionFactory;
         $this->factory = $factory;
-        $this->joinProcessor = $joinProcessor;
         $this->collectionProcessor = $collectionProcessor;
         $this->searchResultsFactory = $searchResultsFactory;
-        $this->datetime = $datetime;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -116,7 +106,16 @@ class CampaignRepository implements CampaignRepositoryInterface
      */
     public function save(CampaignInterface $item): CampaignInterface
     {
-        $this->resource->saveCampaignData($item);
+        try {
+            $this->entityManager->save($item);
+        } catch (\Exception $exception) {
+            throw new CouldNotSaveException(__(
+                'Could not save the campaign: %1',
+                $exception->getMessage()
+            ));
+        }
+
+        $this->campaignsById[$item->getId()] = $item;
 
         return $item;
     }
@@ -132,15 +131,10 @@ class CampaignRepository implements CampaignRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function getList(SearchCriteriaInterface $searchCriteria) : CampaignSearchResultsInterface
+    public function getList(SearchCriteriaInterface $searchCriteria)
     {
         /** @var CampaignCollection $collection */
         $collection = $this->collectionFactory->create();
-        $this->joinProcessor->process(
-            $collection,
-            CampaignInterface::class
-        );
-
         $this->collectionProcessor->process($searchCriteria, $collection);
 
         /** @var CampaignSearchResultsInterface $searchResults */
@@ -161,10 +155,12 @@ class CampaignRepository implements CampaignRepositoryInterface
     {
         if (!isset($this->campaignsById[$campaignId])) {
             $item = $this->factory->create();
-            $this->resource->load($item, $campaignId);
+            $this->entityManager->load($item, $campaignId);
             if (!$item->getId()) {
                 throw NoSuchEntityException::singleField(CampaignInterface::CAMPAIGN_ID, $campaignId);
             }
+
+            $this->campaignsById[$campaignId] = $item;
         }
 
         return $this->campaignsById[$campaignId];

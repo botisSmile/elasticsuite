@@ -15,12 +15,10 @@
 
 namespace Smile\ElasticsuiteAbCampaign\Model\ResourceModel;
 
-use Magento\Framework\DB\Adapter\AdapterInterface;
-use Magento\Framework\DB\Adapter\Pdo\Mysql;
-use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
+use Magento\Framework\Model\ResourceModel\Db\Context;
 use Smile\ElasticsuiteAbCampaign\Api\Data\CampaignInterface;
-use Smile\ElasticsuiteAbCampaign\Model\Campaign as CampaignModel;
 
 /**
  * Campaign Resource
@@ -32,33 +30,39 @@ use Smile\ElasticsuiteAbCampaign\Model\Campaign as CampaignModel;
 class Campaign extends AbstractDb
 {
     /**
-     * Saves campaign data.
+     * Retrieve Search Containers for a given campaign.
      *
-     * @param CampaignInterface $campaign Campaign.
-     *
-     * @return Campaign
-     * @throws CouldNotSaveException
+     * @param int $campaignId The campaign Id
+     * @return array
      */
-    public function saveCampaignData(CampaignInterface $campaign)
+    public function getSearchContainersFromCampaignId($campaignId)
     {
-        /** @var CampaignModel $campaign */
-        if ($campaign->hasData()) {
-            try {
-                $campaignData = $this->_prepareDataForSave($campaign);
-                /** @var Mysql $connection */
-                $connection = $this->getConnection();
-                $connection->insertArray(
-                    $this->getMainTable(),
-                    array_keys($campaignData),
-                    [array_values($campaignData)],
-                    AdapterInterface::INSERT_IGNORE
-                );
-            } catch (\Exception $e) {
-                throw new CouldNotSaveException(__('There was an error while saving campaign.'));
-            }
-        }
+        $connection = $this->getConnection();
 
-        return $this;
+        $select = $connection->select();
+
+        $select->from(
+            $this->getTable(CampaignInterface::TABLE_NAME_SEARCH_CONTAINER),
+            [CampaignInterface::SEARCH_CONTAINER, 'apply_to']
+        )->where(CampaignInterface::CAMPAIGN_ID . ' = ?', (int) $campaignId);
+
+        return $connection->fetchPairs($select);
+    }
+
+    /**
+     * Update end date.
+     *
+     * @param string $newDate    New date
+     * @param int    $campaignId Campaign id
+     */
+    public function updateEndDate(string $newDate, int $campaignId)
+    {
+        $connection = $this->getConnection();
+        $connection->update(
+            $connection->getTableName(CampaignInterface::TABLE_NAME),
+            [CampaignInterface::END_DATE => $newDate],
+            [CampaignInterface::CAMPAIGN_ID . ' = ?' => $campaignId]
+        );
     }
 
     /**
@@ -68,5 +72,75 @@ class Campaign extends AbstractDb
     protected function _construct()
     {
         $this->_init(CampaignInterface::TABLE_NAME, CampaignInterface::CAMPAIGN_ID);
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.CamelCaseMethodName)
+     *
+     * {@inheritDoc}
+     */
+    protected function _afterSave(AbstractModel $object)
+    {
+        parent::_afterSave($object);
+
+        $this->saveSearchContainerRelation($object);
+
+        return $this;
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.CamelCaseMethodName)
+     *
+     * {@inheritDoc}
+     */
+    protected function _afterLoad(AbstractModel $object)
+    {
+        if ($object->getId()) {
+            $searchContainers = $this->getSearchContainersFromCampaignId($object->getId());
+            $object->setSearchContainers($searchContainers);
+        }
+
+        return parent::_afterLoad($object);
+    }
+
+    /**
+     * Saves relation between optimizer and search container
+     *
+     * @param AbstractModel $object Optimizer to save
+     *
+     * @return void
+     */
+    private function saveSearchContainerRelation(AbstractModel $object)
+    {
+        $searchContainers = $object->getSearchContainer();
+
+        if (is_array($searchContainers) && (count($searchContainers) > 0)) {
+            $searchContainerLinks = [];
+            $deleteCondition = CampaignInterface::CAMPAIGN_ID . " = " . $object->getId();
+
+            foreach ($searchContainers as $searchContainer) {
+                $searchContainerName = (string) $searchContainer;
+                // Treat autocomplete apply_to like the quick search.
+                if ($searchContainerName === 'catalog_product_autocomplete') {
+                    $searchContainerName = 'quick_search_container';
+                }
+                $searchContainerData = $object->getData($searchContainerName);
+                $applyTo = is_array($searchContainerData) ? ((bool) $searchContainerData['apply_to'] ?? false) : false;
+                $searchContainerLinks[(string) $searchContainer] = [
+                    CampaignInterface::CAMPAIGN_ID      => (int) $object->getId(),
+                    CampaignInterface::SEARCH_CONTAINER => (string) $searchContainer,
+                    'apply_to'                          => (int) $applyTo,
+                ];
+            }
+
+            $this->getConnection()->delete(
+                $this->getTable(CampaignInterface::TABLE_NAME_SEARCH_CONTAINER),
+                $deleteCondition
+            );
+            $this->getConnection()->insertOnDuplicate(
+                $this->getTable(CampaignInterface::TABLE_NAME_SEARCH_CONTAINER),
+                $searchContainerLinks
+            );
+        }
     }
 }

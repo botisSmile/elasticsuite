@@ -13,12 +13,18 @@
  *            Unauthorized copying of this file, via any medium, is strictly prohibited.
  */
 
-
 namespace Smile\ElasticsuiteAbCampaign\Model;
 
+use Exception;
+use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\DataObject\IdentityInterface;
+use Magento\Framework\Model\Context;
+use Magento\Framework\Model\ResourceModel\AbstractResource;
+use Magento\Framework\Registry;
+use Magento\Framework\Stdlib\DateTime\Filter\Date;
 use Smile\ElasticsuiteAbCampaign\Api\Data\CampaignInterface;
+use Smile\ElasticsuiteAbCampaign\Model\Campaign\Limitation\IdentitiesFactory;
 
 /**
  * Campaign model.
@@ -37,16 +43,55 @@ class Campaign extends AbstractModel implements CampaignInterface, IdentityInter
     const CACHE_TAG = 'smile_elasticsuite_campaign';
 
     /**
+     * @var Date
+     */
+    private $dateFilter;
+
+    /**
+     * @var IdentitiesFactory
+     */
+    private $limitationIdentitiesFactory;
+
+    /**
+    /**
      * @var string
      */
     protected $_cacheTag = self::CACHE_TAG;
 
     /**
-     * {@inheritDoc}
+     * Class constructor
+     *
+     * @param Context               $context                     Context.
+     * @param Registry              $registry                    Registry.
+     * @param Date                  $dateFilter                  Date Filter.
+     * @param IdentitiesFactory     $limitationIdentitiesFactory Limitation Identities.
+     * @param AbstractResource|null $resource                    Resource.
+     * @param AbstractDb|null       $resourceCollection          Resource collection.
+     * @param array                 $data                        Data.
+     */
+    public function __construct(
+        Context $context,
+        Registry $registry,
+        Date $dateFilter,
+        IdentitiesFactory $limitationIdentitiesFactory,
+        AbstractResource $resource = null,
+        AbstractDb $resourceCollection = null,
+        array $data = []
+    ) {
+        parent::__construct($context, $registry, $resource, $resourceCollection, $data);
+        $this->dateFilter                  = $dateFilter;
+        $this->limitationIdentitiesFactory = $limitationIdentitiesFactory;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function getIdentities()
     {
-        return [self::CACHE_TAG . '_' . $this->getId()];
+        $limitationIdentities = $this->limitationIdentitiesFactory->create(['campaign' => $this]);
+        $identities           = array_merge($this->getCacheTags(), $limitationIdentities->get());
+
+        return $identities;
     }
 
     /**
@@ -68,9 +113,17 @@ class Campaign extends AbstractModel implements CampaignInterface, IdentityInter
     /**
      * {@inheritDoc}
      */
-    public function getAuthor()
+    public function getAuthorId()
     {
-        return (string) $this->getData(self::AUTHOR);
+        return (int) $this->getData(self::AUTHOR_ID);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getAuthorName()
+    {
+        return (string) $this->getData(self::AUTHOR_NAME);
     }
 
     /**
@@ -124,6 +177,14 @@ class Campaign extends AbstractModel implements CampaignInterface, IdentityInter
     /**
      * {@inheritDoc}
      */
+    public function getSearchContainers()
+    {
+        return (array) $this->getData('search_containers');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function setId($campaignId)
     {
         return $this->setData(self::CAMPAIGN_ID, $campaignId);
@@ -140,9 +201,17 @@ class Campaign extends AbstractModel implements CampaignInterface, IdentityInter
     /**
      * {@inheritDoc}
      */
-    public function setAuthor($author)
+    public function setAuthorId($authorId)
     {
-        return $this->setData(self::AUTHOR, $author);
+        return $this->setData(self::AUTHOR_ID, $authorId);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setAuthorName($authorName)
+    {
+        return $this->setData(self::AUTHOR_NAME, $authorName);
     }
 
     /**
@@ -191,5 +260,23 @@ class Campaign extends AbstractModel implements CampaignInterface, IdentityInter
     public function setStatus($status)
     {
         return $this->setData(self::STATUS, $status);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setSearchContainers($searchContainer)
+    {
+        return $this->setData('search_containers', $searchContainer);
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.CamelCaseMethodName)
+     *
+     * {@inheritDoc}
+     */
+    protected function _construct()
+    {
+        $this->_init(\Smile\ElasticsuiteAbCampaign\Model\ResourceModel\Campaign::class);
     }
 }
