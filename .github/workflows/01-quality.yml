@@ -4,6 +4,9 @@ on:
     pull_request:
         branches:
         - 2.8.x
+    push:
+        branches:
+            - 2.8.x
 
 jobs:
     qualit:
