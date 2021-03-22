@@ -67,19 +67,17 @@ class DataProvider extends BaseDataProvider
      * DataProvider Constructor.
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      *
-     * @param string                           $name                Component name
-     * @param string                           $primaryFieldName    Primary field Name
-     * @param string                           $requestFieldName    Request field name
-     * @param CollectionFactory                $collectionFactory   The collection factory
-     * @param RequestInterface                 $request             Request
-     * @param CategoryRepositoryInterface      $categoryRepository  Category repository
-     * @param ContextInterface                 $searchContext       Search context
-     * @param OptimizerFilter                  $optimizerFilter     Optimizer filter
-     * @param OptimizerRenderer                $optimizerRenderer   Optimizer Renderer
-     * @param AddFieldToCollectionInterface[]  $addFieldStrategies  Add field Strategy
-     * @param AddFilterToCollectionInterface[] $addFilterStrategies Add filter Strategy
-     * @param array                            $meta                Component Meta
-     * @param array                            $data                Component extra data
+     * @param string                      $name               Component name
+     * @param string                      $primaryFieldName   Primary field Name
+     * @param string                      $requestFieldName   Request field name
+     * @param CollectionFactory           $collectionFactory  The collection factory
+     * @param RequestInterface            $request            Request
+     * @param CategoryRepositoryInterface $categoryRepository Category repository
+     * @param ContextInterface            $searchContext      Search context
+     * @param OptimizerFilter             $optimizerFilter    Optimizer filter
+     * @param OptimizerRenderer           $optimizerRenderer  Optimizer Renderer
+     * @param array                       $meta               Component Meta
+     * @param array                       $data               Component extra data
      */
     public function __construct(
         $name,
