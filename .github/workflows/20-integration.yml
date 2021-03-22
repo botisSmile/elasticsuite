@@ -280,7 +280,7 @@ jobs:
 
             - name: "[Test] Publish statics"
               working-directory: ${{ env.magento-directory }}
-              run: php bin/magento setup:static-content:deploy
+              run: php bin/magento setup:static-content:deploy -f
 
             - name: "[Test] Data : Require"
               working-directory: ${{ env.magento-directory }}
