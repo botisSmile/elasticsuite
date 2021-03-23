@@ -388,6 +388,13 @@ class Item
         return $boost;
     }
 
+    /**
+     * Get document highlights : fields content with matched patterns.
+     *
+     * @SuppressWarnings(PHPMD.ElseExpression)
+     *
+     * @return array
+     */
     private function getHighlights()
     {
         $fields         = $this->fields;
@@ -402,22 +409,10 @@ class Item
         }
         $matchedQueries = array_unique($matchedQueries);
 
-        foreach ($this->getDocumentSource() as $fieldName => $value) {
-            $field = $fields[$fieldName] ?? null;
-            if ($field && $field->isSearchable()) {
-                $value = strip_tags(json_encode($value));
-                foreach ($matchedQueries as $query) {
-                    $value = preg_replace('/\b'.$query.'\b/i', "<em>$0</em>", $value);
-                }
-                $value = json_decode($value);
-            }
-            $highlights[$fieldName] = $value;
-        }
-
         $results = [];
-        foreach ($highlights as $fieldName => $value) {
+        foreach ($this->getDocumentSource() as $fieldName => $value) {
             // Convert complex (array of objects) values to dot notation.
-            if (is_array($value) && (count($value) != count($value, COUNT_RECURSIVE))) {
+            if (is_array($value) && ((count($value) != count($value, COUNT_RECURSIVE)) || (array_keys($value) !== range(0, count($value) - 1)))) {
                 $iterator = new \RecursiveIteratorIterator(new \RecursiveArrayIterator($value));
                 $result   = [];
                 foreach ($iterator as $leafValue) {
@@ -425,13 +420,27 @@ class Item
                     foreach (range(0, $iterator->getDepth()) as $depth) {
                         $keys[] = $iterator->getSubIterator($depth)->key();
                     }
-                    $results[] = ['field' => $fieldName . '.' . join('.', $keys) , 'value' => $leafValue];
+                    $dottedName = $fieldName . '.' . join('.', $keys);
+                    $realName   = preg_replace('/\.[0-9]+\./i', ".", $dottedName);
+                    $results[]  = ['field' => $dottedName, 'sourceField' => $realName, 'value' => $leafValue];
                 }
             } else {
-                $results[] = ['field' =>  $fieldName , 'value' => $value];
+                $results[] = ['field' =>  $fieldName, 'sourceField' => $fieldName, 'value' => $value];
             }
         }
 
-        return $results;
+        foreach ($results as &$result) {
+            $field = $fields[$result['sourceField']] ?? null;
+            if ($field && $field->isSearchable() && isset($result['value'])) {
+                $result['is_searchable'] = true;
+                $value = strip_tags(json_encode($result['value']));
+                foreach ($matchedQueries as $query) {
+                    $value = preg_replace('/\b'.$query.'\b/i', "<em>$0</em>", $value);
+                }
+                $result['value'] = json_decode($value);
+            }
+        }
+
+        return array_values($results);
     }
 }
