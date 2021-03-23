@@ -19,12 +19,15 @@ use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Helper\Image as ImageHelper;
 use Magento\Customer\Api\Data\GroupInterface;
 use Smile\ElasticsuiteCore\Api\Index\Mapping\FieldInterface;
+use Smile\ElasticsuiteExplain\Model\Result\Item\Highlights;
 use Smile\ElasticsuiteCore\Search\Request\Query\FunctionScore;
 use Smile\ElasticsuiteExplain\Model\Result\Item\SynonymManager;
 use Smile\ElasticsuiteExplain\Search\Adapter\Elasticsuite\Response\ExplainDocument;
 
 /**
  * Result Item Model for Explain
+ *
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  *
  * @category Smile
  * @package  Smile\ElasticsuiteExplain
@@ -63,12 +66,18 @@ class Item
     private $synonymManager;
 
     /**
+     * @var Highlights
+     */
+    private $highlights;
+
+    /**
      * Constructor.
      *
      * @param ProductInterface $product        Product
      * @param ExplainDocument  $document       Product Document.
      * @param ImageHelper      $imageHelper    Image helper.
      * @param SynonymManager   $synonymManager Synonym Manager.
+     * @param Highlights       $highlights     Highlights retriver.
      * @param FieldInterface[] $fields         All fields of the mapping.
      */
     public function __construct(
@@ -76,12 +85,14 @@ class Item
         ExplainDocument $document,
         ImageHelper $imageHelper,
         SynonymManager $synonymManager,
+        Highlights $highlights,
         array $fields = []
     ) {
         $this->product        = $product;
         $this->document       = $document;
         $this->imageHelper    = $imageHelper;
         $this->synonymManager = $synonymManager;
+        $this->highlights     = $highlights;
         $this->fields         = $fields;
     }
 
@@ -397,50 +408,14 @@ class Item
      */
     private function getHighlights()
     {
-        $fields         = $this->fields;
-        $highlights     = [];
         $matchedQueries = [];
-        $matches        = $this->getMatches();
-
-        foreach ($matches as $match) {
+        foreach ($this->getMatches() as $match) {
             if (isset($match['query']) && ($match['query'] !== '')) {
                 $matchedQueries[] = $match['query'];
             }
         }
         $matchedQueries = array_unique($matchedQueries);
 
-        $results = [];
-        foreach ($this->getDocumentSource() as $fieldName => $value) {
-            // Convert complex (array of objects) values to dot notation.
-            if (is_array($value) && ((count($value) != count($value, COUNT_RECURSIVE)) || (array_keys($value) !== range(0, count($value) - 1)))) {
-                $iterator = new \RecursiveIteratorIterator(new \RecursiveArrayIterator($value));
-                $result   = [];
-                foreach ($iterator as $leafValue) {
-                    $keys = [];
-                    foreach (range(0, $iterator->getDepth()) as $depth) {
-                        $keys[] = $iterator->getSubIterator($depth)->key();
-                    }
-                    $dottedName = $fieldName . '.' . join('.', $keys);
-                    $realName   = preg_replace('/\.[0-9]+\./i', ".", $dottedName);
-                    $results[]  = ['field' => $dottedName, 'sourceField' => $realName, 'value' => $leafValue];
-                }
-            } else {
-                $results[] = ['field' =>  $fieldName, 'sourceField' => $fieldName, 'value' => $value];
-            }
-        }
-
-        foreach ($results as &$result) {
-            $field = $fields[$result['sourceField']] ?? null;
-            if ($field && $field->isSearchable() && isset($result['value'])) {
-                $result['is_searchable'] = true;
-                $value = strip_tags(json_encode($result['value']));
-                foreach ($matchedQueries as $query) {
-                    $value = preg_replace('/\b'.$query.'\b/i', "<em>$0</em>", $value);
-                }
-                $result['value'] = json_decode($value);
-            }
-        }
-
-        return array_values($results);
+        return $this->highlights->getHighlights($this->getDocumentSource(), $this->fields, $matchedQueries);
     }
 }
