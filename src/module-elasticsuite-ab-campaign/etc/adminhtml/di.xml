@@ -40,6 +40,10 @@
                     <item name="class" xsi:type="string">Smile\ElasticsuiteAbCampaign\Ui\Component\Campaign\Form\Modifier\Unavailabilities</item>
                     <item name="sortOrder" xsi:type="number">30</item>
                 </item>
+                <item name="optimizer" xsi:type="array">
+                    <item name="class" xsi:type="string">Smile\ElasticsuiteAbCampaign\Ui\Component\Campaign\Form\Modifier\Optimizer</item>
+                    <item name="sortOrder" xsi:type="number">40</item>
+                </item>
             </argument>
         </arguments>
     </virtualType>

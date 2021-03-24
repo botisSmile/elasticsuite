@@ -66,6 +66,22 @@ class Campaign extends AbstractDb
     }
 
     /**
+     * Update campaign status.
+     *
+     * @param string $status     New status
+     * @param int    $campaignId Campaign id
+     */
+    public function updateStatus(string $status, int $campaignId)
+    {
+        $connection = $this->getConnection();
+        $connection->update(
+            $connection->getTableName(CampaignInterface::TABLE_NAME),
+            [CampaignInterface::STATUS => $status],
+            [CampaignInterface::CAMPAIGN_ID . ' = ?' => $campaignId]
+        );
+    }
+
+    /**
      * {@inheritDoc}
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      */
@@ -95,9 +111,13 @@ class Campaign extends AbstractDb
      */
     protected function _afterLoad(AbstractModel $object)
     {
+        /** @var \Smile\ElasticsuiteAbCampaign\Model\Campaign $object */
         if ($object->getId()) {
             $searchContainers = $this->getSearchContainersFromCampaignId($object->getId());
             $object->setSearchContainers($searchContainers);
+            if ($object->getScenarioAPercentage()) {
+                $object->setScenarioBPercentage(100 - $object->getScenarioAPercentage());
+            }
         }
 
         return parent::_afterLoad($object);

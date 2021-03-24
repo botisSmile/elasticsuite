@@ -22,6 +22,8 @@ use Magento\Framework\EntityManager\MetadataPool;
 use Magento\Framework\Setup\SchemaSetupInterface;
 use Magento\Store\Model\Store;
 use Smile\ElasticsuiteAbCampaign\Api\Data\CampaignInterface;
+use Smile\ElasticsuiteAbCampaign\Api\Data\CampaignOptimizerInterface;
+use Smile\ElasticsuiteCatalogOptimizer\Api\Data\OptimizerInterface;
 
 /**
  * Elasticsuite Campaign setup.
@@ -50,6 +52,8 @@ class CampaignSetup
 
     /**
      * Creates the campaign table.
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      *
      * @param SchemaSetupInterface $setup Schema setup
      * @return void
@@ -117,6 +121,24 @@ class CampaignSetup
                 ->addColumn(
                     CampaignInterface::END_DATE,
                     Table::TYPE_DATE,
+                    null,
+                    ['nullable' => false]
+                )
+                ->addColumn(
+                    CampaignInterface::SCENARIO_A_NAME,
+                    Table::TYPE_TEXT,
+                    255,
+                    ['nullable' => false]
+                )
+                ->addColumn(
+                    CampaignInterface::SCENARIO_B_NAME,
+                    Table::TYPE_TEXT,
+                    255,
+                    ['nullable' => false]
+                )
+                ->addColumn(
+                    CampaignInterface::SCENARIO_A_PERCENTAGE,
+                    Table::TYPE_FLOAT,
                     null,
                     ['nullable' => false]
                 )
@@ -203,7 +225,7 @@ class CampaignSetup
     }
 
     /**
-     * Create table containing entity association between optimizer and category_id or search_terms.
+     * Create table containing entity association between campaign and category_id or search_terms.
      *
      * @param SchemaSetupInterface $setup Setup instance
      */
@@ -278,6 +300,75 @@ class CampaignSetup
                 ->setComment('Campaign limitation Table');
 
             $setup->getConnection()->createTable($optimizerCategoryTable);
+        }
+    }
+
+    /**
+     * Create table containing entity association between optimizer and category_id or search_terms.
+     *
+     * @param SchemaSetupInterface $setup Setup instance
+     */
+    public function createCampaignOptimizerTable(SchemaSetupInterface $setup)
+    {
+        if (!$setup->getConnection()->isTableExists($setup->getTable(CampaignOptimizerInterface::TABLE_NAME))) {
+            $optimizerTable = $setup->getConnection()
+                ->newTable($setup->getTable(CampaignOptimizerInterface::TABLE_NAME))
+                ->addColumn(
+                    CampaignOptimizerInterface::CAMPAIGN_ID,
+                    Table::TYPE_SMALLINT,
+                    5,
+                    ['nullable' => false, 'unsigned' => true],
+                    'Campaign ID'
+                )
+                ->addColumn(
+                    CampaignOptimizerInterface::OPTIMIZER_ID,
+                    Table::TYPE_SMALLINT,
+                    null,
+                    ['nullable' => false],
+                    'Optimizer ID'
+                )
+                ->addColumn(
+                    CampaignOptimizerInterface::SCENARIO_TYPE,
+                    Table::TYPE_TEXT,
+                    8,
+                    ['nullable' => false]
+                )
+                ->addForeignKey(
+                    $setup->getFkName(
+                        CampaignOptimizerInterface::TABLE_NAME,
+                        CampaignOptimizerInterface::CAMPAIGN_ID,
+                        CampaignInterface::TABLE_NAME,
+                        CampaignInterface::CAMPAIGN_ID
+                    ),
+                    CampaignOptimizerInterface::CAMPAIGN_ID,
+                    $setup->getTable(CampaignInterface::TABLE_NAME),
+                    CampaignInterface::CAMPAIGN_ID,
+                    Table::ACTION_CASCADE
+                )
+                ->addForeignKey(
+                    $setup->getFkName(
+                        CampaignOptimizerInterface::TABLE_NAME,
+                        CampaignOptimizerInterface::OPTIMIZER_ID,
+                        OptimizerInterface::TABLE_NAME,
+                        OptimizerInterface::OPTIMIZER_ID
+                    ),
+                    CampaignOptimizerInterface::OPTIMIZER_ID,
+                    $setup->getTable(OptimizerInterface::TABLE_NAME),
+                    OptimizerInterface::OPTIMIZER_ID,
+                    Table::ACTION_CASCADE
+                )
+                ->addIndex(
+                    $setup->getIdxName(
+                        CampaignOptimizerInterface::TABLE_NAME,
+                        [CampaignOptimizerInterface::CAMPAIGN_ID, CampaignOptimizerInterface::OPTIMIZER_ID],
+                        AdapterInterface::INDEX_TYPE_UNIQUE
+                    ),
+                    [CampaignOptimizerInterface::CAMPAIGN_ID, CampaignOptimizerInterface::OPTIMIZER_ID],
+                    ['type' => AdapterInterface::INDEX_TYPE_UNIQUE]
+                )
+                ->setComment('Campaign Optimize Table');
+
+            $setup->getConnection()->createTable($optimizerTable);
         }
     }
 }

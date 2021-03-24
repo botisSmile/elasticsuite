@@ -67,6 +67,7 @@
             <argument name="dataValidators" xsi:type="array">
                 <item name="date" xsi:type="object">Smile\ElasticsuiteAbCampaign\Model\Campaign\Validator\Date</item>
                 <item name="availability" xsi:type="object">Smile\ElasticsuiteAbCampaign\Model\Campaign\Validator\Availability</item>
+                <item name="optimizer" xsi:type="object">Smile\ElasticsuiteAbCampaign\Model\Campaign\Validator\Optimizer</item>
             </argument>
         </arguments>
     </type>
@@ -78,12 +79,15 @@
                 <item name="Smile\ElasticsuiteAbCampaign\Api\Data\CampaignInterface" xsi:type="array">
                     <item name="create" xsi:type="array">
                         <item name="campaignLimitationPersistor" xsi:type="string">Smile\ElasticsuiteAbCampaign\Model\Campaign\Limitation\SaveHandler</item>
+                        <item name="campaignOptimizerPersistor" xsi:type="string">Smile\ElasticsuiteAbCampaign\Model\Campaign\Optimizer\SaveHandler</item>
                     </item>
                     <item name="update" xsi:type="array">
                         <item name="campaignLimitationPersistor" xsi:type="string">Smile\ElasticsuiteAbCampaign\Model\Campaign\Limitation\SaveHandler</item>
+                        <item name="campaignOptimizerPersistor" xsi:type="string">Smile\ElasticsuiteAbCampaign\Model\Campaign\Optimizer\SaveHandler</item>
                     </item>
                     <item name="read" xsi:type="array">
                         <item name="campaignLimitationReader" xsi:type="string">Smile\ElasticsuiteAbCampaign\Model\Campaign\Limitation\ReadHandler</item>
+                        <item name="campaignOptimizerReader" xsi:type="string">Smile\ElasticsuiteAbCampaign\Model\Campaign\Optimizer\ReadHandler</item>
                     </item>
                 </item>
             </argument>

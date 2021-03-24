@@ -24,6 +24,7 @@ use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
 use Magento\Framework\Stdlib\DateTime\Filter\Date;
 use Smile\ElasticsuiteAbCampaign\Api\Data\CampaignInterface;
+use Smile\ElasticsuiteAbCampaign\Api\Data\CampaignOptimizerInterface;
 use Smile\ElasticsuiteAbCampaign\Model\Campaign\Limitation\IdentitiesFactory;
 
 /**
@@ -185,6 +186,71 @@ class Campaign extends AbstractModel implements CampaignInterface, IdentityInter
     /**
      * {@inheritDoc}
      */
+    public function getScenarioAName()
+    {
+        return $this->getData(self::SCENARIO_A_NAME);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getScenarioBName()
+    {
+        return $this->getData(self::SCENARIO_B_NAME);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getScenarioAPercentage()
+    {
+        return $this->getData(self::SCENARIO_A_PERCENTAGE);
+    }
+
+    /**
+     * Get scenario b percentage.
+     *
+     * @return flaot
+     */
+    public function getScenarioBPercentage()
+    {
+        return $this->getData(self::SCENARIO_B_PERCENTAGE);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getScenarioAOptimizerIds()
+    {
+        return $this->getData(self::SCENARIO_A_OPTIMIZER_IDS);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getScenarioBOptimizerIds()
+    {
+        return $this->getData(self::SCENARIO_B_OPTIMIZER_IDS);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getOptimizerIds($scenarioType)
+    {
+        switch ($scenarioType) {
+            case CampaignOptimizerInterface::SCENARIO_TYPE_A:
+                return $this->getScenarioAOptimizerIds();
+            case CampaignOptimizerInterface::SCENARIO_TYPE_B:
+                return $this->getScenarioBOptimizerIds();
+        }
+
+        return [];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function setId($campaignId)
     {
         return $this->setData(self::CAMPAIGN_ID, $campaignId);
@@ -268,6 +334,72 @@ class Campaign extends AbstractModel implements CampaignInterface, IdentityInter
     public function setSearchContainers($searchContainer)
     {
         return $this->setData('search_containers', $searchContainer);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setScenarioAName($scenarioAName)
+    {
+        return $this->setData(self::SCENARIO_A_NAME, $scenarioAName);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setScenarioBName($scenarioBName)
+    {
+        return $this->setData(self::SCENARIO_B_NAME, $scenarioBName);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setScenarioAPercentage($scenarioAPercentage)
+    {
+        return $this->setData(self::SCENARIO_A_PERCENTAGE, $scenarioAPercentage);
+    }
+
+    /**
+     * Set scenario b percentage.
+     *
+     * @param float $scenarioBPercentage Scenario b percentage
+     * @return Campaign
+     */
+    public function setScenarioBPercentage($scenarioBPercentage)
+    {
+        return $this->setData(self::SCENARIO_B_PERCENTAGE, $scenarioBPercentage);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setScenarioAOptimizerIds($scenarioAOptimizerIds)
+    {
+        return $this->setData(self::SCENARIO_A_OPTIMIZER_IDS, $scenarioAOptimizerIds);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setScenarioBOptimizerIds($scenarioBOptimizerIds)
+    {
+        return $this->setData(self::SCENARIO_B_OPTIMIZER_IDS, $scenarioBOptimizerIds);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setOptimizerIds($optimizerIds, $scenarioType)
+    {
+        switch ($scenarioType) {
+            case CampaignOptimizerInterface::SCENARIO_TYPE_A:
+                return $this->setScenarioAOptimizerIds($optimizerIds);
+            case CampaignOptimizerInterface::SCENARIO_TYPE_B:
+                return $this->setScenarioBOptimizerIds($optimizerIds);
+        }
+
+        return $this;
     }
 
     /**

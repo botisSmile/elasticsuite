@@ -89,7 +89,7 @@ class CampaignActions extends Column
                         'label' => __('Edit'),
                     ];
 
-                    if ($this->getData('status') === CampaignInterface::STATUS_PUBLISHED) {
+                    if ($item['status'] === CampaignInterface::STATUS_PUBLISHED) {
                         $item[$name]['stop'] = [
                             'href'    => $this->urlBuilder->getUrl(self::OPTIMIZER_URL_PATH_STOP, ['id' => $item['campaign_id']]),
                             'label'   => __('Stop'),

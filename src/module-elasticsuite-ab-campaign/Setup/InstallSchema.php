@@ -52,6 +52,7 @@ class InstallSchema implements InstallSchemaInterface
         $this->campaignSetup->createCampaignTable($setup);
         $this->campaignSetup->createCampaignSearchContainerTable($setup);
         $this->campaignSetup->createCampaignLimitationTable($setup);
+        $this->campaignSetup->createCampaignOptimizerTable($setup);
         $setup->endSetup();
     }
 }

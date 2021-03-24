@@ -42,4 +42,44 @@ interface CampaignManagerInterface
      * @throws Exception
      */
     public function stopCampaign(CampaignInterface $campaign);
+
+    /**
+     * Publish campaign.
+     *
+     * @param CampaignInterface $campaign Campaign
+     * @throws Exception
+     */
+    public function publishCampaign(CampaignInterface $campaign);
+
+    /**
+     * Reopen campaign.
+     *
+     * @param CampaignInterface $campaign Campaign
+     * @throws Exception
+     */
+    public function reopenCampaign(CampaignInterface $campaign);
+
+    /**
+     * Can publish campaign ?
+     *
+     * @param CampaignInterface $campaign Campaign
+     * @return boolean
+     */
+    public function canPublish(CampaignInterface $campaign): bool;
+
+    /**
+     * Can reopen campaign ?
+     *
+     * @param CampaignInterface $campaign Campaign
+     * @return boolean
+     */
+    public function canReopen(CampaignInterface $campaign): bool;
+
+    /**
+     * Can stop campaign ?
+     *
+     * @param CampaignInterface $campaign Campaign
+     * @return boolean
+     */
+    public function canStop(CampaignInterface $campaign): bool;
 }

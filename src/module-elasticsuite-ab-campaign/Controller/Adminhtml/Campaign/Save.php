@@ -25,7 +25,6 @@ use Smile\ElasticsuiteAbCampaign\Api\CampaignManagerInterface;
 use Smile\ElasticsuiteAbCampaign\Api\CampaignRepositoryInterface;
 use Smile\ElasticsuiteAbCampaign\Api\Data\CampaignInterfaceFactory;
 use Smile\ElasticsuiteAbCampaign\Controller\Adminhtml\AbstractCampaign as CampaignController;
-use Smile\ElasticsuiteAbCampaign\Exception\ValidatorException;
 use Smile\ElasticsuiteAbCampaign\Model\Campaign;
 use Smile\ElasticsuiteAbCampaign\Model\Campaign\CompositeValidator;
 use Smile\ElasticsuiteAbCampaign\Model\Context\Adminhtml\Campaign as CampaignContext;
@@ -51,6 +50,8 @@ class Save extends CampaignController
 
     /**
      * Save constructor.
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      *
      * @param Context                     $context            Context
      * @param PageFactory                 $resultPageFactory  Result page factory
@@ -83,7 +84,7 @@ class Save extends CampaignController
             $campaignManager
         );
         $this->campaignValidator = $campaignValidator;
-        $this->backendSession = $backendSession;
+        $this->backendSession    = $backendSession;
     }
 
     /**
@@ -98,7 +99,7 @@ class Save extends CampaignController
         $redirectBack = $this->getRequest()->getParam('back', false);
 
         if ($data) {
-            $identifier = (int) $this->getRequest()->getParam('id');
+            $identifier = (int) $this->getRequest()->getParam('campaign_id');
             /** @var Campaign $model */
             $model = $this->campaignFactory->create();
 
@@ -118,6 +119,7 @@ class Save extends CampaignController
                 $this->campaignValidator->validateData($model);
                 $this->campaignRepository->save($model);
                 $this->messageManager->addSuccessMessage(__('You saved the campaign %1.', $model->getName()));
+                $this->preventForNoOptimizerSaved($identifier, $model);
                 $this->backendSession->setFormData(false);
 
                 if ($redirectBack) {
@@ -144,6 +146,22 @@ class Save extends CampaignController
     }
 
     /**
+     * Prevent customer if no optimizer was saved.
+     *
+     * @param int      $identifier Identifier
+     * @param Campaign $model      Campaign
+     * @return void
+     */
+    private function preventForNoOptimizerSaved($identifier, $model)
+    {
+        if ($identifier && !$model->getScenarioAOptimizerIds() && !$model->getScenarioBOptimizerIds()) {
+            $this->messageManager->addWarningMessage(
+                __('You saved no optimizer linked to the campaign %1.', $model->getName())
+            );
+        }
+    }
+
+    /**
      * Format and complete post data.
      *
      * @param array $data Data
@@ -162,6 +180,8 @@ class Save extends CampaignController
 
         $result['start_date'] = isset($data['start_date']) ? $this->dateFilter->filter($data['start_date']) : null;
         $result['end_date'] = isset($data['end_date']) ? $this->dateFilter->filter($data['end_date']) : null;
+        $result['scenario_a_optimizer_ids'] = $data['scenario_a_optimizer_ids'] ?? [];
+        $result['scenario_b_optimizer_ids'] = $data['scenario_b_optimizer_ids'] ?? [];
 
         return $result;
     }

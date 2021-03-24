@@ -92,9 +92,39 @@ interface CampaignInterface
     const STATUS      = 'status';
 
     /**
+     * Constant for field scenario_a_name
+     */
+    const SCENARIO_A_NAME = 'scenario_a_name';
+
+    /**
+     * Constant for field status
+     */
+    const SCENARIO_B_NAME = 'scenario_b_name';
+
+    /**
+     * Constant for field scenario_a_name
+     */
+    const SCENARIO_A_PERCENTAGE = 'scenario_a_percentage';
+
+    /**
+     * Constant for field scenario_a_name
+     */
+    const SCENARIO_B_PERCENTAGE = 'scenario_b_percentage';
+
+    /**
      * Constant for field search_container
      */
     const SEARCH_CONTAINER = 'search_container';
+
+    /**
+     * Constant for field scenario_a_optimizer_ids
+     */
+    const SCENARIO_A_OPTIMIZER_IDS = 'scenario_a_optimizer_ids';
+
+    /**
+     * Constant for field scenario_a_optimizer_ids
+     */
+    const SCENARIO_B_OPTIMIZER_IDS = 'scenario_b_optimizer_ids';
 
     /**
      * Campaign Statuses
@@ -179,6 +209,49 @@ interface CampaignInterface
      * @return array
      */
     public function getSearchContainers();
+
+    /**
+     * Get optimizer ids for scenario A.
+     *
+     * @return array
+     */
+    public function getScenarioAOptimizerIds();
+
+    /**
+     * Get optimizer ids for scenario B.
+     *
+     * @return array
+     */
+    public function getScenarioBOptimizerIds();
+
+    /**
+     * Get optimizer ids for one scenario.
+     *
+     * @param string $scenarioType Scenario Type
+     * @return array
+     */
+    public function getOptimizerIds($scenarioType);
+
+    /**
+     * Get Scenario A Name.
+     *
+     * @return string
+     */
+    public function getScenarioAName();
+
+    /**
+     * Get Scenario B name.
+     *
+     * @return string
+     */
+    public function getScenarioBName();
+
+    /**
+     * Get Scenario A Percentage.
+     *
+     * @return float
+     */
+    public function getScenarioAPercentage();
 
     /**
      * Set Campaign ID
@@ -267,4 +340,53 @@ interface CampaignInterface
      * @return CampaignInterface
      */
     public function setSearchContainers($searchContainer);
+
+    /**
+     * Set optimizer ids for scenario A.
+     *
+     * @param array $scenarioAOptimizerIds Scenario A optimizer ids
+     * @return CampaignInterface
+     */
+    public function setScenarioAOptimizerIds($scenarioAOptimizerIds);
+
+    /**
+     * Set optimizer ids for scenario B.
+     *
+     * @param array $scenarioBOptimizerIds Scenario B optimizer ids
+     * @return CampaignInterface
+     */
+    public function setScenarioBOptimizerIds($scenarioBOptimizerIds);
+
+    /**
+     * Set optimizer ids for one scenario.
+     *
+     * @param array  $optimizerIds Optimizer ids
+     * @param string $scenarioType Scenario Type
+     * @return CampaignInterface
+     */
+    public function setOptimizerIds($optimizerIds, $scenarioType);
+
+    /**
+     * Set Scenario a name.
+     *
+     * @param string $scenarioAName Scenario a name
+     * @return CampaignInterface
+     */
+    public function setScenarioAName($scenarioAName);
+
+    /**
+     * Set Scenario b name.
+     *
+     * @param string $scenarioBName Scenario b name
+     * @return CampaignInterface
+     */
+    public function setScenarioBName($scenarioBName);
+
+    /**
+     * Set Scenario a percentage.
+     *
+     * @param string $scenarioAPercentage Scenario a percentage
+     * @return CampaignInterface
+     */
+    public function setScenarioAPercentage($scenarioAPercentage);
 }

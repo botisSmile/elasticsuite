@@ -17,6 +17,7 @@ namespace Smile\ElasticsuiteAbCampaign\Block\Adminhtml\Campaign\Edit\Button;
 
 use Magento\Framework\View\Element\UiComponent\Context;
 use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
+use Smile\ElasticsuiteAbCampaign\Api\CampaignManagerInterface;
 use Smile\ElasticsuiteAbCampaign\Api\Data\CampaignInterface;
 use Smile\ElasticsuiteAbCampaign\Model\Context\Adminhtml\Campaign as CampaignContext;
 
@@ -40,17 +41,25 @@ class AbstractButton implements ButtonProviderInterface
     protected $campaignContext;
 
     /**
+     * @var CampaignManagerInterface
+     */
+    protected $campaignManager;
+
+    /**
      * Abstract button constructor
      *
-     * @param Context         $context         Application context
-     * @param CampaignContext $campaignContext Campaign context
+     * @param Context                  $context         Application context
+     * @param CampaignContext          $campaignContext Campaign context
+     * @param CampaignManagerInterface $campaignManager Campaign Manager
      */
     public function __construct(
         Context $context,
-        CampaignContext $campaignContext
+        CampaignContext $campaignContext,
+        CampaignManagerInterface $campaignManager
     ) {
         $this->context = $context;
         $this->campaignContext = $campaignContext;
+        $this->campaignManager = $campaignManager;
     }
 
     /**

@@ -40,6 +40,15 @@
             <item name="save_and_continue" xsi:type="string">
                 Smile\ElasticsuiteAbCampaign\Block\Adminhtml\Campaign\Edit\Button\SaveAndContinue
             </item>
+            <item name="publish" xsi:type="string">
+                Smile\ElasticsuiteAbCampaign\Block\Adminhtml\Campaign\Edit\Button\Publish
+            </item>
+            <item name="reopen" xsi:type="string">
+                Smile\ElasticsuiteAbCampaign\Block\Adminhtml\Campaign\Edit\Button\Reopen
+            </item>
+            <item name="stop" xsi:type="string">
+                Smile\ElasticsuiteAbCampaign\Block\Adminhtml\Campaign\Edit\Button\Stop
+            </item>
         </item>
         <item name="config" xsi:type="array">
             <item name="dataScope" xsi:type="string">data</item>
@@ -524,6 +533,104 @@
                         </item>
                         <item name="listens" xsi:type="array">
                             <item name="${ $.namespace }.${ $.namespace }:responseData" xsi:type="string">setParsed</item>
+                        </item>
+                    </item>
+                </argument>
+            </field>
+        </fieldset>
+    </fieldset>
+    <fieldset name="scenario">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="label" xsi:type="string" translate="true">Scenarios</item>
+                <item name="sortOrder" xsi:type="number">30</item>
+            </item>
+        </argument>
+        <fieldset name="scenario_a">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Scenario A</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                    <item name="collapsible" xsi:type="boolean">true</item>
+                    <item name="opened" xsi:type="boolean">true</item>
+                </item>
+            </argument>
+            <field name="name">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="sortOrder" xsi:type="number">10</item>
+                        <item name="dataType" xsi:type="string">string</item>
+                        <item name="formElement" xsi:type="string">input</item>
+                        <item name="label" xsi:type="string" translate="true">Name</item>
+                        <item name="dataScope" xsi:type="string">scenario_a_name</item>
+                        <item name="visible" xsi:type="boolean">true</item>
+                        <item name="source" xsi:type="string">campaign</item>
+                        <item name="validation" xsi:type="array">
+                            <item name="required-entry" xsi:type="boolean">true</item>
+                        </item>
+                    </item>
+                </argument>
+            </field>
+            <field name="percentage" component="Smile_ElasticsuiteAbCampaign/js/form/element/percentage">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="sortOrder" xsi:type="number">20</item>
+                        <item name="dataType" xsi:type="string">string</item>
+                        <item name="formElement" xsi:type="string">input</item>
+                        <item name="label" xsi:type="string" translate="true">Percentage</item>
+                        <item name="dataScope" xsi:type="string">scenario_a_percentage</item>
+                        <item name="visible" xsi:type="boolean">true</item>
+                        <item name="source" xsi:type="string">campaign</item>
+                        <item name="percentage_pair" xsi:type="string">scenario_b_percentage</item>
+                        <item name="notice" xsi:type="string" translate="true">Please enter a number between 0 and 100.</item>
+                        <item name="validation" xsi:type="array">
+                            <item name="required-entry" xsi:type="boolean">true</item>
+                            <item name="validate-number-range" xsi:type="string">0.00-100.00</item>
+                        </item>
+                    </item>
+                </argument>
+            </field>
+        </fieldset>
+        <fieldset name="scenario_b">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Scenario B</item>
+                    <item name="sortOrder" xsi:type="number">20</item>
+                    <item name="collapsible" xsi:type="boolean">true</item>
+                    <item name="opened" xsi:type="boolean">true</item>
+                </item>
+            </argument>
+            <field name="name">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="sortOrder" xsi:type="number">10</item>
+                        <item name="dataType" xsi:type="string">string</item>
+                        <item name="formElement" xsi:type="string">input</item>
+                        <item name="label" xsi:type="string" translate="true">Name</item>
+                        <item name="dataScope" xsi:type="string">scenario_b_name</item>
+                        <item name="visible" xsi:type="boolean">true</item>
+                        <item name="source" xsi:type="string">campaign</item>
+                        <item name="validation" xsi:type="array">
+                            <item name="required-entry" xsi:type="boolean">true</item>
+                        </item>
+                    </item>
+                </argument>
+            </field>
+            <field name="percentage" component="Smile_ElasticsuiteAbCampaign/js/form/element/percentage">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="sortOrder" xsi:type="number">20</item>
+                        <item name="dataType" xsi:type="string">string</item>
+                        <item name="formElement" xsi:type="string">input</item>
+                        <item name="label" xsi:type="string" translate="true">Percentage</item>
+                        <item name="dataScope" xsi:type="string">scenario_b_percentage</item>
+                        <item name="visible" xsi:type="boolean">true</item>
+                        <item name="source" xsi:type="string">campaign</item>
+                        <item name="percentage_pair" xsi:type="string">scenario_a_percentage</item>
+                        <item name="notice" xsi:type="string" translate="true">Please enter a number between 0 and 100.</item>
+                        <item name="validation" xsi:type="array">
+                            <item name="required-entry" xsi:type="boolean">true</item>
+                            <item name="validate-number-range" xsi:type="string">0.00-100.00</item>
                         </item>
                     </item>
                 </argument>

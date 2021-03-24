@@ -120,7 +120,65 @@ class CampaignManager implements CampaignManagerInterface
      */
     public function stopCampaign(CampaignInterface $campaign)
     {
+        if (!$this->canStop($campaign)) {
+            throw new LocalizedException(__("You can't stop this campaign"));
+        }
+
         $now = $this->dateFilter->filter(new \DateTime('now'));
-        $this->campaignResource->updateEndDate($now, $campaign->getId());
+        $newStatus = CampaignInterface::STATUS_DRAFT;
+        if ($now >= $campaign->getStartDate()) {
+            $newStatus = CampaignInterface::STATUS_COMPLETE;
+            $this->campaignResource->updateEndDate($now, $campaign->getId());
+        }
+
+        $this->campaignResource->updateStatus($newStatus, $campaign->getId());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function publishCampaign(CampaignInterface $campaign)
+    {
+        if (!$this->canPublish($campaign)) {
+            throw new LocalizedException(__("You can't publish this campaign"));
+        }
+
+        $this->campaignResource->updateStatus(CampaignInterface::STATUS_PUBLISHED, $campaign->getId());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function reopenCampaign(CampaignInterface $campaign)
+    {
+        if (!$this->canReopen($campaign)) {
+            throw new LocalizedException(__("You can't reopen this campaign"));
+        }
+
+        $this->campaignResource->updateStatus(CampaignInterface::STATUS_DRAFT, $campaign->getId());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function canPublish(CampaignInterface $campaign): bool
+    {
+        return $campaign->getStatus() === CampaignInterface::STATUS_DRAFT;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function canReopen(CampaignInterface $campaign): bool
+    {
+        return $campaign->getStatus() === CampaignInterface::STATUS_COMPLETE;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function canStop(CampaignInterface $campaign): bool
+    {
+        return $campaign->getStatus() === CampaignInterface::STATUS_PUBLISHED;
     }
 }
