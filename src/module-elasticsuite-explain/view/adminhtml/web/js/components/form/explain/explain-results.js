@@ -17,7 +17,8 @@ define([
     'jquery',
     'Smile_ElasticsuiteExplain/js/components/form/explain/result/item',
     'Magento_Ui/js/modal/modal',
-    'MutationObserver'
+    'MutationObserver',
+    'mage/collapsible'
 ], function (Component, $, Product, modal) {
     'use strict';
 
@@ -154,6 +155,7 @@ define([
                 this.modal = $("#productDetails").modal(this.modalOptions);
             }
             this.modal.modal('openModal');
+            $("#highlight-details").collapsible({collateral : {element: '#highlight-details', openedState: '_show'}});
         }
     });
 });

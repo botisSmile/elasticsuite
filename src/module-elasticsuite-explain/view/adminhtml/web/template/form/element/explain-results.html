@@ -245,22 +245,26 @@
             </tfoot>
         </table>
 
-        <br/>
-        <h1 class="modal-title" data-bind="i18n: 'Highlights'"></h1>
-        <br/>
-        <table class="admin__table-primary dashboard-data source-report highlights">
-            <thead>
-            <tr>
-                <th class="data-grid-th no-link field"><span data-bind="i18n: 'Field'"></span></th>
-                <th class="data-grid-th no-link highlighted-source"><span data-bind="i18n: 'Source'"></span></th>
-            </tr>
-            </thead>
-            <tbody data-bind="foreach: {data: getHighlights(), as: 'hl'}" class="matches">
-            <tr>
-                <td class="field"><span data-bind="text: hl.field, attr: {class: hl.is_searchable ? 'searchable' : ''}"></span></td>
-                <td class="source"><span data-bind="html: hl.value"></span></td>
-            </tr>
-            </tbody>
-        </table>
+        <div id="highlight-details" class="admin__collapsible-block-wrapper">
+            <div data-role="title" class="fieldset-wrapper-title">
+                <h4><h1 class="modal-title admin__collapsible-title" data-bind="i18n: 'Indexed Content'"></h1></h4>
+            </div>
+            <div data-role="content">
+                <table class="admin__table-primary dashboard-data source-report highlights">
+                    <thead>
+                    <tr>
+                        <th class="data-grid-th no-link field"><span data-bind="i18n: 'Field'"></span></th>
+                        <th class="data-grid-th no-link highlighted-source"><span data-bind="i18n: 'Source'"></span></th>
+                    </tr>
+                    </thead>
+                    <tbody data-bind="foreach: {data: getHighlights(), as: 'hl'}" class="matches">
+                    <tr>
+                        <td class="field"><span data-bind="text: hl.field, attr: {class: hl.is_searchable ? 'searchable' : ''}"></span></td>
+                        <td class="source"><span data-bind="html: hl.value"></span></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>

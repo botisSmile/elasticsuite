@@ -43,6 +43,7 @@ class Highlights
 
         foreach ($results as &$result) {
             $field = $fields[$result['sourceField']] ?? null;
+            $result['is_searchable'] = false;
             if ($field && $field->isSearchable() && isset($result['value'])) {
                 $result['is_searchable'] = true;
                 $value = strip_tags(json_encode($result['value']));
@@ -52,6 +53,8 @@ class Highlights
                 $result['value'] = json_decode($value);
             }
         }
+
+        array_multisort(array_column($results, 'is_searchable'), SORT_DESC, $results);
 
         return array_values($results);
     }
