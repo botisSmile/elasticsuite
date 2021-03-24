@@ -18,12 +18,16 @@ namespace Smile\ElasticsuiteExplain\Model\Result;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Helper\Image as ImageHelper;
 use Magento\Customer\Api\Data\GroupInterface;
+use Smile\ElasticsuiteCore\Api\Index\Mapping\FieldInterface;
+use Smile\ElasticsuiteExplain\Model\Result\Item\Highlights;
 use Smile\ElasticsuiteCore\Search\Request\Query\FunctionScore;
 use Smile\ElasticsuiteExplain\Model\Result\Item\SynonymManager;
 use Smile\ElasticsuiteExplain\Search\Adapter\Elasticsuite\Response\ExplainDocument;
 
 /**
  * Result Item Model for Explain
+ *
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  *
  * @category Smile
  * @package  Smile\ElasticsuiteExplain
@@ -42,14 +46,29 @@ class Item
     private $document;
 
     /**
+     * @var FieldInterface[]
+     */
+    private $fields;
+
+    /**
      * @var ImageHelper
      */
     private $imageHelper;
 
     /**
+     * @var null|array
+     */
+    private $matches = null;
+
+    /**
      * @var SynonymManager
      */
     private $synonymManager;
+
+    /**
+     * @var Highlights
+     */
+    private $highlights;
 
     /**
      * Constructor.
@@ -58,17 +77,23 @@ class Item
      * @param ExplainDocument  $document       Product Document.
      * @param ImageHelper      $imageHelper    Image helper.
      * @param SynonymManager   $synonymManager Synonym Manager.
+     * @param Highlights       $highlights     Highlights retriver.
+     * @param FieldInterface[] $fields         All fields of the mapping.
      */
     public function __construct(
         ProductInterface $product,
         ExplainDocument $document,
         ImageHelper $imageHelper,
-        SynonymManager $synonymManager
+        SynonymManager $synonymManager,
+        Highlights $highlights,
+        array $fields = []
     ) {
         $this->product        = $product;
         $this->document       = $document;
         $this->imageHelper    = $imageHelper;
         $this->synonymManager = $synonymManager;
+        $this->highlights     = $highlights;
+        $this->fields         = $fields;
     }
 
     /**
@@ -90,6 +115,7 @@ class Item
             'is_in_stock' => $this->isInStockProduct(),
             'boosts'      => $this->getBoosts(),
             'matches'     => $this->getMatches(),
+            'highlights'  => $this->getHighlights(),
         ];
 
         return $data;
@@ -269,13 +295,17 @@ class Item
      */
     private function getMatches()
     {
-        $matches = [];
+        if (null === $this->matches) {
+            $matches = [];
 
-        if ($explain = $this->getDocumentExplanation()) {
-            $matches = $this->getFieldMatches($explain);
+            if ($explain = $this->getDocumentExplanation()) {
+                $matches = $this->getFieldMatches($explain);
+            }
+
+            $this->matches = $matches;
         }
 
-        return $matches;
+        return $this->matches;
     }
 
     /**
@@ -319,10 +349,10 @@ class Item
                 }
 
                 $fieldMatches[] = [
-                    'field' => $field,
-                    'query' => $query,
-                    'weight' => $weight,
-                    'score' => $score,
+                    'field'   => $field,
+                    'query'   => $query,
+                    'weight'  => $weight,
+                    'score'   => $score,
                     'synonym' => $this->synonymManager->getSynonym($query),
                 ];
             } elseif (array_key_exists('details', $explain)) {
@@ -367,5 +397,25 @@ class Item
         }
 
         return $boost;
+    }
+
+    /**
+     * Get document highlights : fields content with matched patterns.
+     *
+     * @SuppressWarnings(PHPMD.ElseExpression)
+     *
+     * @return array
+     */
+    private function getHighlights()
+    {
+        $matchedQueries = [];
+        foreach ($this->getMatches() as $match) {
+            if (isset($match['query']) && ($match['query'] !== '')) {
+                $matchedQueries[] = $match['query'];
+            }
+        }
+        $matchedQueries = array_unique($matchedQueries);
+
+        return $this->highlights->getHighlights($this->getDocumentSource(), $this->fields, $matchedQueries);
     }
 }

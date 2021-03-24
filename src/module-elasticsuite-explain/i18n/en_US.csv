@@ -50,3 +50,6 @@
 "Only the boosting score is used, the field matches score is ignored.","Only the boosting score is used, the field matches score is ignored."
 "Only the maximum value between the field matches score and the boosting score is used.","Only the maximum value between the field matches score and the boosting score is used."
 "Only the minimum value between the field matches score and the boosting score is used.","Only the minimum value between the field matches score and the boosting score is used."
+"Indexed Content","Indexed Content"
+"Field","Field"
+"Source","Source"

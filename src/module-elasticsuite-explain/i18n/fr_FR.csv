@@ -50,3 +50,6 @@
 "Only the boosting score is used, the field matches score is ignored.","Seul le score des boosts est utilisé, le score des champs est ignoré."
 "Only the maximum value between the field matches score and the boosting score is used.","Seul le score le plus grand entre celui des champs et celui des boosts est utilisé."
 "Only the minimum value between the field matches score and the boosting score is used.","Seul le score le plus petit entre celui des champs et celui des boosts est utilisé."
+"Indexed Content","Contenu indexé"
+"Field","Champ"
+"Source","Source"
