@@ -208,7 +208,9 @@
             </thead>
             <tbody data-bind="foreach: {data: getMatches(), as: 'match'}" class="matches">
                 <tr>
-                    <td class="field"><span data-bind="text: match.field"></span></td>
+                    <td class="field">
+                        <span data-bind="text: match.field, attr: {class: $parent.hasFieldDescriptionToShow(match.field) ? 'description' : '', title: $parent.hasFieldDescriptionToShow(match.field) ? $parent.popFieldDescription(match.field) : ''}"></span><span data-bind="if: match.analyzer"><span data-bind="text: '.'+match.analyzer, attr: {class: $parent.hasFieldDescriptionToShow(match.analyzer) ? 'description' : '', title: $parent.hasFieldDescriptionToShow(match.analyzer) ? $parent.popFieldDescription(match.analyzer) : ''}"></span></span>
+                    </td>
                     <td class="query">
                         <span data-bind="text: match.query, attr: {class: match.synonym ? 'synonym' : '', title: match.synonym ? $parent.getSynonymDescription(match) : match.query}"></span>
                     </td>
@@ -244,6 +246,28 @@
                 </tr>
             </tfoot>
         </table>
+
+        <div id="fields-details" class="admin__collapsible-block-wrapper">
+            <div data-role="title" class="fieldset-wrapper-title">
+                <h4><h1 class="modal-title admin__collapsible-title" data-bind="i18n: 'Fields explanations'"></h1></h4>
+            </div>
+            <div data-role="content">
+                <table class="admin__table-primary dashboard-data fields-legends">
+                    <thead>
+                        <tr>
+                            <th class="data-grid-th no-link field"><span data-bind="i18n: 'Field'"></span></th>
+                            <th class="data-grid-th no-link explanation"><span data-bind="i18n: 'Role'"></span></th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: {data: getLegends(), as: 'expl'}" class="explanations">
+                        <tr>
+                            <td class="field"><span data-bind="text: expl.field"></span></td>
+                            <td class="explanation"><span data-bind="html: expl.legend"></span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
         <div id="highlight-details" class="admin__collapsible-block-wrapper">
             <div data-role="title" class="fieldset-wrapper-title">
