@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 /**
- * ElasticSuite.io Catalog Optimizers routes configuration
+ * ElasticSuite bCampaign routes configuration
  *
  * DISCLAIMER
  *
@@ -11,8 +11,9 @@
  * @category  Smile
  * @package   Smile\ElasticsuiteAbCampaign
  * @author    Pierre LE MAGUER <pierre.lemaguer@smile.fr>
- * @copyright 2020 Smile
- * @license   Open Software License ("OSL") v. 3.0
+ * @copyright 2021 Smile
+ * @license   Licensed to Smile-SA. All rights reserved. No warranty, explicit or implicit, provided.
+ *            Unauthorized copying of this file, via any medium, is strictly prohibited.
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">

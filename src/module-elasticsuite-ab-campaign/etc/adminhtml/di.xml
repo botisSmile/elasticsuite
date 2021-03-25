@@ -52,4 +52,9 @@
             <argument name="modifierPool" xsi:type="object">Smile\ElasticsuiteAbCampaign\Ui\Component\Campaign\Form\Modifier\Pool</argument>
         </arguments>
     </type>
+
+    <!-- Restrain optimizer actions -->
+    <type name="Smile\ElasticsuiteCatalogOptimizer\Ui\Component\Listing\Column\OptimizerActions">
+        <plugin name="restrain_optimizer_actions" type="Smile\ElasticsuiteAbCampaign\Plugin\Adminhtml\OptimizerUiListingActionsPlugin"/>
+    </type>
 </config>

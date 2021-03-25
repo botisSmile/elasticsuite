@@ -59,6 +59,45 @@ class Optimizer extends AbstractDb
     }
 
     /**
+     * Extract optimizer ids linked to campaign filter (optionally) by campaign status and dates.
+     *
+     * @param array $optimizerIds           Array of optimizer ids
+     * @param array $filterByCampaignStatus Filter by campaign status ?
+     * @param bool  $filterByCampaignDates  Filter by campaign dates ?
+     * @return array
+     */
+    public function extractOptimizerIdsLinkedToCampaign(
+        array $optimizerIds,
+        array $filterByCampaignStatus = [],
+        bool $filterByCampaignDates
+    ): array {
+        $connection = $this->getConnection();
+        $select = $connection->select()
+            ->from(
+                ['campaign_optimizer' => $this->getMainTable()],
+                [CampaignOptimizerInterface::OPTIMIZER_ID]
+            )
+            ->join(
+                ['campaign' => $this->getTable(CampaignInterface::TABLE_NAME)],
+                'campaign_optimizer.' . CampaignOptimizerInterface::CAMPAIGN_ID
+                . ' = campaign.' . CampaignInterface::CAMPAIGN_ID,
+                []
+            )
+            ->where('campaign_optimizer.' . CampaignOptimizerInterface::OPTIMIZER_ID . ' in (?)', $optimizerIds);
+
+        if ($filterByCampaignStatus) {
+            $select->where('campaign.' . CampaignInterface::STATUS . ' in (?)', $filterByCampaignStatus);
+        }
+
+        if ($filterByCampaignDates) {
+            $select->where('campaign.' . CampaignInterface::START_DATE . ' >= CURDATE()');
+            $select->where('campaign.' . CampaignInterface::END_DATE . ' <= CURDATE()');
+        }
+
+        return $connection->fetchCol($select);
+    }
+
+    /**
      * Save limitation data for a given campaign.
      *
      * @param int    $campaignId   Campaign id

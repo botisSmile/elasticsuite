@@ -47,6 +47,7 @@
 
     <preference for="Smile\ElasticsuiteAbCampaign\Api\CampaignRepositoryInterface" type="Smile\ElasticsuiteAbCampaign\Model\CampaignRepository" />
     <preference for="Smile\ElasticsuiteAbCampaign\Api\CampaignManagerInterface" type="Smile\ElasticsuiteAbCampaign\Model\CampaignManager" />
+    <preference for="Smile\ElasticsuiteAbCampaign\Api\Campaign\OptimizerManagerInterface" type="Smile\ElasticsuiteAbCampaign\Model\Campaign\OptimizerManager" />
     <preference for="Smile\ElasticsuiteAbCampaign\Api\Data\CampaignInterface" type="Smile\ElasticsuiteAbCampaign\Model\Campaign" />
     <preference for="Smile\ElasticsuiteAbCampaign\Api\Data\CampaignSearchResultsInterface" type="Magento\Framework\Api\SearchResults" />
 
