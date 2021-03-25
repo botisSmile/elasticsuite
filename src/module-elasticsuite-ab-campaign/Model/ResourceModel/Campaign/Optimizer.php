@@ -20,6 +20,8 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 use Smile\ElasticsuiteAbCampaign\Api\Data\CampaignInterface;
 use Smile\ElasticsuiteAbCampaign\Api\Data\CampaignOptimizerInterface;
+use Smile\ElasticsuiteCatalogOptimizer\Api\Data\OptimizerInterface;
+use Smile\ElasticsuiteCatalogOptimizer\Model\ResourceModel\Optimizer\Collection as OptimizerCollection;
 use Zend_Db_Expr;
 
 /**
@@ -139,6 +141,37 @@ class Optimizer extends AbstractDb
                 $optimizerData
             );
         }
+    }
+
+    /**
+     * Add campaign data to optimizer collection.
+     *
+     * @param OptimizerCollection $optimizerCollection Optimizer collection
+     * @return OptimizerCollection
+     */
+    public function addCampaignDataToOptimizerCollection(OptimizerCollection $optimizerCollection): OptimizerCollection
+    {
+        if (!$optimizerCollection->hasFlag('campaign_data')) {
+            $optimizerCollection->getSelect()
+                ->joinLeft(
+                    ['campaign_optimizer' => $optimizerCollection->getTable(CampaignOptimizerInterface::TABLE_NAME)],
+                    'main_table.' . OptimizerInterface::OPTIMIZER_ID
+                    . ' = campaign_optimizer.' . CampaignOptimizerInterface::OPTIMIZER_ID,
+                    []
+                )
+                ->joinLeft(
+                    ['campaign' => $optimizerCollection->getTable(CampaignInterface::TABLE_NAME)],
+                    'campaign_optimizer.' . CampaignOptimizerInterface::CAMPAIGN_ID
+                    . ' = campaign.' . CampaignInterface::CAMPAIGN_ID,
+                    [
+                        'campaign_name'   => 'campaign.' . CampaignInterface::NAME,
+                        'campaign_status' => 'campaign.' . CampaignInterface::STATUS,
+                    ]
+                );
+            $optimizerCollection->setFlag('campaign_data', true);
+        }
+
+        return $optimizerCollection;
     }
 
     /**
