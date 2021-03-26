@@ -39,8 +39,6 @@ class ItemPlugin
         Item $subject,
         $productItemData
     ) {
-        // TODO ribay@smile.fr : decide what to do (no access to product or document source)
-
         return $productItemData;
     }
 }

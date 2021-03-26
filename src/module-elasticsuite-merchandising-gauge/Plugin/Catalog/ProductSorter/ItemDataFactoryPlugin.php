@@ -49,7 +49,6 @@ class ItemDataFactoryPlugin
 
     /**
      * Get behavioral stats for a given product.
-     * TODO ribay@smile.fr : post-processing
      *
      * @param ProductInterface $product Product.
      *
