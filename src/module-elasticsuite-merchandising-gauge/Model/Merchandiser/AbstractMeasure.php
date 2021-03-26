@@ -233,7 +233,8 @@ abstract class AbstractMeasure implements MeasureInterface
 
         // Iterate on all possible metrics to find one that can be used.
         $facetedData = $collection->getFacetedData(MerchandisingMetricsProvider::BASE_AGGREGATION);
-        $metrics = $facetedData[MerchandisingMetricsProvider::METRICS_CONTAINER] ?? [];
+        $metrics = $facetedData[MerchandisingMetricsProvider::METRICS_CONTAINER] ?? $facetedData['_doc'] ?? [];
+
         $usableDimensions = $this->dimensionProvider->getUsableDimensions($metrics);
 
         return $usableDimensions;
