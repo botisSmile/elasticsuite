@@ -43,95 +43,38 @@ define([
         },
         initialize: function () {
             this._super();
-            console.log("----------------------------");
-            /*
-            console.log(this.productsProvider);
-            console.log(this.products);
-            console.log(this.name);
-            console.log(this);
-            */
-            console.log("----------------------------");
             this.observe(['loading', 'dimensions', 'dimension', 'automaticRefresh']);
             this.productsMemento = this.products;
             this.waitContent();
-            /*
-                ##
-                * Applies DOM watcher for the
-                * content element rendering.
-                *
-                * @returns {TimelineView} Chainable.
-                ##
-                waitContent: function () {
-                    $.async({
-                        selector: this.selectors.content,
-                        component: this.model
-                    }, this.initContent);
-
-                    return this;
-                },
-
-                 ##
-                 * Initializes timelines' content element.
-                 *
-                 * @param {HTMLElement} content
-                 * @returns {TimelineView} Chainable.
-                 ##
-                initContent: function (content) {
-                    this.$content = content;
-
-                    $(content).on('scroll', this.onContentScroll);
-                    $(window).on('resize', this.onWindowResize);
-
-                    $.async(this.selectors.item, content, this.initItem);
-                    $.async(this.selectors.event, content, this.onEventElementRender);
-                    $.async(this.selectors.timeUnit, content, this.initTimeUnit);
-
-                    this.refresh();
-
-                    return this;
-                },
-            */
         },
+
         waitContent: function () {
             async.async({
                 selector: this.productsSelector
-            }, this.initContent);
+            }, this.initContent.bind(this));
 
             return this;
         },
+
         initContent: function (content) {
-            console.log(content)
+            this.refresh();
         },
+
         refreshProducts: function (data) {
-            console.log("-P-P-P-P-P-P-P-P-P-P-P-P-P-P");
-            console.log("refreshProducts");
-            /*
-            console.log(this.products);
-            console.log(data);
-            */
             // Ignore search contexts.
             if (this.search === "") {
                 // this.productsMemento = this.products;
                 this.productsMemento = data;
             }
-            console.log("-P-P-P-P-P-P-P-P-P-P-P-P-P-P");
         },
+
         refreshMeasures: function (data) {
             if (this.automaticRefresh()) {
                 this.refresh();
             }
         },
-        refresh: function () {
-            console.log("-^-^-^-^-^-^-^-^-^-^-^-^-^-^");
-            console.log("refreshMeasures");
 
-            /*
-            console.log(data);
-            console.log(this.products);
-            console.log(this.editPositions);
-            console.log(this.blacklistedProducts);
-            */
-            console.log("-^-^-^-^-^-^-^-^-^-^-^-^-^-^");
+        refresh: function () {
 
             if (this.refreshRateLimiter !== undefined) {
                 clearTimeout();
@@ -140,16 +83,7 @@ define([
             this.loading(true);
 
             this.refreshRateLimiter = setTimeout(function () {
-                console.log("-T-T-T-T-T-T-T-T-T-T-T-T-T-T");
-                /*
-                console.log(this.products);
-                console.log(this.productsMemento);
-                */
-                /*
-                console.log(this.editPositions);
-                console.log(this.blacklistedProducts);
-                console.log(this.formData);
-                */
+
                 var formData = this.prepareFormData(this.formData);
 
                 // 1) editPositions data (Taken from product-sorter.js)
@@ -164,18 +98,15 @@ define([
                 formData['preview_size'] = this.previewSize;
                 formData['page_size'] = this.currentSize;
 
-                console.log(this.formData);
-
                 // TODO ribay@smile.fr : link this.enabled to this.loadUrl not being null
                 if (this.enabled) {
                     this.loadXhr = $.post(this.loadUrl, this.formData, this.onMeasuresLoad.bind(this));
                 }
-                console.log("-T-T-T-T-T-T-T-T-T-T-T-T-T-T");
+
             }.bind(this), this.maxRefreshInterval);
         },
-        onMeasuresLoad: function (loadedData) {
-            console.log(loadedData);
 
+        onMeasuresLoad: function (loadedData) {
             if (typeof loadedData.available_dimensions !== 'undefined') {
                 // Update gauge dimensions.
                 this.dimensions(loadedData.available_dimensions);
@@ -210,16 +141,19 @@ define([
 
             this.loading(false);
         },
+
         getDimensions: function () {
             var dimensions = this.dimensions();
 
             return _.values(dimensions);
         },
+
         hasDimensions: function () {
             var dimensions = this.dimensions();
 
             return !_.isEmpty(dimensions);
         },
+
         dimensionChanged: function (obj, event) {
             if (event.originalEvent) {
                 // User change.
@@ -228,11 +162,11 @@ define([
                 // Program change : do nothing.
             }
         },
-        hasAutomaticRefresh: function () {
-            console.log(' --- hasAutomaticRefresh --- ');
 
+        hasAutomaticRefresh: function () {
             return this.automaticRefresh();
         },
+
         toggleAutomaticRefresh: function () {
             console.log(' --- toggleAutomaticRefresh --- ');
             this.automaticRefresh(!this.automaticRefresh());
@@ -241,9 +175,11 @@ define([
                 this.refreshMeasures();
             }
         },
+
         applyBestOrdering: function () {
-            console.log(' - - - applyBestOrdering  - - - ');
+
         },
+
         prepareFormData: function (formData) {
             if (this.excludedPreviewFields) {
                 Object.keys(this.excludedPreviewFields).forEach(function (fieldName) {
