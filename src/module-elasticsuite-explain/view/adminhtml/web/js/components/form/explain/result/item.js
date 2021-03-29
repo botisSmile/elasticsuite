@@ -44,6 +44,15 @@ define([
             }
         },
 
+        initialize: function () {
+            this._super();
+
+            this.legends = [];
+            for (const field in this.data.legends) {
+                this.legends.push(this.data.legends[field]);
+            }
+        },
+
         getEffectClass : function () {
             if (this.data.boosts.weight < 1) {
                 return 'down';
@@ -132,6 +141,23 @@ define([
 
         getHighlights : function () {
             return this.data.highlights;
+        },
+
+        getLegends : function () {
+            return this.legends;
+        },
+
+        hasFieldDescriptionToShow : function (field) {
+            return this.data.legends.hasOwnProperty(field);
+        },
+
+        popFieldDescription : function (field) {
+            let description = '';
+            if (this.hasFieldDescriptionToShow(field)) {
+                description = this.data.legends[field].legend;
+                delete this.data.legends[field];
+            }
+            return description;
         }
     });
 

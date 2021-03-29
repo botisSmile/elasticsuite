@@ -156,6 +156,7 @@ define([
             }
             this.modal.modal('openModal');
             $("#highlight-details").collapsible({collateral : {element: '#highlight-details', openedState: '_show'}});
+            $("#fields-details").collapsible({collateral : {element: '#fields-details', openedState: '_show'}});
         }
     });
 });

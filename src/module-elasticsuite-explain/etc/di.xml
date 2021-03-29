@@ -17,5 +17,20 @@
  */
  -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-
+    <type name="Smile\ElasticsuiteExplain\Model\Result\Item\DescriptionsGenerator">
+        <arguments>
+            <argument name="analyzers" xsi:type="array">
+                <item name="phonetic" xsi:type="string" translate="true">A variation of a searchable field used for phonetic matching, it does contain representation of sounds.</item>
+                <item name="standard" xsi:type="string" translate="true">The default version of a searchable field that includes language dependent word analysis (singular/plural forms, conjugated verbs, etc).</item>
+                <item name="shingle" xsi:type="string" translate="true">A variation of an indexed field used for phrase matching, when searching several words.</item>
+                <item name="untouched" xsi:type="string" translate="true">An unaltered version of an indexed field content, including spaces and punctuation, used for filtering product lists.</item>
+                <item name="whitespace" xsi:type="string" translate="true">A variation of a searchable field with minimal changes, used for exact matching.</item>
+            </argument>
+            <argument name="defaultFields" xsi:type="array">
+                <item name="search" xsi:type="string" translate="true">A default search field where every other searchable attribute or field text data is copied into.</item>
+                <item name="spelling" xsi:type="string" translate="true">A default search field containing the text data of every searchable attribute with spellchecking enabled.</item>
+                <item name="autocomplete" xsi:type="string" translate="true">A default search field historically used to contain all the text data of searchable attributes enabled for autocomplete search. Deprecated.</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

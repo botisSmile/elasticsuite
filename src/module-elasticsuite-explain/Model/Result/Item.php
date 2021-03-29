@@ -19,8 +19,9 @@ use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Helper\Image as ImageHelper;
 use Magento\Customer\Api\Data\GroupInterface;
 use Smile\ElasticsuiteCore\Api\Index\Mapping\FieldInterface;
-use Smile\ElasticsuiteExplain\Model\Result\Item\Highlights;
 use Smile\ElasticsuiteCore\Search\Request\Query\FunctionScore;
+use Smile\ElasticsuiteExplain\Model\Result\Item\DescriptionsGenerator;
+use Smile\ElasticsuiteExplain\Model\Result\Item\Highlights;
 use Smile\ElasticsuiteExplain\Model\Result\Item\SynonymManager;
 use Smile\ElasticsuiteExplain\Search\Adapter\Elasticsuite\Response\ExplainDocument;
 
@@ -71,20 +72,27 @@ class Item
     private $highlights;
 
     /**
+     * @var DescriptionsGenerator
+     */
+    private $descriptionsGenerator;
+
+    /**
      * Constructor.
      *
-     * @param ProductInterface $product        Product
-     * @param ExplainDocument  $document       Product Document.
-     * @param ImageHelper      $imageHelper    Image helper.
-     * @param SynonymManager   $synonymManager Synonym Manager.
-     * @param Highlights       $highlights     Highlights retriver.
-     * @param FieldInterface[] $fields         All fields of the mapping.
+     * @param ProductInterface      $product               Product.
+     * @param ExplainDocument       $document              Product Document.
+     * @param ImageHelper           $imageHelper           Image helper.
+     * @param SynonymManager        $synonymManager        Synonym Manager.
+     * @param DescriptionsGenerator $descriptionsGenerator Descriptions generator.
+     * @param Highlights            $highlights            Highlights retriever.
+     * @param FieldInterface[]      $fields                All fields of the mapping.
      */
     public function __construct(
         ProductInterface $product,
         ExplainDocument $document,
         ImageHelper $imageHelper,
         SynonymManager $synonymManager,
+        DescriptionsGenerator $descriptionsGenerator,
         Highlights $highlights,
         array $fields = []
     ) {
@@ -92,6 +100,7 @@ class Item
         $this->document       = $document;
         $this->imageHelper    = $imageHelper;
         $this->synonymManager = $synonymManager;
+        $this->descriptionsGenerator = $descriptionsGenerator;
         $this->highlights     = $highlights;
         $this->fields         = $fields;
     }
@@ -116,6 +125,7 @@ class Item
             'boosts'      => $this->getBoosts(),
             'matches'     => $this->getMatches(),
             'highlights'  => $this->getHighlights(),
+            'legends'     => $this->getLegends(),
         ];
 
         return $data;
@@ -348,12 +358,19 @@ class Item
                     }
                 }
 
+                $analyzer = false;
+                if (preg_match('/^([^.]+)\.(.*)$/', $field, $analyzerMatches)) {
+                    $field      = $analyzerMatches[1];
+                    $analyzer   = $analyzerMatches[2];
+                }
+
                 $fieldMatches[] = [
-                    'field'   => $field,
-                    'query'   => $query,
-                    'weight'  => $weight,
-                    'score'   => $score,
-                    'synonym' => $this->synonymManager->getSynonym($query),
+                    'field'     => $field,
+                    'analyzer'  => $analyzer,
+                    'query'     => $query,
+                    'weight'    => $weight,
+                    'score'     => $score,
+                    'synonym'   => $this->synonymManager->getSynonym($query),
                 ];
             } elseif (array_key_exists('details', $explain)) {
                 $details = $explain['details'];
@@ -402,8 +419,6 @@ class Item
     /**
      * Get document highlights : fields content with matched patterns.
      *
-     * @SuppressWarnings(PHPMD.ElseExpression)
-     *
      * @return array
      */
     private function getHighlights()
@@ -417,5 +432,15 @@ class Item
         $matchedQueries = array_unique($matchedQueries);
 
         return $this->highlights->getHighlights($this->getDocumentSource(), $this->fields, $matchedQueries);
+    }
+
+    /**
+     * Get fields and analyzers related legends.
+     *
+     * @return string[]
+     */
+    private function getLegends()
+    {
+        return $this->descriptionsGenerator->generate($this->getMatches());
     }
 }
