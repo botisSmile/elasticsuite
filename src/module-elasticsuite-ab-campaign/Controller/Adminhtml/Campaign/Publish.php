@@ -56,6 +56,7 @@ class Publish extends CampaignController
         }
 
         try {
+            $this->campaignValidator->validateData($model);
             $this->campaignManager->publishCampaign($model);
             $this->messageManager->addSuccessMessage(__('You published the campaign %1.', $model->getName()));
 

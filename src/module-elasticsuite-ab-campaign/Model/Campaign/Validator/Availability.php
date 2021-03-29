@@ -61,7 +61,7 @@ class Availability extends AbstractDate
             $doesNotOverlap = $endDate < $startUnavailability || $startDate > $endUnavailability;
             if (!$doesNotOverlap) {
                 throw new ValidatorException(
-                    __("You can't save a campaign over a period with already a published campaign")
+                    __("You can't save or publish a campaign over a period with already a published campaign")
                 );
             }
         }

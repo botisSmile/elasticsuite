@@ -222,7 +222,7 @@ class Campaign extends AbstractModel implements CampaignInterface, IdentityInter
      */
     public function getScenarioAOptimizerIds()
     {
-        return $this->getData(self::SCENARIO_A_OPTIMIZER_IDS);
+        return (array) $this->getData(self::SCENARIO_A_OPTIMIZER_IDS);
     }
 
     /**
@@ -230,7 +230,7 @@ class Campaign extends AbstractModel implements CampaignInterface, IdentityInter
      */
     public function getScenarioBOptimizerIds()
     {
-        return $this->getData(self::SCENARIO_B_OPTIMIZER_IDS);
+        return (array) $this->getData(self::SCENARIO_B_OPTIMIZER_IDS);
     }
 
     /**

@@ -9,7 +9,7 @@
 "Select the search terms for which you want the campaign to apply.","Select the search terms for which you want the campaign to apply."
 "Are you sure you want to stop %1 ?","Are you sure you want to stop %1 ?"
 "Stop","Stop"
-"You can't to save a campaign over a period with already a published campaign","You can't to save a campaign over a period with already a published campaign"
+"You can't to save or publish a campaign over a period with already a published campaign","You can't to save or publish a campaign over a period with already a published campaign"
 "End Date must follow Start Date.","End Date must follow Start Date."
 "Start and end date are mandatory.","Start and end date are mandatory."
 "End Date cannot be defined before the date of today.","End Date cannot be defined before the date of today."

@@ -39,11 +39,6 @@ use Smile\ElasticsuiteAbCampaign\Model\Context\Adminhtml\Campaign as CampaignCon
 class Save extends CampaignController
 {
     /**
-     * @var CompositeValidator
-     */
-    protected $campaignValidator;
-
-    /**
      * @var AuthBackendSession
      */
     protected $backendSession;
@@ -81,9 +76,9 @@ class Save extends CampaignController
             $campaignRepository,
             $campaignFactory,
             $dateFilter,
-            $campaignManager
+            $campaignManager,
+            $campaignValidator
         );
-        $this->campaignValidator = $campaignValidator;
         $this->backendSession    = $backendSession;
     }
 

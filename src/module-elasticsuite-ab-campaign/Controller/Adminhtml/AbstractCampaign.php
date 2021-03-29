@@ -23,6 +23,7 @@ use Magento\Framework\View\Result\PageFactory;
 use Smile\ElasticsuiteAbCampaign\Api\CampaignManagerInterface;
 use Smile\ElasticsuiteAbCampaign\Api\Data\CampaignInterfaceFactory;
 use Smile\ElasticsuiteAbCampaign\Api\CampaignRepositoryInterface;
+use Smile\ElasticsuiteAbCampaign\Model\Campaign\CompositeValidator;
 use Smile\ElasticsuiteAbCampaign\Model\Context\Adminhtml\Campaign as CampaignContext;
 
 /**
@@ -67,6 +68,10 @@ abstract class AbstractCampaign extends Action
     protected $campaignManager;
 
     /**
+     * @var CompositeValidator
+     */
+    protected $campaignValidator;
+    /**
      * Abstract constructor.
      *
      * @param Context                     $context            Application context.
@@ -76,6 +81,7 @@ abstract class AbstractCampaign extends Action
      * @param CampaignInterfaceFactory    $campaignFactory    Campaign Factory.
      * @param DateFilter                  $dateFilter         Date filter
      * @param CampaignManagerInterface    $campaignManager    Campaign manager.
+     * @param CompositeValidator          $campaignValidator  Campaign Validator.
      */
     public function __construct(
         Context $context,
@@ -84,7 +90,8 @@ abstract class AbstractCampaign extends Action
         CampaignRepositoryInterface $campaignRepository,
         CampaignInterfaceFactory $campaignFactory,
         DateFilter $dateFilter,
-        CampaignManagerInterface $campaignManager
+        CampaignManagerInterface $campaignManager,
+        CompositeValidator $campaignValidator
     ) {
         parent::__construct($context);
 
@@ -94,6 +101,7 @@ abstract class AbstractCampaign extends Action
         $this->campaignFactory     = $campaignFactory;
         $this->dateFilter          = $dateFilter;
         $this->campaignManager     = $campaignManager;
+        $this->campaignValidator   = $campaignValidator;
     }
 
     /**
