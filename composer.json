@@ -49,6 +49,7 @@
         "smile/module-elasticsuite-explain": "self.version",
         "smile/module-elasticsuite-facet-recommender": "self.version",
         "smile/module-elasticsuite-instant-search": "self.version",
+        "smile/module-elasticsuite-merchandising-gauge": "self.version",
         "smile/module-elasticsuite-recommender": "self.version",
         "smile/module-elasticsuite-virtual-attribute": "self.version"
     },
@@ -66,6 +67,7 @@
             "src/module-elasticsuite-explain/registration.php",
             "src/module-elasticsuite-facet-recommender/registration.php",
             "src/module-elasticsuite-instant-search/registration.php",
+            "src/module-elasticsuite-merchandising-gauge/registration.php",
             "src/module-elasticsuite-recommender/registration.php",
             "src/module-elasticsuite-virtual-attribute/registration.php"
         ],
@@ -79,6 +81,7 @@
             "Smile\\ElasticsuiteExplain\\": "src/module-elasticsuite-explain",
             "Smile\\ElasticsuiteFacetRecommender\\": "src/module-elasticsuite-facet-recommender",
             "Smile\\ElasticsuiteInstantSearch\\": "src/module-elasticsuite-instant-search",
+            "Smile\\ElasticsuiteMerchandisingGauge\\": "src/module-elasticsuite-merchandising-gauge",
             "Smile\\ElasticsuiteRecommender\\": "src/module-elasticsuite-recommender",
             "Smile\\ElasticsuiteVirtualAttribute\\": "src/module-elasticsuite-virtual-attribute"
         }
