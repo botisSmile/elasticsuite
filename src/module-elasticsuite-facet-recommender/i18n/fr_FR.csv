@@ -1,0 +1,3 @@
+"Facets Recommendations","Facettes recommandées"
+"When enabled, facets regularly used by a customer for a given category will be recommended to him. Elasticsuite tracking must also be enabled.","Si activé, les facettes régulièrement utilisées par un utilisateur pour une catégorie donnée lui seront recommandées. Nécessite l'activation du tracking Elasticsuite."
+"Max number of facets to recommend","Nombre de valeurs de filtres recommandées maximum"
