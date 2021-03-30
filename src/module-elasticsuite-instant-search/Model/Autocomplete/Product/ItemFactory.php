@@ -26,7 +26,7 @@ use Magento\Framework\Pricing\Render;
  *
  * @category Smile
  * @package  Smile\ElasticsuiteInstantSearch
- * @author   Aurelien FOUCRET <aurelien.foucret@smile.fr>
+ * @author   Romain Ruaud <romain.ruaud@smile.fr>
  */
 class ItemFactory extends \Magento\Search\Model\Autocomplete\ItemFactory
 {

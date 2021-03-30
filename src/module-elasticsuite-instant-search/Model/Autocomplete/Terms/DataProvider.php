@@ -20,13 +20,12 @@ use Magento\Framework\Search\SearchEngineInterface;
 use Magento\Framework\Stdlib\StringUtils;
 use Magento\Search\Model\Autocomplete\DataProviderInterface;
 use Magento\Search\Model\QueryFactory as SearchQueryFactory;
-use Smile\ElasticsuiteCore\Search\Request\Query\QueryFactory as ElasticsearchQueryFactory;
 use Magento\Store\Model\StoreManagerInterface;
 use Smile\ElasticsuiteCore\Helper\Autocomplete as ConfigurationHelper;
 use Smile\ElasticsuiteCore\Search\Request\BucketInterface;
 use Smile\ElasticsuiteCore\Search\Request\Builder as RequestBuilder;
+use Smile\ElasticsuiteCore\Search\Request\Query\QueryFactory as ElasticsearchQueryFactory;
 use Smile\ElasticsuiteCore\Search\Request\QueryInterface;
-use Smile\ElasticsuiteInstantSearch\Model\Autocomplete\Terms\ItemFactory;
 use Smile\ElasticsuiteInstantSearch\Model\Search\QueryStringProvider;
 use Smile\ElasticsuiteInstantSearch\Model\Search\QueryStringProviderFactory;
 
@@ -95,6 +94,7 @@ class DataProvider extends \Smile\ElasticsuiteCore\Model\Autocomplete\Terms\Data
      * @param StoreManagerInterface      $storeManager               Store Manager Interface.
      * @param StringUtils                $string                     String utils
      * @param string                     $type                       Autocomplete items type.
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function __construct(
         ElasticsearchQueryFactory $esQueryFactory,
@@ -122,6 +122,8 @@ class DataProvider extends \Smile\ElasticsuiteCore\Model\Autocomplete\Terms\Data
     }
 
     /**
+     * Get autocomplete data type.
+     *
      * @return string
      */
     public function getType()

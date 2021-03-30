@@ -6,8 +6,8 @@
  * versions in the future.
  *
  * @category  Smile
- * @package   Smile\ElasticsuiteCatalog
- * @author    Aurelien FOUCRET <aurelien.foucret@smile.fr>
+ * @package   Smile\ElasticsuiteInstantSearch
+ * @author    Romain Ruaud <romain.ruaud@smile.fr>
  * @copyright 2021 Smile
  * @license   Licensed to Smile-SA. All rights reserved. No warranty, explicit or implicit, provided.
  *            Unauthorized copying of this file, via any medium, is strictly prohibited.
@@ -22,8 +22,8 @@ use Magento\Framework\UrlInterface;
  * Create an autocomplete item from a product.
  *
  * @category Smile
- * @package  Smile\ElasticsuiteCatalog
- * @author   Aurelien FOUCRET <aurelien.foucret@smile.fr>
+ * @package  Smile\ElasticsuiteInstantSearch
+ * @author   Romain Ruaud <romain.ruaud@smile.fr>
  */
 class ItemFactory extends \Magento\Search\Model\Autocomplete\ItemFactory
 {

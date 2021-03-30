@@ -10,7 +10,6 @@
  *            Unauthorized copying of this file, via any medium, is strictly prohibited.
  */
 
-
 namespace Smile\ElasticsuiteInstantSearch\Model\Autocomplete\Terms;
 
 use Magento\Framework\ObjectManagerInterface;
@@ -20,7 +19,7 @@ use Magento\Framework\UrlInterface;
  * * Autocomplete terms item factory.
  *
  * @category  Smile
- * @package   Smile\Elasticsuite
+ * @package   Smile\ElasticsuiteInstantSearch
  * @author    Richard Bayet <richard.bayet@smile.fr>
  */
 class ItemFactory extends \Magento\Search\Model\Autocomplete\ItemFactory

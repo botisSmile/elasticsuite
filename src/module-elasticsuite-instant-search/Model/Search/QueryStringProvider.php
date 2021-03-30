@@ -15,8 +15,8 @@
 
 namespace Smile\ElasticsuiteInstantSearch\Model\Search;
 
-use \Magento\Framework\Stdlib\StringUtils;
-use \Magento\Framework\App\RequestInterface;
+use Magento\Framework\Stdlib\StringUtils;
+use Magento\Framework\App\RequestInterface;
 use Magento\Search\Model\QueryFactory;
 
 /**
@@ -29,11 +29,11 @@ use Magento\Search\Model\QueryFactory;
 class QueryStringProvider
 {
     /**
-     * @var \Magento\Framework\App\RequestInterface
+     * @var RequestInterface
      */
     private $request;
 
-    /** @var \Magento\Framework\Stdlib\StringUtils */
+    /** @var StringUtils */
     private $string;
 
     /**
@@ -44,8 +44,8 @@ class QueryStringProvider
     /**
      * QueryStringProvider constructor.
      *
-     * @param \Magento\Framework\App\RequestInterface $request HTTP Request
-     * @param \Magento\Framework\Stdlib\StringUtils   $string  String utils
+     * @param RequestInterface $request HTTP Request
+     * @param StringUtils      $string  String utils
      */
     public function __construct(RequestInterface $request, StringUtils $string)
     {

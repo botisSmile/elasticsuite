@@ -18,7 +18,6 @@ use Magento\Framework\Search\ResponseInterface;
 use Magento\Framework\Stdlib\StringUtils as StdlibString;
 use Magento\Search\Model\QueryFactory;
 use Magento\Store\Model\StoreManagerInterface;
-use mysql_xdevapi\Exception;
 use Smile\ElasticsuiteBehavioralAutocomplete\Api\TrendingQueryServiceInterface;
 use Smile\ElasticsuiteCore\Search\Request\BucketInterface;
 use Smile\ElasticsuiteCore\Search\Request\Query\FunctionScore;
