@@ -22,6 +22,7 @@
     "require": {
         "smile/elasticsuite" : "~2.8.0",
         "smile/module-elasticsuite-beacon" : "*",
+        "smile/module-elasticsuite-behavioral-autocomplete" : "*",
         "smile/magento2-react": "~16"
     },
     "autoload": {

@@ -46,6 +46,11 @@ class DataProvider extends \Smile\ElasticsuiteCore\Model\Autocomplete\Terms\Data
     private $service;
 
     /**
+     * @var boolean
+     */
+    private $allowFallback;
+
+    /**
      * Constructor.
      *
      * @param TrendingQueryServiceInterface $service             Service
@@ -53,18 +58,22 @@ class DataProvider extends \Smile\ElasticsuiteCore\Model\Autocomplete\Terms\Data
      * @param ItemFactory                   $itemFactory         Suggest terms item facory.
      * @param ConfigurationHelper           $configurationHelper Autocomplete configuration helper.
      * @param string                        $type                Autocomplete items type.
+     * @param boolean                       $allowFallback       Allow fallback to default data provider using the database.
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     public function __construct(
         TrendingQueryServiceInterface $service,
         QueryFactory $queryFactory,
         ItemFactory $itemFactory,
         ConfigurationHelper $configurationHelper,
-        $type = self::AUTOCOMPLETE_TYPE
+        $type = self::AUTOCOMPLETE_TYPE,
+        $allowFallback = true
     ) {
         $this->service             = $service;
         $this->itemFactory         = $itemFactory;
         $this->configurationHelper = $configurationHelper;
         $this->type                = $type;
+        $this->allowFallback       = $allowFallback;
 
         parent::__construct($queryFactory, $itemFactory, $configurationHelper, $type);
     }
@@ -102,7 +111,7 @@ class DataProvider extends \Smile\ElasticsuiteCore\Model\Autocomplete\Terms\Data
             }
         }
 
-        if (empty($this->items)) {
+        if (empty($this->items) && $this->allowFallback) {
             $this->items = parent::getItems();
         }
 

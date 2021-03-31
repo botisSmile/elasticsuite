@@ -26,6 +26,14 @@
     <preference for="Smile\ElasticsuiteCatalog\Model\Autocomplete\Product\Attribute\DataProvider"
                 type="Smile\ElasticsuiteInstantSearch\Model\Autocomplete\Product\Attribute\DataProvider"/>
 
+    <virtualType name="Smile\ElasticsuiteInstantSearch\Model\Autocomplete\Terms\DataProvider"
+                 type="Smile\ElasticsuiteBehavioralAutocomplete\Model\Autocomplete\Terms\DataProvider">
+        <arguments>
+            <argument name="itemFactory" xsi:type="object">Smile\ElasticsuiteInstantSearch\Model\Autocomplete\Terms\ItemFactory</argument>
+            <argument name="allowFallback" xsi:type="boolean">false</argument>
+        </arguments>
+    </virtualType>
+
     <preference for="Smile\ElasticsuiteCore\Model\Autocomplete\Terms\DataProvider"
                 type="Smile\ElasticsuiteInstantSearch\Model\Autocomplete\Terms\DataProvider"/>
 </config>

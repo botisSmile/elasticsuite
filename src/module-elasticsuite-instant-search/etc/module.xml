@@ -22,6 +22,7 @@
         <sequence>
             <module name="Smile_ElasticsuiteCatalog" />
             <module name="Smile_React" />
+            <module name="Smile_ElasticsuiteBehavioralAutocomplete" />
         </sequence>
     </module>
 </config>

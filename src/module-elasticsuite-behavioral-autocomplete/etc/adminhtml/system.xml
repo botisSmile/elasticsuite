@@ -29,7 +29,7 @@
                 <label>Trend based autocomplete</label>
                 <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Enabled</label>
-                    <comment>When enabled, autocomplete box will suggest trending search terms. Elasticsuite tracking must also be enabled.</comment>
+                    <comment>When enabled, autocomplete box will suggest trending search terms. If disabled, autocomplete box will suggest matching search terms with the most uses. Elasticsuite tracking must be enabled in both cases.</comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
             </group>
