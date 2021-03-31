@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * ElasticSuite AbCampaign menu configuration
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Smile ElasticSuite to newer
+ * versions in the future.
+ *
+ * @category  Smile
+ * @package   Smile\ElasticsuiteAbCampaign
+ * @author    Pierre Le Maguer <pierre.lemaguer@smile.fr>
+ * @copyright 2021 Smile
+ * @license   Licensed to Smile-SA. All rights reserved. No warranty, explicit or implicit, provided.
+ *            Unauthorized copying of this file, via any medium, is strictly prohibited.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add
+            id="ElasticsuiteAbCampaign::manage"
+            title="AB Testing Campaign"
+            translate="title"
+            module="Smile_ElasticsuiteAbCampaign"
+            sortOrder="35"
+            parent="Smile_ElasticsuiteCore::elasticsuite_menu"
+            resource="Smile_ElasticsuiteAbCampaign::manage"/>
+        <add
+            id="ElasticsuiteAbCampaign::manage_campaign"
+            title="Optimizer Campaign"
+            translate="title"
+            module="Smile_ElasticsuiteAbCampaign"
+            sortOrder="10"
+            parent="ElasticsuiteAbCampaign::manage"
+            action="smile_elasticsuite_ab_campaign/campaign/index"
+            resource="Smile_ElasticsuiteAbCampaign::manage"/>
+    </menu>
+</config>

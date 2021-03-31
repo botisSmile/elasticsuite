@@ -1,0 +1,37 @@
+{
+    "name": "smile/module-elasticsuite-ab-campaign-customer-segment",
+    "type": "magento2-module",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Richard Bayet",
+            "email": "richard.bayet@smile.fr"
+        },
+        {
+            "name": "Pierre Le Maguer",
+            "email": "pierre.lemaguer@smile.fr"
+        }
+    ],
+    "description": "ElasticSuite - A/B testing campaign module with customer segments support.",
+    "homepage": "https://elasticsuite.io",
+    "keywords": [
+        "magento",
+        "magento2",
+        "elasticsearch",
+        "search",
+        "merchandising",
+        "core",
+        "setup"
+    ],
+    "require": {
+        "smile/elasticsuite" : "~2.8.0"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Smile\\ElasticsuiteAbCampaign\\": ""
+        }
+    }
+}
