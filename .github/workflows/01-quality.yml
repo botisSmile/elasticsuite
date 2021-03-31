@@ -53,6 +53,10 @@ jobs:
               if: steps.composer-cache.outputs.cache-hit != 'true'
               run: composer install --prefer-dist --no-progress --no-suggest
 
+            - name: Generate autoload if vendor was cached
+              if: steps.composer-cache.outputs.cache-hit == 'true'
+              run: composer dump-autoload
+
             - name: PHP Code Sniffer with Smile Rules
               run: vendor/bin/phpcs --standard=vendor/smile/magento2-smilelab-phpcs/phpcs-standards/SmileLab --extensions=php src/
 
