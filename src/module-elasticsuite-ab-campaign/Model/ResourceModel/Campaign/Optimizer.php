@@ -61,6 +61,8 @@ class Optimizer extends AbstractDb
     /**
      * Extract optimizer ids linked to campaign filter (optionally) by campaign status and dates.
      *
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     *
      * @param array $optimizerIds           Array of optimizer ids
      * @param array $filterByCampaignStatus Filter by campaign status ?
      * @param bool  $filterByCampaignDates  Filter by campaign dates ?
@@ -69,7 +71,7 @@ class Optimizer extends AbstractDb
     public function extractOptimizerIdsLinkedToCampaign(
         array $optimizerIds,
         array $filterByCampaignStatus = [],
-        bool $filterByCampaignDates
+        bool $filterByCampaignDates = false
     ): array {
         $connection = $this->getConnection();
         $select = $connection->select()
