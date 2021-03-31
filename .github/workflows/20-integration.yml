@@ -248,7 +248,7 @@ jobs:
                   INSTALL_COMMAND="$INSTALL_COMMAND --elasticsearch-port=9200"
                 fi
                 if [ "$MAGENTO_EDITION" = "community" ]; then
-                   INSTALL_COMMAND="$INSTALL_COMMAND --disable-modules=Smile_ElasticsuiteCatalogOptimizerCustomerSegment"
+                   INSTALL_COMMAND="$INSTALL_COMMAND --disable-modules=Smile_ElasticsuiteCatalogOptimizerCustomerSegment,Smile_ElasticsuiteAbCampaignCustomerSegment"
                 fi
                 $INSTALL_COMMAND --quiet
 
@@ -264,7 +264,7 @@ jobs:
               working-directory: ${{ env.magento-directory }}
               run: php bin/magento cache:flush
 
-            - name: "[Init] Remove Customer Segment Optimizer module for compiling."
+            - name: "[Init] Remove Customer Segment modules for compiling."
               working-directory: ${{ env.magento-directory }}
               env:
                   MAGENTO_EDITION: ${{ matrix.magento-editions }}
@@ -274,6 +274,10 @@ jobs:
                       rm -rf vendor/smile/elasticsuite-premium/src/module-elasticsuite-catalog-optimizer-customer-segment/registration.php
                       touch vendor/smile/elasticsuite-premium/src/module-elasticsuite-catalog-optimizer-customer-segment/registration.php
                       ls -ail vendor/smile/elasticsuite-premium/src/module-elasticsuite-catalog-optimizer-customer-segment
+                      cp -rf vendor/smile/elasticsuite-premium/src/module-elasticsuite-ab-campaign-customer-segment/registration.php vendor/smile/elasticsuite-premium/src/module-elasticsuite-ab-campaign-customer-segment/registration.php.bak
+                      rm -rf vendor/smile/elasticsuite-premium/src/module-elasticsuite-ab-campaign-customer-segment/registration.php
+                      touch vendor/smile/elasticsuite-premium/src/module-elasticsuite-ab-campaign-customer-segment/registration.php
+                      ls -ail vendor/smile/elasticsuite-premium/src/module-elasticsuite-ab-campaign-customer-segment
                   fi
 
             - name: "[Test] Compile"
