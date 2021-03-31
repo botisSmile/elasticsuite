@@ -24,7 +24,8 @@
         "setup"
     ],
     "require": {
-        "smile/elasticsuite" : "~2.8.0"
+        "smile/elasticsuite" : "~2.8.0",
+        "smile/module-elasticsuite-ab-campaign" : "~2.8.0"
     },
     "autoload": {
         "files": [
