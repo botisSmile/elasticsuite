@@ -42,3 +42,5 @@
 "Scenario B","Scénario B"
 "You saved no optimizer linked to the campaign %1.","Vous n'avez enregistré aucun optimiseur pour la campagne %1."
 "You can edit an optimizer linked to a running campaign only on the campaign page.","Vous ne pouvez modifier un optimiseur lié à une campagne seulement sur la page d'édition de la campagne."
+"Campaign Status","Statut de la campagne"
+"Campaign Name","Nom de la campagne"

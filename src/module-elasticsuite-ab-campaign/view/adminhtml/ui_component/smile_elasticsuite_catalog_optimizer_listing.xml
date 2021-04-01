@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * ElasticsuiteAbCampaign listing UI Component
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Smile ElasticSuite to newer
+ * versions in the future.
+ *
+ * @category  Smile
+ * @package   Smile\ElasticsuiteAbCampaign
+ * @author    Pierre Le Maguer <pierre.lemaguer@smile.fr>
+ * @copyright 2021 Smile
+ * @license   Licensed to Smile-SA. All rights reserved. No warranty, explicit or implicit, provided.
+ *            Unauthorized copying of this file, via any medium, is strictly prohibited.
+ */
+-->
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <columns name="smile_elasticsuite_catalog_optimizer_columns">
+        <column name="campaign_name">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="add_field" xsi:type="boolean">true</item>
+                    <item name="label" xsi:type="string" translate="true">Campaign Name</item>
+                    <item name="sortOrder" xsi:type="number">55</item>
+                </item>
+            </argument>
+        </column>
+        <column name="campaign_status">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="array">
+                    <item name="draft" xsi:type="array">
+                        <item name="value" xsi:type="string">draft</item>
+                        <item name="label" xsi:type="string" translate="true">Draft</item>
+                    </item>
+                    <item name="published" xsi:type="array">
+                        <item name="value" xsi:type="string">published</item>
+                        <item name="label" xsi:type="string" translate="true">Published</item>
+                    </item>
+                    <item name="complete" xsi:type="array">
+                        <item name="value" xsi:type="string">complete</item>
+                        <item name="label" xsi:type="string" translate="true">Complete</item>
+                    </item>
+                </item>
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">select</item>
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/select</item>
+                    <item name="dataType" xsi:type="string">select</item>
+                    <item name="add_field" xsi:type="boolean">true</item>
+                    <item name="label" xsi:type="string" translate="true">Campaign Status</item>
+                    <item name="sortOrder" xsi:type="number">56</item>
+                </item>
+            </argument>
+        </column>
+    </columns>
+</listing>

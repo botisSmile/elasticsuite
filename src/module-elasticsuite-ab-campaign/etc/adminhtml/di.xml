@@ -57,4 +57,18 @@
     <type name="Smile\ElasticsuiteCatalogOptimizer\Ui\Component\Listing\Column\OptimizerActions">
         <plugin name="restrain_optimizer_actions" type="Smile\ElasticsuiteAbCampaign\Plugin\Adminhtml\OptimizerUiListingActionsPlugin"/>
     </type>
+
+    <!-- Add campaign data and filter to optimizer ui collection -->
+    <type name="Smile\ElasticsuiteCatalogOptimizer\Ui\Component\Optimizer\Listing\DataProvider">
+        <arguments>
+            <argument name="addFieldStrategies" xsi:type="array">
+                <item name="campaign_name" xsi:type="object">Smile\ElasticsuiteAbCampaign\Ui\DataProvider\Optimizer\AddCampaignDataToCollection</item>
+                <item name="campaign_status" xsi:type="object">Smile\ElasticsuiteAbCampaign\Ui\DataProvider\Optimizer\AddCampaignDataToCollection</item>
+            </argument>
+            <argument name="addFilterStrategies" xsi:type="array">
+                <item name="campaign_name" xsi:type="object">Smile\ElasticsuiteAbCampaign\Ui\DataProvider\Optimizer\AddCampaignFilterToCollection</item>
+                <item name="campaign_status" xsi:type="object">Smile\ElasticsuiteAbCampaign\Ui\DataProvider\Optimizer\AddCampaignFilterToCollection</item>
+            </argument>
+        </arguments>
+    </type>
 </config>
