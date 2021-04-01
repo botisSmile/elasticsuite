@@ -18,7 +18,6 @@ use Magento\Framework\Search\ResponseInterface;
 use Magento\Framework\Stdlib\StringUtils as StdlibString;
 use Magento\Search\Model\QueryFactory;
 use Magento\Store\Model\StoreManagerInterface;
-use mysql_xdevapi\Exception;
 use Smile\ElasticsuiteBehavioralAutocomplete\Api\TrendingQueryServiceInterface;
 use Smile\ElasticsuiteCore\Search\Request\BucketInterface;
 use Smile\ElasticsuiteCore\Search\Request\Query\FunctionScore;
@@ -66,6 +65,11 @@ class TrendingQueryService implements TrendingQueryServiceInterface
     private $request;
 
     /**
+     * @var Config
+     */
+    private $config;
+
+    /**
      * @var \Magento\Framework\Stdlib\StringUtils
      */
     private $string;
@@ -79,6 +83,7 @@ class TrendingQueryService implements TrendingQueryServiceInterface
      * @param \Smile\ElasticsuiteCore\Search\Request\Query\QueryFactory $queryFactory         Query Factory
      * @param \Magento\Store\Model\StoreManagerInterface                $storeManager         Store Manager
      * @param \Magento\Framework\App\RequestInterface                   $request              Request Interface
+     * @param Config                                                    $config               Behavioral autocomplete config
      * @param StdlibString                                              $string               String Utils
      */
     public function __construct(
@@ -88,6 +93,7 @@ class TrendingQueryService implements TrendingQueryServiceInterface
         \Smile\ElasticsuiteCore\Search\Request\Query\QueryFactory $queryFactory,
         StoreManagerInterface $storeManager,
         \Magento\Framework\App\RequestInterface $request,
+        Config $config,
         StdlibString $string
     ) {
         $this->searchQueryFactory   = $searchQueryFactory;
@@ -96,6 +102,7 @@ class TrendingQueryService implements TrendingQueryServiceInterface
         $this->queryFactory         = $queryFactory;
         $this->request              = $request;
         $this->storeManager         = $storeManager;
+        $this->config               = $config;
         $this->string               = $string;
     }
 
@@ -173,14 +180,16 @@ class TrendingQueryService implements TrendingQueryServiceInterface
         $storeId      = $this->getStoreId();
         $aggregations = $this->getAggregations($maxSize);
         $searchQuery  = $this->getSearchQuery($queryText);
-        $boostedQuery = $this->getBoostedQuery($searchQuery);
+        if ($this->config->isTrendingEnabled()) {
+            $searchQuery = $this->getBoostedQuery($searchQuery);
+        }
 
         return $this->searchRequestBuilder->create(
             $storeId,
             'tracking_log_event',
             0,
             0,
-            $boostedQuery,
+            $searchQuery,
             [],
             [],
             [],
@@ -292,13 +301,20 @@ class TrendingQueryService implements TrendingQueryServiceInterface
      */
     private function getAggregations($maxSize)
     {
+        /*
+         * If trending search terms are to be picked, a function score is applied, thus the score/relevance is to be used
+         * in the aggregation.
+         * Otherwise, the raw popularity is the number of uses ie the documents (events) count.
+         */
+        $sortOrder = $this->config->isTrendingEnabled() ? BucketInterface::SORT_ORDER_RELEVANCE : BucketInterface::SORT_ORDER_COUNT;
+
         return [
             [
                 'type'      => BucketInterface::TYPE_TERM,
                 'field'     => 'page.search.query.sortable',
                 'name'      => 'search_query',
                 'size'      => (int) $maxSize,
-                'sortOrder' => BucketInterface::SORT_ORDER_RELEVANCE,
+                'sortOrder' => $sortOrder,
                 'metrics'   => [
                     [
                         'name'  => 'product_count',

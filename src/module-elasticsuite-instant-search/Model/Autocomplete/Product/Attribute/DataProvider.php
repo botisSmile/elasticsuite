@@ -6,8 +6,8 @@
  * versions in the future.
  *
  * @category  Smile
- * @package   Smile\ElasticsuiteCatalog
- * @author    Aurelien FOUCRET <aurelien.foucret@smile.fr>
+ * @package   Smile\ElasticsuiteInstantSearch
+ * @author    Romain Ruaud <romain.ruaud@smile.fr>
  * @copyright 2021 Smile
  * @license   Licensed to Smile-SA. All rights reserved. No warranty, explicit or implicit, provided.
  *            Unauthorized copying of this file, via any medium, is strictly prohibited.
@@ -26,8 +26,8 @@ use Smile\ElasticsuiteInstantSearch\Model\Autocomplete\Product\DataProvider as P
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  *
  * @category Smile
- * @package  Smile\ElasticsuiteCatalog
- * @author   Aurelien FOUCRET <aurelien.foucret@smile.fr>
+ * @package  Smile\ElasticsuiteInstantSearch
+ * @author   Romain Ruaud <romain.ruaud@smile.fr>
  */
 class DataProvider implements DataProviderInterface
 {
@@ -141,6 +141,7 @@ class DataProvider implements DataProviderInterface
      * @param string $field Facet field.
      *
      * @return array
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     private function getFacetedData($field)
     {

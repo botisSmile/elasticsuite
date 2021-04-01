@@ -18,12 +18,10 @@ use Magento\Framework\Search\SearchEngineInterface;
 use Magento\Search\Model\Autocomplete\DataProviderInterface;
 use Magento\Search\Model\Autocomplete\Item as TermItem;
 use Magento\Store\Model\StoreManagerInterface;
-use Smile\ElasticsuiteCatalog\Model\Autocomplete\Product\AttributeConfig;
 use Smile\ElasticsuiteCatalog\Helper\Autocomplete as ConfigurationHelper;
-use Smile\ElasticsuiteCore\Search\RequestInterface;
 use Smile\ElasticsuiteCore\Model\Autocomplete\Terms\DataProvider as TermDataProvider;
 use Smile\ElasticsuiteCore\Search\Request\Builder as RequestBuilder;
-use Magento\Search\Model\QueryFactory;
+use Smile\ElasticsuiteCore\Search\RequestInterface;
 use Smile\ElasticsuiteInstantSearch\Model\Search\QueryStringProvider;
 use Smile\ElasticsuiteInstantSearch\Model\Search\QueryStringProviderFactory;
 
@@ -33,7 +31,7 @@ use Smile\ElasticsuiteInstantSearch\Model\Search\QueryStringProviderFactory;
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  *
  * @category Smile
- * @package  Smile\ElasticsuiteCatalog
+ * @package  Smile\ElasticsuiteInstantSearch
  * @author   Romain Ruaud <romain.ruaud@smile.fr>
  */
 class DataProvider implements DataProviderInterface
@@ -164,7 +162,10 @@ class DataProvider implements DataProviderInterface
     }
 
     /**
+     * Get query response.
+     *
      * @return \Smile\ElasticsuiteCore\Search\Adapter\Elasticsuite\Response\QueryResponse
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getQueryResponse()
     {
@@ -180,6 +181,7 @@ class DataProvider implements DataProviderInterface
      * Prepare the search request before it will be executed.
      *
      * @return RequestInterface
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     private function prepareRequest()
     {
@@ -208,6 +210,8 @@ class DataProvider implements DataProviderInterface
     }
 
     /**
+     * Get current store ID.
+     *
      * @return int
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
