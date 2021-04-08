@@ -5,7 +5,7 @@
  * versions in the future.
  *
  * @category  Smile
- * @package   Smile\ElasticSuiteAbCampaign
+ * @package   Smile\ElasticsuiteAbCampaign
  * @author    Pierre Le maguer <pierre.lemaguer@smile.fr>
  * @copyright 2021 Smile
  * @license   Licensed to Smile-SA. All rights reserved. No warranty, explicit or implicit, provided.

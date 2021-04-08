@@ -24,7 +24,7 @@ use Magento\Framework\Controller\Result\RedirectFactory;
  * Bypass the routers_match procedure to dispatch directly to the proper controller.
  *
  * @category Smile
- * @package  Smile\ElasticSuiteInstantSearch
+ * @package  Smile\ElasticsuiteInstantSearch
  * @author   Romain Ruaud <romain.ruaud@smile.fr>
  */
 class DispatchPlugin
