@@ -590,6 +590,131 @@
                     </item>
                 </argument>
             </field>
+            <container name="optimizer">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="sortOrder" xsi:type="number">30</item>
+                    </item>
+                </argument>
+                <container name="button_set" template="ui/form/components/complex">
+                    <argument name="data" xsi:type="array">
+                        <item name="config" xsi:type="array">
+                            <item name="label" xsi:type="string" translate="true">Optimizer</item>
+                            <item name="content" xsi:type="string" translate="true">Define an optimizer to test during the campaign in this scenario by creating a new one or by creating from an existing optimizer.</item>
+                        </item>
+                    </argument>
+                    <button name="create" displayArea="actions-secondary" component="Smile_ElasticsuiteAbCampaign/js/form/components/campaign-button">
+                        <argument name="data" xsi:type="array">
+                            <item name="config" xsi:type="array">
+                                <item name="formElement" xsi:type="string">container</item>
+                                <item name="buttonClasses" xsi:type="string">add-new-optimizer-button</item>
+                                <item name="actions" xsi:type="array">
+                                    <!-- Remove optimizer listing from the modal -->
+                                    <item name="0" xsi:type="array">
+                                        <item name="targetName" xsi:type="string">smile_elasticsuite_ab_campaign_form.smile_elasticsuite_ab_campaign_form.create_optimizer.smile_elasticsuite_ab_campaign_optimizer_listing</item>
+                                        <item name="actionName" xsi:type="string">destroyInserted</item>
+                                    </item>
+                                    <!-- Remove optimizer form from the modal -->
+                                    <item name="1" xsi:type="array">
+                                        <item name="targetName" xsi:type="string">smile_elasticsuite_ab_campaign_form.smile_elasticsuite_ab_campaign_form.create_optimizer.create_optimizer_form</item>
+                                        <item name="actionName" xsi:type="string">destroyInserted</item>
+                                    </item>
+                                    <!-- Open the modal -->
+                                    <item name="2" xsi:type="array">
+                                        <item name="targetName" xsi:type="string">smile_elasticsuite_ab_campaign_form.smile_elasticsuite_ab_campaign_form.create_optimizer</item>
+                                        <item name="actionName" xsi:type="string">openModal</item>
+                                    </item>
+                                    <!-- Load the optimizer form in the modal -->
+                                    <item name="3" xsi:type="array">
+                                        <item name="targetName" xsi:type="string">smile_elasticsuite_ab_campaign_form.smile_elasticsuite_ab_campaign_form.create_optimizer.create_optimizer_form</item>
+                                        <item name="actionName" xsi:type="string">render</item>
+                                    </item>
+                                </item>
+                            </item>
+                        </argument>
+                        <settings>
+                            <title translate="true">Create new</title>
+                            <imports>
+                                <link name="campaignId">${ $.provider}:data.campaign_id</link>
+                                <link name="scenarioType">${ $.provider}:data.scenario_type_a</link>
+                                <link name="scenarioAOptimizerCount">${ $.provider}:data.scenario_a_optimizer_count</link>
+                            </imports>
+                        </settings>
+                    </button>
+                    <button name="create_from" displayArea="actions-secondary" component="Smile_ElasticsuiteAbCampaign/js/form/components/campaign-button">
+                        <argument name="data" xsi:type="array">
+                            <item name="config" xsi:type="array">
+                                <item name="formElement" xsi:type="string">container</item>
+                                <item name="buttonClasses" xsi:type="string">add-new-optimizer-from-button</item>
+                                <item name="actions" xsi:type="array">
+                                    <!-- Remove the optimizer listing from the modal -->
+                                    <item name="0" xsi:type="array">
+                                        <item name="targetName" xsi:type="string">smile_elasticsuite_ab_campaign_form.smile_elasticsuite_ab_campaign_form.create_optimizer.smile_elasticsuite_ab_campaign_optimizer_listing</item>
+                                        <item name="actionName" xsi:type="string">destroyInserted</item>
+                                    </item>
+                                    <!-- Remove the optimizer form from the modal -->
+                                    <item name="1" xsi:type="array">
+                                        <item name="targetName" xsi:type="string">smile_elasticsuite_ab_campaign_form.smile_elasticsuite_ab_campaign_form.create_optimizer.create_optimizer_form</item>
+                                        <item name="actionName" xsi:type="string">destroyInserted</item>
+                                    </item>
+                                    <!-- Open the modal -->
+                                    <item name="2" xsi:type="array">
+                                        <item name="targetName" xsi:type="string">smile_elasticsuite_ab_campaign_form.smile_elasticsuite_ab_campaign_form.create_optimizer</item>
+                                        <item name="actionName" xsi:type="string">openModal</item>
+                                    </item>
+                                    <!-- Display the optimizer listing component in the modal -->
+                                    <item name="3" xsi:type="array">
+                                        <item name="targetName" xsi:type="string">smile_elasticsuite_ab_campaign_form.smile_elasticsuite_ab_campaign_form.create_optimizer.smile_elasticsuite_ab_campaign_optimizer_listing</item>
+                                        <item name="actionName" xsi:type="string">setVisible</item>
+                                        <item name="params" xsi:type="array">
+                                            <item name="visible" xsi:type="boolean">true</item>
+                                        </item>
+                                    </item>
+                                    <!-- Load the optimizer listing in the modal -->
+                                    <item name="4" xsi:type="array">
+                                        <item name="targetName" xsi:type="string">smile_elasticsuite_ab_campaign_form.smile_elasticsuite_ab_campaign_form.create_optimizer.smile_elasticsuite_ab_campaign_optimizer_listing</item>
+                                        <item name="actionName" xsi:type="string">render</item>
+                                    </item>
+                                </item>
+                            </item>
+                        </argument>
+                        <settings>
+                            <title translate="true">Create from existing</title>
+                            <imports>
+                                <link name="campaignId">${ $.provider}:data.campaign_id</link>
+                                <link name="scenarioType">${ $.provider}:data.scenario_type_a</link>
+                                <link name="scenarioAOptimizerCount">${ $.provider}:data.scenario_a_optimizer_count</link>
+                            </imports>
+                        </settings>
+                    </button>
+                </container>
+                <!-- List of optimizers linked to the scenario A -->
+                <insertListing name="smile_elasticsuite_ab_campaign_scenario_a_optimizer_listing" component="Smile_ElasticsuiteAbCampaign/js/form/components/scenario/insert-listing">
+                    <settings>
+                        <dataLinks>
+                            <exports>false</exports>
+                            <imports>true</imports>
+                        </dataLinks>
+                        <externalProvider>smile_elasticsuite_ab_campaign_scenario_a_optimizer_listing.smile_elasticsuite_ab_campaign_scenario_a_optimizer_listing_data_source</externalProvider>
+                        <selectionsProvider>smile_elasticsuite_ab_campaign_scenario_a_optimizer_listing.smile_elasticsuite_ab_campaign_scenario_a_optimizer_listing.smile_elasticsuite_ab_campaign_scenario_a_optimizer_listing_columns.ids</selectionsProvider>
+                        <autoRender>true</autoRender>
+                        <dataScope>smile_elasticsuite_ab_campaign_scenario_a_optimizer_listing</dataScope>
+                        <ns>smile_elasticsuite_ab_campaign_scenario_a_optimizer_listing</ns>
+                        <exports>
+                            <link name="campaignId">${ $.externalProvider }:params.campaign_id</link>
+                            <link name="scenarioType">${ $.externalProvider }:params.scenario_type</link>
+                        </exports>
+                        <imports>
+                            <link name="campaignId">${ $.provider }:data.campaign_id</link>
+                            <link name="scenarioType">${ $.provider }:data.scenario_type_a</link>
+                            <link name="scenarioAOptimizerCount">${ $.provider}:data.scenario_a_optimizer_count</link>
+                        </imports>
+                        <links>
+                            <link name="value">${ $.provider }:${ $.ns }</link>
+                        </links>
+                    </settings>
+                </insertListing>
+            </container>
         </fieldset>
         <fieldset name="scenario_b">
             <argument name="data" xsi:type="array">
@@ -635,6 +760,194 @@
                     </item>
                 </argument>
             </field>
+            <container name="optimizer">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="sortOrder" xsi:type="number">30</item>
+                    </item>
+                </argument>
+                <container name="button_set" template="ui/form/components/complex">
+                    <argument name="data" xsi:type="array">
+                        <item name="config" xsi:type="array">
+                            <item name="label" xsi:type="string" translate="true">Optimizer</item>
+                            <item name="content" xsi:type="string" translate="true">Compare the previous scenario with this one by letting it empty or by adding a new optimizer.</item>
+                        </item>
+                    </argument>
+                    <button name="create" displayArea="actions-secondary" component="Smile_ElasticsuiteAbCampaign/js/form/components/campaign-button">
+                        <argument name="data" xsi:type="array">
+                            <item name="config" xsi:type="array">
+                                <item name="formElement" xsi:type="string">container</item>
+                                <item name="buttonClasses" xsi:type="string">add-new-optimizer-button</item>
+                                <item name="actions" xsi:type="array">
+                                    <!-- Remove optimizer listing from the modal -->
+                                    <item name="0" xsi:type="array">
+                                        <item name="targetName" xsi:type="string">smile_elasticsuite_ab_campaign_form.smile_elasticsuite_ab_campaign_form.create_optimizer.smile_elasticsuite_ab_campaign_optimizer_listing</item>
+                                        <item name="actionName" xsi:type="string">destroyInserted</item>
+                                    </item>
+                                    <!-- Remove optimizer form from the modal -->
+                                    <item name="1" xsi:type="array">
+                                        <item name="targetName" xsi:type="string">smile_elasticsuite_ab_campaign_form.smile_elasticsuite_ab_campaign_form.create_optimizer.create_optimizer_form</item>
+                                        <item name="actionName" xsi:type="string">destroyInserted</item>
+                                    </item>
+                                    <!-- Open the modal -->
+                                    <item name="2" xsi:type="array">
+                                        <item name="targetName" xsi:type="string">smile_elasticsuite_ab_campaign_form.smile_elasticsuite_ab_campaign_form.create_optimizer</item>
+                                        <item name="actionName" xsi:type="string">openModal</item>
+                                    </item>
+                                    <!-- Load the optimizer form in the modal -->
+                                    <item name="3" xsi:type="array">
+                                        <item name="targetName" xsi:type="string">smile_elasticsuite_ab_campaign_form.smile_elasticsuite_ab_campaign_form.create_optimizer.create_optimizer_form</item>
+                                        <item name="actionName" xsi:type="string">render</item>
+                                    </item>
+                                </item>
+                            </item>
+                        </argument>
+                        <settings>
+                            <title translate="true">Create new</title>
+                            <imports>
+                                <link name="campaignId">${ $.provider}:data.campaign_id</link>
+                                <link name="scenarioType">${ $.provider}:data.scenario_type_b</link>
+                                <link name="scenarioBOptimizerCount">${ $.provider}:data.scenario_b_optimizer_count</link>
+                            </imports>
+                        </settings>
+                    </button>
+                    <button name="create_from" displayArea="actions-secondary" component="Smile_ElasticsuiteAbCampaign/js/form/components/campaign-button">
+                        <argument name="data" xsi:type="array">
+                            <item name="config" xsi:type="array">
+                                <item name="formElement" xsi:type="string">container</item>
+                                <item name="buttonClasses" xsi:type="string">add-new-optimizer-from-button</item>
+                                <item name="actions" xsi:type="array">
+                                    <!-- Remove the optimizer listing from the modal -->
+                                    <item name="0" xsi:type="array">
+                                        <item name="targetName" xsi:type="string">smile_elasticsuite_ab_campaign_form.smile_elasticsuite_ab_campaign_form.create_optimizer.smile_elasticsuite_ab_campaign_optimizer_listing</item>
+                                        <item name="actionName" xsi:type="string">destroyInserted</item>
+                                    </item>
+                                    <!-- Remove the optimizer form from the modal -->
+                                    <item name="1" xsi:type="array">
+                                        <item name="targetName" xsi:type="string">smile_elasticsuite_ab_campaign_form.smile_elasticsuite_ab_campaign_form.create_optimizer.create_optimizer_form</item>
+                                        <item name="actionName" xsi:type="string">destroyInserted</item>
+                                    </item>
+                                    <!-- Open the modal -->
+                                    <item name="2" xsi:type="array">
+                                        <item name="targetName" xsi:type="string">smile_elasticsuite_ab_campaign_form.smile_elasticsuite_ab_campaign_form.create_optimizer</item>
+                                        <item name="actionName" xsi:type="string">openModal</item>
+                                    </item>
+                                    <!-- Display the optimizer listing component in the modal -->
+                                    <item name="3" xsi:type="array">
+                                        <item name="targetName" xsi:type="string">smile_elasticsuite_ab_campaign_form.smile_elasticsuite_ab_campaign_form.create_optimizer.smile_elasticsuite_ab_campaign_optimizer_listing</item>
+                                        <item name="actionName" xsi:type="string">setVisible</item>
+                                        <item name="params" xsi:type="array">
+                                            <item name="visible" xsi:type="boolean">true</item>
+                                        </item>
+                                    </item>
+                                    <!-- Load the optimizer listing in the modal -->
+                                    <item name="4" xsi:type="array">
+                                        <item name="targetName" xsi:type="string">smile_elasticsuite_ab_campaign_form.smile_elasticsuite_ab_campaign_form.create_optimizer.smile_elasticsuite_ab_campaign_optimizer_listing</item>
+                                        <item name="actionName" xsi:type="string">render</item>
+                                    </item>
+                                </item>
+                            </item>
+                        </argument>
+                        <settings>
+                            <title translate="true">Create from existing</title>
+                            <imports>
+                                <link name="campaignId">${ $.provider}:data.campaign_id</link>
+                                <link name="scenarioType">${ $.provider}:data.scenario_type_b</link>
+                                <link name="scenarioBOptimizerCount">${ $.provider}:data.scenario_b_optimizer_count</link>
+                            </imports>
+                        </settings>
+                    </button>
+                </container>
+                <!-- List of optimizers linked to the scenario B -->
+                <insertListing name="smile_elasticsuite_ab_campaign_scenario_b_optimizer_listing" component="Smile_ElasticsuiteAbCampaign/js/form/components/scenario/insert-listing">
+                    <settings>
+                        <dataLinks>
+                            <exports>false</exports>
+                            <imports>true</imports>
+                        </dataLinks>
+                        <externalProvider>smile_elasticsuite_ab_campaign_scenario_b_optimizer_listing.smile_elasticsuite_ab_campaign_scenario_b_optimizer_listing_data_source</externalProvider>
+                        <selectionsProvider>smile_elasticsuite_ab_campaign_scenario_b_optimizer_listing.smile_elasticsuite_ab_campaign_scenario_b_optimizer_listing.smile_elasticsuite_ab_campaign_scenario_b_optimizer_listing_columns.ids</selectionsProvider>
+                        <autoRender>true</autoRender>
+                        <dataScope>smile_elasticsuite_ab_campaign_scenario_b_optimizer_listing</dataScope>
+                        <ns>smile_elasticsuite_ab_campaign_scenario_b_optimizer_listing</ns>
+                        <exports>
+                            <link name="campaignId">${ $.externalProvider }:params.campaign_id</link>
+                            <link name="scenarioType">${ $.externalProvider }:params.scenario_type</link>
+                        </exports>
+                        <imports>
+                            <link name="campaignId">${ $.provider }:data.campaign_id</link>
+                            <link name="scenarioType">${ $.provider }:data.scenario_type_b</link>
+                            <link name="scenarioBOptimizerCount">${ $.provider}:data.scenario_b_optimizer_count</link>
+                        </imports>
+                    </settings>
+                </insertListing>
+            </container>
         </fieldset>
     </fieldset>
+
+    <!-- Modal displaying either the create optimizer form or the optimizer listing. -->
+    <modal name="create_optimizer">
+        <settings>
+            <options>
+                <option name="title" xsi:type="string" translate="true">Create optimizer</option>
+                <option name="type" xsi:type="string">slide</option>
+                <option name="responsive" xsi:type="boolean">true</option>
+                <option name="innerScroll" xsi:type="boolean">true</option>
+                <option name="autoOpen" xsi:type="boolean">false</option>
+            </options>
+        </settings>
+        <insertForm name="create_optimizer_form" component="Smile_ElasticsuiteAbCampaign/js/form/components/insert-form">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="optimizerScenarioAListingProvider" xsi:type="string">ns = smile_elasticsuite_ab_campaign_scenario_a_optimizer_listing, index = smile_elasticsuite_ab_campaign_scenario_a_optimizer_listing</item>
+                    <item name="optimizerScenarioBListingProvider" xsi:type="string">ns = smile_elasticsuite_ab_campaign_scenario_b_optimizer_listing, index = smile_elasticsuite_ab_campaign_scenario_b_optimizer_listing</item>
+                    <item name="optimizerModalProvider" xsi:type="string">${ $.parentName }</item>
+                </item>
+            </argument>
+            <settings>
+                <formSubmitType>ajax</formSubmitType>
+                <renderUrl path="mui/index/render_handle">
+                    <param name="handle">smile_elasticsuite_catalog_optimizer_optimizer_edit</param>
+                    <param name="buttons">1</param>
+                </renderUrl>
+                <loading>false</loading>
+                <toolbarContainer>${ $.parentName }</toolbarContainer>
+                <externalProvider>${ $.ns }.smile_elasticsuite_catalog_optimizer_form_data_source</externalProvider>
+                <dataScope>smile_elasticsuite_catalog_optimizer_form</dataScope>
+                <ns>smile_elasticsuite_catalog_optimizer_form</ns>
+                <dataLinks>
+                    <imports>false</imports>
+                    <exports>true</exports>
+                </dataLinks>
+                <imports>
+                    <link name="campaignId">${ $.provider }:data.campaign_id</link>
+                </imports>
+                <exports>
+                    <link name="campaignId">${ $.externalProvider }:data.campaign_id</link>
+                </exports>
+            </settings>
+        </insertForm>
+        <insertListing name="smile_elasticsuite_ab_campaign_optimizer_listing" component="Smile_ElasticsuiteAbCampaign/js/form/components/insert-listing">
+            <settings>
+                <dataLinks>
+                    <exports>false</exports>
+                    <imports>true</imports>
+                </dataLinks>
+                <externalProvider>smile_elasticsuite_ab_campaign_optimizer_listing.smile_elasticsuite_ab_campaign_optimizer_listing_data_source</externalProvider>
+                <selectionsProvider>smile_elasticsuite_ab_campaign_optimizer_listing.smile_elasticsuite_ab_campaign_optimizer_listing.smile_elasticsuite_ab_campaign_optimizer_listing_columns.ids</selectionsProvider>
+                <autoRender>true</autoRender>
+                <dataScope>smile_elasticsuite_ab_campaign_optimizer_listing</dataScope>
+                <ns>smile_elasticsuite_ab_campaign_optimizer_listing</ns>
+                <exports>
+                    <link name="campaignId">${ $.externalProvider }:params.campaign_id</link>
+                </exports>
+                <imports>
+                    <link name="campaignId">${ $.provider }:data.campaign_id</link>
+                </imports>
+                <links>
+                    <link name="value">${ $.provider }:${ $.ns }</link>
+                </links>
+            </settings>
+        </insertListing>
+    </modal>
 </form>

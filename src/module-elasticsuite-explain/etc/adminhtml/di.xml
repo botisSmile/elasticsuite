@@ -91,4 +91,21 @@
             </argument>
         </arguments>
     </type>
+
+    <!-- Virtual types for UI optimizer Data provider -->
+    <virtualType name="Smile\ElasticsuiteExplain\Ui\Component\Category\Optimizer\Listing\DataProvider" type="Smile\ElasticsuiteExplain\Ui\Component\Optimizer\Listing\DataProvider">
+        <arguments>
+            <argument name="collectionProcessors" xsi:type="array">
+                <item name="category" xsi:type="object">Smile\ElasticsuiteExplain\Ui\Component\Optimizer\Listing\FilterCollectionByCategory</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Smile\ElasticsuiteExplain\Ui\Component\Optimizer\Listing\Modifier\Pool" type="Magento\Ui\DataProvider\Modifier\Pool"/>
+
+    <type name="Smile\ElasticsuiteExplain\Ui\Component\Optimizer\Listing\DataProvider">
+        <arguments>
+            <argument name="modifierPool" xsi:type="object">Smile\ElasticsuiteExplain\Ui\Component\Optimizer\Listing\Modifier\Pool</argument>
+        </arguments>
+    </type>
 </config>

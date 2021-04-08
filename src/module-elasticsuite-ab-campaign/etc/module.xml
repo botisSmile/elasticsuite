@@ -21,6 +21,7 @@
     <module name="Smile_ElasticsuiteAbCampaign" setup_version="1.0.0">
         <sequence>
             <module name="Smile_ElasticsuiteCatalogOptimizer" />
+            <module name="Smile_ElasticsuiteExplain" />
         </sequence>
     </module>
 </config>

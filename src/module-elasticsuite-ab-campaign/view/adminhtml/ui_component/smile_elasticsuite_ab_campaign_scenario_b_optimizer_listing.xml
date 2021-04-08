@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Elasticsuite Optimizer listing UI Component.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Smile ElasticSuite to newer
+ * versions in the future.
+ *
+ * @category  Smile
+ * @package   Smile\ElasticsuiteAbCampaign
+ * @author    Pierre Le Maguer <pierre.lemaguer@smile.fr>
+ * @copyright 2021 Smile
+ * @license   Licensed to Smile-SA. All rights reserved. No warranty, explicit or implicit, provided.
+ *            Unauthorized copying of this file, via any medium, is strictly prohibited.
+ */
+-->
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">smile_elasticsuite_ab_campaign_scenario_b_optimizer_listing.smile_elasticsuite_ab_campaign_scenario_b_optimizer_listing</item>
+            <item name="deps" xsi:type="string">smile_elasticsuite_ab_campaign_scenario_b_optimizer_listing.smile_elasticsuite_ab_campaign_scenario_b_optimizer_listing_data_source</item>
+        </item>
+        <item name="spinner" xsi:type="string">smile_elasticsuite_ab_campaign_scenario_b_optimizer_listing_columns</item>
+    </argument>
+    <dataSource name="smile_elasticsuite_ab_campaign_scenario_b_optimizer_listing_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Smile\ElasticsuiteAbCampaign\Ui\Component\Campaign\Optimizer\Listing\DataProvider</argument>
+            <argument name="name" xsi:type="string">smile_elasticsuite_ab_campaign_scenario_b_optimizer_listing_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">optimizer_id</argument>
+            <argument name="requestFieldName" xsi:type="string">id</argument>
+            <argument name="collectionFactory" xsi:type="object">Smile\ElasticsuiteCatalogOptimizer\Model\ResourceModel\Optimizer\CollectionFactory</argument>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/provider</item>
+                    <item name="update_url" xsi:type="url" path="mui/index/render"/>
+                    <item name="storageConfig" xsi:type="array">
+                        <item name="indexField" xsi:type="string">optimizer_id</item>
+                    </item>
+                </item>
+            </argument>
+        </argument>
+    </dataSource>
+    <columns name="smile_elasticsuite_ab_campaign_scenario_b_optimizer_listing_columns">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="childDefaults" xsi:type="array">
+                    <item name="fieldAction" xsi:type="array">
+                        <item name="provider" xsi:type="string">smile_elasticsuite_ab_campaign_scenario_a_optimizer_listing.smile_elasticsuite_ab_campaign_scenario_a_optimizer_listing.smile_elasticsuite_ab_campaign_scenario_b_optimizer_listing_columns.actions</item>
+                        <item name="target" xsi:type="string">applyAction</item>
+                        <item name="params" xsi:type="array">
+                            <item name="0" xsi:type="string">edit</item>
+                            <item name="1" xsi:type="string">${ $.$data.rowIndex }</item>
+                        </item>
+                    </item>
+                </item>
+            </item>
+        </argument>
+        <column name="optimizer_id">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">textRange</item>
+                    <item name="add_field" xsi:type="boolean">true</item>
+                    <item name="sorting" xsi:type="string">asc</item>
+                    <item name="label" xsi:type="string" translate="true">ID</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+            </argument>
+        </column>
+        <column name="name">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="add_field" xsi:type="boolean">true</item>
+                    <item name="label" xsi:type="string" translate="true">Name</item>
+                    <item name="sortOrder" xsi:type="number">20</item>
+                </item>
+            </argument>
+        </column>
+        <column name="model">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="array">
+                    <item name="constant_score" xsi:type="array">
+                        <item name="value" xsi:type="string">constant_score</item>
+                        <item name="label" xsi:type="string" translate="true">Constant Score</item>
+                    </item>
+                    <item name="attribute_value" xsi:type="array">
+                        <item name="value" xsi:type="string">attribute_value</item>
+                        <item name="label" xsi:type="string" translate="true">Based on attribute value</item>
+                    </item>
+                </item>
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">select</item>
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/select</item>
+                    <item name="dataType" xsi:type="string">select</item>
+                    <item name="add_field" xsi:type="boolean">true</item>
+                    <item name="label" xsi:type="string" translate="true">Model</item>
+                    <item name="sortOrder" xsi:type="number">30</item>
+                </item>
+            </argument>
+        </column>
+        <column name="boost">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="add_field" xsi:type="boolean">false</item>
+                    <item name="label" xsi:type="string" translate="true">Boost</item>
+                    <item name="sortOrder" xsi:type="number">40</item>
+                </item>
+            </argument>
+        </column>
+        <column name="rule">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="bodyTmpl" xsi:type="string">ui/grid/cells/html</item>
+                    <item name="add_field" xsi:type="boolean">false</item>
+                    <item name="label" xsi:type="string" translate="true">Rule</item>
+                    <item name="sortOrder" xsi:type="number">50</item>
+                </item>
+            </argument>
+        </column>
+        <actionsColumn name="actions" class="Smile\ElasticsuiteAbCampaign\Ui\Component\Listing\Column\CampaignOptimizerActions" component="Smile_ElasticsuiteAbCampaign/js/grid/columns/campaign/optimizer-actions">
+            <settings>
+                <indexField>optimizer_id</indexField>
+            </settings>
+        </actionsColumn>
+    </columns>
+</listing>

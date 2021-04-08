@@ -47,6 +47,19 @@
             </argument>
         </arguments>
     </virtualType>
+
+    <!-- Optimizer Form Modifier: Adapt the native optimizer form in the campaign page -->
+    <virtualType name="Smile\ElasticsuiteCatalogOptimizer\Ui\Component\Optimizer\Form\Modifier\Pool" type="Magento\Ui\DataProvider\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="campaign" xsi:type="array">
+                    <item name="class" xsi:type="string">Smile\ElasticsuiteAbCampaign\Ui\Component\Optimizer\Form\Modifier\Campaign</item>
+                    <item name="sortOrder" xsi:type="number">70</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+
     <type name="Smile\ElasticsuiteAbCampaign\Ui\Component\Campaign\Form\DataProvider">
         <arguments>
             <argument name="modifierPool" xsi:type="object">Smile\ElasticsuiteAbCampaign\Ui\Component\Campaign\Form\Modifier\Pool</argument>
@@ -59,7 +72,7 @@
     </type>
 
     <!-- Add campaign data and filter to optimizer ui collection -->
-    <type name="Smile\ElasticsuiteCatalogOptimizer\Ui\Component\Optimizer\Listing\DataProvider">
+    <type name="Smile\ElasticsuiteExplain\Ui\Component\Optimizer\Listing\DataProvider">
         <arguments>
             <argument name="addFieldStrategies" xsi:type="array">
                 <item name="campaign_name" xsi:type="object">Smile\ElasticsuiteAbCampaign\Ui\DataProvider\Optimizer\AddCampaignDataToCollection</item>
@@ -71,4 +84,37 @@
             </argument>
         </arguments>
     </type>
+
+    <!-- Replace optimizer buttons -->
+    <type name="Smile\ElasticsuiteCatalogOptimizer\Block\Adminhtml\Optimizer\Edit\Button\AbstractButton">
+        <plugin name="replace_optimizer_buttons" type="Smile\ElasticsuiteAbCampaign\Plugin\Adminhtml\ReplaceOptimizerButtonPlugin"/>
+    </type>
+
+    <!-- Plugin to the rule condition block in optimizer form in campaign page -->
+    <type name="Smile\ElasticsuiteCatalogOptimizer\Block\Adminhtml\Optimizer\RuleCondition">
+        <plugin name="rule_condition_block_plugin" type="Smile\ElasticsuiteAbCampaign\Plugin\Adminhtml\OptimizerRuleConditionBlockPlugin"/>
+    </type>
+
+    <!-- Buttons mapping to replace native optimizer buttons for buttons adapted to the campaign page -->
+    <type name="Smile\ElasticsuiteAbCampaign\Plugin\Adminhtml\ReplaceOptimizerButtonPlugin">
+        <arguments>
+            <argument name="buttonMaps" xsi:type="array">
+                <item name="Smile\ElasticsuiteCatalogOptimizer\Block\Adminhtml\Optimizer\Edit\Button\Delete" xsi:type="boolean">false</item>
+                <item name="Smile\ElasticsuiteCatalogOptimizer\Block\Adminhtml\Optimizer\Edit\Button\Back" xsi:type="object">Smile\ElasticsuiteAbCampaign\Block\Adminhtml\Campaign\Edit\Button\Optimizer\Cancel</item>
+                <item name="Smile\ElasticsuiteCatalogOptimizer\Block\Adminhtml\Optimizer\Edit\Button\SaveAndContinue" xsi:type="boolean">false</item>
+            </argument>
+            <argument name="createFromButtonsMaps" xsi:type="array">
+                <item name="Smile\ElasticsuiteCatalogOptimizer\Block\Adminhtml\Optimizer\Edit\Button\Back" xsi:type="object">Smile\ElasticsuiteAbCampaign\Block\Adminhtml\Campaign\Edit\Button\Optimizer\CreateFrom\Cancel</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Virtual types for UI optimizer Data provider -->
+    <virtualType name="Smile\ElasticsuiteAbCampaign\Ui\Component\Campaign\Optimizer\Listing\DataProvider" type="Smile\ElasticsuiteExplain\Ui\Component\Optimizer\Listing\DataProvider">
+        <arguments>
+            <argument name="collectionProcessors" xsi:type="array">
+                <item name="category" xsi:type="object">Smile\ElasticsuiteAbCampaign\Ui\Component\Optimizer\Listing\FilterCollectionByCampaign</item>
+            </argument>
+        </arguments>
+    </virtualType>
 </config>

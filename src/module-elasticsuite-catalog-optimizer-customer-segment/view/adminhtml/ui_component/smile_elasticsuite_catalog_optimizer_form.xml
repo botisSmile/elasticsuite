@@ -24,9 +24,6 @@
             <item name="config" xsi:type="array">
                 <item name="label" xsi:type="string" translate="true">Customer Segments</item>
                 <item name="sortOrder" xsi:type="number">70</item>
-                <item name="imports" xsi:type="array">
-                    <item name="visible" xsi:type="string">${ $.provider }:data.customer_segment.enabled</item>
-                </item>
             </item>
         </argument>
         <field name="customer_segment_apply_to">
