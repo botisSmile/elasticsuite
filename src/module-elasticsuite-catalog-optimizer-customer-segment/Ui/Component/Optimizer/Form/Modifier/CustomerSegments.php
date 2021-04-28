@@ -99,7 +99,6 @@ class CustomerSegments implements \Magento\Ui\DataProvider\Modifier\ModifierInte
             $containerData = [
                 'apply_to'      => (int) !empty($segmentsData),
                 'segment_ids'   => $segmentsData,
-                'enabled'       => $this->segmentHelper->isEnabled(),
             ];
 
             $data[$optimizer->getId()]['customer_segment'] = $containerData;
@@ -111,9 +110,14 @@ class CustomerSegments implements \Magento\Ui\DataProvider\Modifier\ModifierInte
     /**
      * {@inheritdoc}
      */
-    public function modifyMeta(array $data)
+    public function modifyMeta(array $meta)
     {
-        return $data;
+        if (!$this->segmentHelper->isEnabled()) {
+            $meta['customer_segment']['arguments']['data']['config']['disabled'] = true;
+            $meta['customer_segment']['arguments']['data']['config']['visible'] = false;
+        }
+
+        return $meta;
     }
 
     /**

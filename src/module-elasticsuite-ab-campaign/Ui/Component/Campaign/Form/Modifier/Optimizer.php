@@ -16,8 +16,7 @@
 namespace Smile\ElasticsuiteAbCampaign\Ui\Component\Campaign\Form\Modifier;
 
 use Magento\Ui\DataProvider\Modifier\ModifierInterface;
-use Smile\ElasticsuiteAbCampaign\Api\CampaignManagerInterface;
-use Smile\ElasticsuiteAbCampaign\Block\Adminhtml\Campaign\Edit\Button\Reopen;
+use Smile\ElasticsuiteAbCampaign\Api\Data\CampaignOptimizerInterface;
 use Smile\ElasticsuiteAbCampaign\Model\Context\Adminhtml\Campaign as CampaignContext;
 
 /**
@@ -50,6 +49,15 @@ class Optimizer implements ModifierInterface
      */
     public function modifyData(array $data)
     {
+        if ($this->campaignContext->getCurrentCampaign()) {
+            $currentCampaign = $this->campaignContext->getCurrentCampaign();
+            $campaignId      = $currentCampaign->getId();
+            $data[$campaignId]['scenario_type_a']            = CampaignOptimizerInterface::SCENARIO_TYPE_A;
+            $data[$campaignId]['scenario_type_b']            = CampaignOptimizerInterface::SCENARIO_TYPE_B;
+            $data[$campaignId]['scenario_b_optimizer_count'] = count($currentCampaign->getScenarioBOptimizerIds());
+            $data[$campaignId]['scenario_a_optimizer_count'] = count($currentCampaign->getScenarioAOptimizerIds());
+        }
+
         return $data;
     }
 
@@ -61,18 +69,29 @@ class Optimizer implements ModifierInterface
         /**
          * Only enable the scenario fieldset in edit page.
          * The disable should be set on scenario a and b fieldsets too to avoid issue with required field
-         * in the create campagn page.
+         * in the create campaign page.
          */
-        $meta['scenario']['arguments']['data']['config']['disabled'] = true;
-        $meta['scenario']['arguments']['data']['config']['visible'] = false;
-        $meta['scenario']['children']['scenario_a']['arguments']['data']['config']['disabled'] = true;
-        $meta['scenario']['children']['scenario_b']['arguments']['data']['config']['disabled'] = true;
+        $meta = $this->setScenarioFieldsetDisplay($meta, false);
         if ($this->campaignContext->getCurrentCampaign()) {
-            $meta['scenario']['arguments']['data']['config']['disabled'] = false;
-            $meta['scenario']['arguments']['data']['config']['visible'] = true;
-            $meta['scenario']['children']['scenario_a']['arguments']['data']['config']['disabled'] = false;
-            $meta['scenario']['children']['scenario_b']['arguments']['data']['config']['disabled'] = false;
+            $meta = $this->setScenarioFieldsetDisplay($meta, true);
         }
+
+        return $meta;
+    }
+
+    /**
+     * Set scenario fieldset display.
+     *
+     * @param array $meta    Meta
+     * @param bool  $display Should display scenario fieldset ?
+     * @return array
+     */
+    private function setScenarioFieldsetDisplay(array $meta, bool $display): array
+    {
+        $meta['scenario']['arguments']['data']['config']['disabled']                           = !$display;
+        $meta['scenario']['arguments']['data']['config']['visible']                            = $display;
+        $meta['scenario']['children']['scenario_a']['arguments']['data']['config']['disabled'] = !$display;
+        $meta['scenario']['children']['scenario_b']['arguments']['data']['config']['disabled'] = !$display;
 
         return $meta;
     }

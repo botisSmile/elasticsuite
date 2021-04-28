@@ -36,10 +36,12 @@ class Optimizer extends AbstractDb
     /**
      * Retrieve optimizer ids by campaign.
      *
-     * @param int $campaignId The campaign id
+     * @param int         $campaignId   The campaign id
+     * @param string|null $scenarioType Scenario type
      * @return array
+     * @throws LocalizedException
      */
-    public function getOptimizerIdsByCampaign(int $campaignId)
+    public function getOptimizerIdsByCampaign(int $campaignId, string $scenarioType = null): array
     {
         $select = $this->getConnection()
             ->select()
@@ -56,6 +58,13 @@ class Optimizer extends AbstractDb
             ))
             ->group(CampaignOptimizerInterface::SCENARIO_TYPE)
         ;
+
+        if ($scenarioType) {
+            $select->where($this->getConnection()->quoteInto(
+                CampaignOptimizerInterface::SCENARIO_TYPE . " = ?",
+                $scenarioType
+            ));
+        }
 
         return $this->getConnection()->fetchPairs($select);
     }
@@ -172,6 +181,31 @@ class Optimizer extends AbstractDb
         }
 
         return $optimizerCollection;
+    }
+
+    /**
+     * Save campaign optimizer link.
+     *
+     * @param int    $campaignId   Campaign id
+     * @param int    $optimizerId  Optimizer id
+     * @param string $scenarioType Scenario type
+     * @return void
+     */
+    public function saveCampaignOptimizerLink(int $campaignId, int $optimizerId, string $scenarioType): void
+    {
+        $this->getConnection()->insertOnDuplicate(
+            $this->getConnection()->getTableName(CampaignOptimizerInterface::TABLE_NAME),
+            [
+                CampaignOptimizerInterface::CAMPAIGN_ID => $campaignId,
+                CampaignOptimizerInterface::OPTIMIZER_ID => $optimizerId,
+                CampaignOptimizerInterface::SCENARIO_TYPE => $scenarioType,
+            ],
+            [
+                CampaignOptimizerInterface::CAMPAIGN_ID,
+                CampaignOptimizerInterface::OPTIMIZER_ID,
+                CampaignOptimizerInterface::SCENARIO_TYPE,
+            ]
+        );
     }
 
     /**

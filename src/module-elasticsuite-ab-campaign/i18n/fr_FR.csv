@@ -44,3 +44,8 @@
 "You can edit an optimizer linked to a running campaign only on the campaign page.","Vous ne pouvez modifier un optimiseur lié à une campagne seulement sur la page d'édition de la campagne."
 "Campaign Status","Statut de la campagne"
 "Campaign Name","Nom de la campagne"
+"Define an optimizer to test during the campaign in this scenario by creating a new one or by creating from an existing optimizer.","Définissez un optimiseur à tester durant la compagne sur ce scénario en en créant un nouveau ou en en créant à partir d'un optimiseur existant."
+"Compare the previous scenario with this one by letting it empty or by adding a new optimizer.","Comparez le scénario précédent avec celui-ci en le laissant vide ou en lui ajoutant un nouveau optimiseur."
+"Create new","Nouveau"
+"Create from existing","Créer à partir de"
+"Choose","Choisir"

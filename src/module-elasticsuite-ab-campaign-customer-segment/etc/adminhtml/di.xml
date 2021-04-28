@@ -18,12 +18,25 @@
  */
  -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- Modifier pool for campaign -->
     <virtualType name="Smile\ElasticsuiteAbCampaign\Ui\Component\Campaign\Form\Modifier\Pool" type="Magento\Ui\DataProvider\Modifier\Pool">
         <arguments>
             <argument name="modifiers" xsi:type="array">
                 <item name="customer_segment" xsi:type="array">
                     <item name="class" xsi:type="string">Smile\ElasticsuiteAbCampaignCustomerSegment\Ui\Component\Campaign\Form\Modifier\CustomerSegments</item>
                     <item name="sortOrder" xsi:type="number">40</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Modifier pool used to edit optimizer form in campaign page -->
+    <virtualType name="Smile\ElasticsuiteCatalogOptimizer\Ui\Component\Optimizer\Form\Modifier\Pool" type="Magento\Ui\DataProvider\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="campaign_customer_segment" xsi:type="array">
+                    <item name="class" xsi:type="string">Smile\ElasticsuiteAbCampaignCustomerSegment\Ui\Component\Optimizer\Form\Modifier\Campaign</item>
+                    <item name="sortOrder" xsi:type="number">80</item>
                 </item>
             </argument>
         </arguments>

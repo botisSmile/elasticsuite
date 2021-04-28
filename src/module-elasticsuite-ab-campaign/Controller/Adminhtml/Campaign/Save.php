@@ -110,7 +110,7 @@ class Save extends CampaignController
             $data = $this->formatAndCompleteData($data);
 
             try {
-                $model->setData($data);
+                $model->addData($data);
                 $this->campaignValidator->validateData($model);
                 $this->campaignRepository->save($model);
                 $this->messageManager->addSuccessMessage(__('You saved the campaign %1.', $model->getName()));
@@ -175,8 +175,6 @@ class Save extends CampaignController
 
         $result['start_date'] = isset($data['start_date']) ? $this->dateFilter->filter($data['start_date']) : null;
         $result['end_date'] = isset($data['end_date']) ? $this->dateFilter->filter($data['end_date']) : null;
-        $result['scenario_a_optimizer_ids'] = $data['scenario_a_optimizer_ids'] ?? [];
-        $result['scenario_b_optimizer_ids'] = $data['scenario_b_optimizer_ids'] ?? [];
 
         return $result;
     }

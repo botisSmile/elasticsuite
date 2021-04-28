@@ -14,29 +14,25 @@
  *            Unauthorized copying of this file, via any medium, is strictly prohibited.
  */
 
-namespace Smile\ElasticsuiteExplain\Ui\Component\Category\Optimizer\Listing;
+namespace Smile\ElasticsuiteExplain\Ui\Component\Optimizer\Listing;
 
 use Magento\Catalog\Api\CategoryRepositoryInterface;
 use Magento\Catalog\Api\Data\CategoryInterface;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Ui\DataProvider\AddFieldToCollectionInterface;
-use Magento\Ui\DataProvider\AddFilterToCollectionInterface;
-use Smile\ElasticsuiteCatalogOptimizer\Model\Optimizer;
 use Smile\ElasticsuiteCatalogOptimizer\Model\Optimizer\Category\OptimizerFilter;
+use Smile\ElasticsuiteCatalogOptimizer\Model\ResourceModel\Optimizer\Collection as OptimizerCollection;
 use Smile\ElasticsuiteCatalogOptimizer\Model\ResourceModel\Optimizer\CollectionFactory;
-use Magento\Ui\DataProvider\AbstractDataProvider as BaseDataProvider;
 use Smile\ElasticsuiteCore\Api\Search\ContextInterface;
-use Smile\ElasticsuiteExplain\Model\Renderer\Optimizer as OptimizerRenderer;
 
 /**
- * Optimizer listing data provider.
+ * Filter optimizer collection by category processor.
  *
  * @category Smile
  * @package  Smile\ElasticsuiteExplain
  * @author   Pierre Le Maguer <pierre.lemaguer@smile.fr>
  */
-class DataProvider extends BaseDataProvider
+class FilterCollectionByCategory implements OptimizerCollectionProcessorInterface
 {
     /**
      * @var RequestInterface
@@ -59,84 +55,34 @@ class DataProvider extends BaseDataProvider
     private $optimizerFilter;
 
     /**
-     * @var OptimizerRenderer
-     */
-    private $optimizerRenderer;
-
-    /**
      * DataProvider Constructor.
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      *
-     * @param string                      $name               Component name
-     * @param string                      $primaryFieldName   Primary field Name
-     * @param string                      $requestFieldName   Request field name
-     * @param CollectionFactory           $collectionFactory  The collection factory
      * @param RequestInterface            $request            Request
      * @param CategoryRepositoryInterface $categoryRepository Category repository
      * @param ContextInterface            $searchContext      Search context
      * @param OptimizerFilter             $optimizerFilter    Optimizer filter
-     * @param OptimizerRenderer           $optimizerRenderer  Optimizer Renderer
-     * @param array                       $meta               Component Meta
-     * @param array                       $data               Component extra data
      */
     public function __construct(
-        $name,
-        $primaryFieldName,
-        $requestFieldName,
-        $collectionFactory,
         RequestInterface $request,
         CategoryRepositoryInterface $categoryRepository,
         ContextInterface $searchContext,
-        OptimizerFilter $optimizerFilter,
-        OptimizerRenderer $optimizerRenderer,
-        array $meta = [],
-        array $data = []
+        OptimizerFilter $optimizerFilter
     ) {
-        parent::__construct(
-            $name,
-            $primaryFieldName,
-            $requestFieldName,
-            $meta,
-            $data
-        );
-        $this->collection         = $collectionFactory->create();
-        $this->request            = $request;
-        $this->optimizerFilter    = $optimizerFilter;
-        $this->categoryRepository = $categoryRepository;
-        $this->searchContext      = $searchContext;
-        $this->optimizerRenderer  = $optimizerRenderer;
+        $this->request              = $request;
+        $this->optimizerFilter      = $optimizerFilter;
+        $this->categoryRepository   = $categoryRepository;
+        $this->searchContext        = $searchContext;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getData()
+    public function process(OptimizerCollection $collection)
     {
         $categoryId = (int) $this->request->getParam('category_id');
-        if (!$categoryId) {
-            return parent::getData();
+        if ($categoryId) {
+            $collection->addFieldToFilter('optimizer_id', ['in' => $this->getOptimizerIds($categoryId)]);
         }
-
-        // Display in the list only optimizers potentially applied for a category.
-        if (!$this->getCollection()->isLoaded()) {
-            $this->getCollection()
-                ->addFieldToSelect(['config', 'rule_condition'])
-                ->addFieldToFilter('optimizer_id', ['in' => $this->getOptimizerIds($categoryId)]);
-        }
-
-        $itemsData = [];
-        /** @var Optimizer $optimizer */
-        foreach ($this->getCollection()->getItems() as $optimizer) {
-            $itemsData[] = array_merge(
-                $optimizer->toArray(),
-                [
-                    'boost' => $this->optimizerRenderer->renderBoost($optimizer),
-                    'rule'  => $this->optimizerRenderer->renderRuleConditions($optimizer),
-                ]
-            );
-        }
-
-        return ['totalRecords' => count($itemsData), 'items' => $itemsData];
     }
 
     /**

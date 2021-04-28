@@ -44,3 +44,8 @@
 "You can edit an optimizer linked to a running campaign only on the campaign page.","You can edit an optimizer linked to a running campaign only on the campaign page."
 "Campaign Status","Campaign Status"
 "Campaign Name","Campaign Name"
+"Define an optimizer to test during the campaign in this scenario by creating a new one or by creating from an existing optimizer.","Define an optimizer to test during the campaign in this scenario by creating a new one or by creating from an existing optimizer."
+"Compare the previous scenario with this one by letting it empty or by adding a new optimizer.","Compare the previous scenario with this one by letting it empty or by adding a new optimizer."
+"Create new","Create new"
+"Create from existing","Create from existing"
+"Choose","Choose"
