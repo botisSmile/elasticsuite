@@ -54,7 +54,7 @@
             <argument name="modifiers" xsi:type="array">
                 <item name="campaign" xsi:type="array">
                     <item name="class" xsi:type="string">Smile\ElasticsuiteAbCampaign\Ui\Component\Optimizer\Form\Modifier\Campaign</item>
-                    <item name="sortOrder" xsi:type="number">70</item>
+                    <item name="sortOrder" xsi:type="number">15</item>
                 </item>
             </argument>
         </arguments>
@@ -63,25 +63,6 @@
     <type name="Smile\ElasticsuiteAbCampaign\Ui\Component\Campaign\Form\DataProvider">
         <arguments>
             <argument name="modifierPool" xsi:type="object">Smile\ElasticsuiteAbCampaign\Ui\Component\Campaign\Form\Modifier\Pool</argument>
-        </arguments>
-    </type>
-
-    <!-- Restrain optimizer actions -->
-    <type name="Smile\ElasticsuiteCatalogOptimizer\Ui\Component\Listing\Column\OptimizerActions">
-        <plugin name="restrain_optimizer_actions" type="Smile\ElasticsuiteAbCampaign\Plugin\Adminhtml\OptimizerUiListingActionsPlugin"/>
-    </type>
-
-    <!-- Add campaign data and filter to optimizer ui collection -->
-    <type name="Smile\ElasticsuiteExplain\Ui\Component\Optimizer\Listing\DataProvider">
-        <arguments>
-            <argument name="addFieldStrategies" xsi:type="array">
-                <item name="campaign_name" xsi:type="object">Smile\ElasticsuiteAbCampaign\Ui\DataProvider\Optimizer\AddCampaignDataToCollection</item>
-                <item name="campaign_status" xsi:type="object">Smile\ElasticsuiteAbCampaign\Ui\DataProvider\Optimizer\AddCampaignDataToCollection</item>
-            </argument>
-            <argument name="addFilterStrategies" xsi:type="array">
-                <item name="campaign_name" xsi:type="object">Smile\ElasticsuiteAbCampaign\Ui\DataProvider\Optimizer\AddCampaignFilterToCollection</item>
-                <item name="campaign_status" xsi:type="object">Smile\ElasticsuiteAbCampaign\Ui\DataProvider\Optimizer\AddCampaignFilterToCollection</item>
-            </argument>
         </arguments>
     </type>
 
@@ -110,10 +91,17 @@
     </type>
 
     <!-- Virtual types for UI optimizer Data provider -->
-    <virtualType name="Smile\ElasticsuiteAbCampaign\Ui\Component\Campaign\Optimizer\Listing\DataProvider" type="Smile\ElasticsuiteExplain\Ui\Component\Optimizer\Listing\DataProvider">
+    <virtualType name="OptimizersByCampaignDataProvider" type="Smile\ElasticsuiteExplain\Ui\Component\Optimizer\Listing\DataProvider">
         <arguments>
             <argument name="collectionProcessors" xsi:type="array">
-                <item name="category" xsi:type="object">Smile\ElasticsuiteAbCampaign\Ui\Component\Optimizer\Listing\FilterCollectionByCampaign</item>
+                <item name="campaign" xsi:type="object">Smile\ElasticsuiteAbCampaign\Ui\Component\Optimizer\Listing\FilterCollectionByCampaign</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="OptimizerWithoutCampaignDataProvider" type="Smile\ElasticsuiteExplain\Ui\Component\Optimizer\Listing\DataProvider">
+        <arguments>
+            <argument name="collectionProcessors" xsi:type="array">
+                <item name="campaign" xsi:type="object">Smile\ElasticsuiteAbCampaign\Ui\Component\Optimizer\Listing\FilterCollectionNoCampaign</item>
             </argument>
         </arguments>
     </virtualType>

@@ -49,3 +49,8 @@
 "Create new","Create new"
 "Create from existing","Create from existing"
 "Choose","Choose"
+"The scenario does not exist.","The scenario does not exist."
+"There is no optimizers to publish.","There is no optimizers to publish."
+"An error occurs when trying to publish optimizers.","An error occurs when trying to publish optimizers."
+"You published well optimizers from scenario %1","You published well optimizers from scenario %1"
+"Edit and publish","Edit and publish"

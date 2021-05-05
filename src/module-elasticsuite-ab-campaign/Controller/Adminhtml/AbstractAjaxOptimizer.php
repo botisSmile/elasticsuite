@@ -20,6 +20,7 @@ use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Smile\ElasticsuiteAbCampaign\Api\Campaign\OptimizerManagerInterface;
 use Smile\ElasticsuiteAbCampaign\Api\Data\CampaignOptimizerInterface;
 use Smile\ElasticsuiteAbCampaign\Model\ResourceModel\Campaign\Optimizer as CampaignOptimizerResource;
 use Smile\ElasticsuiteCatalogOptimizer\Api\Data\OptimizerInterface;
@@ -56,6 +57,16 @@ abstract class AbstractAjaxOptimizer extends Action
     protected $campaignOptimizerResource;
 
     /**
+     * @var OptimizerManagerInterface
+     */
+    protected $optimizerManager;
+
+    /**
+     * @var OptimizerInterface
+     */
+    protected $optimizer;
+
+    /**
      * AbstractAjaxOptimizer constructor
      *
      * @param Context                      $context                   Context
@@ -63,19 +74,22 @@ abstract class AbstractAjaxOptimizer extends Action
      * @param OptimizerInterfaceFactory    $optimizerFactory          Optimizer factory
      * @param CampaignOptimizerResource    $campaignOptimizerResource Campaign optimizer resource
      * @param JsonFactory                  $resultJsonFactory         Result json factory
+     * @param OptimizerManagerInterface    $optimizerManager          Optimizer manager
      */
     public function __construct(
         Context $context,
         OptimizerRepositoryInterface $optimizerRepository,
         OptimizerInterfaceFactory $optimizerFactory,
         CampaignOptimizerResource $campaignOptimizerResource,
-        JsonFactory $resultJsonFactory
+        JsonFactory $resultJsonFactory,
+        OptimizerManagerInterface $optimizerManager
     ) {
         parent::__construct($context);
         $this->optimizerRepository       = $optimizerRepository;
         $this->optimizerFactory          = $optimizerFactory;
         $this->campaignOptimizerResource = $campaignOptimizerResource;
         $this->resultJsonFactory         = $resultJsonFactory;
+        $this->optimizerManager          = $optimizerManager;
     }
 
     /**
@@ -87,19 +101,25 @@ abstract class AbstractAjaxOptimizer extends Action
      * @param string $scenarioType  Scenario type
      * @return Json
      */
-    protected function sendJsonResult(bool $error, array $errorMessages, int $optimizerId, string $scenarioType): Json
-    {
+    protected function sendJsonResult(
+        bool $error,
+        array $errorMessages,
+        int $optimizerId,
+        string $scenarioType
+    ): Json {
         $resultJson = $this->resultJsonFactory->create();
-
-        return $resultJson->setData([
+        $data = [
             'error' => $error,
             'messages' => $errorMessages,
             'data' => [
-                'optimizer_id' => $optimizerId,
-                'scenario_type' => $scenarioType,
+                'optimizer_id'              => $optimizerId,
+                'scenario_type'             => $scenarioType,
                 'optimizer_ids_in_campaign' => $this->getOptimizerIdsInCampaign($scenarioType),
             ],
-        ]);
+        ];
+        $data = array_merge_recursive($data, $this->getAdditionalDataForJsonResult());
+
+        return $resultJson->setData($data);
     }
 
     /**
@@ -109,24 +129,27 @@ abstract class AbstractAjaxOptimizer extends Action
      */
     protected function getOptimizer(): ?OptimizerInterface
     {
-        // Retrieve the optimizer identifier/id.
-        $identifier = (int) $this->getRequest()->getParam(OptimizerInterface::OPTIMIZER_ID);
-        $identifier = $identifier ?: (int) $this->getRequest()->getParam('id');
+        if ($this->optimizer === null) {
+            // Retrieve the optimizer identifier/id.
+            $identifier = (int) $this->getRequest()->getParam(OptimizerInterface::OPTIMIZER_ID);
+            $identifier = $identifier ?: (int) $this->getRequest()->getParam('id');
 
-        // Create from parameter to indicate if the ajax request if from the create optimizer from form.
-        $createFrom = (int) $this->getRequest()->getParam('create_from');
+            // Create new optimizer parameter to indicate if we will update or create the optimizer.
+            $createNewOptimizer = (int) $this->getRequest()->getParam('create_new_optimizer');
 
-        $model = $this->optimizerFactory->create();
-        // If the request comes from the create optimizer from form, we need to create a new model.
-        if ($identifier && !$createFrom) {
-            try {
-                $model = $this->optimizerRepository->getById($identifier);
-            } catch (NoSuchEntityException $noSuchEntityException) {
-                $model = null;
+            $model = $this->optimizerFactory->create();
+            if ($identifier && !$createNewOptimizer) {
+                try {
+                    $model = $this->optimizerRepository->getById($identifier);
+                } catch (NoSuchEntityException $noSuchEntityException) {
+                    $model = null;
+                }
             }
+
+            $this->optimizer = $model;
         }
 
-        return $model;
+        return $this->optimizer;
     }
 
     /**
@@ -151,6 +174,16 @@ abstract class AbstractAjaxOptimizer extends Action
     protected function _isAllowed()
     {
         return $this->_authorization->isAllowed('Smile_ElasticsuiteAbCampaign::manage');
+    }
+
+    /**
+     * Get additional data for json result.
+     *
+     * @return array
+     */
+    protected function getAdditionalDataForJsonResult(): array
+    {
+        return [];
     }
 
     /**

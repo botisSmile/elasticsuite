@@ -37,7 +37,6 @@ class Edit extends CampaignController
         $resultPage = $this->resultPageFactory->create();
 
         $campaignId = (int) $this->getRequest()->getParam('id');
-        $campaign = null;
 
         try {
             $campaign = $this->campaignRepository->getById($campaignId);

@@ -15,6 +15,7 @@
 
 namespace Smile\ElasticsuiteAbCampaign\Ui\Component\Campaign\Form\Modifier;
 
+use Magento\Backend\Model\UrlInterface;
 use Magento\Ui\DataProvider\Modifier\ModifierInterface;
 use Smile\ElasticsuiteAbCampaign\Api\Data\CampaignOptimizerInterface;
 use Smile\ElasticsuiteAbCampaign\Model\Context\Adminhtml\Campaign as CampaignContext;
@@ -34,14 +35,22 @@ class Optimizer implements ModifierInterface
     private $campaignContext;
 
     /**
+     * @var UrlInterface
+     */
+    private $urlBuilder;
+
+    /**
      * Optimizer constructor.
      *
      * @param CampaignContext $campaignContext Campaign context
+     * @param UrlInterface    $urlBuilder      Url builder
      */
     public function __construct(
-        CampaignContext $campaignContext
+        CampaignContext $campaignContext,
+        UrlInterface $urlBuilder
     ) {
         $this->campaignContext = $campaignContext;
+        $this->urlBuilder      = $urlBuilder;
     }
 
     /**
@@ -52,10 +61,10 @@ class Optimizer implements ModifierInterface
         if ($this->campaignContext->getCurrentCampaign()) {
             $currentCampaign = $this->campaignContext->getCurrentCampaign();
             $campaignId      = $currentCampaign->getId();
-            $data[$campaignId]['scenario_type_a']            = CampaignOptimizerInterface::SCENARIO_TYPE_A;
-            $data[$campaignId]['scenario_type_b']            = CampaignOptimizerInterface::SCENARIO_TYPE_B;
-            $data[$campaignId]['scenario_b_optimizer_count'] = count($currentCampaign->getScenarioBOptimizerIds());
-            $data[$campaignId]['scenario_a_optimizer_count'] = count($currentCampaign->getScenarioAOptimizerIds());
+            $data[$campaignId]['scenario_type_a']       = CampaignOptimizerInterface::SCENARIO_TYPE_A;
+            $data[$campaignId]['scenario_type_b']       = CampaignOptimizerInterface::SCENARIO_TYPE_B;
+            $data[$campaignId]['scenario_b_optimizers'] = $currentCampaign->getScenarioBOptimizerIds();
+            $data[$campaignId]['scenario_a_optimizers'] = $currentCampaign->getScenarioAOptimizerIds();
         }
 
         return $data;
@@ -74,6 +83,7 @@ class Optimizer implements ModifierInterface
         $meta = $this->setScenarioFieldsetDisplay($meta, false);
         if ($this->campaignContext->getCurrentCampaign()) {
             $meta = $this->setScenarioFieldsetDisplay($meta, true);
+            $meta = $this->addPersistOptimizersUrl($meta);
         }
 
         return $meta;
@@ -94,5 +104,32 @@ class Optimizer implements ModifierInterface
         $meta['scenario']['children']['scenario_b']['arguments']['data']['config']['disabled'] = !$display;
 
         return $meta;
+    }
+
+    /**
+     * Add persist optimizers url to button config.
+     *
+     * @param array $meta Meta
+     * @return array
+     */
+    private function addPersistOptimizersUrl(array $meta): array
+    {
+        $config['button_set']['children']['persist']['arguments']['data']['config'] = [
+            'persistOptimizersUrl' => $this->getPersistOptimizersUrl(),
+        ];
+        $meta['scenario']['children']['scenario_a']['children']['optimizer']['children'] = $config;
+        $meta['scenario']['children']['scenario_b']['children']['optimizer']['children'] = $config;
+
+        return $meta;
+    }
+
+    /**
+     * Retrieve the persist optimizers URL.
+     *
+     * @return string
+     */
+    private function getPersistOptimizersUrl(): string
+    {
+        return $this->urlBuilder->getUrl('smile_elasticsuite_ab_campaign/campaign/persistOptimizers');
     }
 }

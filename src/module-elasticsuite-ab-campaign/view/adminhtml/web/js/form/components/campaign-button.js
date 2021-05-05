@@ -24,24 +24,12 @@ define([
             entityId: null,
             campaignId: null,
             scenarioType: null,
-            scenarioAOptimizerCount: 0,
-            scenarioBOptimizerCount: 0,
+            campaignStatus: '',
+            scenarioBOptimizers: [],
+            scenarioAOptimizers: [],
             listens: {
                 entity: 'changeVisibility'
             }
-        },
-
-        initialize: function () {
-            this._super();
-            // Hide button if there is an optimizer in the scenario.
-            if (this.scenarioBOptimizerCount > 0 || this.scenarioAOptimizerCount > 0) {
-                this.visible(false);
-            }
-
-            // Update visibility when optimizers in the scenario are updated.
-            $(document).on('update-scenario-' + this.scenarioType, this.updateVisibility.bind(this));
-
-            return this;
         },
 
         /**
@@ -63,12 +51,6 @@ define([
             }
 
             this._super();
-        },
-
-        updateVisibility: function (event, data) {
-            if (data.hasOwnProperty('optimizer_ids_in_campaign')) {
-                this.visible(data.optimizer_ids_in_campaign.length === 0);
-            }
         }
     });
 });

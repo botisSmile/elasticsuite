@@ -26,7 +26,7 @@
     </argument>
     <dataSource name="smile_elasticsuite_ab_campaign_scenario_a_optimizer_listing_data_source">
         <argument name="dataProvider" xsi:type="configurableObject">
-            <argument name="class" xsi:type="string">Smile\ElasticsuiteAbCampaign\Ui\Component\Campaign\Optimizer\Listing\DataProvider</argument>
+            <argument name="class" xsi:type="string">OptimizersByCampaignDataProvider</argument>
             <argument name="name" xsi:type="string">smile_elasticsuite_ab_campaign_scenario_a_optimizer_listing_data_source</argument>
             <argument name="primaryFieldName" xsi:type="string">optimizer_id</argument>
             <argument name="requestFieldName" xsi:type="string">id</argument>
@@ -120,8 +120,16 @@
             </argument>
         </column>
         <actionsColumn name="actions" class="Smile\ElasticsuiteAbCampaign\Ui\Component\Listing\Column\CampaignOptimizerActions" component="Smile_ElasticsuiteAbCampaign/js/grid/columns/campaign/optimizer-actions">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="scenarioType" xsi:type="string">A</item>
+                </item>
+            </argument>
             <settings>
                 <indexField>optimizer_id</indexField>
+                <imports>
+                    <link name="campaignStatus">${ $.provider}:data.status</link>
+                </imports>
             </settings>
         </actionsColumn>
     </columns>

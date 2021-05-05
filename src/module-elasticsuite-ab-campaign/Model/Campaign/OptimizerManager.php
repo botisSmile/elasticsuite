@@ -15,9 +15,14 @@
 
 namespace Smile\ElasticsuiteAbCampaign\Model\Campaign;
 
+use Magento\Framework\DataObject;
+use Magento\Framework\EntityManager\EventManager;
 use Smile\ElasticsuiteAbCampaign\Api\Campaign\OptimizerManagerInterface;
 use Smile\ElasticsuiteAbCampaign\Api\Data\CampaignInterface;
+use Smile\ElasticsuiteAbCampaign\Model\Campaign;
 use Smile\ElasticsuiteAbCampaign\Model\ResourceModel\Campaign\Optimizer as CampaignOptimizerResource;
+use Smile\ElasticsuiteCatalogOptimizer\Api\Data\OptimizerInterface;
+use Smile\ElasticsuiteCatalogOptimizer\Model\Optimizer;
 
 /**
  * Class OptimizerManager
@@ -34,14 +39,22 @@ class OptimizerManager implements OptimizerManagerInterface
     private $campaignOptimizerResource;
 
     /**
+     * @var EventManager
+     */
+    private $eventManager;
+
+    /**
      * OptimizerManager constructor.
      *
      * @param CampaignOptimizerResource $campaignOptimizerResource Campaign optimizer resource
+     * @param EventManager              $eventManager              Event manager
      */
     public function __construct(
-        CampaignOptimizerResource $campaignOptimizerResource
+        CampaignOptimizerResource $campaignOptimizerResource,
+        EventManager $eventManager
     ) {
         $this->campaignOptimizerResource = $campaignOptimizerResource;
+        $this->eventManager              = $eventManager;
     }
 
     /**
@@ -61,5 +74,41 @@ class OptimizerManager implements OptimizerManagerInterface
             $filterByCampaignStatus,
             $takeInAccountCampaignDates
         );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function addCampaignContextToOptimizer(Campaign $campaign, $optimizer)
+    {
+        $optimizerContext = [];
+        $optimizerContext['store_id']          = $campaign->getStoreId();
+        $optimizerContext['search_containers'] = $campaign->getSearchContainers();
+        $optimizerContext['search_container']  = array_keys($campaign->getSearchContainers());
+        if ($campaign->getData('quick_search_container')) {
+            $optimizerContext['quick_search_container'] = $campaign->getData('quick_search_container');
+        }
+
+        if ($campaign->getData('catalog_view_container')) {
+            $optimizerContext['catalog_view_container'] = $campaign->getData('catalog_view_container');
+        }
+
+        $optimizerContextDataObject = new DataObject($optimizerContext);
+        $this->eventManager->dispatch(
+            'smile_elasticsuite_campaign_context_to_optimizer',
+            [
+                'campaign'          => $campaign,
+                'optimizer_context' => $optimizerContextDataObject,
+            ]
+        );
+        $optimizerContext = $optimizerContextDataObject->getData();
+
+        if ($optimizer instanceof Optimizer) {
+            $optimizer->addData($optimizerContext);
+
+            return $optimizer;
+        }
+
+        return array_merge($optimizer, $optimizerContext);
     }
 }

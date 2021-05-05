@@ -2,32 +2,32 @@
 /**
  * DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade Smile ElasticSuite to newer
+ * Do not edit or add to this file if you wish to upgrade this module to newer
  * versions in the future.
+ *
  *
  * @category  Smile
  * @package   Smile\ElasticsuiteAbCampaign
- * @author    Pierre LE MAGUER <pierre.lemaguer@smile.fr>
+ * @author    Pierre Le Maguer <pierre.lemaguer@smile.fr>
  * @copyright 2021 Smile
  * @license   Licensed to Smile-SA. All rights reserved. No warranty, explicit or implicit, provided.
  *            Unauthorized copying of this file, via any medium, is strictly prohibited.
  */
 
-namespace Smile\ElasticsuiteAbCampaign\Ui\DataProvider\Optimizer;
+namespace Smile\ElasticsuiteAbCampaign\Ui\Component\Optimizer\Listing;
 
-use Magento\Framework\Data\Collection;
-use Magento\Ui\DataProvider\AddFieldToCollectionInterface;
-use Smile\ElasticsuiteCatalogOptimizer\Model\ResourceModel\Optimizer\Collection as OptimizerCollection;
 use Smile\ElasticsuiteAbCampaign\Model\ResourceModel\Campaign\Optimizer as CampaignOptimizerResource;
+use Smile\ElasticsuiteCatalogOptimizer\Model\ResourceModel\Optimizer\Collection as OptimizerCollection;
+use Smile\ElasticsuiteExplain\Ui\Component\Optimizer\Listing\OptimizerCollectionProcessorInterface;
 
 /**
- * Class AddCampaignDataToCollection
+ * Filter optimizer collection to have only optimizer not linked to a campaign..
  *
  * @category Smile
  * @package  Smile\ElasticsuiteAbCampaign
  * @author   Pierre Le Maguer <pierre.lemaguer@smile.fr>
  */
-class AddCampaignDataToCollection implements AddFieldToCollectionInterface
+class FilterCollectionNoCampaign implements OptimizerCollectionProcessorInterface
 {
     /**
      * @var CampaignOptimizerResource
@@ -35,7 +35,7 @@ class AddCampaignDataToCollection implements AddFieldToCollectionInterface
     private $campaignOptimizerResource;
 
     /**
-     * AddCampaignDataToCollection constructor
+     * FilterCollectionNoCampaign constructor.
      *
      * @param CampaignOptimizerResource $campaignOptimizerResource Campaign optimizer resource
      */
@@ -46,12 +46,10 @@ class AddCampaignDataToCollection implements AddFieldToCollectionInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function addField(Collection $collection, $field, $condition = null)
+    public function process(OptimizerCollection $collection)
     {
-        /** @var OptimizerCollection $collection */
-        $this->campaignOptimizerResource->addCampaignDataToOptimizerCollection($collection);
+        $this->campaignOptimizerResource->joinCampaignToOptimizerCollection($collection);
+        $collection->getSelect()->where('campaign_optimizer.campaign_id IS NULL');
     }
 }
