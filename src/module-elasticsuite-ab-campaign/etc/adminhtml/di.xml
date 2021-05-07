@@ -98,10 +98,16 @@
             </argument>
         </arguments>
     </virtualType>
+    <!-- Legacy Optimizers listing UI component data provider override -->
     <virtualType name="OptimizerWithoutCampaignDataProvider" type="Smile\ElasticsuiteExplain\Ui\Component\Optimizer\Listing\DataProvider">
         <arguments>
             <argument name="collectionProcessors" xsi:type="array">
                 <item name="campaign" xsi:type="object">Smile\ElasticsuiteAbCampaign\Ui\Component\Optimizer\Listing\FilterCollectionNoCampaign</item>
+            </argument>
+            <!-- please note that a custom collectionFactory could also have done the job -->
+            <argument name="addFilterStrategies" xsi:type="array">
+                <item name="name" xsi:type="object">Smile\ElasticsuiteAbCampaign\Ui\Component\Optimizer\Listing\DataProvider\AddNameFilterToCollection</item>
+                <item name="store_id" xsi:type="object">Smile\ElasticsuiteAbCampaign\Ui\Component\Optimizer\Listing\DataProvider\AddStoreFilterToCollection</item>
             </argument>
         </arguments>
     </virtualType>

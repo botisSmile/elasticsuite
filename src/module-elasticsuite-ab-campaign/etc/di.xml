@@ -94,4 +94,13 @@
             </argument>
         </arguments>
     </type>
+
+    <!-- Prevent table column names collision due to
+         Smile\ElasticsuiteAbCampaign\Model\ResourceModel\Campaign\Optimizer::joinCampaignToOptimizerCollection
+          Addressed by OptimizerWithoutCampaignDataProvider in etc/adminghtml.di.xml -->
+    <type name="Smile\ElasticsuiteCatalogOptimizer\Model\ResourceModel\Optimizer\CollectionFactory">
+        <plugin name="declare_optimizer_collection_self_columns"
+                type="Smile\ElasticsuiteAbCampaign\Plugin\CatalogOptimizer\ResourceModel\Optimizer\CollectionFactoryPlugin"
+                disabled="true" />
+    </type>
 </config>
