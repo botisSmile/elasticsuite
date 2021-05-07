@@ -61,20 +61,20 @@ class Campaign implements ModifierInterface
         $scenarioType = (string) $this->request->getParam('scenario_type');
         $optimizerId = (int) $this->request->getParam('id');
 
-        // Add campaign id and scenario type to optimizer entity and unset search container data.
-        $data['']['campaign_id'] = $campaignId;
-        $data['']['scenario_type'] = $scenarioType;
-        $data['']['search_container'] = [];
-        $data['']['search_containers'] = [];
-        if ($optimizerId) {
-            $data[$optimizerId]['campaign_id'] = $campaignId;
-            $data[$optimizerId]['scenario_type'] = $scenarioType;
-            $data[$optimizerId]['search_container'] = [];
-            $data[$optimizerId]['search_containers'] = [];
-        }
-
-        // Change the optimizer form submit url in campaign page.
         if ($isInCampaignPage) {
+            // Add campaign id and scenario type to optimizer entity and unset search container data.
+            $data['']['campaign_id'] = $campaignId;
+            $data['']['scenario_type'] = $scenarioType;
+            $data['']['search_container'] = [];
+            $data['']['search_containers'] = [];
+            if ($optimizerId) {
+                $data[$optimizerId]['search_container'] = [];
+                $data[$optimizerId]['search_containers'] = [];
+                $data[$optimizerId]['campaign_id'] = $campaignId;
+                $data[$optimizerId]['scenario_type'] = $scenarioType;
+            }
+
+            // Change the optimizer form submit url in campaign page.
             $data['config']['submit_url'] = $this->getUrl(
                 'smile_elasticsuite_ab_campaign/optimizer/ajaxSave',
                 ['create_from' => (int) $this->request->getParam('create_from')]
