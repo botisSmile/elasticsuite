@@ -23,6 +23,9 @@ define([
 
     return Actions.extend({
         defaults: {
+            scenarioType: null,
+            campaignStatus: null,
+            optimizerPersisted: null,
             ajaxSettings: {
                 method: 'POST',
                 dataType: 'json'
@@ -35,6 +38,50 @@ define([
                 options: true,
                 action: true
             }
+        },
+
+        initialize: function () {
+            this._super();
+
+            $(document).on('update-scenario-' + this.scenarioType, this.changeLabel.bind(this));
+
+            return this;
+        },
+
+        getBody: function () {
+            // If the campaign status is complete, change the template of the component.
+            if (this.campaignStatus === 'complete') {
+                if (this.optimizerPersisted) {
+                    $.each(this.rows, function (index, row) {
+                        if (parseInt(row.optimizer_id) === parseInt(this.optimizerPersisted)) {
+                            row.isPersisted(true);
+                        }
+                    }.bind(this));
+                }
+                return 'Smile_ElasticsuiteAbCampaign/grid/cells/persist-optimizer-actions';
+            }
+
+            return this._super();
+        },
+
+        getVisibleActions: function (rowIndex) {
+            var rowActions = this.getAction(rowIndex);
+
+            return _.filter(rowActions, this.isActionVisible, this);
+        },
+
+        changeLabel: function (event, data) {
+            if (data.hasOwnProperty('persist')) {
+                this.optimizerPersisted = parseInt(data.persist);
+            }
+        },
+
+        isPersisted: function (row) {
+            return parseInt(this.optimizerPersisted) === parseInt(row.optimizer_id);
+        },
+
+        getPersistedLabel: function () {
+            return $t('Published');
         },
 
         /**

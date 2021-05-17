@@ -1,0 +1,30 @@
+<!--
+/**
+ * Smile_ElasticsuiteAbCampaign grid cells template
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Smile ElasticSuite to newer
+ * versions in the future.
+ *
+ * @category  Smile
+ * @package   Smile\ElasticsuiteAbCampaign
+ * @author    Pierre Le Maguer <pierre.lemaguer@smile.fr>
+ * @copyright 2021 Smile
+ * @license   Licensed to Smile-SA. All rights reserved. No warranty, explicit or implicit, provided.
+ *            Unauthorized copying of this file, via any medium, is strictly prohibited.
+ */
+ -->
+<!-- ko ifnot: isPersisted($row()) -->
+    <button
+        class="button action-basic"
+        if="$col.isSingle($row()._rowIndex)"
+        repeat="foreach: $col.getVisibleActions($row()._rowIndex), item: '$action'"
+        click="$col.getActionHandler($action())"
+        text="$action().label"
+        attr="target: $col.getTarget($action()), style: 'white-space:nowrap'">
+    </button>
+<!-- /ko -->
+<!-- ko if: isPersisted($row()) -->
+    <span class="data-grid-cell-content" text="$col.getPersistedLabel()"></span>
+<!-- /ko -->

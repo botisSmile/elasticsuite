@@ -56,9 +56,10 @@ class Campaign implements ModifierInterface
      */
     public function modifyMeta(array $meta)
     {
-        // Disable fieldset in the campaign form page.
+        // Disable fieldset in the campaign form page in the optimizer form except in the case of optimizer persisting.
         $isInCampaignPage = (int) $this->request->getParam('campaign_id');
-        if ($isInCampaignPage) {
+        $persist = (bool) $this->request->getParam('persist');
+        if ($isInCampaignPage && !$persist) {
             $meta = $this->disableFields($meta);
         }
 

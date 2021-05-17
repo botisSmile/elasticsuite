@@ -17,9 +17,8 @@
 namespace Smile\ElasticsuiteAbCampaign\Ui\Component\Optimizer\Listing;
 
 use Magento\Framework\App\RequestInterface;
-use Smile\ElasticsuiteAbCampaign\Api\Data\CampaignOptimizerInterface;
+use Smile\ElasticsuiteAbCampaign\Model\ResourceModel\Campaign\Optimizer as CampaignOptimizerResource;
 use Smile\ElasticsuiteCatalogOptimizer\Model\ResourceModel\Optimizer\Collection as OptimizerCollection;
-use Smile\ElasticsuiteCatalogOptimizer\Model\ResourceModel\Optimizer\CollectionFactory;
 use Smile\ElasticsuiteExplain\Ui\Component\Optimizer\Listing\OptimizerCollectionProcessorInterface;
 
 /**
@@ -37,14 +36,22 @@ class FilterCollectionByCampaign implements OptimizerCollectionProcessorInterfac
     private $request;
 
     /**
+     * @var CampaignOptimizerResource
+     */
+    private $campaignOptimizerResource;
+
+    /**
      * FilterCollectionByCampaign Constructor.
      *
-     * @param RequestInterface $request Request
+     * @param RequestInterface          $request                   Request
+     * @param CampaignOptimizerResource $campaignOptimizerResource Campaign optimizer resource
      */
     public function __construct(
-        RequestInterface $request
+        RequestInterface $request,
+        CampaignOptimizerResource $campaignOptimizerResource
     ) {
-        $this->request = $request;
+        $this->request                   = $request;
+        $this->campaignOptimizerResource = $campaignOptimizerResource;
     }
 
     /**
@@ -55,15 +62,7 @@ class FilterCollectionByCampaign implements OptimizerCollectionProcessorInterfac
         $campaignId = (int) $this->request->getParam('campaign_id');
         $scenarioType = (string) $this->request->getParam('scenario_type');
         if ($scenarioType && $campaignId) {
-            if (!$collection->hasFlag('campaign_optimizer')) {
-                $collection->setFlag('campaign_optimizer', true);
-                $collection->getSelect()
-                    ->joinLeft(
-                        ['campaign_optimizer' => $collection->getTable(CampaignOptimizerInterface::TABLE_NAME)],
-                        'main_table.optimizer_id = campaign_optimizer.optimizer_id',
-                        []
-                    );
-            }
+            $this->campaignOptimizerResource->joinCampaignToOptimizerCollection($collection);
             $collection->getSelect()
                 ->where('campaign_optimizer.campaign_id = ?', $campaignId)
                 ->where('campaign_optimizer.scenario_type = ?', $scenarioType);

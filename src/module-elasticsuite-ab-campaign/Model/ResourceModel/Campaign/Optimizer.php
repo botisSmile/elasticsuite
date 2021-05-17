@@ -153,31 +153,27 @@ class Optimizer extends AbstractDb
     }
 
     /**
-     * Add campaign data to optimizer collection.
+     * Join campaign table to optimizer collection.
      *
      * @param OptimizerCollection $optimizerCollection Optimizer collection
      * @return OptimizerCollection
      */
-    public function addCampaignDataToOptimizerCollection(OptimizerCollection $optimizerCollection): OptimizerCollection
+    public function joinCampaignToOptimizerCollection(OptimizerCollection $optimizerCollection): OptimizerCollection
     {
-        if (!$optimizerCollection->hasFlag('campaign_data')) {
+        if (!$optimizerCollection->hasFlag('campaign_optimizer')) {
+            $optimizerCollection->setFlag('campaign_optimizer', true);
             $optimizerCollection->getSelect()
                 ->joinLeft(
                     ['campaign_optimizer' => $optimizerCollection->getTable(CampaignOptimizerInterface::TABLE_NAME)],
-                    'main_table.' . OptimizerInterface::OPTIMIZER_ID
-                    . ' = campaign_optimizer.' . CampaignOptimizerInterface::OPTIMIZER_ID,
+                    'main_table.optimizer_id = campaign_optimizer.optimizer_id',
                     []
                 )
                 ->joinLeft(
                     ['campaign' => $optimizerCollection->getTable(CampaignInterface::TABLE_NAME)],
-                    'campaign_optimizer.' . CampaignOptimizerInterface::CAMPAIGN_ID
-                    . ' = campaign.' . CampaignInterface::CAMPAIGN_ID,
-                    [
-                        'campaign_name'   => 'campaign.' . CampaignInterface::NAME,
-                        'campaign_status' => 'campaign.' . CampaignInterface::STATUS,
-                    ]
-                );
-            $optimizerCollection->setFlag('campaign_data', true);
+                    'campaign.campaign_id = campaign_optimizer.campaign_id',
+                    []
+                )
+            ;
         }
 
         return $optimizerCollection;

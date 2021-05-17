@@ -49,3 +49,8 @@
 "Create new","Nouveau"
 "Create from existing","Créer à partir de"
 "Choose","Choisir"
+"The scenario does not exist.","Ce scénario n'existe pas."
+"There is no optimizers to publish.","Aucun optimiseur n'est à publier."
+"An error occurs when trying to publish optimizers.","Une erreur s'est produite lors de la tentative de publication des optimiseurs."
+"You published well optimizers from scenario %1","Vous avez bien publié les optimiseurs du scénatio %1"
+"Edit and publish","Modifier et publier"

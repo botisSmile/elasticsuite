@@ -100,7 +100,7 @@
                                 <item name="buttonClasses" xsi:type="string"></item>
                                 <item name="actions" xsi:type="array">
                                     <item name="0" xsi:type="array">
-                                        <item name="targetName" xsi:type="string">smile_elasticsuite_ab_campaign_form.smile_elasticsuite_ab_campaign_form.apply_to.customer_segment.customer_segments_modal</item>
+                                        <item name="targetName" xsi:type="string">smile_elasticsuite_ab_campaign_form.smile_elasticsuite_ab_campaign_form.apply_to.customer_segment.campaign_customer_segments_modal</item>
                                         <item name="actionName" xsi:type="string">toggleModal</item>
                                     </item>
                                 </item>
@@ -120,7 +120,7 @@
                         <item name="config" xsi:type="array">
                             <item name="columnsHeaderAfterRender" xsi:type="boolean">true</item>
                             <item name="deleteButtonLabel" xsi:type="string" translate="true">Remove</item>
-                            <item name="dataProvider" xsi:type="string">customer_segment_listing</item>
+                            <item name="dataProvider" xsi:type="string">campaign_customer_segment_listing</item>
                             <item name="map" xsi:type="array">
                                 <item name="id" xsi:type="string">segment_id</item>
                                 <item name="name" xsi:type="string">name</item>
@@ -200,7 +200,7 @@
                 </dynamicRows>
             </fieldset>
 
-            <modal name="customer_segments_modal">
+            <modal name="campaign_customer_segments_modal">
                 <settings>
                     <options>
                         <option name="title" xsi:type="string" translate="true">Select Customer Segments</option>
@@ -216,7 +216,7 @@
                             <item name="buttonClasses" xsi:type="string">action-secondary</item>
                             <item name="actions" xsi:type="array">
                                 <item name="0" xsi:type="array">
-                                    <item name="targetName" xsi:type="string">smile_elasticsuite_ab_campaign_form.smile_elasticsuite_ab_campaign_form.apply_to.customer_segment.customer_segments_modal</item>
+                                    <item name="targetName" xsi:type="string">smile_elasticsuite_ab_campaign_form.smile_elasticsuite_ab_campaign_form.apply_to.customer_segment.campaign_customer_segments_modal</item>
                                     <item name="actionName" xsi:type="string">closeModal</item>
                                 </item>
                             </item>
@@ -230,11 +230,11 @@
                             <item name="buttonClasses" xsi:type="string">action-primary</item>
                             <item name="actions" xsi:type="array">
                                 <item name="0" xsi:type="array">
-                                    <item name="targetName" xsi:type="string">index = customer_segment_listing</item>
+                                    <item name="targetName" xsi:type="string">index = campaign_customer_segment_listing</item>
                                     <item name="actionName" xsi:type="string">save</item>
                                 </item>
                                 <item name="1" xsi:type="array">
-                                    <item name="targetName" xsi:type="string">smile_elasticsuite_ab_campaign_form.smile_elasticsuite_ab_campaign_form.apply_to.customer_segment.customer_segments_modal</item>
+                                    <item name="targetName" xsi:type="string">smile_elasticsuite_ab_campaign_form.smile_elasticsuite_ab_campaign_form.apply_to.customer_segment.campaign_customer_segments_modal</item>
                                     <item name="actionName" xsi:type="string">closeModal</item>
                                 </item>
                             </item>
@@ -242,19 +242,19 @@
                         </item>
                     </argument>
                 </button>
-                <insertListing name="customer_segment_listing" component="Magento_Ui/js/form/components/insert-listing">
+                <insertListing name="campaign_customer_segment_listing" component="Magento_Ui/js/form/components/insert-listing">
                     <settings>
-                        <externalProvider>${ $.ns }.customer_segment_listing_data_source</externalProvider>
-                        <selectionsProvider>${ $.ns }.${ $.ns }.customer_segment_listing_columns.ids</selectionsProvider>
+                        <externalProvider>${ $.ns }.campaign_customer_segment_listing_data_source</externalProvider>
+                        <selectionsProvider>${ $.ns }.${ $.ns }.campaign_customer_segment_listing_columns.ids</selectionsProvider>
                         <realTimeLink>true</realTimeLink>
                         <autoRender>true</autoRender>
                         <externalFilterMode>true</externalFilterMode>
-                        <dataScope>customer_segment_listing</dataScope>
+                        <dataScope>campaign_customer_segment_listing</dataScope>
                         <dataLinks>
                             <imports>false</imports>
                             <exports>true</exports>
                         </dataLinks>
-                        <ns>customer_segment_listing</ns>
+                        <ns>campaign_customer_segment_listing</ns>
                         <imports>
                             <link name="campaignId">${ $.provider }:data.campaign_id</link>
                         </imports>

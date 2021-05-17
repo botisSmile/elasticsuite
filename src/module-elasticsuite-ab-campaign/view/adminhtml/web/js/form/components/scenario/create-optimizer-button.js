@@ -14,23 +14,15 @@
 
 define([
     'jquery',
-    'Magento_Ui/js/form/components/insert-listing'
-], function ($, Insert) {
+    'Smile_ElasticsuiteAbCampaign/js/form/components/campaign-button'
+], function ($, CampaignButton) {
     'use strict';
 
-    return Insert.extend({
-        defaults: {
-            scenarioType: '',
-            scenarioBOptimizers: [],
-            scenarioAOptimizers: []
-        },
-
+    return CampaignButton.extend({
         initialize: function () {
             this._super();
-
-            // Hide list if there is no optimizer in the scenario.
-            if ((this.scenarioBOptimizers.length === 0 && this.scenarioType === 'B') ||
-                (this.scenarioAOptimizers.length === 0 && this.scenarioType === 'A')) {
+            // Hide button if there is an optimizer in the scenario.
+            if (this.scenarioBOptimizers.length > 0 || this.scenarioAOptimizers.length > 0 || this.campaignStatus === 'complete') {
                 this.visible(false);
             }
 
@@ -42,7 +34,7 @@ define([
 
         updateVisibility: function (event, data) {
             if (data.hasOwnProperty('optimizer_ids_in_campaign')) {
-                this.visible(data.optimizer_ids_in_campaign.length > 0);
+                this.visible(data.optimizer_ids_in_campaign.length === 0);
             }
         }
     });

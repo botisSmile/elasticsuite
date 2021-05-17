@@ -17,6 +17,8 @@ namespace Smile\ElasticsuiteAbCampaign\Api\Campaign;
 
 use Exception;
 use Smile\ElasticsuiteAbCampaign\Api\Data\CampaignInterface;
+use Smile\ElasticsuiteAbCampaign\Model\Campaign;
+use Smile\ElasticsuiteCatalogOptimizer\Model\Optimizer;
 
 /**
  * Interface OptimizerManagerInterface
@@ -47,4 +49,13 @@ interface OptimizerManagerInterface
         bool $takeInAccountCampaignStatus = false,
         bool $takeInAccountCampaignDates = false
     ): array;
+
+    /**
+     * Add campaign context to optimizer.
+     *
+     * @param Campaign        $campaign  Campaign
+     * @param Optimizer|array $optimizer Optimizer: can be an array of data or an optimizer object.
+     * @return Optimizer|array
+     */
+    public function addCampaignContextToOptimizer(Campaign $campaign, $optimizer);
 }

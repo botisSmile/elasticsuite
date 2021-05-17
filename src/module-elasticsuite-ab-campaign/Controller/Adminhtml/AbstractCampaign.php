@@ -23,6 +23,7 @@ use Magento\Framework\View\Result\PageFactory;
 use Smile\ElasticsuiteAbCampaign\Api\CampaignManagerInterface;
 use Smile\ElasticsuiteAbCampaign\Api\Data\CampaignInterfaceFactory;
 use Smile\ElasticsuiteAbCampaign\Api\CampaignRepositoryInterface;
+use Smile\ElasticsuiteAbCampaign\Api\Data\CampaignOptimizerInterface;
 use Smile\ElasticsuiteAbCampaign\Model\Campaign\CompositeValidator;
 use Smile\ElasticsuiteAbCampaign\Model\Context\Adminhtml\Campaign as CampaignContext;
 
@@ -119,6 +120,20 @@ abstract class AbstractCampaign extends Action
             ->addBreadcrumb(__('Campaign'), __('Campaign'));
 
         return $resultPage;
+    }
+
+    /**
+     * Validate scenario type param.
+     *
+     * @param string $scenarioType Scenario type
+     * @return bool
+     */
+    protected function validateScenarioTypeParam(string $scenarioType): bool
+    {
+        return in_array(
+            $scenarioType,
+            [CampaignOptimizerInterface::SCENARIO_TYPE_A, CampaignOptimizerInterface::SCENARIO_TYPE_B]
+        );
     }
 
     /**

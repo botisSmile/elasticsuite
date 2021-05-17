@@ -15,6 +15,7 @@
 
 namespace Smile\ElasticsuiteAbCampaign\Controller\Adminhtml\Optimizer;
 
+use Exception;
 use Magento\Framework\DataObject;
 use Smile\ElasticsuiteAbCampaign\Api\Data\CampaignOptimizerInterface;
 use Smile\ElasticsuiteAbCampaign\Controller\Adminhtml\AbstractAjaxOptimizer;
@@ -58,13 +59,11 @@ class AjaxSave extends AbstractAjaxOptimizer
             }
 
             // Unset optimizer id to create a new optimizer.
-            if (empty($data['optimizer_id']) || $this->getRequest()->getParam('create_from')) {
+            if (empty($data['optimizer_id']) || $this->getRequest()->getParam('create_new_optimizer')) {
                 $data['optimizer_id'] = null;
             }
 
-            // Add empty data to avoid issues on optimizer save.
-            $data['search_container'] = [];
-            $data['search_containers'] = [];
+            $data = $this->formatData($data);
             $validateResult = $model->validateData(new DataObject($data));
             if ($validateResult !== true) {
                 $error = true;
@@ -82,14 +81,42 @@ class AjaxSave extends AbstractAjaxOptimizer
             try {
                 $this->optimizerRepository->save($model);
                 $optimizerId = $model->getId();
-                $this->campaignOptimizerResource->saveCampaignOptimizerLink($campaignId, $optimizerId, $scenarioType);
-            } catch (\Exception $e) {
+                $this->afterSave($campaignId, $optimizerId, $scenarioType);
+            } catch (Exception $e) {
                 $error = true;
                 $errorMessages[] = $e->getMessage();
             }
         }
 
         return $this->sendJsonResult($error, $errorMessages, $optimizerId, $scenarioType);
+    }
+
+    /**
+     * After save.
+     *
+     * @param int    $campaignId   Campaign id
+     * @param int    $optimizerId  Optimizer id
+     * @param string $scenarioType Scenario type
+     * @return void
+     */
+    protected function afterSave(int $campaignId, int $optimizerId, string $scenarioType): void
+    {
+        $this->campaignOptimizerResource->saveCampaignOptimizerLink($campaignId, $optimizerId, $scenarioType);
+    }
+
+    /**
+     * Format post data.
+     *
+     * @param array $data Data
+     * @return array
+     */
+    protected function formatData(array $data): array
+    {
+        // Add empty data to avoid issues on campaign optimizer save.
+        $data['search_container'] = [];
+        $data['search_containers'] = [];
+
+        return $data;
     }
 
     /**

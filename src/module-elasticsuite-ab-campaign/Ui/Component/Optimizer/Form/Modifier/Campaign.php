@@ -15,9 +15,12 @@
 
 namespace Smile\ElasticsuiteAbCampaign\Ui\Component\Optimizer\Form\Modifier;
 
+use Exception;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\View\Element\UiComponent\Context;
 use Magento\Ui\DataProvider\Modifier\ModifierInterface;
+use Smile\ElasticsuiteAbCampaign\Api\Campaign\OptimizerManagerInterface;
+use Smile\ElasticsuiteAbCampaign\Api\CampaignRepositoryInterface;
 
 /**
  * Campaign Ui Component Modifier. Used to edit optimizer form in campaign page.
@@ -39,17 +42,33 @@ class Campaign implements ModifierInterface
     private $context;
 
     /**
+     * @var CampaignRepositoryInterface
+     */
+    private $campaignRepository;
+
+    /**
+     * @var OptimizerManagerInterface
+     */
+    private $optimizerManager;
+
+    /**
      * Campaign constructor.
      *
-     * @param RequestInterface $request Request
-     * @param Context          $context Context
+     * @param RequestInterface            $request            Request
+     * @param Context                     $context            Context
+     * @param CampaignRepositoryInterface $campaignRepository Campaign repository
+     * @param OptimizerManagerInterface   $optimizerManager   Optimizer manager
      */
     public function __construct(
         RequestInterface $request,
-        Context $context
+        Context $context,
+        CampaignRepositoryInterface $campaignRepository,
+        OptimizerManagerInterface $optimizerManager
     ) {
-        $this->request = $request;
-        $this->context = $context;
+        $this->request            = $request;
+        $this->context            = $context;
+        $this->campaignRepository = $campaignRepository;
+        $this->optimizerManager   = $optimizerManager;
     }
 
     /**
@@ -57,28 +76,17 @@ class Campaign implements ModifierInterface
      */
     public function modifyData(array $data)
     {
-        $campaignId = $isInCampaignPage = (int) $this->request->getParam('campaign_id');
+        $campaignId   = (int) $this->request->getParam('campaign_id');
         $scenarioType = (string) $this->request->getParam('scenario_type');
-        $optimizerId = (int) $this->request->getParam('id');
+        $optimizerId  = (int) $this->request->getParam('id');
+        $persist      = (string) $this->request->getParam('persist');
 
-        if ($isInCampaignPage) {
+        if ($campaignId) {
             // Add campaign id and scenario type to optimizer entity and unset search container data.
-            $data['']['campaign_id'] = $campaignId;
-            $data['']['scenario_type'] = $scenarioType;
-            $data['']['search_container'] = [];
-            $data['']['search_containers'] = [];
-            if ($optimizerId) {
-                $data[$optimizerId]['search_container'] = [];
-                $data[$optimizerId]['search_containers'] = [];
-                $data[$optimizerId]['campaign_id'] = $campaignId;
-                $data[$optimizerId]['scenario_type'] = $scenarioType;
+            $data = $this->editDataForCampaignOptimizer($data, $campaignId, $scenarioType, $optimizerId);
+            if ($persist) {
+                $data = $this->prepareForOptimizerPersist($data, $campaignId, $optimizerId);
             }
-
-            // Change the optimizer form submit url in campaign page.
-            $data['config']['submit_url'] = $this->getUrl(
-                'smile_elasticsuite_ab_campaign/optimizer/ajaxSave',
-                ['create_from' => (int) $this->request->getParam('create_from')]
-            );
         }
 
         return $data;
@@ -91,8 +99,12 @@ class Campaign implements ModifierInterface
     {
         // Disable fieldset in the campaign form page.
         $isInCampaignPage = (int) $this->request->getParam('campaign_id');
+        $persist = (bool) $this->request->getParam('persist');
         if ($isInCampaignPage) {
-            $meta = $this->disableFields($meta);
+            $meta = $this->disablePreview($meta);
+            if (!$persist) {
+                $meta = $this->disableFields($meta);
+            }
         }
 
         return $meta;
@@ -132,9 +144,85 @@ class Campaign implements ModifierInterface
         $meta['quick_search_container']['arguments']['data']['config']['visible'] = false;
         $meta['catalog_view_container']['arguments']['data']['config']['disabled'] = true;
         $meta['catalog_view_container']['arguments']['data']['config']['visible'] = false;
+
+        return $meta;
+    }
+
+    /**
+     * Disable preview in optimizer form.
+     *
+     * @param array $meta Meta
+     * @return array
+     */
+    private function disablePreview(array $meta): array
+    {
         $meta['optimizer_preview_fieldset']['arguments']['data']['config']['disabled'] = true;
         $meta['optimizer_preview_fieldset']['arguments']['data']['config']['visible'] = false;
 
         return $meta;
+    }
+
+    /**
+     * Edit data for campaign optimizer.
+     *
+     * @param array  $data         Data
+     * @param int    $campaignId   Campaign id
+     * @param string $scenarioType Scenario type
+     * @param int    $optimizerId  Optimizer id
+     * @return array
+     */
+    private function editDataForCampaignOptimizer(
+        array $data,
+        int $campaignId,
+        string $scenarioType,
+        int $optimizerId
+    ): array {
+        $data['']['campaign_id'] = $campaignId;
+        $data['']['scenario_type'] = $scenarioType;
+        $data['']['search_container'] = [];
+        $data['']['search_containers'] = [];
+        if ($optimizerId) {
+            $data[$optimizerId]['campaign_id'] = $campaignId;
+            $data[$optimizerId]['scenario_type'] = $scenarioType;
+            $data[$optimizerId]['search_container'] = [];
+            $data[$optimizerId]['search_containers'] = [];
+        }
+
+        $data['config']['submit_url'] = $this->getUrl(
+            'smile_elasticsuite_ab_campaign/optimizer/ajaxSave',
+            ['create_from' => (int) $this->request->getParam('create_from')]
+        );
+
+        return $data;
+    }
+
+    /**
+     * Prepare for optimizer persist.
+     *
+     * @param array $data        Data
+     * @param int   $campaignId  Campaign id
+     * @param int   $optimizerId Optimizer id
+     * @return array
+     * @throws Exception
+     */
+    private function prepareForOptimizerPersist(
+        array $data,
+        int $campaignId,
+        int $optimizerId
+    ): array {
+        if (!$optimizerId) {
+            throw new Exception('We should have an optimizer id.');
+        }
+
+        $campaign = $this->campaignRepository->getById($campaignId);
+        $data[$optimizerId] = $this->optimizerManager->addCampaignContextToOptimizer($campaign, $data[$optimizerId]);
+
+        // Change the optimizer form submit url in campaign page.
+        $data['config']['submit_url'] = $this->getUrl(
+            'smile_elasticsuite_ab_campaign/optimizer/ajaxPersist',
+            ['create_new_optimizer' => 1]
+        );
+
+        return $data;
     }
 }

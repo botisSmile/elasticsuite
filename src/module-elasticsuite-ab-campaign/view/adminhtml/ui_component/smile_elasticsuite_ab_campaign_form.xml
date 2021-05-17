@@ -287,7 +287,7 @@
                                 <item name="buttonClasses" xsi:type="string"></item>
                                 <item name="actions" xsi:type="array">
                                     <item name="0" xsi:type="array">
-                                        <item name="targetName" xsi:type="string">smile_elasticsuite_ab_campaign_form.smile_elasticsuite_ab_campaign_form.apply_to.quick_search_container.search_terms_modal</item>
+                                        <item name="targetName" xsi:type="string">smile_elasticsuite_ab_campaign_form.smile_elasticsuite_ab_campaign_form.apply_to.quick_search_container.campaign_search_terms_modal</item>
                                         <item name="actionName" xsi:type="string">toggleModal</item>
                                     </item>
                                 </item>
@@ -307,7 +307,7 @@
                         <item name="config" xsi:type="array">
                             <item name="columnsHeaderAfterRender" xsi:type="boolean">true</item>
                             <item name="deleteButtonLabel" xsi:type="string" translate="true">Remove</item>
-                            <item name="dataProvider" xsi:type="string">search_term_listing</item>
+                            <item name="dataProvider" xsi:type="string">campaign_search_term_listing</item>
                             <item name="map" xsi:type="array">
                                 <item name="id" xsi:type="string">query_id</item>
                                 <item name="query_text" xsi:type="string">query_text</item>
@@ -379,7 +379,7 @@
                 </dynamicRows>
             </fieldset>
 
-            <modal name="search_terms_modal">
+            <modal name="campaign_search_terms_modal">
                 <settings>
                     <options>
                         <option name="title" xsi:type="string" translate="true">Select Search Terms</option>
@@ -389,13 +389,13 @@
                         <option name="autoOpen" xsi:type="boolean">false</option>
                     </options>
                 </settings>
-                <button name="search_terms_modal_button_back" displayArea="actions-secondary">
+                <button name="campaign_search_terms_modal_button_back" displayArea="actions-secondary">
                     <argument name="data" xsi:type="array">
                         <item name="config" xsi:type="array">
                             <item name="buttonClasses" xsi:type="string">action-secondary</item>
                             <item name="actions" xsi:type="array">
                                 <item name="0" xsi:type="array">
-                                    <item name="targetName" xsi:type="string">smile_elasticsuite_ab_campaign_form.smile_elasticsuite_ab_campaign_form.apply_to.quick_search_container.search_terms_modal</item>
+                                    <item name="targetName" xsi:type="string">smile_elasticsuite_ab_campaign_form.smile_elasticsuite_ab_campaign_form.apply_to.quick_search_container.campaign_search_terms_modal</item>
                                     <item name="actionName" xsi:type="string">closeModal</item>
                                 </item>
                             </item>
@@ -403,17 +403,17 @@
                         </item>
                     </argument>
                 </button>
-                <button name="search_terms_modal_button_save" displayArea="actions-primary">
+                <button name="campaign_search_terms_modal_button_save" displayArea="actions-primary">
                     <argument name="data" xsi:type="array">
                         <item name="config" xsi:type="array">
                             <item name="buttonClasses" xsi:type="string">action-primary</item>
                             <item name="actions" xsi:type="array">
                                 <item name="0" xsi:type="array">
-                                    <item name="targetName" xsi:type="string">index = search_term_listing</item>
+                                    <item name="targetName" xsi:type="string">index = campaign_search_term_listing</item>
                                     <item name="actionName" xsi:type="string">save</item>
                                 </item>
                                 <item name="1" xsi:type="array">
-                                    <item name="targetName" xsi:type="string">smile_elasticsuite_ab_campaign_form.smile_elasticsuite_ab_campaign_form.apply_to.quick_search_container.search_terms_modal</item>
+                                    <item name="targetName" xsi:type="string">smile_elasticsuite_ab_campaign_form.smile_elasticsuite_ab_campaign_form.apply_to.quick_search_container.campaign_search_terms_modal</item>
                                     <item name="actionName" xsi:type="string">closeModal</item>
                                 </item>
                             </item>
@@ -421,19 +421,19 @@
                         </item>
                     </argument>
                 </button>
-                <insertListing name="search_term_listing" component="Magento_Ui/js/form/components/insert-listing">
+                <insertListing name="campaign_search_term_listing" component="Magento_Ui/js/form/components/insert-listing">
                     <settings>
-                        <externalProvider>${ $.ns }.search_term_listing_data_source</externalProvider>
-                        <selectionsProvider>${ $.ns }.${ $.ns }.search_term_listing_columns.ids</selectionsProvider>
+                        <externalProvider>${ $.ns }.campaign_search_term_listing_data_source</externalProvider>
+                        <selectionsProvider>${ $.ns }.${ $.ns }.campaign_search_term_listing_columns.ids</selectionsProvider>
                         <realTimeLink>true</realTimeLink>
                         <autoRender>true</autoRender>
                         <externalFilterMode>true</externalFilterMode>
-                        <dataScope>search_term_listing</dataScope>
+                        <dataScope>campaign_search_term_listing</dataScope>
                         <dataLinks>
                             <imports>false</imports>
                             <exports>true</exports>
                         </dataLinks>
-                        <ns>search_term_listing</ns>
+                        <ns>campaign_search_term_listing</ns>
                         <imports>
                             <link name="campaignId">${ $.provider }:data.campaign_id</link>
                         </imports>
@@ -603,7 +603,7 @@
                             <item name="content" xsi:type="string" translate="true">Define an optimizer to test during the campaign in this scenario by creating a new one or by creating from an existing optimizer.</item>
                         </item>
                     </argument>
-                    <button name="create" displayArea="actions-secondary" component="Smile_ElasticsuiteAbCampaign/js/form/components/campaign-button">
+                    <button name="create" displayArea="actions-secondary" component="Smile_ElasticsuiteAbCampaign/js/form/components/scenario/create-optimizer-button">
                         <argument name="data" xsi:type="array">
                             <item name="config" xsi:type="array">
                                 <item name="formElement" xsi:type="string">container</item>
@@ -637,11 +637,12 @@
                             <imports>
                                 <link name="campaignId">${ $.provider}:data.campaign_id</link>
                                 <link name="scenarioType">${ $.provider}:data.scenario_type_a</link>
-                                <link name="scenarioAOptimizerCount">${ $.provider}:data.scenario_a_optimizer_count</link>
+                                <link name="scenarioAOptimizers">${ $.provider}:data.scenario_a_optimizers</link>
+                                <link name="campaignStatus">${ $.provider}:data.status</link>
                             </imports>
                         </settings>
                     </button>
-                    <button name="create_from" displayArea="actions-secondary" component="Smile_ElasticsuiteAbCampaign/js/form/components/campaign-button">
+                    <button name="create_from" displayArea="actions-secondary" component="Smile_ElasticsuiteAbCampaign/js/form/components/scenario/create-optimizer-button">
                         <argument name="data" xsi:type="array">
                             <item name="config" xsi:type="array">
                                 <item name="formElement" xsi:type="string">container</item>
@@ -683,7 +684,32 @@
                             <imports>
                                 <link name="campaignId">${ $.provider}:data.campaign_id</link>
                                 <link name="scenarioType">${ $.provider}:data.scenario_type_a</link>
-                                <link name="scenarioAOptimizerCount">${ $.provider}:data.scenario_a_optimizer_count</link>
+                                <link name="scenarioAOptimizers">${ $.provider}:data.scenario_a_optimizers</link>
+                                <link name="campaignStatus">${ $.provider}:data.status</link>
+                            </imports>
+                        </settings>
+                    </button>
+                    <button name="persist" displayArea="actions-secondary" component="Smile_ElasticsuiteAbCampaign/js/form/components/scenario/persist-optimizers-button">
+                        <argument name="data" xsi:type="array">
+                            <item name="config" xsi:type="array">
+                                <item name="formElement" xsi:type="string">container</item>
+                                <item name="buttonClasses" xsi:type="string">persist-optimizer-button</item>
+                                <item name="actions" xsi:type="array">
+                                    <!-- Persist all optimizers -->
+                                    <item name="0" xsi:type="array">
+                                        <item name="targetName" xsi:type="string">smile_elasticsuite_ab_campaign_form.smile_elasticsuite_ab_campaign_form.scenario.scenario_a.optimizer.button_set.persist</item>
+                                        <item name="actionName" xsi:type="string">persistOptimizers</item>
+                                    </item>
+                                </item>
+                            </item>
+                        </argument>
+                        <settings>
+                            <title translate="true">Publish</title>
+                            <imports>
+                                <link name="campaignId">${ $.provider}:data.campaign_id</link>
+                                <link name="scenarioType">${ $.provider}:data.scenario_type_a</link>
+                                <link name="scenarioAOptimizers">${ $.provider}:data.scenario_a_optimizers</link>
+                                <link name="campaignStatus">${ $.provider}:data.status</link>
                             </imports>
                         </settings>
                     </button>
@@ -707,7 +733,7 @@
                         <imports>
                             <link name="campaignId">${ $.provider }:data.campaign_id</link>
                             <link name="scenarioType">${ $.provider }:data.scenario_type_a</link>
-                            <link name="scenarioAOptimizerCount">${ $.provider}:data.scenario_a_optimizer_count</link>
+                            <link name="scenarioAOptimizers">${ $.provider}:data.scenario_a_optimizers</link>
                         </imports>
                         <links>
                             <link name="value">${ $.provider }:${ $.ns }</link>
@@ -773,7 +799,7 @@
                             <item name="content" xsi:type="string" translate="true">Compare the previous scenario with this one by letting it empty or by adding a new optimizer.</item>
                         </item>
                     </argument>
-                    <button name="create" displayArea="actions-secondary" component="Smile_ElasticsuiteAbCampaign/js/form/components/campaign-button">
+                    <button name="create" displayArea="actions-secondary" component="Smile_ElasticsuiteAbCampaign/js/form/components/scenario/create-optimizer-button">
                         <argument name="data" xsi:type="array">
                             <item name="config" xsi:type="array">
                                 <item name="formElement" xsi:type="string">container</item>
@@ -807,11 +833,12 @@
                             <imports>
                                 <link name="campaignId">${ $.provider}:data.campaign_id</link>
                                 <link name="scenarioType">${ $.provider}:data.scenario_type_b</link>
-                                <link name="scenarioBOptimizerCount">${ $.provider}:data.scenario_b_optimizer_count</link>
+                                <link name="scenarioBOptimizers">${ $.provider}:data.scenario_b_optimizers</link>
+                                <link name="campaignStatus">${ $.provider}:data.status</link>
                             </imports>
                         </settings>
                     </button>
-                    <button name="create_from" displayArea="actions-secondary" component="Smile_ElasticsuiteAbCampaign/js/form/components/campaign-button">
+                    <button name="create_from" displayArea="actions-secondary" component="Smile_ElasticsuiteAbCampaign/js/form/components/scenario/create-optimizer-button">
                         <argument name="data" xsi:type="array">
                             <item name="config" xsi:type="array">
                                 <item name="formElement" xsi:type="string">container</item>
@@ -853,7 +880,32 @@
                             <imports>
                                 <link name="campaignId">${ $.provider}:data.campaign_id</link>
                                 <link name="scenarioType">${ $.provider}:data.scenario_type_b</link>
-                                <link name="scenarioBOptimizerCount">${ $.provider}:data.scenario_b_optimizer_count</link>
+                                <link name="scenarioBOptimizers">${ $.provider}:data.scenario_b_optimizers</link>
+                                <link name="campaignStatus">${ $.provider}:data.status</link>
+                            </imports>
+                        </settings>
+                    </button>
+                    <button name="persist" displayArea="actions-secondary" component="Smile_ElasticsuiteAbCampaign/js/form/components/scenario/persist-optimizers-button">
+                        <argument name="data" xsi:type="array">
+                            <item name="config" xsi:type="array">
+                                <item name="formElement" xsi:type="string">container</item>
+                                <item name="buttonClasses" xsi:type="string">persist-optimizer-button</item>
+                                <item name="actions" xsi:type="array">
+                                    <!-- Persist all optimizers -->
+                                    <item name="0" xsi:type="array">
+                                        <item name="targetName" xsi:type="string">smile_elasticsuite_ab_campaign_form.smile_elasticsuite_ab_campaign_form.scenario.scenario_b.optimizer.button_set.persist</item>
+                                        <item name="actionName" xsi:type="string">persistOptimizers</item>
+                                    </item>
+                                </item>
+                            </item>
+                        </argument>
+                        <settings>
+                            <title translate="true">Publish</title>
+                            <imports>
+                                <link name="campaignId">${ $.provider}:data.campaign_id</link>
+                                <link name="scenarioType">${ $.provider}:data.scenario_type_b</link>
+                                <link name="scenarioBOptimizers">${ $.provider}:data.scenario_b_optimizers</link>
+                                <link name="campaignStatus">${ $.provider}:data.status</link>
                             </imports>
                         </settings>
                     </button>
@@ -877,7 +929,7 @@
                         <imports>
                             <link name="campaignId">${ $.provider }:data.campaign_id</link>
                             <link name="scenarioType">${ $.provider }:data.scenario_type_b</link>
-                            <link name="scenarioBOptimizerCount">${ $.provider}:data.scenario_b_optimizer_count</link>
+                            <link name="scenarioBOptimizers">${ $.provider}:data.scenario_b_optimizers</link>
                         </imports>
                     </settings>
                 </insertListing>
