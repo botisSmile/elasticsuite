@@ -15,7 +15,6 @@
 
 namespace Smile\ElasticsuiteAbCampaign\Model\ResourceModel\Campaign;
 
-use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 use Smile\ElasticsuiteAbCampaign\Api\Data\CampaignInterface;
@@ -56,8 +55,7 @@ class Optimizer extends AbstractDb
                 CampaignOptimizerInterface::CAMPAIGN_ID . " = ?",
                 $campaignId
             ))
-            ->group(CampaignOptimizerInterface::SCENARIO_TYPE)
-        ;
+            ->group(CampaignOptimizerInterface::SCENARIO_TYPE);
 
         if ($scenarioType) {
             $select->where($this->getConnection()->quoteInto(
@@ -172,8 +170,7 @@ class Optimizer extends AbstractDb
                     ['campaign' => $optimizerCollection->getTable(CampaignInterface::TABLE_NAME)],
                     'campaign.campaign_id = campaign_optimizer.campaign_id',
                     []
-                )
-            ;
+                );
         }
 
         return $optimizerCollection;
