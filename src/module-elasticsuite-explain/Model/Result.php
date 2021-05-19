@@ -16,14 +16,17 @@
 namespace Smile\ElasticsuiteExplain\Model;
 
 use Magento\Catalog\Api\Data\CategoryInterface;
+use Magento\Search\Model\Autocomplete\Item as TermItem;
 use Smile\ElasticsuiteCatalog\Model\Category\Filter\Provider as CategoryFilterProvider;
 use Smile\ElasticsuiteCore\Api\Client\ClientInterface;
 use Smile\ElasticsuiteCore\Api\Search\ContextInterface;
 use Smile\ElasticsuiteCore\Api\Search\Request\ContainerConfigurationInterface;
+use Smile\ElasticsuiteCore\Model\Autocomplete\Terms\DataProvider as TermDataProvider;
 use Smile\ElasticsuiteCore\Search\Adapter\Elasticsuite\Response\QueryResponseFactory;
 use Smile\ElasticsuiteCore\Search\Request\Builder;
 use Smile\ElasticsuiteCore\Search\Request\SortOrderInterface;
 use Smile\ElasticsuiteCore\Search\RequestInterface;
+use Smile\ElasticsuiteExplain\Model\Autocomplete\QueryProvider;
 use Smile\ElasticsuiteExplain\Model\Result\CollectorInterface;
 
 /**
@@ -89,12 +92,17 @@ class Result
     /**
      * @var null|string
      */
-    private $queryText = null;
+    private $queryText;
 
     /**
      * @var integer
      */
     private $size;
+
+    /**
+     * @var QueryProvider
+     */
+    private $autocompleteQueryProvider;
 
     /**
      * @var boolean
@@ -105,18 +113,19 @@ class Result
      * Constructor.
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      *
-     * @param \Smile\ElasticsuiteExplain\Model\Result\ItemFactory                $previewItemFactory     Preview item factory.
-     * @param ContainerConfigurationInterface                                    $containerConfig        Container Configuration
-     * @param \Smile\ElasticsuiteCore\Search\Request\Builder                     $requestBuilder         Request Builder
-     * @param \Smile\ElasticsuiteCore\Search\Adapter\Elasticsuite\Request\Mapper $requestMapper          Request Mapper
-     * @param \Smile\ElasticsuiteCore\Api\Client\ClientInterface                 $client                 Elasticsearch client
-     * @param QueryResponseFactory                                               $queryResponseFactory   Query Response
-     * @param \Smile\ElasticsuiteCore\Api\Search\ContextInterface                $searchContext          Search Context
-     * @param \Smile\ElasticsuiteCatalog\Model\Category\Filter\Provider          $categoryFilterProvider Category Filter Provider
-     * @param \Smile\ElasticsuiteExplain\Model\Result\CollectorInterface[]       $collectors             Explain collectors
-     * @param \Magento\Catalog\Api\Data\CategoryInterface|null                   $category               Category Id to preview, if any.
-     * @param null                                                               $queryText              Query Text.
-     * @param int                                                                $size                   Preview size.
+     * @param \Smile\ElasticsuiteExplain\Model\Result\ItemFactory                $previewItemFactory        Preview item factory.
+     * @param ContainerConfigurationInterface                                    $containerConfig           Container Configuration
+     * @param \Smile\ElasticsuiteCore\Search\Request\Builder                     $requestBuilder            Request Builder
+     * @param \Smile\ElasticsuiteCore\Search\Adapter\Elasticsuite\Request\Mapper $requestMapper             Request Mapper
+     * @param \Smile\ElasticsuiteCore\Api\Client\ClientInterface                 $client                    Elasticsearch client
+     * @param QueryResponseFactory                                               $queryResponseFactory      Query Response
+     * @param \Smile\ElasticsuiteCore\Api\Search\ContextInterface                $searchContext             Search Context
+     * @param \Smile\ElasticsuiteCatalog\Model\Category\Filter\Provider          $categoryFilterProvider    Category Filter Provider
+     * @param QueryProvider                                                      $autocompleteQueryProvider Query Provider
+     * @param \Smile\ElasticsuiteExplain\Model\Result\CollectorInterface[]       $collectors                Explain collectors
+     * @param \Magento\Catalog\Api\Data\CategoryInterface|null                   $category                  Category Id to preview, if any.
+     * @param null                                                               $queryText                 Query Text.
+     * @param int                                                                $size                      Preview size.
      */
     public function __construct(
         Result\ItemFactory $previewItemFactory,
@@ -127,6 +136,7 @@ class Result
         QueryResponseFactory $queryResponseFactory,
         ContextInterface $searchContext,
         CategoryFilterProvider $categoryFilterProvider,
+        QueryProvider $autocompleteQueryProvider,
         array $collectors = [],
         CategoryInterface $category = null,
         $queryText = null,
@@ -144,6 +154,7 @@ class Result
         $this->queryText              = $queryText;
         $this->containerConfiguration = $containerConfig;
         $this->category               = $category;
+        $this->autocompleteQueryProvider = $autocompleteQueryProvider;
     }
 
     /**
@@ -209,7 +220,7 @@ class Result
         $queryText = null;
 
         if ($this->queryText !== null) {
-            $queryText  = $this->queryText;
+            $queryText  = $this->getQueryText();
             $sortOrders = $this->getSearchQuerySortOrders();
         } elseif ($this->category !== null) {
             $filters[]  = $this->categoryFilterProvider->getQueryFilter($this->category);
@@ -227,6 +238,21 @@ class Result
             [],
             []
         );
+    }
+
+    /**
+     * Get query text.
+     *
+     * @return array|string
+     */
+    private function getQueryText()
+    {
+        $queryText = $this->queryText;
+        if ($this->containerConfiguration->getName() === 'catalog_product_autocomplete') {
+            $queryText = $this->autocompleteQueryProvider->getQueryTextForAutocomplete() ?: $queryText;
+        }
+
+        return $queryText;
     }
 
     /**

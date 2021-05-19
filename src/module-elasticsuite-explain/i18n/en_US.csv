@@ -63,3 +63,8 @@
 "A default search field where every other searchable attribute or field text data is copied into.","A default search field where every other searchable attribute or field text data is copied into."
 "A default search field containing the text data of every searchable attribute with spellchecking enabled.","A default search field containing the text data of every searchable attribute with spellchecking enabled."
 "A default search field historically used to contain all the text data of searchable attributes enabled for autocomplete search. Deprecated.","A default search field historically used to contain all the text data of searchable attribute enabled for autocomplete. Deprecated."
+"Breadcrumb","Breadcrumb"
+"Result Number","Result Number"
+"Type your search","Type your search"
+"No terms for this query","No terms for this query"
+"No categories for this query","No categories for this query"

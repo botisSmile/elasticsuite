@@ -63,3 +63,8 @@
 "A default search field where every other searchable attribute or field text data is copied into.","Un champ de recherche par défaut dans lequel le contenu de tous les champs recherchables est copié."
 "A default search field containing the text data of every searchable attribute with spellchecking enabled.","Un champ de recherche par défaut contenant le texte de tous les attributs recherchables pour lesquels la recherche approchante est activée."
 "A default search field historically used to contain all the text data of searchable attributes enabled for autocomplete search. Deprecated.","Un champ de recherche par défaut historiquement utilisé pour contenir le texte de tous les attributs activés pour la recherche par autocomplétion. Obsolète."
+"Breadcrumb","Fil d'ariane"
+"Result Number","Nombre de résultats"
+"Type your search","Écrivez votre recherche"
+"No terms for this query","Pas de recherches populaires pour cette recherche"
+"No categories for this query","Pas de catégories pour cette recherche"

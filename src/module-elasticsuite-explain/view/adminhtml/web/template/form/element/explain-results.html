@@ -7,7 +7,7 @@
         <!-- /ko -->
     </div>
     <div class="admin__field-control" data-bind="css: {'_with-tooltip': $data.tooltip, '_with-reset': $data.showFallbackReset &amp;&amp; $data.isDifferedFromDefault}">
-        <button id="preview-button" data-bind="{ click : refreshProductList, attr: { title: $t('Explain') }}"
+        <button id="preview-button" data-bind="{ click : refreshProductList, visible: showPreviewButton, attr: { title: $t('Explain') }}"
                 type="button" class="action- scalable add primary">
             <span data-bind="i18n: 'Explain'"></span>
         </button>
@@ -69,13 +69,6 @@
                                 <th class="data-grid-th no-link"><span data-bind="i18n: 'No thesaurus for this query'"></span></th>
                             </tr>
                             </thead>
-                            <tbody data-bind="foreach: synonyms">
-                            <tr>
-                                <td><span data-bind="text: $data"></span></td>
-                            </tr>
-                            </tbody>
-                            <tbody class="extra" id="elasticsuite-explain-synonyms_extra">
-                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -125,19 +118,94 @@
                                 <th class="data-grid-th no-link"><span data-bind="i18n: 'No optimizers for this query'"></span></th>
                             </tr>
                             </thead>
-                            <tbody data-bind="foreach: synonyms">
-                            <tr>
-                                <td><span data-bind="text: $data"></span></td>
-                            </tr>
-                            </tbody>
-                            <tbody class="extra" id="elasticsuite-explain-synonyms_extra">
-                            </tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <div class="dashboard-container row" data-bind="if: isSearchContainerWithAutocompletion() && hasQuery()">
+        <div class="dashboard-secondary col-m-5" >
+            <div>
+                <div class="dashboard-item" id="elasticsuite-explain-terms">
+                    <div class="dashboard-item-title">
+                        <span data-bind="i18n: 'Search terms'"></span>
+                    </div>
+                    <div class="dashboard-item-help dashboard-data" id="elasticsuite-explain-terms_help">
+                        <p></p>
+                    </div>
+                    <div class="dashboard-item-content" data-bind="if: hasTerms()">
+                        <table class="admin__table-primary dashboard-data terms-report">
+                            <thead>
+                            <tr>
+                                <th class="data-grid-th no-link"><span data-bind="i18n: 'Term'"></span></th>
+                                <th class="data-grid-th no-link"><span data-bind="i18n: 'Result Number'"></span></th>
+                            </tr>
+                            </thead>
+                            <tbody data-bind="foreach: terms">
+                            <tr>
+                                <td><span data-bind="text: title, attr: { title: title }" ></span></td>
+                                <td><span data-bind="text: num_results, attr: { title: num_results }" ></span></td>
+                            </tr>
+                            </tbody>
+                            <tbody class="extra" id="elasticsuite-explain-terms_extra">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="dashboard-item-content"  data-bind="if: !hasTerms()">
+                        <table class="admin__table-primary dashboard-data terms-report">
+                            <thead>
+                            <tr>
+                                <th class="data-grid-th no-link"><span data-bind="i18n: 'No terms for this query'"></span></th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-secondary col-m-5">
+            <div>
+                <div class="dashboard-item" id="elasticsuite-explain-categories">
+                    <div class="dashboard-item-title">
+                        <span data-bind="i18n: 'Categories'"></span>
+                    </div>
+                    <div class="dashboard-item-help dashboard-data" id="elasticsuite-explain-categories_help">
+                        <p></p>
+                    </div>
+                    <div class="dashboard-item-content"  data-bind="if: hasCategories()">
+                        <table class="admin__table-primary dashboard-data categories-report">
+                            <thead>
+                            <tr>
+                                <th class="data-grid-th no-link"><span data-bind="i18n: 'Name'"></span></th>
+                                <th class="data-grid-th no-link"><span data-bind="i18n: 'Breadcrumb'"></span></th>
+                            </tr>
+                            </thead>
+                            <tbody data-bind="foreach: categories">
+                            <tr>
+                                <td><a data-bind="attr: { href: url, title: title }"><span data-bind="text: title"></span></a></td>
+                                <td><span data-bind="text: breadcrumb.join(' > ')"></span></td>
+                            </tr>
+                            </tbody>
+                            <tbody class="extra" id="elasticsuite-explain-categories_extra">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="dashboard-item-content"  data-bind="if: !hasCategories()">
+                        <table class="admin__table-primary dashboard-data categories-report">
+                            <thead>
+                            <tr>
+                                <th class="data-grid-th no-link"><span data-bind="i18n: 'No categories for this query'"></span></th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="elasticsuite-admin-product-sorter">
         <div data-role="spinner" class="admin__data-grid-loading-mask" visible="loading" if="showSpinner">
             <div class="spinner"><span repeat="8"></span></div>

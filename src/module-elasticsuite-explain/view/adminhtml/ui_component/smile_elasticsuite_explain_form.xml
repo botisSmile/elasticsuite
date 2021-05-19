@@ -169,8 +169,15 @@
                     <item name="imports" xsi:type="array">
                         <item name="searchContainers" xsi:type="string">${ $.provider }:data.search_containers</item>
                     </item>
+                    <item name="listens" xsi:type="array">
+                        <item name="${ $.provider }:data.search_container_preview" xsi:type="string">onContainersUpdate</item>
+                    </item>
+                    <item name="queryField" xsi:type="string">smile_elasticsuite_explain_form.smile_elasticsuite_explain_form.general.query_text_preview</item>
                     <item name="additionalClasses" xsi:type="string">optimizer-preview</item>
                     <item name="labelVisible" xsi:type="boolean">true</item>
+                    <item name="searchContainersWithAutocompletion" xsi:type="array">
+                        <item name="catalog_product_autocomplete" xsi:type="string">catalog_product_autocomplete</item>
+                    </item>
                 </item>
             </argument>
         </field>
