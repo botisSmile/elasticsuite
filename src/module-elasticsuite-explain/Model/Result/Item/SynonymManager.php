@@ -16,6 +16,8 @@
 namespace Smile\ElasticsuiteExplain\Model\Result\Item;
 
 use Smile\ElasticsuiteCore\Api\Search\ContextInterface;
+use Smile\ElasticsuiteCore\Api\Search\Request\ContainerConfigurationInterface;
+use Smile\ElasticsuiteExplain\Model\Autocomplete\QueryProvider;
 use Smile\ElasticsuiteExplain\Model\Thesaurus\Index;
 
 /**
@@ -38,6 +40,11 @@ class SynonymManager
     private $searchContext;
 
     /**
+     * @var QueryProvider
+     */
+    private $autocompleteQueryProvider;
+
+    /**
      * @var array
      */
     private $synonymCache = [];
@@ -45,48 +52,63 @@ class SynonymManager
     /**
      * Constructor.
      *
-     * @param Index            $thesaurusIndex Theraurus Index.
-     * @param ContextInterface $searchContext  Search Context.
+     * @param Index            $thesaurusIndex            Theraurus Index.
+     * @param ContextInterface $searchContext             Search Context.
+     * @param QueryProvider    $autocompleteQueryProvider Autocomplete query provider
      */
     public function __construct(
         Index $thesaurusIndex,
-        ContextInterface  $searchContext
+        ContextInterface  $searchContext,
+        QueryProvider $autocompleteQueryProvider
     ) {
         $this->thesaurusIndex = $thesaurusIndex;
         $this->searchContext  = $searchContext;
+        $this->autocompleteQueryProvider = $autocompleteQueryProvider;
     }
 
     /**
      * Get synonym for a field query.
      *
      * @param string $fieldQuery Field query.
-     *
      * @return string
      */
     public function getSynonym(string $fieldQuery): string
     {
-        $queryText = $this->searchContext->getCurrentSearchQuery()->getQueryText();
+        $queryTexts = $this->getQueryTexts();
         $storeId   = (int) $this->searchContext->getStoreId();
-
-        // Retrieve all possible synonyms for the query text.
-        $cacheKey = $storeId . '_' . $queryText;
-        if (!isset($this->synonymCache[$cacheKey])) {
-            $this->synonymCache[$cacheKey] = $this->thesaurusIndex->getSynonyms($storeId, $queryText);
-        }
-
-        // Find the synonym.
         $synonym = '';
-        foreach ($this->synonymCache[$cacheKey] as $synonymData) {
-            if ($fieldQuery === $synonymData['token']) {
-                $synonym = substr(
-                    $queryText,
-                    $synonymData['start_offset'],
-                    $synonymData['end_offset'] - $synonymData['start_offset']
-                );
-                break;
+        foreach ($queryTexts as $queryText) {
+            // Retrieve all possible synonyms for the query text.
+            $cacheKey = $storeId . '_' . $queryText;
+            if (!isset($this->synonymCache[$cacheKey])) {
+                $this->synonymCache[$cacheKey] = $this->thesaurusIndex->getSynonyms($storeId, $queryText);
+            }
+
+            // Find the synonym.
+            foreach ($this->synonymCache[$cacheKey] as $synonymData) {
+                if ($fieldQuery === $synonymData['token']) {
+                    $synonym = substr(
+                        $queryText,
+                        $synonymData['start_offset'],
+                        $synonymData['end_offset'] - $synonymData['start_offset']
+                    );
+                    break 2;
+                }
             }
         }
 
         return $synonym;
+    }
+
+    /**
+     * Get query texts.
+     *
+     * @return array
+     */
+    private function getQueryTexts()
+    {
+        $currentQueryText = $this->searchContext->getCurrentSearchQuery()->getQueryText();
+
+        return $this->autocompleteQueryProvider->getQueryTextForAutocomplete() ?: [$currentQueryText];
     }
 }

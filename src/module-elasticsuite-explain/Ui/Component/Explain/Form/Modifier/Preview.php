@@ -17,6 +17,7 @@ namespace Smile\ElasticsuiteExplain\Ui\Component\Explain\Form\Modifier;
 
 use Magento\Backend\Model\UrlInterface;
 use Magento\Framework\Locale\FormatInterface;
+use Magento\Search\Helper\Data as SearchHelper;
 use Magento\Ui\DataProvider\Modifier\ModifierInterface;
 
 /**
@@ -39,15 +40,22 @@ class Preview implements ModifierInterface
     private $localeFormat;
 
     /**
+     * @var SearchHelper
+     */
+    private $searchHelper;
+
+    /**
      * Preview constructor.
      *
      * @param \Magento\Backend\Model\UrlInterface       $urlBuilder   Url Builder
      * @param \Magento\Framework\Locale\FormatInterface $localeFormat Locale Format
+     * @param SearchHelper                              $searchHelper Search helper
      */
-    public function __construct(UrlInterface $urlBuilder, FormatInterface $localeFormat)
+    public function __construct(UrlInterface $urlBuilder, FormatInterface $localeFormat, SearchHelper $searchHelper)
     {
         $this->urlBuilder   = $urlBuilder;
         $this->localeFormat = $localeFormat;
+        $this->searchHelper = $searchHelper;
     }
 
     /**
@@ -64,8 +72,10 @@ class Preview implements ModifierInterface
     public function modifyMeta(array $meta)
     {
         $config = [
-            'loadUrl'     => $this->getPreviewUrl(),
-            'priceFormat' => $this->localeFormat->getPriceFormat(),
+            'loadUrl'         => $this->getPreviewUrl(),
+            'priceFormat'     => $this->localeFormat->getPriceFormat(),
+            'minSearchLength' => $this->searchHelper->getMinQueryLength(),
+            'maxSearchLength' => $this->searchHelper->getMaxQueryLength(),
         ];
 
         $meta['general']['children']['explain_preview']['arguments']['data']['config'] = $config;

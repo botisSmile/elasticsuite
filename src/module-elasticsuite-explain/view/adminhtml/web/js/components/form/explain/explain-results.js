@@ -15,11 +15,13 @@
 define([
     'Magento_Ui/js/form/element/abstract',
     'jquery',
+    'underscore',
     'Smile_ElasticsuiteExplain/js/components/form/explain/result/item',
     'Magento_Ui/js/modal/modal',
+    'mage/translate',
     'MutationObserver',
     'mage/collapsible'
-], function (Component, $, Product, modal) {
+], function (Component, $, _, Product, modal, $t) {
     'use strict';
 
     return Component.extend({
@@ -27,12 +29,16 @@ define([
             showSpinner: true,
             template: "Smile_ElasticsuiteExplain/form/element/explain-results",
             refreshFields: {},
-            maxRefreshInterval: 200,
+            searchContainersWithAutocompletion: {},
+            maxRefreshInterval: 250,
             imports: {
                 formData: "${ $.provider }:data"
             },
             messages : {
                 showMore : $.mage.__('Show more')
+            },
+            modules: {
+                queryField: '${ $.queryField }'
             },
             modalOptions : {
                 type: 'popup',
@@ -46,14 +52,20 @@ define([
         {
             this._super();
 
-            this.products           = [];
-            this.synonyms           = [];
-            this.optimizers         = [];
-            this.positions          = {};
-            this.countTotalProducts = 0;
-            this.pageSize           = parseInt(this.pageSize, 10);
-            this.currentSize        = this.pageSize;
-            this.isSpellchecked     = false;
+            this.products               = [];
+            this.synonyms               = [];
+            this.optimizers             = [];
+            this.terms                  = [];
+            this.categories             = [];
+            this.positions              = {};
+            this.countTotalProducts     = 0;
+            this.pageSize               = parseInt(this.pageSize, 10);
+            this.currentSize            = this.pageSize;
+            this.isSpellchecked         = false;
+            this.showPreviewButton      = true;
+            this.currentRequest         = null;
+            this.currentSearchContainer = '';
+            this.observeQueryField();
 
             this.observe([
                 'products',
@@ -64,9 +76,17 @@ define([
                 'queryText',
                 'synonyms',
                 'optimizers',
+                'terms',
+                'categories',
                 'currentProduct',
-                'isSpellchecked'
+                'isSpellchecked',
+                'showPreviewButton',
+                'currentSearchContainer'
             ]);
+        },
+
+        observeQueryField: function () {
+            $(document).on('input propertychange', '#' + this.queryField().uid, _.debounce(this.onQueryTextUpdate.bind(this), this.maxRefreshInterval));
         },
 
         refreshProductList: function () {
@@ -75,14 +95,28 @@ define([
             }
 
             this.refreshRateLimiter = setTimeout(function () {
-                this.value({queryText : this.queryText()});
-                this.loading(true);
-
-                var formData = this.formData;
-                formData['page_size'] = this.currentSize();
-
-                $.post(this.loadUrl, this.formData, this.onProductListLoad.bind(this));
+                this.sendAjax();
             }.bind(this), this.maxRefreshInterval);
+        },
+
+        sendAjax: function () {
+            this.value({queryText : this.queryText()});
+            this.loading(true);
+
+            var formData = this.formData;
+            formData['page_size'] = this.currentSize();
+            if (this.isSearchContainerWithAutocompletion(this.currentSearchContainer())) {
+                formData['q'] = this.queryText();
+            }
+
+            this.currentRequest = $.ajax({
+                method: "GET",
+                url: this.loadUrl,
+                data: formData,
+                dataType: 'json',
+                beforeSend: function() { if (this.currentRequest !== null) { this.currentRequest.abort(); }}.bind(this),
+                success: this.onProductListLoad.bind(this)
+            });
         },
 
         onProductListLoad: function (loadedData) {
@@ -109,6 +143,14 @@ define([
 
             if (loadedData.optimizers) {
                 this.optimizers(loadedData.optimizers);
+            }
+
+            if (loadedData.terms) {
+                this.terms(loadedData.terms);
+            }
+
+            if (loadedData.categories) {
+                this.categories(loadedData.categories);
             }
 
             this.loading(false);
@@ -144,6 +186,14 @@ define([
             return (this.optimizers().length > 0);
         },
 
+        hasTerms: function () {
+            return (this.terms().length > 0 && this.terms()[0].title);
+        },
+
+        hasCategories: function () {
+            return (this.categories().length > 0 && this.categories()[0].title);
+        },
+
         getSpellcheckMessage: function () {
             return $.mage.__("No exact results found for: '%1'. The displayed items are the closest matches.")
                 .replace('%1', $('[name="query_text_preview"]').val());
@@ -157,6 +207,60 @@ define([
             this.modal.modal('openModal');
             $("#highlight-details").collapsible({collateral : {element: '#highlight-details', openedState: '_show'}});
             $("#fields-details").collapsible({collateral : {element: '#fields-details', openedState: '_show'}});
+        },
+
+        onContainersUpdate: function (value) {
+            this.currentSearchContainer(value);
+            this.showPreviewButton(!this.isSearchContainerWithAutocompletion(value));
+            this.editQueryInputOnContainersUpdate(value);
+        },
+
+        editQueryInputOnContainersUpdate: function (value) {
+            var queryInputField = $('#' + this.queryField().uid);
+            if (this.isSearchContainerWithAutocompletion(value)) {
+                queryInputField.attr('maxLength', this.maxSearchLength);
+                this.queryField().notice($t('Type your search'));
+                queryInputField.focus();
+            } else {
+                queryInputField.attr('maxLength', null);
+                this.queryField().notice(null);
+            }
+        },
+
+        isSearchContainerWithAutocompletion: function (searchContainer) {
+            if (typeof searchContainer === 'undefined') {
+                searchContainer = this.currentSearchContainer();
+            }
+
+            return Object.keys(this.searchContainersWithAutocompletion).includes(searchContainer);
+        },
+
+        hasQuery: function () {
+            return typeof this.queryText() !== 'undefined' && this.queryText().trim().length >= parseInt(this.minSearchLength, 10);
+        },
+
+        onQueryTextUpdate: function (event) {
+            // On query text change, do action only if we use autocompletion.
+            if (this.isSearchContainerWithAutocompletion(this.currentSearchContainer())) {
+                var queryInput = $(event.currentTarget);
+                this.queryText(queryInput.val());
+                queryInput.trigger('change');
+                // Send an ajax call if conditions on the query text are met. Otherwise, we reset explain data.
+                if (queryInput.val().trim().length >= parseInt(this.minSearchLength, 10)
+                    && queryInput.val().trim().length <= parseInt(this.maxSearchLength, 10)) {
+                    this.sendAjax();
+                } else {
+                    this.resetExplainData();
+                }
+            }
+        },
+
+        resetExplainData: function () {
+            this.products([]);
+            this.synonyms([]);
+            this.optimizers([]);
+            this.categories([]);
+            this.terms([]);
         }
     });
 });
