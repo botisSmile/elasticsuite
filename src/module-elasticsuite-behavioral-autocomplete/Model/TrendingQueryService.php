@@ -22,6 +22,7 @@ use Smile\ElasticsuiteBehavioralAutocomplete\Api\TrendingQueryServiceInterface;
 use Smile\ElasticsuiteCore\Search\Request\BucketInterface;
 use Smile\ElasticsuiteCore\Search\Request\Query\FunctionScore;
 use Smile\ElasticsuiteCore\Search\Request\QueryInterface;
+use Smile\ElasticsuiteCore\Search\Request\SortOrderInterface;
 
 /**
  * Trending Query service.
@@ -118,7 +119,7 @@ class TrendingQueryService implements TrendingQueryServiceInterface
         $request = $this->getRequest($queryText, $maxSize);
         $result  = $this->searchEngine->search($request);
 
-        $queries = $this->buildQueries($result);
+        $queries = $this->buildQueries($result, $queryText);
 
         return $queries;
     }
@@ -136,13 +137,37 @@ class TrendingQueryService implements TrendingQueryServiceInterface
     }
 
     /**
-     * @param \Magento\Framework\Search\ResponseInterface $response Search Response
+     * @param \Magento\Framework\Search\ResponseInterface $response  Search Response
+     * @param string                                      $queryText The query text
      *
      * @return \Smile\ElasticsuiteFacetRecommender\Api\Data\FacetRecommendationInterface[]
      */
-    private function buildQueries(ResponseInterface $response)
+    private function buildQueries(ResponseInterface $response, $queryText)
     {
         $queries = [];
+
+        $exactBucket = $response->getAggregations()->getBucket('exact_search_query');
+
+        if ($exactBucket) {
+            /** @var \Smile\ElasticsuiteCore\Search\Adapter\Elasticsuite\Response\Aggregation\Value $childBucket */
+            foreach ($exactBucket->getValues() as $childBucket) {
+                if ($childBucket->getValue() != '__other_docs') {
+                    if (trim($childBucket->getValue()) !== trim($queryText)) {
+                        continue;
+                    }
+                    $metrics   = $childBucket->getMetrics();
+                    $text      = $this->string->cleanString($childBucket->getValue());
+                    $queries[$text] = $this->searchQueryFactory->create(
+                        [
+                            'data' => [
+                                'query_text'  => $text,
+                                'num_results' => round($metrics['product_count'] ?? 0),
+                            ],
+                        ]
+                    );
+                }
+            }
+        }
 
         $searchBucket = $response->getAggregations()->getBucket('search_query');
 
@@ -151,10 +176,11 @@ class TrendingQueryService implements TrendingQueryServiceInterface
             foreach ($searchBucket->getValues() as $childBucket) {
                 if ($childBucket->getValue() != '__other_docs') {
                     $metrics   = $childBucket->getMetrics();
-                    $queries[] = $this->searchQueryFactory->create(
+                    $text      = $this->string->cleanString($childBucket->getValue());
+                    $queries[$text] = $this->searchQueryFactory->create(
                         [
                             'data' => [
-                                'query_text'  => $this->string->cleanString($childBucket->getValue()),
+                                'query_text'  => $text,
                                 'num_results' => round($metrics['product_count'] ?? 0),
                             ],
                         ]
@@ -178,7 +204,7 @@ class TrendingQueryService implements TrendingQueryServiceInterface
     private function getRequest($queryText, $maxSize = null)
     {
         $storeId      = $this->getStoreId();
-        $aggregations = $this->getAggregations($maxSize);
+        $aggregations = $this->getAggregations($queryText, $maxSize);
         $searchQuery  = $this->getSearchQuery($queryText);
         if ($this->config->isTrendingEnabled()) {
             $searchQuery = $this->getBoostedQuery($searchQuery);
@@ -283,9 +309,15 @@ class TrendingQueryService implements TrendingQueryServiceInterface
             ['field' => 'page.search.query', 'queryText' => $queryText]
         );
 
+        $currentTermFilter = $this->queryFactory->create(
+            QueryInterface::TYPE_MATCH,
+            ['field' => 'page.search.query.untouched', 'queryText' => $queryText, 'boost' => 100]
+        );
+
         return $this->queryFactory->create(
             QueryInterface::TYPE_BOOL,
             [
+                'should'  => [$pageFilter, $spellcheckFilter, $productCountFilter, $currentTermFilter],
                 'must'    => [$pageFilter, $spellcheckFilter, $productCountFilter, $matchFilter],
                 'mustNot' => [$noFilterFilter],
             ]
@@ -295,18 +327,30 @@ class TrendingQueryService implements TrendingQueryServiceInterface
     /**
      * Get aggregations
      *
-     * @param int $maxSize The max size
+     * @param string $queryText The current query text
+     * @param int    $maxSize   The max size
      *
      * @return array
      */
-    private function getAggregations($maxSize)
+    private function getAggregations($queryText, $maxSize)
     {
+        $currentTermFilter = $this->queryFactory->create(
+            QueryInterface::TYPE_MATCH,
+            ['field' => 'page.search.query.untouched', 'queryText' => $queryText, 'boost' => 100]
+        );
+
         /*
          * If trending search terms are to be picked, a function score is applied, thus the score/relevance is to be used
          * in the aggregation.
          * Otherwise, the raw popularity is the number of uses ie the documents (events) count.
          */
-        $sortOrder = $this->config->isTrendingEnabled() ? BucketInterface::SORT_ORDER_RELEVANCE : BucketInterface::SORT_ORDER_COUNT;
+        $sortOrder = BucketInterface::SORT_ORDER_COUNT;
+        if ($this->config->isTrendingEnabled()) {
+            $sortOrder = [
+                'termRelevance' => SortOrderInterface::SORT_DESC,
+                BucketInterface::SORT_ORDER_COUNT => SortOrderInterface::SORT_DESC,
+            ];
+        }
 
         return [
             [
@@ -320,6 +364,33 @@ class TrendingQueryService implements TrendingQueryServiceInterface
                         'name'  => 'product_count',
                         'type'  => 'avg',
                         'field' => 'page.product_list.product_count',
+                    ],
+                    [
+                        'name'   => 'termRelevance',
+                        'type'   => 'avg',
+                        'field'  => '_score',
+                        'config' => ['script' => '_score'],
+                    ],
+                ],
+            ],
+            [
+                'type'      => BucketInterface::TYPE_TERM,
+                'field'     => 'page.search.query.sortable',
+                'name'      => 'exact_search_query',
+                'size'      => (int) $maxSize,
+                'sortOrder' => $sortOrder,
+                'filter'    => $currentTermFilter,
+                'metrics'   => [
+                    [
+                        'name'  => 'product_count',
+                        'type'  => 'avg',
+                        'field' => 'page.product_list.product_count',
+                    ],
+                    [
+                        'name'   => 'termRelevance',
+                        'type'   => 'avg',
+                        'field'  => '_score',
+                        'config' => ['script' => '_score'],
                     ],
                 ],
             ],
