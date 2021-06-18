@@ -1,0 +1,17 @@
+type Query {
+    elasticsuitefacetRecommender(visitorId: String!, userId: String! categoryId: Int!, ): FilterRecommendations @resolver(class: "Smile\\ElasticsuiteFacetRecommender\\Model\\Resolver\\Filter\\Recommendations")
+}
+
+type FilterRecommendations @doc(description: "Recommendations of filters for a given category and a given user.") {
+    items: [FilterRecommendationInterface] @doc(description: "An array of filters recommended for the user.")
+}
+
+interface FilterRecommendationInterface @typeResolver(class: "Smile\\ElasticsuiteFacetRecommender\\Model\\Resolver\\Filter") {
+    attribute_code: String @doc(description: "Filter attribute code.")
+    label: String @doc(description: "Filter label.")
+    value: String! @doc(description: "Filter value.")
+}
+
+type ElasticsuiteFilterRecommendation implements FilterRecommendationInterface {
+
+}
