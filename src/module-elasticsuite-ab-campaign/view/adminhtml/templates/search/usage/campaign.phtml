@@ -1,0 +1,96 @@
+<?php
+/**
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Smile ElasticSuite to newer
+ * versions in the future.
+ *
+ * @category  Smile
+ * @package   Smile\ElasticsuiteAbCampaign
+ * @author    Botis <botis@smile.fr>
+ * @copyright 2021 Smile
+ * @license   Open Software License ("OSL") v. 3.0
+ */
+?>
+
+<?php
+
+/**
+ * @var \Smile\ElasticsuiteAbCampaign\Block\Adminhtml\Search\Usage\Campaign $block
+ */
+
+$campaignSessionsData = $block->getCampaignSessionsData();
+?>
+
+<div class="dashboard-item" id="<?= $block->getJsId() ?>">
+    <div class="dashboard-item-title">
+        <span><?= $block->getTitle() ;?></span>
+        <?php if ($block->hasHelp()) :?>
+            <div class="admin__field-tooltip tooltip">
+                <a href="#<?= $block->getJsId() ?>_help"
+                   title="<?= $block->escapeHtml(__('What is this ?')) ?>" class="admin__field-tooltip-action action-help">
+                    <span style="display: inline-block"><?= __('What is this ?') ?></span>
+                </a>
+            </div>
+        <?php endif; ?>
+    </div>
+    <?php if ($block->hasHelp()) :?>
+        <div class="dashboard-item-help dashboard-data" id="<?= $block->getJsId() ?>_help">
+            <p><?= $block->getHelp() ?></p>
+        </div>
+    <?php endif; ?>
+    <div class="dashboard-item-content">
+        <table class="admin__table-primary dashboard-data terms-report">
+            <thead>
+            <tr>
+                <th class="data-grid-th no-link"><span><?= __('Campaign');?></span></th>
+                <th class="data-grid-th no-link"><span><?= __('Sessions A');?></span></th>
+                <th class="data-grid-th no-link"><span><?= __('Sessions B');?></span></th>
+                <th class="data-grid-th no-link"><span><?= __('Conv. rate A');?></span></th>
+                <th class="data-grid-th no-link"><span><?= __('Conv. rate B');?></span></th>
+            </thead>
+            <?php if (empty($campaignSessionsData)) : ?>
+                <tbody>
+                <tr>
+                    <td colspan="5" style="text-align:center; padding: 20px;">
+                        <em><?= __('No data over the selected period.'); ?></em>
+                    </td>
+                </tr>
+                </tbody>
+            <?php else : ?>
+                <tbody>
+                <?php foreach ($campaignSessionsData as $campaignId => $campaignData) : ?>
+                    <tr>
+                        <td><?php if ($campaignData['url']) : ?>
+                                <a href=<?= $campaignData['url']; ?> target="_blank"><?= $campaignData['name']; ?></a>
+                            <?php else : ?>
+                                <?= __('Id %1', $campaignData['campaign_id']); ?>
+                            <?php endif; ?>
+                        </td>
+                        <td><?= $campaignData['scenario_session_a']; ?></td>
+                        <td><?= $campaignData['scenario_session_b']; ?></td>
+                        <td><?= $campaignData['conversion_rate_a'] ?></td>
+                        <td><?= $campaignData['conversion_rate_b'] ?></td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            <?php endif; ?>
+        </table>
+    </div>
+</div>
+
+<script>
+    require([
+        'jquery'
+    ], function($){
+        $(function() {
+
+            $("#<?= $block->getJsId() ?> .action-help").click(function(event) {
+                event.preventDefault();
+                $("#<?= $block->getJsId() ?> .dashboard-item-help").slideToggle();
+            });
+        });
+    });
+</script>
+
+

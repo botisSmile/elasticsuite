@@ -98,6 +98,13 @@
             </argument>
         </arguments>
     </virtualType>
+    <virtualType name="CampaignSessionsByCampaignDataProvider" type="Smile\ElasticsuiteAbCampaign\Ui\Component\CampaignSession\Listing\DataProvider">
+        <arguments>
+            <argument name="collectionProcessors" xsi:type="array">
+                <item name="campaign" xsi:type="object">Smile\ElasticsuiteAbCampaign\Ui\Component\CampaignSession\Listing\FilterCollectionByCampaign</item>
+            </argument>
+        </arguments>
+    </virtualType>
     <!-- Legacy Optimizers listing UI component data provider override -->
     <virtualType name="OptimizerWithoutCampaignDataProvider" type="Smile\ElasticsuiteExplain\Ui\Component\Optimizer\Listing\DataProvider">
         <arguments>

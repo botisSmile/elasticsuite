@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Smile ElasticSuite to newer
+ * versions in the future.
+ *
+ * @category  Smile
+ * @package   Smile\ElasticsuiteAbCampaign
+ * @author    Botis <botis@smile.fr>
+ * @copyright 2021 Smile
+ * @license   Open Software License ("OSL") v. 3.0
+ */
+-->
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <referenceContainer name="dashboard-left-col">
+        <block name="elasticsuite.analytics.search_usage.campaign" class="Smile\ElasticsuiteAbCampaign\Block\Adminhtml\Search\Usage\Campaign" template="Smile_ElasticsuiteAbCampaign::search/usage/campaign.phtml" after="elasticsuite.analytics.search_usage.no_result_terms">
+            <arguments>
+                <argument name="title" xsi:type="string" translate="true">AB Testing Campaign</argument>
+                <argument name="help" xsi:type="string" translate="true"><![CDATA[The campaign data listed below are in real time.<br /><br /><strong>Sessions A</strong>: Total number of sessions exposed to scenario A.<br /><strong>Conv. rate A</strong>: Conversion rate of scenario A.<br /><strong>Sessions B</strong>: Total number of sessions exposed to scenario B.<br /><strong>Conv. rate B</strong>: Conversion rate of scenario B.]]></argument>
+            </arguments>
+        </block>
+    </referenceContainer>
+</page>

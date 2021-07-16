@@ -23,6 +23,7 @@ use Magento\Framework\Setup\SchemaSetupInterface;
 use Magento\Store\Model\Store;
 use Smile\ElasticsuiteAbCampaign\Api\Data\CampaignInterface;
 use Smile\ElasticsuiteAbCampaign\Api\Data\CampaignOptimizerInterface;
+use Smile\ElasticsuiteAbCampaign\Api\Data\CampaignSessionInterface;
 use Smile\ElasticsuiteCatalogOptimizer\Api\Data\OptimizerInterface;
 
 /**
@@ -369,6 +370,99 @@ class CampaignSetup
                 ->setComment('Campaign Optimize Table');
 
             $setup->getConnection()->createTable($optimizerTable);
+        }
+    }
+
+    /**
+     * Creates the campaign session table.
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
+     * @param SchemaSetupInterface $setup Schema setup
+     * @return void
+     * @throws \Zend_Db_Exception
+     */
+    public function createCampaignSessionTable(SchemaSetupInterface $setup)
+    {
+        if (!$setup->getConnection()->isTableExists($setup->getTable(CampaignSessionInterface::TABLE_NAME))) {
+            $table = $setup->getConnection()
+                ->newTable($setup->getTable(CampaignSessionInterface::TABLE_NAME))
+                ->addColumn(
+                    CampaignSessionInterface::CAMPAIGN_SESSION_ID,
+                    Table::TYPE_SMALLINT,
+                    5,
+                    ['identity' => true, 'nullable' => false, 'unsigned' => true, 'primary' => true]
+                )
+                ->addColumn(
+                    CampaignSessionInterface::CAMPAIGN_ID,
+                    Table::TYPE_SMALLINT,
+                    5,
+                    ['nullable' => false, 'unsigned' => true]
+                )
+                ->addColumn(
+                    CampaignSessionInterface::SESSION_COUNT_TOTAL,
+                    Table::TYPE_INTEGER,
+                    null,
+                    ['nullable' => false, 'default' => 0]
+                )
+                ->addColumn(
+                    CampaignSessionInterface::SESSION_COUNT_A,
+                    Table::TYPE_INTEGER,
+                    null,
+                    ['nullable' => false, 'default' => 0]
+                )
+                ->addColumn(
+                    CampaignSessionInterface::SALES_COUNT_A,
+                    Table::TYPE_INTEGER,
+                    null,
+                    ['nullable' => false, 'default' => 0]
+                )
+                ->addColumn(
+                    CampaignSessionInterface::CONVERSION_RATE_A,
+                    Table::TYPE_DECIMAL,
+                    '10,2',
+                    ['nullable' => false, 'default' => 0]
+                )
+
+                ->addColumn(
+                    CampaignSessionInterface::SESSION_COUNT_B,
+                    Table::TYPE_INTEGER,
+                    null,
+                    ['nullable' => false, 'default' => 0]
+                )
+                ->addColumn(
+                    CampaignSessionInterface::SALES_COUNT_B,
+                    Table::TYPE_INTEGER,
+                    null,
+                    ['nullable' => false, 'default' => 0]
+                )
+                ->addColumn(
+                    CampaignSessionInterface::CONVERSION_RATE_B,
+                    Table::TYPE_DECIMAL,
+                    '10,2',
+                    ['nullable' => false, 'default' => 0]
+                )
+                ->addColumn(
+                    CampaignSessionInterface::SIGNIFICANCE,
+                    Table::TYPE_BOOLEAN,
+                    null,
+                    ['nullable' => false, 'default' => 0]
+                )
+                ->addForeignKey(
+                    $setup->getFkName(
+                        CampaignSessionInterface::TABLE_NAME,
+                        CampaignSessionInterface::CAMPAIGN_ID,
+                        CampaignInterface::TABLE_NAME,
+                        CampaignInterface::CAMPAIGN_ID
+                    ),
+                    CampaignSessionInterface::CAMPAIGN_ID,
+                    CampaignInterface::TABLE_NAME,
+                    CampaignInterface::CAMPAIGN_ID,
+                    Table::ACTION_CASCADE
+                )
+            ;
+
+            $setup->getConnection()->createTable($table);
         }
     }
 }

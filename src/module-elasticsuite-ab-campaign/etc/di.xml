@@ -22,6 +22,7 @@
         <arguments>
             <argument name="entities" xsi:type="array">
                 <item name="Smile\ElasticsuiteAbCampaign\Api\Data\CampaignInterface" xsi:type="string">Smile\ElasticsuiteAbCampaign\Api\CampaignRepositoryInterface</item>
+                <item name="Smile\ElasticsuiteAbCampaign\Api\Data\CampaignSessionInterface" xsi:type="string">Smile\ElasticsuiteAbCampaign\Api\CampaignSessionRepositoryInterface</item>
             </argument>
         </arguments>
     </type>
@@ -33,6 +34,10 @@
                     <item name="entityTableName" xsi:type="string">smile_elasticsuite_campaign</item>
                     <item name="identifierField" xsi:type="string">campaign_id</item>
                 </item>
+                <item name="Smile\ElasticsuiteAbCampaign\Api\Data\CampaignSessionInterface" xsi:type="array">
+                    <item name="entityTableName" xsi:type="string">smile_elasticsuite_campaign_session</item>
+                    <item name="identifierField" xsi:type="string">campaign_session_id</item>
+                </item>
             </argument>
         </arguments>
     </type>
@@ -41,15 +46,20 @@
         <arguments>
             <argument name="hydrators" xsi:type="array">
                 <item name="Smile\ElasticsuiteAbCampaign\Api\Data\CampaignInterface" xsi:type="string">Magento\Framework\EntityManager\AbstractModelHydrator</item>
+                <item name="Smile\ElasticsuiteAbCampaign\Api\Data\CampaignSessionInterface" xsi:type="string">Magento\Framework\EntityManager\AbstractModelHydrator</item>
             </argument>
         </arguments>
     </type>
 
     <preference for="Smile\ElasticsuiteAbCampaign\Api\CampaignRepositoryInterface" type="Smile\ElasticsuiteAbCampaign\Model\CampaignRepository" />
+    <preference for="Smile\ElasticsuiteAbCampaign\Api\CampaignSessionRepositoryInterface" type="Smile\ElasticsuiteAbCampaign\Model\CampaignSessionRepository" />
     <preference for="Smile\ElasticsuiteAbCampaign\Api\CampaignManagerInterface" type="Smile\ElasticsuiteAbCampaign\Model\CampaignManager" />
     <preference for="Smile\ElasticsuiteAbCampaign\Api\Campaign\OptimizerManagerInterface" type="Smile\ElasticsuiteAbCampaign\Model\Campaign\OptimizerManager" />
     <preference for="Smile\ElasticsuiteAbCampaign\Api\Data\CampaignInterface" type="Smile\ElasticsuiteAbCampaign\Model\Campaign" />
+    <preference for="Smile\ElasticsuiteAbCampaign\Api\Data\CampaignSessionInterface" type="Smile\ElasticsuiteAbCampaign\Model\CampaignSession" />
     <preference for="Smile\ElasticsuiteAbCampaign\Api\Data\CampaignSearchResultsInterface" type="Magento\Framework\Api\SearchResults" />
+    <preference for="Smile\ElasticsuiteAbCampaign\Api\Data\CampaignSessionSearchResultsInterface" type="Magento\Framework\Api\SearchResults" />
+    <preference for="Smile\ElasticsuiteAbCampaign\Api\CampaignAggregatorInterface" type="Smile\ElasticsuiteAbCampaign\Model\CampaignAggregator" />
 
     <!-- Campaign Containers -->
     <type name="Smile\ElasticsuiteAbCampaign\Model\Search\Request\Product\Source\Containers">
@@ -103,4 +113,38 @@
                 type="Smile\ElasticsuiteAbCampaign\Plugin\CatalogOptimizer\ResourceModel\Optimizer\CollectionFactoryPlugin"
                 disabled="true" />
     </type>
+
+    <type name="Smile\ElasticsuiteTracker\Model\ResourceModel\SessionIndex">
+        <plugin name="session_aggregator_add_ab_campaign_data"
+                type="Smile\ElasticsuiteAbCampaign\Plugin\Tracker\Model\ResourceModel\SessionIndexPlugin" />
+    </type>
+
+    <type name="Smile\ElasticsuiteAbCampaign\Model\Search\Usage\Campaign\Report">
+        <arguments>
+            <argument name="kpiAggregator" xsi:type="object">Smile\ElasticsuiteAbCampaign\Model\Search\Campaign\Usage\KpiAggregator</argument>
+        </arguments>
+    </type>
+
+    <!-- Search usage Campaign report config -->
+    <virtualType name="Smile\ElasticsuiteAbCampaign\Model\Search\Campaign\Usage\KpiAggregator" type="Smile\ElasticsuiteAbCampaign\Model\Search\Campaign\KpiAggregator">
+        <arguments>
+            <argument name="queryProviders" xsi:type="array">
+                <item name="dateFilter" xsi:type="object">Smile\ElasticsuiteAnalytics\Model\Report\Session\DateFilterQueryProvider</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Smile\ElasticsuiteAbCampaign\Model\CampaignAggregator">
+        <arguments>
+            <argument name="kpiAggregator" xsi:type="object">Smile\ElasticsuiteAbCampaign\Model\Search\Campaign\Cron\KpiAggregator</argument>
+        </arguments>
+    </type>
+
+    <virtualType name="Smile\ElasticsuiteAbCampaign\Model\Search\Campaign\Cron\KpiAggregator" type="Smile\ElasticsuiteAbCampaign\Model\Search\Campaign\KpiAggregator">
+        <arguments>
+            <argument name="queryProviders" xsi:type="array">
+                <item name="dateFilter" xsi:type="object">Smile\ElasticsuiteAbCampaign\Model\Search\Campaign\DateFilterQueryProvider</item>
+            </argument>
+        </arguments>
+    </virtualType>
 </config>
