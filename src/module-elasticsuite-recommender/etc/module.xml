@@ -21,6 +21,7 @@
     <module name="Smile_ElasticsuiteRecommender" setup_version="0.0.1">
         <sequence>
             <module name="Smile_ElasticsuiteCatalog" />
+            <module name="Magento_RelatedProductGraphQl" />
             <module name="Magento_TargetRule" />
         </sequence>
     </module>
