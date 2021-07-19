@@ -248,7 +248,7 @@ jobs:
                   INSTALL_COMMAND="$INSTALL_COMMAND --elasticsearch-port=9200"
                 fi
 
-                DISABLE_MODULES = ""
+                DISABLE_MODULES=""
                 if [ "$MAGENTO_EDITION" = "community" ]; then
                   DISABLE_MODULES="$DISABLE_MODULES Smile_ElasticsuiteCatalogOptimizerCustomerSegment,Smile_ElasticsuiteAbCampaignCustomerSegment"
                 fi
