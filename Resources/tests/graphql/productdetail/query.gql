@@ -43,6 +43,27 @@ query productDetail($urlKey: String, $onServer: Boolean!) {
         __typename
       }
       url_key
+      upsell_products {
+          id
+          name
+          sku
+          url_key
+          __typename
+      },
+      crosssell_products {
+          id
+          name
+          sku
+          url_key
+          __typename
+      },
+      related_products {
+          id
+          name
+          sku
+          url_key
+          __typename
+      }
       ... on ConfigurableProduct {
         configurable_options {
           attribute_code

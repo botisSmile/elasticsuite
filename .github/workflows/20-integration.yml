@@ -247,8 +247,17 @@ jobs:
                   INSTALL_COMMAND="$INSTALL_COMMAND --elasticsearch-host=elasticsearch"
                   INSTALL_COMMAND="$INSTALL_COMMAND --elasticsearch-port=9200"
                 fi
+
+                DISABLE_MODULES = ""
                 if [ "$MAGENTO_EDITION" = "community" ]; then
-                   INSTALL_COMMAND="$INSTALL_COMMAND --disable-modules=Smile_ElasticsuiteCatalogOptimizerCustomerSegment,Smile_ElasticsuiteAbCampaignCustomerSegment"
+                  DISABLE_MODULES="$DISABLE_MODULES Smile_ElasticsuiteCatalogOptimizerCustomerSegment,Smile_ElasticsuiteAbCampaignCustomerSegment"
+                fi
+                if [ $(version $MAGENTO_VERSION) -lt $(version "2.3.4") ]; then
+                  DISABLE_MODULES="$DISABLE_MODULES Smile_ElasticsuiteRecommenderGraphQl"
+                fi
+
+                if [ "$DISABLE_MODULES" != "" ]; then
+                  INSTALL_COMMAND="$INSTALL_COMMAND --disable-modules=$DISABLE_MODULES"
                 fi
                 $INSTALL_COMMAND --quiet
 

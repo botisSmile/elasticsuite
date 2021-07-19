@@ -307,4 +307,5 @@
             <argument name="collectionProvider" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Related\CollectionProvider</argument>
         </arguments>
     </type>
+
 </config>

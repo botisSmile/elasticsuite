@@ -1,0 +1,5 @@
+interface ProductInterface {
+    related_products: [ProductInterface] @doc(description: "Related Products") @resolver(class: "Smile\\ElasticsuiteRecommender\\Model\\Resolver\\Batch\\RelatedProducts")
+    upsell_products: [ProductInterface] @doc(description: "Upsell Products")  @resolver(class: "Smile\\ElasticsuiteRecommender\\Model\\Resolver\\Batch\\UpSellProducts")
+    crosssell_products: [ProductInterface] @doc(description: "Crosssell Products") @resolver(class: "Smile\\ElasticsuiteRecommender\\Model\\Resolver\\Batch\\CrossSellProducts")
+}

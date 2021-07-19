@@ -1,0 +1,40 @@
+{
+    "name": "smile/module-elasticsuite-recommender-graph-ql",
+    "type": "magento2-module",
+    "license": "proprietary",
+    "authors": [{
+        "name": "Romain Ruaud",
+        "email": "romain.ruaud@smile.fr"
+    }
+    ],
+    "description": "Smile ElasticSuite - Catalog recommender GraphQl module.",
+    "homepage": "https://github.com/Smile-SA/elasticsuite",
+    "keywords": [
+        "magento",
+        "magento2",
+        "elasticsearch",
+        "search",
+        "merchandising",
+        "core",
+        "setup",
+        "recommender",
+        "graphql"
+    ],
+    "require": {
+        "magento/framework": ">=102.0.4",
+        "smile/elasticsuite" : "~2.8.0",
+        "smile/module-elasticsuite-recommender" : "~2.8.0",
+        "smile/module-elasticsuite-beacon" : "*"
+    },
+    "require-dev": {
+        "smile/magento2-smilelab-quality-suite": "^1.0.4"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Smile\\ElasticsuiteRecommenderGraphQl\\": ""
+        }
+    }
+}
