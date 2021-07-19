@@ -7,32 +7,36 @@
  *
  *
  * @category  Smile
- * @package   Smile\ElasticsuiteRecommender
+ * @package   Smile\ElasticsuiteRecommenderGraphQl
  * @author    Romain Ruaud <romain.ruaud@smile.fr>
  * @copyright 2021 Smile
  * @license   Licensed to Smile-SA. All rights reserved. No warranty, explicit or implicit, provided.
  *            Unauthorized copying of this file, via any medium, is strictly prohibited.
  */
 
-namespace Smile\ElasticsuiteRecommender\Model\Resolver\Batch;
+namespace Smile\ElasticsuiteRecommenderGraphQl\Model\Resolver\Batch;
 
 use Magento\Catalog\Model\Product\Link;
-use Magento\CatalogGraphQl\Model\Resolver\Product\ProductFieldsSelector;
 use Magento\CatalogGraphQl\Model\Resolver\Products\DataProvider\Product as ProductDataProvider;
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Query\Resolver\BatchResolverInterface;
+use Magento\Framework\GraphQl\Query\Resolver\BatchResponse;
+use Magento\Framework\GraphQl\Query\Resolver\ContextInterface;
+use Magento\CatalogGraphQl\Model\Resolver\Product\ProductFieldsSelector;
 
 /**
- * Resolver for Related Products
+ * Resolver for Upsell Products
  *
  * @category Smile
- * @package  Smile\ElasticsuiteRecommender
+ * @package  Smile\ElasticsuiteRecommenderGraphQl
  * @author   Romain Ruaud <romain.ruaud@smile.fr>
  */
-class RelatedProducts extends AbstractLinkedProducts implements BatchResolverInterface
+class UpSellProducts extends AbstractLinkedProducts implements BatchResolverInterface
 {
     /**
-     * Related Products constructor.
+     * Up Sell Products constructor.
      *
      * @param \Smile\ElasticsuiteRecommender\Model\Product\Matcher                 $model                 Recommender model
      * @param \Smile\ElasticsuiteRecommender\Helper\Data                           $helper                Helper
@@ -57,7 +61,7 @@ class RelatedProducts extends AbstractLinkedProducts implements BatchResolverInt
      */
     public function getType(): string
     {
-        return 'related-rule';
+        return 'upsell-rule';
     }
 
     /**
@@ -65,6 +69,6 @@ class RelatedProducts extends AbstractLinkedProducts implements BatchResolverInt
      */
     protected function getNode(): string
     {
-        return 'related_products';
+        return 'upsell_products';
     }
 }

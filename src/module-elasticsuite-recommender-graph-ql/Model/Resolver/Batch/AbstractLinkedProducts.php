@@ -7,14 +7,14 @@
  *
  *
  * @category  Smile
- * @package   Smile\ElasticsuiteRecommender
+ * @package   Smile\ElasticsuiteRecommenderGraphQl
  * @author    Romain Ruaud <romain.ruaud@smile.fr>
  * @copyright 2021 Smile
  * @license   Licensed to Smile-SA. All rights reserved. No warranty, explicit or implicit, provided.
  *            Unauthorized copying of this file, via any medium, is strictly prohibited.
  */
 
-namespace Smile\ElasticsuiteRecommender\Model\Resolver\Batch;
+namespace Smile\ElasticsuiteRecommenderGraphQl\Model\Resolver\Batch;
 
 use Magento\CatalogGraphQl\Model\Resolver\Product\ProductFieldsSelector;
 use Magento\Framework\Exception\LocalizedException;
@@ -28,7 +28,7 @@ use Magento\CatalogGraphQl\Model\Resolver\Products\DataProvider\Product as Produ
  * Abstract Resolver for linked products
  *
  * @category Smile
- * @package  Smile\ElasticsuiteRecommender
+ * @package  Smile\ElasticsuiteRecommenderGraphQl
  * @author   Romain Ruaud <romain.ruaud@smile.fr>
  */
 abstract class AbstractLinkedProducts

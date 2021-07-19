@@ -14,29 +14,25 @@
  *            Unauthorized copying of this file, via any medium, is strictly prohibited.
  */
 
-namespace Smile\ElasticsuiteRecommender\Model\Resolver\Batch;
+namespace Smile\ElasticsuiteRecommenderGraphQl\Model\Resolver\Batch;
 
 use Magento\Catalog\Model\Product\Link;
+use Magento\CatalogGraphQl\Model\Resolver\Product\ProductFieldsSelector;
 use Magento\CatalogGraphQl\Model\Resolver\Products\DataProvider\Product as ProductDataProvider;
 use Magento\Framework\Api\SearchCriteriaBuilder;
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Query\Resolver\BatchResolverInterface;
-use Magento\Framework\GraphQl\Query\Resolver\BatchResponse;
-use Magento\Framework\GraphQl\Query\Resolver\ContextInterface;
-use Magento\CatalogGraphQl\Model\Resolver\Product\ProductFieldsSelector;
 
 /**
- * Resolver for Upsell Products
+ * Resolver for Related Products
  *
  * @category Smile
- * @package  Smile\ElasticsuiteRecommender
+ * @package  Smile\ElasticsuiteRecommenderGraphQl
  * @author   Romain Ruaud <romain.ruaud@smile.fr>
  */
-class UpSellProducts extends AbstractLinkedProducts implements BatchResolverInterface
+class RelatedProducts extends AbstractLinkedProducts implements BatchResolverInterface
 {
     /**
-     * Up Sell Products constructor.
+     * Related Products constructor.
      *
      * @param \Smile\ElasticsuiteRecommender\Model\Product\Matcher                 $model                 Recommender model
      * @param \Smile\ElasticsuiteRecommender\Helper\Data                           $helper                Helper
@@ -61,7 +57,7 @@ class UpSellProducts extends AbstractLinkedProducts implements BatchResolverInte
      */
     public function getType(): string
     {
-        return 'upsell-rule';
+        return 'related-rule';
     }
 
     /**
@@ -69,6 +65,6 @@ class UpSellProducts extends AbstractLinkedProducts implements BatchResolverInte
      */
     protected function getNode(): string
     {
-        return 'upsell_products';
+        return 'related_products';
     }
 }

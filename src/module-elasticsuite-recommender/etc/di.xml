@@ -308,23 +308,4 @@
         </arguments>
     </type>
 
-
-    <!-- GraphQL -->
-    <type name="Smile\ElasticsuiteRecommender\Model\Resolver\Batch\CrossSellProducts">
-        <arguments>
-            <argument name="model" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\CrossSell</argument>
-        </arguments>
-    </type>
-
-    <type name="Smile\ElasticsuiteRecommender\Model\Resolver\Batch\UpSellProducts">
-        <arguments>
-            <argument name="model" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Upsell</argument>
-        </arguments>
-    </type>
-
-    <type name="Smile\ElasticsuiteRecommender\Model\Resolver\Batch\RelatedProducts">
-        <arguments>
-            <argument name="model" xsi:type="object">Smile\ElasticsuiteRecommender\Model\Product\Related</argument>
-        </arguments>
-    </type>
 </config>
