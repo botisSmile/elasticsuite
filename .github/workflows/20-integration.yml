@@ -418,5 +418,5 @@ jobs:
                 http://localhost/graphql \
                 -l \
                 -H "Content-Type: application/json" \
-                --variablesFile="$GITHUB_WORKSPACE/Resources/tests/graphql/search/variables.json" \
-                --queryFile="$GITHUB_WORKSPACE/Resources/tests/graphql/search/query.gql"
+                --variablesFile="$GITHUB_WORKSPACE/Resources/tests/graphql/productdetail/variables.json" \
+                --queryFile="$GITHUB_WORKSPACE/Resources/tests/graphql/productdetail/query.gql"
