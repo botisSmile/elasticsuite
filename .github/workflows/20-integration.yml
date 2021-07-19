@@ -292,6 +292,18 @@ jobs:
                       ls -ail vendor/smile/elasticsuite-premium/src/module-elasticsuite-ab-campaign-customer-segment
                   fi
 
+            - name: "[Init] Remove Recommender GraphQl module for compiling on old Magento2 versions."
+              working-directory: ${{ env.magento-directory }}
+              env:
+                  MAGENTO_VERSION: ${{ matrix.magento-versions }}
+              run: |
+                  if [ $(version $MAGENTO_VERSION) -lt $(version "2.3.4") ]; then
+                      cp -rf vendor/smile/elasticsuite-premium/src/module-elasticsuite-recommender-graph-ql/registration.php vendor/smile/elasticsuite-premium/src/module-elasticsuite-recommender-graph-ql/registration.php.bak
+                      rm -rf vendor/smile/elasticsuite-premium/src/module-elasticsuite-recommender-graph-ql/registration.php
+                      touch vendor/smile/elasticsuite-premium/src/module-elasticsuite-recommender-graph-ql/registration.php
+                      ls -ail vendor/smile/elasticsuite-premium/src/module-elasticsuite-recommender-graph-ql
+                  fi
+
             - name: "[Test] Compile"
               working-directory: ${{ env.magento-directory }}
               run: php bin/magento setup:di:compile
