@@ -23,6 +23,7 @@
     "require": {
         "magento/framework": ">=102.0.4",
         "smile/elasticsuite" : "~2.8.0",
+        "smile/module-elasticsuite-recommender" : "~2.8.0",
         "smile/module-elasticsuite-beacon" : "*"
     },
     "require-dev": {
