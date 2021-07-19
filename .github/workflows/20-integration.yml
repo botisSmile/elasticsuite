@@ -421,6 +421,21 @@ jobs:
                 --variablesFile="$GITHUB_WORKSPACE/Resources/tests/graphql/productdetail/variables.json" \
                 --queryFile="$GITHUB_WORKSPACE/Resources/tests/graphql/productdetail/query.gql"
 
+            - name: "[Test] GraphQl : Product Recommendations"
+              env:
+                  MAGENTO_VERSION: ${{ matrix.magento-versions }}
+              run: |
+                  function version { echo "$@" | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,$4); }'; }
+                  if [ $(version $MAGENTO_VERSION) -gt $(version "2.3.2") ]; then
+                    echo "==> Testing Search"
+                    gq \
+                    http://localhost/graphql \
+                    -l \
+                    -H "Content-Type: application/json" \
+                    --variablesFile="$GITHUB_WORKSPACE/Resources/tests/graphql/recommendations/variables.json" \
+                    --queryFile="$GITHUB_WORKSPACE/Resources/tests/graphql/recommendations/query.gql"
+                  fi
+
             - name: "[End] Job failed, gathering logs"
               env:
                   MAGENTO_ROOT: ${{ env.magento-directory }}
