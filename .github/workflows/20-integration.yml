@@ -426,5 +426,6 @@ jobs:
                   MAGENTO_ROOT: ${{ env.magento-directory }}
               if: ${{ failure() }}
               run: |
-                  cat /var/log/apache2/apache-error.log
-                  cat $MAGENTO_ROOT/var/log/*.log
+                  tail -n 100 /var/log/apache2/apache-error.log
+                  tail -n 100 $MAGENTO_ROOT/var/log/*.log
+                  cat $MAGENTO_ROOT/var/report/*
