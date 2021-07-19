@@ -258,9 +258,10 @@ jobs:
                 fi
 
                 if [ "$DISABLE_MODULES" != "" ]; then
+                  DISABLE_MODULES=$(sed 's/,$//' <<< $DISABLE_MODULES)
                   INSTALL_COMMAND="$INSTALL_COMMAND --disable-modules=$DISABLE_MODULES"
                 fi
-                echo $INSTALL_COMMAND
+
                 $INSTALL_COMMAND --quiet
 
             - name: "[Test] Setup Upgrade"
