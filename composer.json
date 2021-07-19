@@ -53,6 +53,7 @@
         "smile/module-elasticsuite-instant-search": "self.version",
         "smile/module-elasticsuite-merchandising-gauge": "self.version",
         "smile/module-elasticsuite-recommender": "self.version",
+        "smile/module-elasticsuite-recommender-graph-ql": "self.version",
         "smile/module-elasticsuite-virtual-attribute": "self.version"
     },
     "require-dev": {
@@ -73,6 +74,7 @@
             "src/module-elasticsuite-instant-search/registration.php",
             "src/module-elasticsuite-merchandising-gauge/registration.php",
             "src/module-elasticsuite-recommender/registration.php",
+            "src/module-elasticsuite-recommender-graph-ql/registration.php",
             "src/module-elasticsuite-virtual-attribute/registration.php"
         ],
         "psr-4": {
@@ -89,6 +91,7 @@
             "Smile\\ElasticsuiteInstantSearch\\": "src/module-elasticsuite-instant-search",
             "Smile\\ElasticsuiteMerchandisingGauge\\": "src/module-elasticsuite-merchandising-gauge",
             "Smile\\ElasticsuiteRecommender\\": "src/module-elasticsuite-recommender",
+            "Smile\\ElasticsuiteRecommenderGraphQl\\": "src/module-elasticsuite-recommender-graph-ql",
             "Smile\\ElasticsuiteVirtualAttribute\\": "src/module-elasticsuite-virtual-attribute"
         }
     },
