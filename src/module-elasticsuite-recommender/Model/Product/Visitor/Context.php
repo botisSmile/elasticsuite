@@ -52,7 +52,7 @@ class Context implements ContextInterface
         $maxAge = 30,
         $maxSize = 10
     ) {
-        $this->categories = $categories;
+        $this->categories = array_values(array_unique(array_map('intval', $categories)));
         $this->maxAge = $maxAge;
         $this->maxSize = $maxSize;
     }
