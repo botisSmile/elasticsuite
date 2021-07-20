@@ -3,3 +3,11 @@ interface ProductInterface {
     upsell_products: [ProductInterface] @doc(description: "Upsell Products")  @resolver(class: "Smile\\ElasticsuiteRecommenderGraphQl\\Model\\Resolver\\Batch\\UpSellProducts")
     crosssell_products: [ProductInterface] @doc(description: "Crosssell Products") @resolver(class: "Smile\\ElasticsuiteRecommenderGraphQl\\Model\\Resolver\\Batch\\CrossSellProducts")
 }
+
+type Query {
+    elasticsuiteVisitorProducts(visitorId: String!, categoryId: Int!, pageSize: Int ): VisitorProducts @resolver(class: "Smile\\ElasticsuiteRecommenderGraphQl\\Model\\Resolver\\VisitorProducts")
+}
+
+type VisitorProducts {
+    items : [ProductInterface]
+}

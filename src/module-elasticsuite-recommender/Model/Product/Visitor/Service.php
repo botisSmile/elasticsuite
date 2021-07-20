@@ -69,10 +69,11 @@ class Service
      * @param int|null $maxAge     Max age of events to compute recommendations on
      * @param int|null $maxSize    Max number of product ids to fetch
      * @param array    $categories Categories to restrain the recommendations, if any.
+     * @param string   $visitorId  The visitor id, used when it's not fetchable from cookies.
      *
      * @return array
      */
-    public function getRecommendedProductIds($maxAge = null, $maxSize = null, $categories = [])
+    public function getRecommendedProductIds($maxAge = null, $maxSize = null, $categories = [], $visitorId = null)
     {
         $productIds = [];
 
@@ -81,7 +82,7 @@ class Service
         );
 
         $this->productProvider = $this->productProviderFactory->create(['context' => $context]);
-        $sourceProducts        = $this->productProvider->getProducts();
+        $sourceProducts        = $this->productProvider->getProducts($visitorId);
 
         if (!empty($sourceProducts)) {
             $items = $this->model->getItems($sourceProducts, $maxSize);
