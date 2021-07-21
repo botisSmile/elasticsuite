@@ -112,13 +112,15 @@ class ProductProvider implements ProductProviderInterface
     /**
      * Return the products to get recommendations for
      *
+     * @param string $visitorId The visitor id, used when it's not fetchable from cookies.
+     *
      * @return ProductInterface[]
      */
-    public function getProducts()
+    public function getProducts($visitorId = null)
     {
         $products = [];
 
-        $productIds = $this->getProductIds();
+        $productIds = $this->getProductIds($visitorId);
         if (!empty($productIds)) {
             /** @var SearchCriteriaBuilder $criteriaBuilder */
             $criteriaBuilder = $this->criteriaBuilderFactory->create();
@@ -134,9 +136,11 @@ class ProductProvider implements ProductProviderInterface
     /**
      * Return the products ids to get recommendations for
      *
+     * @param string $visitorId The visitor id, used when it's not fetchable from cookies.
+     *
      * @return int[]
      */
-    private function getProductIds()
+    private function getProductIds($visitorId = null)
     {
         $maxSize = $this->productProviderContext->getMaxSize();
         $maxAge = $this->productProviderContext->getMaxAge();
@@ -146,7 +150,7 @@ class ProductProvider implements ProductProviderInterface
 
         $productIds = [];
         try {
-            $eventFilter = $this->getEventFilter(['catalog_product_view', 'checkout_onepage_success'], $maxAge);
+            $eventFilter = $this->getEventFilter(['catalog_product_view', 'checkout_onepage_success'], $maxAge, $visitorId);
 
             $aggregations  = $this->getAggregations($maxSize, $categories);
 
@@ -192,14 +196,19 @@ class ProductProvider implements ProductProviderInterface
      *
      * @param array   $pageTypes Page type identifiers
      * @param integer $maxAge    Event max age.
+     * @param string  $visitorId The visitor id, used when it's not fetchable from cookies.
      *
      * @return array
      */
-    private function getEventFilter($pageTypes = [], $maxAge = 0)
+    private function getEventFilter($pageTypes = [], $maxAge = 0, $visitorId = null)
     {
         $filter = [];
 
-        if ($visitorId = $this->trackerHelper->getCurrentVisitorId()) {
+        if (null === $visitorId) {
+            $visitorId = $this->trackerHelper->getCurrentVisitorId();
+        }
+
+        if (null !== $visitorId) {
             $filter['session.vid'] = $visitorId;
         }
 

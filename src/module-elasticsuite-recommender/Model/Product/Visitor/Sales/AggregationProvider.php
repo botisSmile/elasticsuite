@@ -73,17 +73,14 @@ class AggregationProvider implements AggregationProviderInterface
     {
         $categoryFilter = null;
         if (!empty($categories)) {
-            $filterQueries = [];
-            foreach ($categories as $categoryId) {
-                $filterQueries[] = $this->queryFactory->create(
-                    QueryInterface::TYPE_TERM,
-                    [
-                        'field' => 'page.order.items.category_ids',
-                        'value' => $categoryId,
-                    ]
-                );
-            }
-            $categoryFilter = $this->queryFactory->create(QueryInterface::TYPE_BOOL, ['should' => $filterQueries]);
+            $filterQuery = $this->queryFactory->create(
+                QueryInterface::TYPE_TERMS,
+                [
+                    'field'  => 'page.order.items.category_ids',
+                    'values' => $categories,
+                ]
+            );
+            $categoryFilter = $this->queryFactory->create(QueryInterface::TYPE_BOOL, ['must' => [$filterQuery]]);
         }
 
         $aggParams = [
