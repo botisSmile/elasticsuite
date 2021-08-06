@@ -139,9 +139,10 @@ class BehavioralData
         try {
             $views = $this->getViewsData($storeId, $productIds);
             $sales = $this->getSalesData($storeId, $productIds);
+            $conversionRates = $this->getConversionRateData($views, $sales);
 
             // Not using array_merge_recursive here because it discards numeric keys (which are product ids).
-            $data = array_replace_recursive($views, $sales);
+            $data = array_replace_recursive($views, $sales, $conversionRates);
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage());
         }
@@ -354,6 +355,63 @@ class BehavioralData
         $result = $this->searchEngine->search($request);
 
         return $this->parseResponse($result, 'sales');
+    }
+
+    /**
+     * Compute conversion rates data for a given sales and views data.
+     *
+     * @param array $viewsData The views data
+     * @param array $salesData The sales data
+     *
+     * @return array
+     */
+    private function getConversionRateData(array $viewsData, array $salesData)
+    {
+        $conversionRateData = [];
+        // Initialize value with "1" if there is no views data for this product in order to avoid
+        // division by 0.
+        $defaultViewsData = [
+            'total' => 1,
+            'daily' => ['ma' => 1, 'count' => 1],
+            'weekly' => ['ma' => 1, 'count' => 1],
+        ];
+        array_walk(
+            $salesData,
+            function ($sales, $productId) use (&$conversionRateData, $viewsData, $defaultViewsData) {
+                $views = $defaultViewsData;
+                if (array_key_exists($productId, $viewsData)) {
+                    $views = $viewsData[$productId]['_stats']['views'];
+                }
+                $sales = $sales['_stats']['sales'];
+                $data = [
+                    'total' => $this->calculateConvRate($views['total'], $sales['total']),
+                    'daily' => [
+                        'ma' => $this->calculateConvRate($views['daily']['ma'], $sales['daily']['ma']),
+                        'count' => $this->calculateConvRate($views['daily']['count'], $sales['daily']['count']),
+                    ],
+                    'weekly' => [
+                        'ma' => $this->calculateConvRate($views['weekly']['ma'], $sales['weekly']['ma']),
+                        'count' => $this->calculateConvRate($views['weekly']['count'], $sales['weekly']['count']),
+                    ],
+                ];
+                $conversionRateData[$productId] = ['_stats' => ['conversion_rate' => $data]];
+            }
+        );
+
+        return $conversionRateData;
+    }
+
+    /**
+     * Calculate conversion rates value.
+     *
+     * @param int $viewsNumber The views number of the product
+     * @param int $salesNumber The sales number of the product
+     *
+     * @return float
+     */
+    private function calculateConvRate($viewsNumber, $salesNumber)
+    {
+        return $salesNumber / ($viewsNumber ?: 1);
     }
 
     /**
