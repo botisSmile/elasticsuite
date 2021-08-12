@@ -17,13 +17,13 @@
 namespace Smile\ElasticsuiteExplain\Ui\Component\Optimizer\Listing;
 
 use Magento\Framework\Api\Filter;
-use Magento\Ui\DataProvider\AbstractDataProvider as BaseDataProvider;
 use Magento\Ui\DataProvider\AddFieldToCollectionInterface;
 use Magento\Ui\DataProvider\AddFilterToCollectionInterface;
 use Magento\Ui\DataProvider\Modifier\PoolInterface;
 use Smile\ElasticsuiteCatalogOptimizer\Model\Optimizer;
 use Smile\ElasticsuiteCatalogOptimizer\Model\ResourceModel\Optimizer\Collection as OptimizerCollection;
 use Smile\ElasticsuiteCatalogOptimizer\Model\ResourceModel\Optimizer\CollectionFactory;
+use Smile\ElasticsuiteCatalogOptimizer\Ui\Component\Optimizer\Listing\DataProvider as BaseDataProvider;
 use Smile\ElasticsuiteExplain\Model\Renderer\Optimizer as OptimizerRenderer;
 
 /**
@@ -49,16 +49,6 @@ class DataProvider extends BaseDataProvider
      * @var PoolInterface
      */
     protected $modifierPool;
-
-    /**
-     * @var AddFieldToCollectionInterface[]
-     */
-    protected $addFieldStrategies;
-
-    /**
-     * @var AddFilterToCollectionInterface[]
-     */
-    protected $addFilterStrategies;
 
     /**
      * DataProvider Constructor.
@@ -94,14 +84,14 @@ class DataProvider extends BaseDataProvider
             $name,
             $primaryFieldName,
             $requestFieldName,
+            $collectionFactory,
+            $addFieldStrategies,
+            $addFilterStrategies,
             $meta,
             $data
         );
-        $this->collection           = $collectionFactory->create();
         $this->optimizerRenderer    = $optimizerRenderer;
         $this->collectionProcessors = $collectionProcessors;
-        $this->addFieldStrategies   = $addFieldStrategies;
-        $this->addFilterStrategies  = $addFilterStrategies;
         $this->modifierPool         = $modifierPool;
     }
 
