@@ -55,6 +55,7 @@ define([
             this.products               = [];
             this.synonyms               = [];
             this.optimizers             = [];
+            this.productOptimizers      = [];
             this.terms                  = [];
             this.categories             = [];
             this.positions              = {};
@@ -76,6 +77,7 @@ define([
                 'queryText',
                 'synonyms',
                 'optimizers',
+                'productOptimizers',
                 'terms',
                 'categories',
                 'currentProduct',
@@ -200,6 +202,7 @@ define([
         },
 
         showDetails: function(product) {
+            this.getAppliedOptimizers(product);
             this.currentProduct(product);
             if (this.modal === undefined) {
                 this.modal = $("#productDetails").modal(this.modalOptions);
@@ -252,6 +255,34 @@ define([
                 } else {
                     this.resetExplainData();
                 }
+            }
+        },
+
+        getAppliedOptimizers: function (product) {
+            let isProductBoosted = Object.keys(product.data.boosts).length > 0;
+            this.productOptimizers([]);
+            // Only get optimizer on product when the query context has optimizer and the product is boosted.
+            if (this.hasOptimizers() && isProductBoosted) {
+                let data = {
+                    store_id: this.formData.store_id,
+                    search_container: this.formData.search_container_preview,
+                    product_id: product.data.id,
+                };
+                this.currentRequest = $.ajax({
+                    method: "POST",
+                    url: this.optimizersDetailsUrl,
+                    data: data,
+                    dataType: 'json',
+                    success: function (data) {
+                        let productOptimizers = [];
+                        this.optimizers().forEach(function (optimizer) {
+                            if (data.includes(optimizer.id)) {
+                                productOptimizers.push(optimizer);
+                            }
+                        }.bind(this));
+                        this.productOptimizers(productOptimizers);
+                    }.bind(this),
+                });
             }
         },
 

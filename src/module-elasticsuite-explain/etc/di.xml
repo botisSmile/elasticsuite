@@ -33,4 +33,37 @@
             </argument>
         </arguments>
     </type>
+
+    <!-- ES index handler declaration -->
+    <virtualType name="optimizerSearchIndexHandler" type="\Smile\ElasticsuiteCore\Indexer\GenericIndexerHandler">
+        <arguments>
+            <argument name="indexName" xsi:type="const">Smile\ElasticsuiteExplain\Model\Indexer\Optimizer\Percolator::INDEX_IDENTIFIER</argument>
+            <argument name="typeName" xsi:type="string">optimizer</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- ES indexer declaration -->
+    <type name="Smile\ElasticsuiteExplain\Model\Indexer\Optimizer\Percolator">
+        <arguments>
+            <argument name="indexerHandler" xsi:type="object">optimizerSearchIndexHandler</argument>
+        </arguments>
+    </type>
+
+    <!-- Since ES 5, indices containing percolator queries should have a mapping
+         which reflects the mapping of the index you wanna percolate query against -->
+    <type name="Smile\ElasticsuiteCore\Api\Index\IndexOperationInterface">
+        <plugin name="merge_percolator_mapping" type="Smile\ElasticsuiteExplain\Plugin\Index\IndexOperation"/>
+    </type>
+
+    <!-- Datasources resolver -->
+    <type name="Smile\ElasticsuiteCore\Index\DataSourceResolver">
+        <arguments>
+            <argument name="datasources" xsi:type="array">
+                <item name="optimizer" xsi:type="array">
+                    <item name="percolator" xsi:type="object">Smile\ElasticsuiteExplain\Model\Indexer\Optimizer\Percolator\Datasource\PercolatorData</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
 </config>
+
