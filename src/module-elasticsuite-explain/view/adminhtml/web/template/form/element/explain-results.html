@@ -258,9 +258,42 @@
 <div class="modal" id="productDetails" data-bind="with: currentProduct">
     <div class="info">
         <h1><span data-bind="html: getName(), attr: {title: getName()}"></span></h1>
-        <p class="sku" data-bind="text: getSku()"></p>
-        <p class="price" data-bind="text: getFormattedPrice()"></p>
-        <p class="stock" data-bind="text: getStockLabel()"></p>
+
+        <table class="admin__top-info">
+            <tr>
+                <td class="product-global-info">
+                    <h3 data-bind="i18n: 'General Information'"></h3>
+                    <p class="sku" data-bind="text: getSku()"></p>
+                    <p class="price" data-bind="text: getFormattedPrice()"></p>
+                    <p class="stock" data-bind="text: getStockLabel()"></p>
+                </td>
+                <td class="behavioral-data-report" data-bind="if: hasBehavioralData()">
+                    <h3 data-bind="i18n: 'Behavioral data'"></h3>
+                    <table class="admin__table-primary dashboard-data behavioral-data-report">
+                        <thead>
+                        <tr>
+                            <th class="data-grid-th no-link field"></th>
+                            <th class="data-grid-th no-link field"><span data-bind="i18n: 'Daily (count)'"></span></th>
+                            <th class="data-grid-th no-link field"><span class="description" data-bind="i18n: 'Daily (ma)', attr: {title: $t('Moving average')}"></span></th>
+                            <th class="data-grid-th no-link field"><span data-bind="i18n: 'Weekly (count)'"></span></th>
+                            <th class="data-grid-th no-link field"><span class="description"  data-bind="i18n: 'Weekly (ma)', attr: {title: $t('Moving average')}"></span></th>
+                            <th class="data-grid-th no-link field"><span data-bind="i18n: 'Total'"></span></th>
+                        </tr>
+                        </thead>
+                        <tbody data-bind="foreach: {data: getBehavioralData(), as: 'behavioralData'}" class="behavioralData">
+                        <tr>
+                            <td><span data-bind="i18n: label"></span></td>
+                            <td><span data-bind="text: $parent.formatBehavioralDataValue(daily.count, type)"></span></td>
+                            <td><span data-bind="text: $parent.formatBehavioralDataValue(daily.ma, type)"></span></td>
+                            <td><span data-bind="text: $parent.formatBehavioralDataValue(weekly.count, type)"></span></td>
+                            <td><span data-bind="text: $parent.formatBehavioralDataValue(weekly.ma, type)"></span></td>
+                            <td><span data-bind="text: $parent.formatBehavioralDataValue(total, type)"></span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </table>
 
         <br/>
         <h1 class="modal-title" data-bind="i18n: 'Matches'"></h1>

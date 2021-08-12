@@ -113,19 +113,20 @@ class Item
     public function getData()
     {
         $data = [
-            'id'          => (int) $this->document->getId(),
-            'name'        => $this->getDocumentSource('name'),
-            'sku'         => $this->getDocumentSource('sku'),
-            'price'       => $this->getProductPrice(),
-            'image'       => $this->getProductImage(),
-            'score'       => $this->getDocumentScore(),
-            'explanation' => $this->getDocumentExplanation(),
-            'sort'        => $this->getDocumentSort(),
-            'is_in_stock' => $this->isInStockProduct(),
-            'boosts'      => $this->getBoosts(),
-            'matches'     => $this->getMatches(),
-            'highlights'  => $this->getHighlights(),
-            'legends'     => $this->getLegends(),
+            'id'              => (int) $this->document->getId(),
+            'name'            => $this->getDocumentSource('name'),
+            'sku'             => $this->getDocumentSource('sku'),
+            'price'           => $this->getProductPrice(),
+            'image'           => $this->getProductImage(),
+            'score'           => $this->getDocumentScore(),
+            'explanation'     => $this->getDocumentExplanation(),
+            'sort'            => $this->getDocumentSort(),
+            'is_in_stock'     => $this->isInStockProduct(),
+            'boosts'          => $this->getBoosts(),
+            'matches'         => $this->getMatches(),
+            'highlights'      => $this->getHighlights(),
+            'legends'         => $this->getLegends(),
+            'behavioral_data' => $this->getBehavioralData(),
         ];
 
         return $data;
@@ -442,5 +443,15 @@ class Item
     private function getLegends()
     {
         return $this->descriptionsGenerator->generate($this->getMatches());
+    }
+
+    /**
+     * Get behavioral data for the current item.
+     *
+     * @return array
+     */
+    private function getBehavioralData()
+    {
+        return $this->document->getSource()['_stats'] ?? [];
     }
 }

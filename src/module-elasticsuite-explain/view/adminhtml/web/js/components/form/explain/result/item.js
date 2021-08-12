@@ -19,7 +19,7 @@ define([
     'Smile_ElasticsuiteCatalog/js/form/element/product-sorter/item',
     'ko',
     'mage/translate'
-], function (Component, $, priceUtil, Item, ko) {
+], function (Component, $, priceUtil, Item, ko, $t) {
 
     'use strict';
 
@@ -51,6 +51,15 @@ define([
             for (const field in this.data.legends) {
                 this.legends.push(this.data.legends[field]);
             }
+
+            this.behavioral_data = [];
+            ['views', 'sales', 'conversion_rate'].forEach(function(type) {
+                if (this.data.behavioral_data.hasOwnProperty(type)) {
+                    this.data.behavioral_data[type]['type'] = type;
+                    this.data.behavioral_data[type]['label'] = this.getBehavioralDataLabel(type);
+                    this.behavioral_data.push(this.data.behavioral_data[type]);
+                }
+            }.bind(this));
         },
 
         getEffectClass : function () {
@@ -145,6 +154,29 @@ define([
 
         getLegends : function () {
             return this.legends;
+        },
+
+        hasBehavioralData : function () {
+            return (this.behavioral_data.length > 0);
+        },
+
+        getBehavioralData : function () {
+            return this.behavioral_data;
+        },
+
+        getBehavioralDataLabel: function (type) {
+            switch (type) {
+                case 'views':
+                    return $t('Views');
+                case 'sales':
+                    return $t('Sales');
+                case 'conversion_rate':
+                    return $t('Conversion rate');
+            }
+        },
+
+        formatBehavioralDataValue: function (val, type) {
+            return type === 'conversion_rate' ? val * 100 + '%' : val;
         },
 
         hasFieldDescriptionToShow : function (field) {
