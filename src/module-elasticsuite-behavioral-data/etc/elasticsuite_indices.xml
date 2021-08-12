@@ -62,6 +62,26 @@
                     <sortOrderAscMissing>_first</sortOrderAscMissing>
                     <sortOrderDescMissing>_last</sortOrderDescMissing>
                 </field>
+                <field name="_stats.conversion_rate.total" type="double">
+                    <sortOrderAscMissing>_first</sortOrderAscMissing>
+                    <sortOrderDescMissing>_last</sortOrderDescMissing>
+                </field>
+                <field name="_stats.conversion_rate.daily.ma" type="double">
+                    <sortOrderAscMissing>_first</sortOrderAscMissing>
+                    <sortOrderDescMissing>_last</sortOrderDescMissing>
+                </field>
+                <field name="_stats.conversion_rate.daily.count" type="double">
+                    <sortOrderAscMissing>_first</sortOrderAscMissing>
+                    <sortOrderDescMissing>_last</sortOrderDescMissing>
+                </field>
+                <field name="_stats.conversion_rate.weekly.ma" type="double">
+                    <sortOrderAscMissing>_first</sortOrderAscMissing>
+                    <sortOrderDescMissing>_last</sortOrderDescMissing>
+                </field>
+                <field name="_stats.conversion_rate.weekly.count" type="double">
+                    <sortOrderAscMissing>_first</sortOrderAscMissing>
+                    <sortOrderDescMissing>_last</sortOrderDescMissing>
+                </field>
             </mapping>
         </type>
     </index>
