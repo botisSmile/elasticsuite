@@ -16,18 +16,17 @@
 namespace Smile\ElasticsuiteExplain\Model;
 
 use Magento\Catalog\Api\Data\CategoryInterface;
-use Magento\Search\Model\Autocomplete\Item as TermItem;
 use Smile\ElasticsuiteCatalog\Model\Category\Filter\Provider as CategoryFilterProvider;
 use Smile\ElasticsuiteCore\Api\Client\ClientInterface;
 use Smile\ElasticsuiteCore\Api\Search\ContextInterface;
 use Smile\ElasticsuiteCore\Api\Search\Request\ContainerConfigurationInterface;
-use Smile\ElasticsuiteCore\Model\Autocomplete\Terms\DataProvider as TermDataProvider;
+use Smile\ElasticsuiteCore\Search\Adapter\Elasticsuite\Request\Mapper;
 use Smile\ElasticsuiteCore\Search\Adapter\Elasticsuite\Response\QueryResponseFactory;
 use Smile\ElasticsuiteCore\Search\Request\Builder;
 use Smile\ElasticsuiteCore\Search\Request\SortOrderInterface;
 use Smile\ElasticsuiteCore\Search\RequestInterface;
 use Smile\ElasticsuiteExplain\Model\Autocomplete\QueryProvider;
-use Smile\ElasticsuiteExplain\Model\Result\CollectorInterface;
+use Smile\ElasticsuiteExplain\Model\Optimizer\Percolator;
 
 /**
  * Result Model for Explain
@@ -50,7 +49,7 @@ class Result
     private $requestBuilder;
 
     /**
-     * @var \Smile\ElasticsuiteCore\Search\Adapter\Elasticsuite\Request\Mapper
+     * @var Mapper
      */
     private $requestMapper;
 
@@ -105,6 +104,11 @@ class Result
     private $autocompleteQueryProvider;
 
     /**
+     * @var Percolator
+     */
+    private $optimizersPercolator;
+
+    /**
      * @var boolean
      */
     private $isSpellchecked;
@@ -122,6 +126,7 @@ class Result
      * @param \Smile\ElasticsuiteCore\Api\Search\ContextInterface                $searchContext             Search Context
      * @param \Smile\ElasticsuiteCatalog\Model\Category\Filter\Provider          $categoryFilterProvider    Category Filter Provider
      * @param QueryProvider                                                      $autocompleteQueryProvider Query Provider
+     * @param Percolator                                                         $optimizersPercolator      Optimizers Percolators
      * @param \Smile\ElasticsuiteExplain\Model\Result\CollectorInterface[]       $collectors                Explain collectors
      * @param \Magento\Catalog\Api\Data\CategoryInterface|null                   $category                  Category Id to preview, if any.
      * @param null                                                               $queryText                 Query Text.
@@ -131,12 +136,13 @@ class Result
         Result\ItemFactory $previewItemFactory,
         ContainerConfigurationInterface $containerConfig,
         Builder $requestBuilder,
-        \Smile\ElasticsuiteCore\Search\Adapter\Elasticsuite\Request\Mapper $requestMapper,
-        \Smile\ElasticsuiteCore\Api\Client\ClientInterface $client,
+        Mapper $requestMapper,
+        ClientInterface $client,
         QueryResponseFactory $queryResponseFactory,
         ContextInterface $searchContext,
         CategoryFilterProvider $categoryFilterProvider,
         QueryProvider $autocompleteQueryProvider,
+        Percolator $optimizersPercolator,
         array $collectors = [],
         CategoryInterface $category = null,
         $queryText = null,
@@ -155,6 +161,7 @@ class Result
         $this->containerConfiguration = $containerConfig;
         $this->category               = $category;
         $this->autocompleteQueryProvider = $autocompleteQueryProvider;
+        $this->optimizersPercolator      = $optimizersPercolator;
     }
 
     /**

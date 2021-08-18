@@ -72,10 +72,11 @@ class Preview implements ModifierInterface
     public function modifyMeta(array $meta)
     {
         $config = [
-            'loadUrl'         => $this->getPreviewUrl(),
-            'priceFormat'     => $this->localeFormat->getPriceFormat(),
-            'minSearchLength' => $this->searchHelper->getMinQueryLength(),
-            'maxSearchLength' => $this->searchHelper->getMaxQueryLength(),
+            'loadUrl'              => $this->getPreviewUrl(),
+            'optimizersDetailsUrl' => $this->getOptimizersDetailsUrl(),
+            'priceFormat'          => $this->localeFormat->getPriceFormat(),
+            'minSearchLength'      => $this->searchHelper->getMinQueryLength(),
+            'maxSearchLength'      => $this->searchHelper->getMaxQueryLength(),
         ];
 
         $meta['general']['children']['explain_preview']['arguments']['data']['config'] = $config;
@@ -93,5 +94,17 @@ class Preview implements ModifierInterface
         $urlParams = ['ajax' => true];
 
         return $this->urlBuilder->getUrl('smile_elasticsuite_explain/explain/results', $urlParams);
+    }
+
+    /**
+     * Retrieve the boost details URL.
+     *
+     * @return string
+     */
+    private function getOptimizersDetailsUrl()
+    {
+        $urlParams = ['ajax' => true];
+
+        return $this->urlBuilder->getUrl('smile_elasticsuite_explain/explain/optimizers', $urlParams);
     }
 }

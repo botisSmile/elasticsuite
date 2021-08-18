@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Smile_ElasticsuiteExplain indices configuration.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Smile ElasticSuite to newer
+ * versions in the future.
+ *
+ * @category  Smile
+ * @package   Smile\ElasticsuiteExplain
+ * @author    Pierre Gauthier <pigau@smile.fr>
+ * @copyright 2021 Smile
+ * @license   Licensed to Smile-SA. All rights reserved. No warranty, explicit or implicit, provided.
+ *            Unauthorized copying of this file, via any medium, is strictly prohibited.
+ */
+ -->
+<indices xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Smile_ElasticsuiteCore:etc/elasticsuite_indices.xsd">
+    <index identifier="optimizer" defaultSearchType="optimizer">
+        <type name="optimizer" idFieldName="optimizer_id">
+            <mapping>
+                <!-- Static fields handled by the base indexer (not datasource) -->
+                <field name="optimizer_id" type="integer" />
+                <!-- the field cannot be simply "name" because it is already used in the "product" index type -->
+                <field name="optimizer_name" type="text" />
+                <field name="is_active" type="boolean" />
+                <field name="search_container" type="text" />
+
+                <!-- Static fields handled by the "percolator" datasource -->
+                <field name="percolator_type" type="text" />
+                <field name="type" type="text" />
+                <field name="query" type="percolator" />
+            </mapping>
+        </type>
+    </index>
+
+</indices>
