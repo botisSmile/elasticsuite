@@ -65,5 +65,10 @@
             </argument>
         </arguments>
     </type>
+
+    <!-- Plugin to reindex optimizer after save -->
+    <type name="Smile\ElasticsuiteCatalogOptimizer\Model\OptimizerRepository">
+        <plugin name="reindex_optimizer" type="Smile\ElasticsuiteExplain\Plugin\ReindexOptimizer"/>
+    </type>
 </config>
 

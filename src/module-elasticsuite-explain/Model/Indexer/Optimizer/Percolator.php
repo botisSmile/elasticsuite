@@ -27,8 +27,8 @@ use Smile\ElasticsuiteExplain\Model\Indexer\Optimizer\Percolator\Action\Full;
  * Optimizers fulltext/percolator indexer
  *
  * @category Smile
- * @package   Smile\ElasticsuiteExplain
- * @author    Pierre Gauthier <pierre.gauthier@smile.fr>
+ * @package  Smile\ElasticsuiteExplain
+ * @author   Pierre Gauthier <pierre.gauthier@smile.fr>
  */
 class Percolator implements IndexerActionInterface, MviewActionInterface
 {
