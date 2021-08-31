@@ -255,6 +255,10 @@
                         <item name="sortOrder" xsi:type="number">10</item>
                         <item name="component" xsi:type="string">Smile_ElasticsuiteCatalogRule/js/component/catalog/product/form/rule</item>
                         <item name="dataScope" xsi:type="string">condition</item>
+                        <item name="listens" xsi:type="array">
+                            <!-- Mandatory, this will enforce to re-init the rule listener when switching attribute -->
+                            <item name="${ $.provider }:data.option_id" xsi:type="string">initRuleListener</item>
+                        </item>
                     </item>
                 </argument>
             </htmlContent>
