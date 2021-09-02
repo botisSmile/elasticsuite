@@ -93,7 +93,7 @@ class TreeData implements DatasourceInterface
      */
     private function getCategoryNameById($categoryId, $storeId, $indexData)
     {
-        if (!isset($this->categoryNames[$categoryId])) {
+        if (!isset($this->categoryNames[$categoryId][$storeId])) {
             $result = false;
 
             if (isset($indexData[$categoryId]) && isset($indexData[$categoryId]['name'])) {
@@ -107,9 +107,9 @@ class TreeData implements DatasourceInterface
                 $result = $this->categoryResource->getAttributeRawValue($categoryId, "name", $storeId);
             }
 
-            $this->categoryNames[$categoryId] = $result;
+            $this->categoryNames[$categoryId][$storeId] = $result;
         }
 
-        return $this->categoryNames[$categoryId];
+        return $this->categoryNames[$categoryId][$storeId];
     }
 }
